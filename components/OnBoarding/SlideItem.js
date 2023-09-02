@@ -7,13 +7,13 @@ const SlideItem = ({ item }) => {
   const screenWidth = Math.round(Dimensions.get("window").width);
 
   return (
-    <View style={{ width: screenWidth - 32 }}>
+    <View style={{ width: screenWidth }}>
       <TextContainer>
         <TitleText>{item.title}</TitleText>
         <ContentText>{item.content}</ContentText>
       </TextContainer>
       <ImageContainer>
-        <Image item={item} />
+        <Image source={item.image} />
       </ImageContainer>
     </View>
   );
@@ -22,6 +22,9 @@ const SlideItem = ({ item }) => {
 export default SlideItem;
 
 const TextContainer = styled.View`
+  margin-left: 16px;
+  margin-right: 16px;
+  height: 153px;
   margin-top: 48px;
   padding-left: 14px;
   gap: 10px;
@@ -39,12 +42,9 @@ const ContentText = styled.Text`
   line-height: 20px;
 `;
 const ImageContainer = styled.View`
-  margin-top: 78px;
   align-items: center;
   justify-content: center;
 `;
-const Image = styled.View`
-  width: 343px;
-  height: 280px;
-  background-color: ${({ item }) => item.color};
+const Image = styled.Image`
+  height: 325px;
 `;

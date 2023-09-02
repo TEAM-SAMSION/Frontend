@@ -1,7 +1,7 @@
 import React from "react";
 import { styled } from "styled-components/native";
 
-export default function Login() {
+export default function Login({ navigation }) {
   return (
     <Container>
       <SymbolContainer>
