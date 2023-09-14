@@ -62,7 +62,7 @@ export default function MyPage({ navigation }) {
         text: "네",
         onPress: () => {
           console.log(deleteId);
-          deleteTeam(deleteId);
+          // deleteTeam(deleteId);
         },
       },
     ]);
