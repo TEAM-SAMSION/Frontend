@@ -1,5 +1,5 @@
 import React from "react";
-import { Dimensions, TouchableOpacity, View } from "react-native";
+import { Dimensions, Image, TouchableOpacity, View } from "react-native";
 import { styled } from "styled-components/native";
 import { Swipeable } from "react-native-gesture-handler";
 import { colors } from "../../colors";
@@ -27,7 +27,7 @@ const GroupBox = (props) => {
           shadowOffset: [0, 0],
         }}
       >
-        <GroupImage />
+        <GroupImage source={{ uri: `${props.data.teamProfileImageUrl}` }} />
         <GroupInfoBox>
           <GroupName>{props.data.teamName}</GroupName>
           <GroupDate>가입한지 {props.data.registerPeriod}일째</GroupDate>
@@ -61,7 +61,6 @@ const GroupImage = styled.Image`
   width: 48px;
   height: 48px;
   border-radius: 8px;
-  background-color: pink;
 `;
 const GroupInfoBox = styled.View`
   margin-left: 16px;

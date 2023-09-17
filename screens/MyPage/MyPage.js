@@ -12,12 +12,20 @@ export default function MyPage({ navigation }) {
   const name = useState("Name");
   const email = useState("email@pawith.com");
 
-  const [groupInfo, setGroupInfo] = useState([]);
+  const [groupInfo, setGroupInfo] = useState([
+    {
+      teamId: 74,
+      teamProfileImageUrl: "../../assets/Svgs/ProfileDefault.svg",
+      teamName: "nhetz",
+      authority: "EXECUTIVE",
+      registerPeriod: 445679,
+    },
+  ]);
   const fetchTeamList = async () => {
     try {
       const page = 0;
       const size = 4;
-      const url = "http://dev.pawith.com:8080/todo/team/list";
+      const url = "https://dev.pawith.com:8080/todo/team/list";
       const accessToken =
         "eyJhbGciOiJIUzM4NCJ9.eyJ0b2tlbl90eXBlIjoiQUNDRVNTX1RPS0VOIiwiZW1haWwiOiJ0ZXN0IiwiaXNzIjoicGF3aXRoIiwiaWF0IjoxNjk0NjUwMDE0LCJleHAiOjE2OTQ3MzY0MTR9.y4z8iu8AW_gWLnywqvbJsaDz3Z__cnTSaqTAJSNjPFjmBNgQu9JG5HtPP7fVrn-8";
       const response = await axios.get(url, {
@@ -36,7 +44,7 @@ export default function MyPage({ navigation }) {
   }, []);
 
   const deleteTeam = async (teamId) => {
-    const url = `http://dev.pawith.com:8080/register`;
+    const url = `https://dev.pawith.com:8080/register/${teamId}`;
     const accessToken =
       "eyJhbGciOiJIUzM4NCJ9.eyJ0b2tlbl90eXBlIjoiQUNDRVNTX1RPS0VOIiwiZW1haWwiOiJ0ZXN0IiwiaXNzIjoicGF3aXRoIiwiaWF0IjoxNjk0NjUwMDE0LCJleHAiOjE2OTQ3MzY0MTR9.y4z8iu8AW_gWLnywqvbJsaDz3Z__cnTSaqTAJSNjPFjmBNgQu9JG5HtPP7fVrn-8";
     try {
@@ -62,7 +70,7 @@ export default function MyPage({ navigation }) {
         text: "네",
         onPress: () => {
           console.log(deleteId);
-          // deleteTeam(deleteId);
+          deleteTeam(deleteId);
         },
       },
     ]);
@@ -164,7 +172,7 @@ const FooterContainer = styled.View`
   padding-top: 24px;
   padding-left: 20px;
   padding-right: 20px;
-  padding-bottom: 200px;
+  padding-bottom: 500px;
 `;
 const FooterText = styled.Text`
   font-size: 12px;

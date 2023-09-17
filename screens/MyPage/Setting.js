@@ -2,26 +2,27 @@ import React from "react";
 import { Text, View } from "react-native";
 import { ScreenLayout } from "../../components/Shared";
 import { styled } from "styled-components/native";
+import ContentIcon from "../../assets/Svgs/chevron_right.svg";
 
-export default function Setting() {
+export default function Setting({ navigation }) {
   return (
     <ScreenLayout>
-      <ContentContainer>
+      <ContentContainer onPress={() => navigation.navigate("Account")}>
         <ContentText>계정</ContentText>
         <TouchableIcon>
-          <ContentIcon />
+          <ContentIcon width={16} height={16} />
         </TouchableIcon>
       </ContentContainer>
       <ContentContainer>
         <ContentText>포잇가이드</ContentText>
         <TouchableIcon>
-          <ContentIcon />
+          <ContentIcon width={16} height={16} />
         </TouchableIcon>
       </ContentContainer>
       <ContentContainer>
         <ContentText>개인정보처리방침</ContentText>
         <TouchableIcon>
-          <ContentIcon />
+          <ContentIcon width={16} height={16} />
         </TouchableIcon>
       </ContentContainer>
       <ContentContainer>
@@ -34,7 +35,7 @@ export default function Setting() {
   );
 }
 
-const ContentContainer = styled.View`
+const ContentContainer = styled.TouchableOpacity`
   padding: 16px;
   padding-left: 24px;
   flex-direction: row;
@@ -48,8 +49,3 @@ const ContentText = styled.Text`
   line-height: 22px;
 `;
 const TouchableIcon = styled.TouchableOpacity``;
-const ContentIcon = styled.Image`
-  width: 16px;
-  height: 16px;
-  background-color: pink;
-`;
