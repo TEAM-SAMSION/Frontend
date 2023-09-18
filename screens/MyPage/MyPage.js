@@ -25,9 +25,9 @@ export default function MyPage({ navigation }) {
     try {
       const page = 0;
       const size = 4;
-      const url = "https://dev.pawith.com:8080/todo/team/list";
+      const url = "https://dev.pawith.com/todo/team/list";
       const accessToken =
-        "eyJhbGciOiJIUzM4NCJ9.eyJ0b2tlbl90eXBlIjoiQUNDRVNTX1RPS0VOIiwiZW1haWwiOiJ0ZXN0IiwiaXNzIjoicGF3aXRoIiwiaWF0IjoxNjk0NjUwMDE0LCJleHAiOjE2OTQ3MzY0MTR9.y4z8iu8AW_gWLnywqvbJsaDz3Z__cnTSaqTAJSNjPFjmBNgQu9JG5HtPP7fVrn-8";
+        "eyJhbGciOiJIUzM4NCJ9.eyJ0b2tlbl90eXBlIjoiQUNDRVNTX1RPS0VOIiwiZW1haWwiOiJ0ZXN0IiwiaXNzIjoicGF3aXRoIiwiaWF0IjoxNjk1MDMwMzc2LCJleHAiOjE2OTUxMTY3NzZ9.-BsVKZF0aOGD9rSL6Bm1ihGYAJcJ1dMnFEFCbfX9Wj1JuuP57q9QNtcoUHqrjLC3";
       const response = await axios.get(url, {
         params: { page, size },
         headers: { Authorization: `Bearer ${accessToken}` },
@@ -44,9 +44,9 @@ export default function MyPage({ navigation }) {
   }, []);
 
   const deleteTeam = async (teamId) => {
-    const url = `https://dev.pawith.com:8080/register/${teamId}`;
+    const url = `https://dev.pawith.com/register/${teamId}`;
     const accessToken =
-      "eyJhbGciOiJIUzM4NCJ9.eyJ0b2tlbl90eXBlIjoiQUNDRVNTX1RPS0VOIiwiZW1haWwiOiJ0ZXN0IiwiaXNzIjoicGF3aXRoIiwiaWF0IjoxNjk0NjUwMDE0LCJleHAiOjE2OTQ3MzY0MTR9.y4z8iu8AW_gWLnywqvbJsaDz3Z__cnTSaqTAJSNjPFjmBNgQu9JG5HtPP7fVrn-8";
+      "eyJhbGciOiJIUzM4NCJ9.eyJ0b2tlbl90eXBlIjoiQUNDRVNTX1RPS0VOIiwiZW1haWwiOiJ0ZXN0IiwiaXNzIjoicGF3aXRoIiwiaWF0IjoxNjk1MDMwMzc2LCJleHAiOjE2OTUxMTY3NzZ9.-BsVKZF0aOGD9rSL6Bm1ihGYAJcJ1dMnFEFCbfX9Wj1JuuP57q9QNtcoUHqrjLC3";
     try {
       const response = await axios.delete(url, {
         params: { todoTeamId: teamId },
@@ -71,6 +71,7 @@ export default function MyPage({ navigation }) {
         onPress: () => {
           console.log(deleteId);
           deleteTeam(deleteId);
+          //reload 추가
         },
       },
     ]);
