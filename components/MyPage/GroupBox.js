@@ -1,5 +1,5 @@
 import React from "react";
-import { Dimensions, Image, TouchableOpacity, View } from "react-native";
+import { Dimensions, TouchableOpacity, View } from "react-native";
 import { styled } from "styled-components/native";
 import { Swipeable } from "react-native-gesture-handler";
 import { colors } from "../../colors";
