@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef, useState } from "react";
 import { Dimensions, TouchableOpacity, View } from "react-native";
 import { styled } from "styled-components/native";
 import { Swipeable } from "react-native-gesture-handler";
@@ -10,7 +10,12 @@ const SCREEN_WIDTH = Dimensions.get("window").width;
 const GroupBox = (props) => {
   const RightSwipe = (progress) => {
     return (
-      <TouchableOpacity onPress={props.handleDelete} activeOpacity={0.6}>
+      <TouchableOpacity
+        onPress={() => {
+          props.handleDelete();
+        }}
+        activeOpacity={0.6}
+      >
         <DeleteBox>
           <DeleteText>나가기</DeleteText>
         </DeleteBox>
@@ -18,7 +23,7 @@ const GroupBox = (props) => {
     );
   };
   return (
-    <Swipeable renderRightActions={RightSwipe}>
+    <Swipeable ref={props.swipeableRef} renderRightActions={RightSwipe}>
       <GroupBoxContainer
         style={{
           shadowColor: "rgb(0,0,0)",

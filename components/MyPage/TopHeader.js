@@ -3,6 +3,28 @@ import LogoIcon from "../../assets/Svgs/LogoIcon.svg";
 import SettingIcon from "../../assets/Svgs/SettingIcon.svg";
 import AlramIcon from "../../assets/Svgs/AlramIcon.svg";
 
+export const TopHeader = ({ navigation }) => {
+  return (
+    <CustomHeader>
+      <IconContainer>
+        <LogoIcon width={110} height={26} />
+      </IconContainer>
+      <RightIcon>
+        <IconContainer>
+          <AlramIcon width={24} height={24} />
+        </IconContainer>
+        <IconContainer
+          onPress={() => {
+            navigation.navigate("Setting");
+          }}
+        >
+          <SettingIcon width={24} height={24} />
+        </IconContainer>
+      </RightIcon>
+    </CustomHeader>
+  );
+};
+
 const CustomHeader = styled.View`
   flex-direction: row;
   padding: 0px 16px;
@@ -25,25 +47,3 @@ const Setting = styled.View`
   height: 24px;
   background-color: pink;
 `;
-
-export const TopHeader = ({ navigation }) => {
-  return (
-    <CustomHeader>
-      <IconContainer>
-        <LogoIcon width={110} height={26} />
-      </IconContainer>
-      <RightIcon>
-        <IconContainer>
-          <AlramIcon width={24} height={24} />
-        </IconContainer>
-        <IconContainer
-          onPress={() => {
-            navigation.navigate("Setting");
-          }}
-        >
-          <SettingIcon width={24} height={24} />
-        </IconContainer>
-      </RightIcon>
-    </CustomHeader>
-  );
-};
