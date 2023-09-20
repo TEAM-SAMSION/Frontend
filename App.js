@@ -5,8 +5,8 @@ import LoggedInNav from "./navigators/LoggedInNav";
 export default function App() {
   return (
     <NavigationContainer>
-      {/* <LoggedInNav /> */}
-      <OnBoardingNav />
+      <LoggedInNav />
+      {/* <OnBoardingNav /> */}
     </NavigationContainer>
   );
 }
