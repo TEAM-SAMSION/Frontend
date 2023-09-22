@@ -3,6 +3,8 @@ import * as ImagePicker from "expo-image-picker";
 import styled from "styled-components/native";
 import { colors } from "../../colors";
 import axios from "axios";
+import ImageResizer from "react-native-image-resizer";
+import * as ImageManipulator from "expo-image-manipulator";
 
 const ACCESSTOKEN =
   "eyJhbGciOiJIUzM4NCJ9.eyJ0b2tlbl90eXBlIjoiQUNDRVNTX1RPS0VOIiwiZW1haWwiOiJ0ZXN0IiwiaXNzIjoicGF3aXRoIiwiaWF0IjoxNjk1MTM0OTYxLCJleHAiOjE2OTUyMjEzNjF9.JpmiVeEsrIxNB814EvZJCRzbW96T_bNvmohQm3SamBcap3H-bzpyCIsK_1kaBd-w";
@@ -10,6 +12,9 @@ const ACCESSTOKEN =
 const ImagePickerComponent = (props) => {
   const [status, requestPermission] = ImagePicker.useMediaLibraryPermissions();
 
+  const showPicker = () => {
+    launch;
+  };
   const uploadImage = async () => {
     if (!status?.granted) {
       const permission = await requestPermission();
@@ -18,7 +23,7 @@ const ImagePickerComponent = (props) => {
       }
     }
     const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: false,
       quality: 0.2,
       aspect: [1, 1],
@@ -36,9 +41,31 @@ const ImagePickerComponent = (props) => {
     const filename = localUri.split("/").pop();
     const match = /\.(\w+)$/.exec(filename ?? "");
     const type = match ? `image/${match[1]}` : `image`;
+
+    // const compressedImageUri = await ImageResizer.createResizedImage(
+    //   localUri,
+    //   800,
+    //   800,
+    //   "JPEG",
+    //   Math.floor(result.assets[0].size / (1024 * 1024)) <= 2
+    //     ? Math.floor(result.assets[0].size / (1024 * 1024)) * 0.8
+    //     : 0.5
+    // );
+
+    const compressedImageUri = await ImageManipulator.manipulateAsync(
+      localUri,
+      [{ resize: { width: 400 } }],
+      { compress: 1, format: ImageManipulator.SaveFormat.JPEG }
+    );
+
     const formData = new FormData();
-    formData.append("imageFile", { uri: localUri, name: filename, type });
-    console.log(filename);
+    formData.append("imageFile", {
+      uri: compressedImageUri.uri,
+      name: filename,
+      type,
+    });
+    console.log(formData);
+
     try {
       const response = await axios.post(url, formData, {
         headers: {
@@ -49,13 +76,6 @@ const ImagePickerComponent = (props) => {
       console.log(response.data.imageUrl);
     } catch (error) {
       console.error(error);
-
-      // await axios.post("https//dev.pawith.com/user", formData, {
-      //   headers: {
-      //     // "content-type": "multipart/form-data",
-      //     Authorization: `Bearer ${ACCESSTOKEN}`,
-      //   },
-      // });
     }
   };
 
