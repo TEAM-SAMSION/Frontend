@@ -14,8 +14,8 @@ export default function MyPageNav() {
     <Stack.Navigator
       screenOptions={{
         headerTitleStyle: {
-          fontSize: 20,
-          lineHeight: 28,
+          fontSize: 16,
+          lineHeight: 22,
           fontWeight: 700,
           color: colors.grey_600,
         },
