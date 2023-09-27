@@ -8,6 +8,7 @@ import * as Google from "expo-auth-session/providers/google";
 import * as WebBrowser from "expo-web-browser";
 import {
   appleAuth,
+  appleAuthAndroid,
   AppleButton,
 } from "@invertase/react-native-apple-authentication";
 
@@ -111,7 +112,6 @@ export default function Login({ navigation }) {
   const getTokenApple = async (accessToken) => {
     let url = "http://52.78.52.47:8080/";
     let detailAPI = `oauth/APPLE?accessToken=${accessToken}`; //500
-    //google에서 발급받는 동일한 AccessToken 집어 넣어도 + 같은 호출문 구조 사용해도 [AxiosError: Request failed with status code 500] 발생
     const response = await axios.get(url + detailAPI, {
       headers: {
         "Content-Type": `application/json`,
@@ -168,6 +168,7 @@ export default function Login({ navigation }) {
 
   useEffect(() => {
     // onCredentialRevoked returns a function that will remove the event listener. useEffect will call this function when the component unmounts
+    if (!appleAuth.isSupported) return;
     return appleAuth.onCredentialRevoked(async () => {
       console.warn(
         "If this function executes, User Credentials have been Revoked"
@@ -201,15 +202,17 @@ export default function Login({ navigation }) {
       <Button onPress={() => logoutNaver()}>
         <ButtonText>Naver 로그아웃</ButtonText>
       </Button>
-      <AppleButton
-        buttonStyle={AppleButton.Style.WHITE}
-        buttonType={AppleButton.Type.SIGN_IN}
-        style={{
-          width: 160, // You must specify a width
-          height: 45, // You must specify a height
-        }}
-        onPress={() => onAppleButtonPress()}
-      />
+      {appleAuth.isSupported && (
+        <AppleButton
+          buttonStyle={AppleButton.Style.WHITE}
+          buttonType={AppleButton.Type.SIGN_IN}
+          style={{
+            width: 160, // You must specify a width
+            height: 45, // You must specify a height
+          }}
+          onPress={() => onAppleButtonPress()}
+        />
+      )}
     </Container>
   );
 }
