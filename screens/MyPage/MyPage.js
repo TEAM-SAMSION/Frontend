@@ -8,26 +8,28 @@ import React, {
 import { ScreenLayout } from "../../components/Shared";
 import { styled } from "styled-components/native";
 import { TopHeader } from "../../components/MyPage/TopHeader";
-import { FlatList, GestureHandlerRootView } from "react-native-gesture-handler";
+import { FlatList, Text } from "react-native";
 import GroupBox from "../../components/MyPage/GroupBox";
 import { Alert, ScrollView, TouchableOpacity, View } from "react-native";
 import EditIcon from "../../assets/Svgs/Edit.svg";
 import axios from "axios";
 import { ProfileImageModal } from "../../components/MyPage/ProfileImageModal";
-// import { resolveDiscoveryAsync } from "expo-auth-session";
-// import {
-//   BottomSheetModal,
-//   BottomSheetModalProvider,
-// } from "@gorhom/bottom-sheet";
+import { resolveDiscoveryAsync } from "expo-auth-session";
+import "react-native-gesture-handler";
+import {
+  BottomSheetBackdrop,
+  BottomSheetModal,
+  BottomSheetModalProvider,
+} from "@gorhom/bottom-sheet";
 
 export default function MyPage({ navigation }) {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
+  const [name, setName] = useState("포잇");
+  const [email, setEmail] = useState("pawith@gmail.com");
   const [profileUrl, setProfileUrl] = useState("");
 
   const swipeableRefs = useRef([]);
   const ACCESSTOKEN =
-    "eyJhbGciOiJIUzM4NCJ9.eyJ0b2tlbl90eXBlIjoiQUNDRVNTX1RPS0VOIiwiZW1haWwiOiJ0ZXN0IiwiaXNzIjoicGF3aXRoIiwiaWF0IjoxNjk1MTM0OTYxLCJleHAiOjE2OTUyMjEzNjF9.JpmiVeEsrIxNB814EvZJCRzbW96T_bNvmohQm3SamBcap3H-bzpyCIsK_1kaBd-w";
+    "eyJhbGciOiJIUzM4NCJ9.eyJ0b2tlbl90eXBlIjoiQUNDRVNTX1RPS0VOIiwiZW1haWwiOiJ0ZXN0IiwiaXNzIjoicGF3aXRoIiwiaWF0IjoxNjk1ODAyNDUzLCJleHAiOjE2OTU4ODg4NTN9.lACxP5vqKIqUR6uHiIe06IgMOE4WwB8X_MXxSQKabH9O8VaM5sk4UvcTbI_ShRIH";
 
   const getUserInfo = async () => {
     try {
@@ -51,9 +53,16 @@ export default function MyPage({ navigation }) {
     {
       teamId: 74,
       teamProfileImageUrl: "../../assets/Svgs/ProfileDefault.svg",
-      teamName: "nhetz",
+      teamName: "dummy1",
+      authority: "PRESIDENT",
+      registerPeriod: 500,
+    },
+    {
+      teamId: 75,
+      teamProfileImageUrl: "../../assets/Svgs/ProfileDefault.svg",
+      teamName: "dummy2",
       authority: "EXECUTIVE",
-      registerPeriod: 445679,
+      registerPeriod: 700,
     },
   ]);
 
@@ -110,81 +119,87 @@ export default function MyPage({ navigation }) {
     ]);
   };
 
-  // const bottomSheetModalRef = useRef(null);
-  // const snapPoints = useMemo(() => ["60%"], []);
-  // const handlePresentModalPress = useCallback(() => {
-  //   bottomSheetModalRef.current?.present();
-  // }, []);
-  // const handleSheetChanges = useCallback((index) => {
-  //   console.log("handleSheetChanges", index);
-  // }, []);
+  const bottomSheetModalRef = useRef(null);
+  const snapPoints = ["30%"];
+  const handlePresentModal = useCallback(() => {
+    bottomSheetModalRef.current?.present();
+  }, []);
+  const renderBackdrop = useCallback(
+    (props) => (
+      <BottomSheetBackdrop
+        {...props}
+        disappearsOnIndex={-1}
+        appearsOnIndex={0}
+        pressBehavior="close"
+      />
+    ),
+    []
+  );
 
   return (
-    // <GestureHandlerRootView style={{ flex: 1 }}>
-    <ScreenLayout>
-      {/* <BottomSheetModalProvider> */}
-      <TopHeader navigation={navigation} />
-      <ScrollView>
-        <UserContainer>
-          <TouchableOpacity>
-            <ProfileImage
-              source={{
-                uri: `${profileUrl}`,
-              }}
-            />
-            {/* <ProfileImage onPress={handlePresentModalPress} /> */}
-          </TouchableOpacity>
-          <UserDetailContainer>
-            <UserNameBox>
-              <Username>{name}</Username>
-              <EditIcon width={24} height={24} />
-            </UserNameBox>
-            <EmailBox>
-              <EmailText>{email}</EmailText>
-            </EmailBox>
-          </UserDetailContainer>
-        </UserContainer>
-        <GroupContainer>
-          <Title>내가 속한 모임</Title>
-          <Groups>
-            <FlatList
-              data={groupInfo}
-              renderItem={({ item }) => {
-                return (
-                  <GroupBox
-                    data={item}
-                    handleDelete={() => deleteItem(item.teamId)}
-                    swipeableRef={(ref) =>
-                      (swipeableRefs.current[item.teamId] = ref)
-                    }
-                  />
-                );
-              }}
-            />
-          </Groups>
-        </GroupContainer>
-        <ProfileImageModal profileUrl={profileUrl} />
-        <FooterContainer>
-          <FooterText>
-            포잇에 대해 더 알아볼까요?{"\n"}좀 더 똑똑하게 포잇을 사용하고
-            싶다면?
-          </FooterText>
-          <Guide>포잇가이드</Guide>
-        </FooterContainer>
-      </ScrollView>
-      {/* <BottomSheetModal
-            ref={bottomSheetModalRef}
-            index={1}
-            snapPoints={snapPoints}
-            onChange={handleSheetChanges}
-          >
-            <View>
-              <Text>Hello</Text>
-            </View>
-          </BottomSheetModal>
-        </BottomSheetModalProvider> */}
-    </ScreenLayout>
-    // </GestureHandlerRootView>
+    <BottomSheetModalProvider>
+      <ScreenLayout>
+        <TopHeader navigation={navigation} />
+        <ScrollView>
+          <UserContainer>
+            <TouchableOpacity onPress={handlePresentModal}>
+              <ProfileImage
+                source={{
+                  uri: `${profileUrl}`,
+                }}
+              />
+              {/* <ProfileImage onPress={handlePresentModalPress} /> */}
+            </TouchableOpacity>
+            <UserDetailContainer>
+              <UserNameBox>
+                <Username>{name}</Username>
+                <EditIcon width={24} height={24} />
+              </UserNameBox>
+              <EmailBox>
+                <EmailText>{email}</EmailText>
+              </EmailBox>
+            </UserDetailContainer>
+          </UserContainer>
+          <GroupContainer>
+            <Title>내가 속한 모임</Title>
+            <Groups>
+              <FlatList
+                data={groupInfo}
+                renderItem={({ item }) => {
+                  return (
+                    <GroupBox
+                      data={item}
+                      handleDelete={() => deleteItem(item.teamId)}
+                      swipeableRef={(ref) =>
+                        (swipeableRefs.current[item.teamId] = ref)
+                      }
+                    />
+                  );
+                }}
+              />
+            </Groups>
+          </GroupContainer>
+          <FooterContainer>
+            <FooterText>
+              포잇에 대해 더 알아볼까요?{"\n"}좀 더 똑똑하게 포잇을 사용하고
+              싶다면?
+            </FooterText>
+            <Guide>포잇가이드</Guide>
+          </FooterContainer>
+        </ScrollView>
+        <BottomSheetModal
+          ref={bottomSheetModalRef}
+          index={0}
+          snapPoints={snapPoints}
+          backdropComponent={renderBackdrop}
+          backgroundStyle={{
+            borderRadius: 22,
+          }}
+        >
+          <ProfileImageModal profileUrl={profileUrl} />
+        </BottomSheetModal>
+      </ScreenLayout>
+    </BottomSheetModalProvider>
   );
 }
 

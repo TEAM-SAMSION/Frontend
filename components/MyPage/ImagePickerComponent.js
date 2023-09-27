@@ -7,14 +7,11 @@ import ImageResizer from "react-native-image-resizer";
 import * as ImageManipulator from "expo-image-manipulator";
 
 const ACCESSTOKEN =
-  "eyJhbGciOiJIUzM4NCJ9.eyJ0b2tlbl90eXBlIjoiQUNDRVNTX1RPS0VOIiwiZW1haWwiOiJ0ZXN0IiwiaXNzIjoicGF3aXRoIiwiaWF0IjoxNjk1MTM0OTYxLCJleHAiOjE2OTUyMjEzNjF9.JpmiVeEsrIxNB814EvZJCRzbW96T_bNvmohQm3SamBcap3H-bzpyCIsK_1kaBd-w";
+  "eyJhbGciOiJIUzM4NCJ9.eyJ0b2tlbl90eXBlIjoiQUNDRVNTX1RPS0VOIiwiZW1haWwiOiJ0ZXN0IiwiaXNzIjoicGF3aXRoIiwiaWF0IjoxNjk1ODAyNDUzLCJleHAiOjE2OTU4ODg4NTN9.lACxP5vqKIqUR6uHiIe06IgMOE4WwB8X_MXxSQKabH9O8VaM5sk4UvcTbI_ShRIH";
 
 const ImagePickerComponent = (props) => {
   const [status, requestPermission] = ImagePicker.useMediaLibraryPermissions();
 
-  const showPicker = () => {
-    launch;
-  };
   const uploadImage = async () => {
     if (!status?.granted) {
       const permission = await requestPermission();
@@ -25,7 +22,7 @@ const ImagePickerComponent = (props) => {
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: false,
-      quality: 0.2,
+      quality: 0.7,
       aspect: [1, 1],
     });
     if (result.canceled) {
@@ -38,36 +35,26 @@ const ImagePickerComponent = (props) => {
     const url = "https://dev.pawith.com/user";
     const localUri = result.assets[0].uri;
     console.log(localUri);
-    const filename = localUri.split("/").pop();
-    const match = /\.(\w+)$/.exec(filename ?? "");
-    const type = match ? `image/${match[1]}` : `image`;
-
-    // const compressedImageUri = await ImageResizer.createResizedImage(
-    //   localUri,
-    //   800,
-    //   800,
-    //   "JPEG",
-    //   Math.floor(result.assets[0].size / (1024 * 1024)) <= 2
-    //     ? Math.floor(result.assets[0].size / (1024 * 1024)) * 0.8
-    //     : 0.5
-    // );
+    // const filename = localUri.split("/").pop();
+    // const match = /\.(\w+)$/.exec(filename ?? "");
+    // const type = match ? `image/${match[1]}` : `image/jpeg`;
 
     const compressedImageUri = await ImageManipulator.manipulateAsync(
       localUri,
-      [{ resize: { width: 400 } }],
+      [{ resize: { width: 100 } }],
       { compress: 1, format: ImageManipulator.SaveFormat.JPEG }
     );
 
-    const formData = new FormData();
-    formData.append("imageFile", {
+    const routeData = new FormData();
+    routeData.append("profileImage", {
       uri: compressedImageUri.uri,
-      name: filename,
-      type,
+      name: "photo.jpeg",
+      type: "image/jpeg",
     });
-    console.log(formData);
+    console.log(routeData);
 
     try {
-      const response = await axios.post(url, formData, {
+      const response = await axios.post(url, routeData, {
         headers: {
           "Content-Type": `multipart/form-data`,
           Authorization: `Bearer ${ACCESSTOKEN}`,
@@ -89,6 +76,7 @@ const ImagePickerComponent = (props) => {
 export default ImagePickerComponent;
 
 const LibraryBox = styled.TouchableOpacity`
+  width: 156px;
   height: 44px;
   border-radius: 8px;
   padding: 12px 16px;
