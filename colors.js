@@ -14,5 +14,7 @@ export const colors = {
   grey_900: "#000",
 
   primary: "#F84D35",
+  primary_container: "#FFE2E0",
   secondary: "#9389FD",
+  secondary_container: "D1D6FF"
 };
