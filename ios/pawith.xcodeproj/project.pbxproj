@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 46;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -12,6 +12,7 @@
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		3E461D99554A48A4959DE609 /* SplashScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */; };
 		96905EF65AED1B983A6B3ABC /* libPods-pawith.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 58EEBF8E8E6FB1BC6CAF49B5 /* libPods-pawith.a */; };
+		AB72B3E32AC2DB0200FF13AE /* SwiftBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB72B3E22AC2DB0200FF13AE /* SwiftBridge.swift */; };
 		B18059E884C0ABDD17F3DC3D /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAC715A2D49A985799AEE119 /* ExpoModulesProvider.swift */; };
 		BB2F792D24A3F905000567C9 /* Expo.plist in Resources */ = {isa = PBXBuildFile; fileRef = BB2F792C24A3F905000567C9 /* Expo.plist */; };
 		D4EFFAB59B67420ABCE38A45 /* noop-file.swift in Sources */ = {isa = PBXBuildFile; fileRef = 981FBC71D146430BA483B81E /* noop-file.swift */; };
@@ -30,6 +31,7 @@
 		7A4D352CD337FB3A3BF06240 /* Pods-pawith.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-pawith.release.xcconfig"; path = "Target Support Files/Pods-pawith/Pods-pawith.release.xcconfig"; sourceTree = "<group>"; };
 		981FBC71D146430BA483B81E /* noop-file.swift */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 4; includeInIndex = 0; lastKnownFileType = sourcecode.swift; name = "noop-file.swift"; path = "pawith/noop-file.swift"; sourceTree = "<group>"; };
 		AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = SplashScreen.storyboard; path = pawith/SplashScreen.storyboard; sourceTree = "<group>"; };
+		AB72B3E22AC2DB0200FF13AE /* SwiftBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftBridge.swift; sourceTree = "<group>"; };
 		BB2F792C24A3F905000567C9 /* Expo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Expo.plist; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		FAC715A2D49A985799AEE119 /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-pawith/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
@@ -59,6 +61,7 @@
 				AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */,
 				981FBC71D146430BA483B81E /* noop-file.swift */,
 				5680334A20B344A2941D818A /* pawith-Bridging-Header.h */,
+				AB72B3E22AC2DB0200FF13AE /* SwiftBridge.swift */,
 			);
 			name = pawith;
 			sourceTree = "<group>";
@@ -271,10 +274,12 @@
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-pawith/Pods-pawith-frameworks.sh",
 				"${PODS_XCFRAMEWORKS_BUILD_DIR}/hermes-engine/Pre-built/hermes.framework/hermes",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/naveridlogin-sdk-ios/NaverThirdPartyLogin.framework/NaverThirdPartyLogin",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/hermes.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/NaverThirdPartyLogin.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -330,6 +335,7 @@
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 				B18059E884C0ABDD17F3DC3D /* ExpoModulesProvider.swift in Sources */,
 				D4EFFAB59B67420ABCE38A45 /* noop-file.swift in Sources */,
+				AB72B3E32AC2DB0200FF13AE /* SwiftBridge.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -351,7 +357,10 @@
 				);
 				INFOPLIST_FILE = pawith/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				MARKETING_VERSION = 1.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
@@ -379,7 +388,10 @@
 				CURRENT_PROJECT_VERSION = 1;
 				INFOPLIST_FILE = pawith/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				MARKETING_VERSION = 1.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
@@ -445,7 +457,10 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
-				LD_RUNPATH_SEARCH_PATHS = "/usr/lib/swift $(inherited)";
+				LD_RUNPATH_SEARCH_PATHS = (
+					/usr/lib/swift,
+					"$(inherited)",
+				);
 				LIBRARY_SEARCH_PATHS = "$(SDKROOT)/usr/lib/swift\"$(inherited)\"";
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -498,7 +513,10 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
-				LD_RUNPATH_SEARCH_PATHS = "/usr/lib/swift $(inherited)";
+				LD_RUNPATH_SEARCH_PATHS = (
+					/usr/lib/swift,
+					"$(inherited)",
+				);
 				LIBRARY_SEARCH_PATHS = "$(SDKROOT)/usr/lib/swift\"$(inherited)\"";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				OTHER_CFLAGS = "$(inherited)";

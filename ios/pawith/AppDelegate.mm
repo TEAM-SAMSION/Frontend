@@ -2,6 +2,8 @@
 
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTLinkingManager.h>
+#import <NaverThirdPartyLogin/NaverThirdPartyLoginConnection.h>
+
 
 @implementation AppDelegate
 
@@ -27,6 +29,17 @@
 
 // Linking API
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options {
+
+  // naver
+   if ([url.scheme isEqualToString:@"{{ CUSTOM URL SCHEME }}"]) {
+    return [[NaverThirdPartyLoginConnection getSharedInstance] application:application openURL:url options:options];
+  }
+  
+  // kakao
+  // if([RNKakaoLogins isKakaoTalkLoginUrl:url]) {
+  //   return [RNKakaoLogins handleOpenUrl: url];
+  // }
+
   return [super application:application openURL:url options:options] || [RCTLinkingManager application:application openURL:url options:options];
 }
 
