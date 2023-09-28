@@ -15,6 +15,7 @@ export const colors = {
 
   primary: "#F84D35",
   primary_container: "#FFE2E0",
+  primary_outline: "#FD8D81",
   secondary: "#9389FD",
-  secondary_container: "D1D6FF"
+  secondary_container: "D1D6FF",
 };
