@@ -7,10 +7,17 @@ import { colors } from "../../colors";
 import Plus from "../../assets/Svgs/plus.svg";
 import Go from "../../assets/Svgs/go.svg";
 import axios from "axios";
+import { MainStat } from "../../components/Home/MainStat";
+import { PamilyChoiceToggle } from "../../components/Home/PamilyChoiceToggle";
 
 export default function Home({ navigation }) {
   const [name, setName] = useState("포잇");
-  const PamilyNum = 0;
+  const [now, setNow] = useState(new Date(Date.now() + 9 * 60 * 60 * 1000));
+  const date = parseInt(now.toISOString().substring(8, 10));
+  const month = now.getMonth() + 1;
+  const [progress, setProgress] = useState(70);
+
+  const PamilyNum = 1;
 
   const ACCESSTOKEN =
     "eyJhbGciOiJIUzM4NCJ9.eyJ0b2tlbl90eXBlIjoiQUNDRVNTX1RPS0VOIiwiZW1haWwiOiJ0ZXN0IiwiaXNzIjoicGF3aXRoIiwiaWF0IjoxNjk1ODk1ODc2LCJleHAiOjE2OTU5ODIyNzZ9.i58lt1IYpj9YHOK1QZ3v3U0jjplv5SR4rkbQyM_qwCT3Tt2rbmVxi0U3BNuAUOcV";
@@ -28,6 +35,22 @@ export default function Home({ navigation }) {
   };
   useEffect(() => {
     getUserInfo();
+  }, []);
+
+  const getTodoProgress = async (teamId) => {
+    try {
+      const url = `https://dev.pawith.com/todo/progress/${teamId}`;
+      const response = await axios.get(url, {
+        params: { teamId: teamId },
+        headers: { Authorization: `Bearer ${ACCESSTOKEN}` },
+      });
+      setProgress(response.data.progress);
+    } catch (error) {
+      console.error(error.message);
+    }
+  };
+  useEffect(() => {
+    getTodoProgress(1);
   }, []);
 
   return (
@@ -53,7 +76,7 @@ export default function Home({ navigation }) {
             {PamilyNum == 0 ? (
               <NoneText>소속된 Pamily가 없습니다.</NoneText>
             ) : (
-              <PamilyStat />
+              <MainStat progress={progress} />
             )}
           </PamilyStatContainer>
         </PamilyContainer>
@@ -85,7 +108,7 @@ export default function Home({ navigation }) {
               shadowOffset: [0, 0],
             }}
           >
-            <Title>Pamily 들어가기</Title>
+            <Title>Pamily 참여하기</Title>
             <SubTitle>함께할 TODO Pamily를{"\n"}들어가 볼까요?</SubTitle>
             <StartIcon>
               <Go />
@@ -93,7 +116,11 @@ export default function Home({ navigation }) {
           </StartTeamContainer>
         </TeamContainer>
       ) : (
-        ""
+        <TodoTitle>
+          <TitleText>
+            {month}월 {date}일, 나에게 할당된 TODO
+          </TitleText>
+        </TodoTitle>
       )}
     </ScreenLayout>
   );
@@ -137,13 +164,13 @@ const PamilyContainer = styled.View`
   background-color: rgba(255, 255, 255, 0.5);
   margin-top: 24px;
 `;
-const PamilyChoiceToggle = styled.View`
-  width: 109px;
-  height: 32px;
-  background-color: white;
-  margin: 12px 0px 0px 12px;
-  z-index: 1;
-`;
+// const PamilyChoiceToggle = styled.View`
+//   width: 109px;
+//   height: 32px;
+//   background-color: white;
+//   margin: 12px 0px 0px 12px;
+//   z-index: 1;
+// `;
 const PamilyImageContainer = styled.View`
   height: 255px;
   width: 100%;
@@ -157,7 +184,6 @@ const PamilyImageContainer = styled.View`
 const PamilyStatContainer = styled.View`
   width: 100%;
   height: 62px;
-  padding: 0px 16px;
   justify-content: center;
   align-items: center;
   background-color: #fff;
@@ -206,4 +232,14 @@ const StartIcon = styled.View`
   position: absolute;
   right: 0;
   bottom: 0;
+`;
+const TodoTitle = styled.View`
+  padding: 24px 16px 0px 16px;
+`;
+const TitleText = styled.Text`
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 28px;
+  color: ${colors.grey_600};
 `;
