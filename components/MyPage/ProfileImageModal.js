@@ -3,9 +3,12 @@ import { colors } from "../../colors";
 import ImagePickerComponent from "./ImagePickerComponent";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { useRecoilValue } from "recoil";
+import { AccessTokenAtom } from "../../recoil/AuthAtom";
 
+// const ACCESSTOKEN = useRecoilValue(AccessTokenAtom);
 const ACCESSTOKEN =
-  "eyJhbGciOiJIUzM4NCJ9.eyJ0b2tlbl90eXBlIjoiQUNDRVNTX1RPS0VOIiwiZW1haWwiOiJ0ZXN0IiwiaXNzIjoicGF3aXRoIiwiaWF0IjoxNjk1ODAyNDUzLCJleHAiOjE2OTU4ODg4NTN9.lACxP5vqKIqUR6uHiIe06IgMOE4WwB8X_MXxSQKabH9O8VaM5sk4UvcTbI_ShRIH";
+  "eyJhbGciOiJIUzM4NCJ9.eyJ0b2tlbl90eXBlIjoiQUNDRVNTX1RPS0VOIiwiZW1haWwiOiJ0ZXN0IiwiaXNzIjoicGF3aXRoIiwiaWF0IjoxNjk1ODk1ODc2LCJleHAiOjE2OTU5ODIyNzZ9.i58lt1IYpj9YHOK1QZ3v3U0jjplv5SR4rkbQyM_qwCT3Tt2rbmVxi0U3BNuAUOcV";
 
 export const ProfileImageModal = (props) => {
   const [imageUrl, setImageUrl] = useState(`${props.profileUrl}`);
@@ -28,7 +31,7 @@ export const ProfileImageModal = (props) => {
         },
       });
       console.log(response.data.imageUrl);
-      setImageUrl(
+      props.setProfileUrl(
         "https://pawith.s3.ap-northeast-2.amazonaws.com/44b0a657-e8fc-4bb3-883d-baf67a9c5d67.png"
       );
     } catch (error) {
@@ -40,13 +43,13 @@ export const ProfileImageModal = (props) => {
     <>
       <ModalContainer>
         <ImageContainer>
-          <ProfileImage source={{ uri: `${imageUrl}` }} />
+          <ProfileImage source={{ uri: `${props.profileUrl}` }} />
         </ImageContainer>
         <BoxContainer>
           <DefaultBox onPress={uploadDefaultImage}>
             <DefaultText>기본 프로필로 선택</DefaultText>
           </DefaultBox>
-          <ImagePickerComponent setImageUrl={setImageUrl} />
+          <ImagePickerComponent setImageUrl={props.setProfileUrl} />
         </BoxContainer>
       </ModalContainer>
     </>

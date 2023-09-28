@@ -21,6 +21,8 @@ import {
   BottomSheetModal,
   BottomSheetModalProvider,
 } from "@gorhom/bottom-sheet";
+import { useRecoilValue } from "recoil";
+import { AccessTokenAtom } from "../../recoil/AuthAtom";
 
 export default function MyPage({ navigation }) {
   const [name, setName] = useState("포잇");
@@ -28,8 +30,9 @@ export default function MyPage({ navigation }) {
   const [profileUrl, setProfileUrl] = useState("");
 
   const swipeableRefs = useRef([]);
+  // const ACCESSTOKEN = useRecoilValue(AccessTokenAtom);
   const ACCESSTOKEN =
-    "eyJhbGciOiJIUzM4NCJ9.eyJ0b2tlbl90eXBlIjoiQUNDRVNTX1RPS0VOIiwiZW1haWwiOiJ0ZXN0IiwiaXNzIjoicGF3aXRoIiwiaWF0IjoxNjk1ODAyNDUzLCJleHAiOjE2OTU4ODg4NTN9.lACxP5vqKIqUR6uHiIe06IgMOE4WwB8X_MXxSQKabH9O8VaM5sk4UvcTbI_ShRIH";
+    "eyJhbGciOiJIUzM4NCJ9.eyJ0b2tlbl90eXBlIjoiQUNDRVNTX1RPS0VOIiwiZW1haWwiOiJ0ZXN0IiwiaXNzIjoicGF3aXRoIiwiaWF0IjoxNjk1ODk1ODc2LCJleHAiOjE2OTU5ODIyNzZ9.i58lt1IYpj9YHOK1QZ3v3U0jjplv5SR4rkbQyM_qwCT3Tt2rbmVxi0U3BNuAUOcV";
 
   const getUserInfo = async () => {
     try {
@@ -148,7 +151,6 @@ export default function MyPage({ navigation }) {
                   uri: `${profileUrl}`,
                 }}
               />
-              {/* <ProfileImage onPress={handlePresentModalPress} /> */}
             </TouchableOpacity>
             <UserDetailContainer>
               <UserNameBox>
@@ -196,7 +198,10 @@ export default function MyPage({ navigation }) {
             borderRadius: 22,
           }}
         >
-          <ProfileImageModal profileUrl={profileUrl} />
+          <ProfileImageModal
+            profileUrl={profileUrl}
+            setProfileUrl={setProfileUrl}
+          />
         </BottomSheetModal>
       </ScreenLayout>
     </BottomSheetModalProvider>
