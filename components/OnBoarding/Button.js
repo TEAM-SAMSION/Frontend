@@ -35,7 +35,7 @@ const MyButton = styled.TouchableOpacity`
   justify-content: center;
 `
 const ButtonText = styled.Text`
-  font-size: 314x;
+  font-size: 14px;
   font-family: Spoqa-Bold;
   line-height: 19px;
 `
