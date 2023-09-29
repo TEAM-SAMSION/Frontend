@@ -17,7 +17,7 @@ WebBrowser.maybeCompleteAuthSession();
 //Apple 소셜로그인 위해 언젠가는 사용해야할것
 //let user = null;
 
-export default function Login({ navigation }) {
+export default function Auth({ navigation }) {
   const [successNaver, setSuccessRes] = useState();
   const [failureNaver, setFailureRes] = useState();
   const [getProfileRes, setGetProfileRes] = useState();

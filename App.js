@@ -1,10 +1,10 @@
 import { NavigationContainer } from "@react-navigation/native";
-import OnBoardingNav from "./navigators/OnBoardingNav";
+import AuthNav from "./navigators/AuthNav";
 
 export default function App() {
   return (
     <NavigationContainer>
-      <OnBoardingNav />
+      <AuthNav />
     </NavigationContainer>
   );
 }
