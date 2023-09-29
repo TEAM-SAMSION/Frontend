@@ -1,10 +1,15 @@
 import React, { useRef, useState } from "react";
 import { styled } from "styled-components/native";
-import { FlatList, Text, View } from "react-native";
+import { FlatList, Text, View, Animated } from "react-native";
 import SlideItem from "../../components/OnBoarding/SlideItem";
 import { ScreenLayout } from "../../components/Shared";
+import Paginator from "../../components/OnBoarding/Paginator";
+import Button from "../../components/OnBoarding/Button";
 
 export default function OnBoarding({ navigation }) {
+  const scrollX = useRef(new Animated.Value(0)).current;
+  const slidesRef = useRef(null);
+  const [currentIdx, setCurrentIdx] = useState(0);
   const PAGES = [
     {
       id: 1,
@@ -42,7 +47,18 @@ export default function OnBoarding({ navigation }) {
       image: require("../../assets/Imgs/onboarding05.png"),
     },
   ];
+  const onViewableItemsChanged = ({ viewableItems }) => {
+    console.log(viewableItems[0].index);
+    setCurrentIdx(viewableItems[0].index);
+  };
+  const viewabilityConfigCallbackPairs = useRef([{ onViewableItemsChanged }]);
 
+  const scrollTo = () => {
+    if (currentIdx < PAGES.length - 1) {
+      slidesRef.current.scrollToIndex({ index: currentIdx + 1 });
+    }
+  };
+  const viewConfig = useRef({ viewAreaCoveragePercentThreshold: 50 }).current;
   return (
     <ScreenLayout>
       <Container>
@@ -54,43 +70,32 @@ export default function OnBoarding({ navigation }) {
           pagingEnabled
           snapToAlignment="center"
           showsHorizontalScrollIndicator={false}
+          bounces={false}
+          onScroll={Animated.event(
+            [{ nativeEvent: { contentOffset: { x: scrollX } } }],
+            { useNativeDriver: false }
+            // 너비를 Animating해야하지만, Native driver는 이를 지원하지않음
+          )}
+          scrollEventThrottle={32}
+          viewabilityConfigCallbackPairs={
+            viewabilityConfigCallbackPairs.current
+          }
+          viewabilityConfig={viewConfig}
+          ref={slidesRef}
         />
-        <View
-          style={{
-            backgroundColor: "pink",
-            marginTop: 18,
-            height: 24,
-          }}
-        >
-          <Text>pagination 부분...</Text>
-        </View>
-        <Button
-          onPress={() => {
-            navigation.navigate("Login");
-          }}
-        >
-          <ButtonText>다음</ButtonText>
-        </Button>
+        <Paginator data={PAGES} scrollX={scrollX} />
       </Container>
+      <Button
+        func={() => scrollTo()}
+        lastFunc={() => navigation.navigate("Auth")}
+        currentIdx={currentIdx}
+        data={PAGES}
+      />
     </ScreenLayout>
   );
 }
 
-const Container = styled.View``;
-const Button = styled.TouchableOpacity`
-  margin-left: 20px;
-  margin-right: 20px;
-  margin-top: 84px;
-  height: 44px;
-  border-radius: 8px;
-  background-color: black;
-  align-items: center;
-  justify-content: center;
-`;
-const ButtonText = styled.Text`
-  color: white;
-  font-size: 16px;
-  font-style: normal;
-  font-weight: 500;
-  line-height: 22px;
+const Container = styled.View`
+  flex: 1;
+  margin-top: 40px;
 `;
