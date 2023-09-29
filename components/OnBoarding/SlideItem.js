@@ -1,50 +1,52 @@
-import React from "react";
-import { Dimensions, View } from "react-native";
-import { styled } from "styled-components/native";
-import { ScreenWidth } from "../Shared";
+import React from 'react'
+import { styled } from 'styled-components/native'
+import { ScreenWidth } from '../Shared'
+import { colors } from '../../colors'
+import LOGOTypo from '../../assets/Svgs/LOGOTypo.svg'
 
 const SlideItem = ({ item }) => {
   return (
     <SlideBase>
       <TextContainer>
-        <TitleText>{item.title}</TitleText>
-        <ContentText>{item.content}</ContentText>
+        {item.title ? <TitleText>{item.title}</TitleText> : <LOGOTypo width={157} height={35} />}
+        <ContentText style={item.title && { marginTop: 8 }}>{item.content}</ContentText>
       </TextContainer>
       <ImageContainer>
         <Image source={item.image} />
       </ImageContainer>
     </SlideBase>
-  );
-};
+  )
+}
 
-export default SlideItem;
+export default SlideItem
 
 const SlideBase = styled.View`
-  width: ${ScreenWidth};
+  width: ${ScreenWidth}px;
   justify-content: space-between;
-`;
+`
 const TextContainer = styled.View`
   flex-direction: column;
   align-items: flex-start;
   margin-left: 24px;
-`;
+`
 const TitleText = styled.Text`
+  color: ${colors.grey_600};
   font-size: 36px;
-  font-style: normal;
-  font-weight: 700;
+  font-family: Spoqa-Bold;
   line-height: 43px;
-`;
+`
 const ContentText = styled.Text`
-  margin-top: 8px;
+  margin-top: 16px;
+  color: ${colors.grey_450};
   font-size: 14px;
-  font-style: normal;
-  font-weight: 500;
-  line-height: 20px;
-`;
+  font-family: Spoqa-Medium;
+  line-height: 19px;
+`
 const ImageContainer = styled.View`
-  justify-content: end;
   margin-bottom: 64px;
-`;
+`
 const Image = styled.Image`
-  width: 100%;
-`;
+  height: 325;
+  width: ${ScreenWidth}px;
+  object-fit: fill;
+`

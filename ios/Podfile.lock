@@ -8,7 +8,7 @@ PODS:
     - ExpoModulesCore
   - EXFileSystem (15.4.4):
     - ExpoModulesCore
-  - EXFont (11.4.0):
+  - EXFont (11.6.0):
     - ExpoModulesCore
   - Expo (49.0.11):
     - ExpoModulesCore
@@ -24,7 +24,7 @@ PODS:
     - ReactCommon/turbomodule/core
   - ExpoWebBrowser (12.5.0):
     - ExpoModulesCore
-  - EXSplashScreen (0.20.5):
+  - EXSplashScreen (0.22.0):
     - ExpoModulesCore
     - RCT-Folly (= 2021.07.22.00)
     - React-Core
@@ -481,6 +481,8 @@ PODS:
   - RNScreens (3.25.0):
     - React-Core
     - React-RCTImage
+  - RNSVG (13.14.0):
+    - React-Core
   - SocketRocket (0.6.1)
   - Yoga (1.14.0)
 
@@ -541,6 +543,7 @@ DEPENDENCIES:
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - "RNNaverLogin (from `../node_modules/@react-native-seoul/naver-login`)"
   - RNScreens (from `../node_modules/react-native-screens`)
+  - RNSVG (from `../node_modules/react-native-svg`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
@@ -664,6 +667,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-seoul/naver-login"
   RNScreens:
     :path: "../node_modules/react-native-screens"
+  RNSVG:
+    :path: "../node_modules/react-native-svg"
   Yoga:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
@@ -674,13 +679,13 @@ SPEC CHECKSUMS:
   EXApplication: 042aa2e3f05258a16962ea1a9914bf288db9c9a1
   EXConstants: ce5bbea779da8031ac818c36bea41b10e14d04e1
   EXFileSystem: 2b826a3bf1071a4b80a8457e97124783d1ac860e
-  EXFont: 738c44c390953ebcbab075a4848bfbef025fd9ee
+  EXFont: b3ca70589cdbdfd725b154f280dc507c3b56749a
   Expo: 8a2d2c235bcbe4f41774562a0635bd74c174858c
   ExpoCrypto: 42485127a5968dda6f67ac5f2b42d3c0af31d7db
   ExpoKeepAwake: be4cbd52d9b177cde0fd66daa1913afa3161fc1d
   ExpoModulesCore: 51cb2e7ab4c8da14be3f40b66d54c1781002e99d
   ExpoWebBrowser: b6e56949734089d75f758f21cfe93fad02bd828c
-  EXSplashScreen: c0e7f2d4a640f3b875808ed0b88575538daf6d82
+  EXSplashScreen: 5ed09ea490155ef603d007d9f194c9e04a4b7980
   FBLazyVector: 5d4a3b7f411219a45a6d952f77d2c0a6c9989da5
   FBReactNativeSpec: 3fc2d478e1c4b08276f9dd9128f80ec6d5d85c1f
   fmt: ff9d55029c625d3757ed641535fd4a75fedc7ce9
@@ -729,6 +734,7 @@ SPEC CHECKSUMS:
   RNGestureHandler: 38aa38413896620338948fbb5c90579a7b1c3fde
   RNNaverLogin: 01ca478665ea024e4ddaa02be38396845fcac0b6
   RNScreens: 85d3880b52d34db7b8eeebe2f1a0e807c05e69fa
+  RNSVG: d00c8f91c3cbf6d476451313a18f04d220d4f396
   SocketRocket: f32cd54efbe0f095c4d7594881e52619cfe80b17
   Yoga: 3efc43e0d48686ce2e8c60f99d4e6bd349aff981
 
