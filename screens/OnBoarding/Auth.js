@@ -4,11 +4,13 @@ import { styled } from 'styled-components/native'
 import * as KakaoLogin from '@react-native-seoul/kakao-login'
 import NaverLogin from '@react-native-seoul/naver-login'
 import * as Google from 'expo-auth-session/providers/google'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import * as WebBrowser from 'expo-web-browser'
 import { appleAuth, AppleButton } from '@invertase/react-native-apple-authentication'
 import LoginButton from '../../components/OnBoarding/LoginButton'
 import { colors } from '../../colors'
 import { ScreenLayout } from '../../components/Shared'
+import OnBoarding from './OnBoarding'
 
 WebBrowser.maybeCompleteAuthSession()
 
@@ -16,7 +18,6 @@ export default function Auth({ navigation }) {
   const [successNaver, setSuccessRes] = useState()
   const [failureNaver, setFailureRes] = useState()
   const [getProfileRes, setGetProfileRes] = useState()
-
   const [GoogleReq, GoogleRes, GooglepromptAsync] = Google.useAuthRequest({
     expoClientId: '317985927887-jk1lb4tj27lvvb750v2pfs6ud7k1doaa.apps.googleusercontent.com',
     iosClientId: '317985927887-qm9cppbaanvfnehe3kd94hd93190r2cj.apps.googleusercontent.com',
@@ -70,7 +71,6 @@ export default function Auth({ navigation }) {
   }
 
   const loginNaver = async () => {
-    console.log('HELlo?')
     const { failureResponse, successResponse } = await NaverLogin.login({
       appName: 'Pawith',
       consumerKey: 'Oto4EWnaTmbyQFJIA6qP',
@@ -144,11 +144,11 @@ export default function Auth({ navigation }) {
   }
 
   useEffect(() => {
-    // onCredentialRevoked returns a function that will remove the event listener. useEffect will call this function when the component unmounts
     if (!appleAuth.isSupported) return
     return appleAuth.onCredentialRevoked(async () => {
       console.warn('If this function executes, User Credentials have been Revoked')
     })
+    // onCredentialRevoked returns a function that will remove the event listener. useEffect will call this function when the component unmounts
   }, []) // passing in an empty array as the second argument ensures this is only ran once when component mounts initially.
 
   useEffect(() => {
@@ -161,13 +161,13 @@ export default function Auth({ navigation }) {
     }
   }, [GoogleRes])
   return (
-    <ScreenLayout>
+    <ScreenLayout style={{ paddingLeft: 16, paddingRight: 16 }}>
       <SymbolContainer>
         <SymbolIcon source={require('../../assets/Imgs/onboarding01.png')} />
       </SymbolContainer>
       <LoginButton loginFunc={() => GooglepromptAsync()} id={0} />
-      <LoginButton loginFunc={() => loginNaver()} id={1} />
-      <LoginButton loginFunc={() => loginKakao()} id={2} />
+      <LoginButton loginFunc={() => loginKakao()} id={1} />
+      <LoginButton loginFunc={() => loginNaver()} id={2} />
       {appleAuth.isSupported && (
         <AppleButton
           buttonStyle={AppleButton.Style.BLACK}

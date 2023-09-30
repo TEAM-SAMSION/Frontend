@@ -2,13 +2,20 @@ import React, { useEffect, useRef, useState } from 'react'
 import { styled } from 'styled-components/native'
 import { FlatList, Animated } from 'react-native'
 import SlideItem from '../../components/OnBoarding/SlideItem'
-import { ScreenLayout, ScreenWidth } from '../../components/Shared'
+import { ScreenLayout } from '../../components/Shared'
 import Paginator from '../../components/OnBoarding/Paginator'
 import Button from '../../components/OnBoarding/Button'
+import { onboardedState } from '../../recoil/AuthAtom'
+import { useRecoilValue, useSetRecoilState } from 'recoil'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import Auth from './Auth'
 
 export default function OnBoarding({ navigation }) {
   const scrollX = useRef(new Animated.Value(0)).current
-  console.log('scrollX:', scrollX)
+  const onboarded = useRecoilValue(onboardedState)
+  console.log('onboarded:', onboarded)
+  const setOnboarded = useSetRecoilState(onboardedState)
+
   const slidesRef = useRef(null)
   const [currentIdx, setCurrentIdx] = useState(0)
   const PAGES = [
@@ -58,38 +65,46 @@ export default function OnBoarding({ navigation }) {
       slidesRef.current.scrollToIndex({ index: currentIdx + 1 })
     }
   }
+
+  const OnBoardingReady = async () => {
+    setOnboarded(true)
+    console.log('온보딩다시 안뜨게끔 onBoarded 변수 조정')
+    await AsyncStorage.setItem('onBoardingDone', 'true')
+  }
+
   const viewConfig = useRef({ viewAreaCoveragePercentThreshold: 50 }).current
   return (
-    <ScreenLayout>
-      <Container>
-        <FlatList
-          style={{ marginTop: 16 }}
-          horizontal
-          data={PAGES}
-          renderItem={({ item }) => <SlideItem item={item} />}
-          pagingEnabled
-          snapToAlignment="center"
-          showsHorizontalScrollIndicator={false}
-          bounces={false}
-          onScroll={Animated.event(
-            [{ nativeEvent: { contentOffset: { x: scrollX } } }],
-            { useNativeDriver: false },
-            // 너비를 Animating해야하지만, Native driver는 이를 지원하지않음
-          )}
-          scrollEventThrottle={32}
-          viewabilityConfigCallbackPairs={viewabilityConfigCallbackPairs.current}
-          viewabilityConfig={viewConfig}
-          ref={slidesRef}
-        />
-        <Paginator data={PAGES} scrollX={scrollX} />
-      </Container>
-      <Button
-        func={() => scrollTo()}
-        lastFunc={() => navigation.navigate('Auth')}
-        currentIdx={currentIdx}
-        data={PAGES}
-      />
-    </ScreenLayout>
+    <>
+      {onboarded ? (
+        <Auth />
+      ) : (
+        <ScreenLayout>
+          <Container>
+            <FlatList
+              style={{ marginTop: 16 }}
+              horizontal
+              data={PAGES}
+              renderItem={({ item }) => <SlideItem item={item} />}
+              pagingEnabled
+              snapToAlignment="center"
+              showsHorizontalScrollIndicator={false}
+              bounces={false}
+              onScroll={Animated.event(
+                [{ nativeEvent: { contentOffset: { x: scrollX } } }],
+                { useNativeDriver: false },
+                // 너비를 Animating해야하지만, Native driver는 이를 지원하지않음
+              )}
+              scrollEventThrottle={32}
+              viewabilityConfigCallbackPairs={viewabilityConfigCallbackPairs.current}
+              viewabilityConfig={viewConfig}
+              ref={slidesRef}
+            />
+            <Paginator data={PAGES} scrollX={scrollX} />
+          </Container>
+          <Button func={() => scrollTo()} lastFunc={() => OnBoardingReady()} currentIdx={currentIdx} data={PAGES} />
+        </ScreenLayout>
+      )}
+    </>
   )
 }
 

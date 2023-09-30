@@ -5,16 +5,20 @@ import * as SplashScreen from 'expo-splash-screen'
 import * as Font from 'expo-font'
 import { View } from 'react-native'
 import LoggedInNav from './navigators/LoggedInNav'
-import { useRecoilState } from 'recoil'
+import { useSetRecoilState, useRecoilValue } from 'recoil'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import 'moment'
 import 'moment/locale/ko' // language must match config
-import { AccessTokenAtom, loggedInState } from './recoil/AuthAtom'
+import { accessTokenState, loggedInState, onboardedState, userInfoState } from './recoil/AuthAtom'
 
 export default function AppBase() {
   const [appIsReady, setAppIsReady] = useState(false)
-  const [loggedIn, setLoggedIn] = useRecoilState(loggedInState)
-  const [token, setToken] = useRecoilState(AccessTokenAtom)
+  const { loggedIn, onboarded, accessToken } = useRecoilValue(userInfoState)
+
+  const setLoggedIn = useSetRecoilState(loggedInState)
+  const setToken = useSetRecoilState(accessTokenState)
+  const setOnboarded = useSetRecoilState(onboardedState)
+
   useEffect(() => {
     async function prepare() {
       try {
@@ -27,6 +31,14 @@ export default function AppBase() {
             console.log('자동으로 로그인되고, Recoil변수로 액서스토큰 저장됨')
           }
         })
+
+        await AsyncStorage.getItem('onBoardingDone').then((onBoardingDone) => {
+          if (onBoardingDone) {
+            console.log('온보딩 이미 완료해서 넘어감')
+            setOnboarded(true)
+          }
+        })
+
         await Font.loadAsync({
           'Spoqa-Bold': require('./assets/Fonts/SpoqaHanSansNeo-Bold.otf'),
           'Spoqa-Medium': require('./assets/Fonts/SpoqaHanSansNeo-Medium.otf'),
