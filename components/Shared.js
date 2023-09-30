@@ -11,9 +11,9 @@ export const ScreenContainer = styled.SafeAreaView`
 export const ScreenWidth = Dimensions.get('window').width
 export const ScreenHeight = Dimensions.get('screen').height
 
-export const ScreenLayout = ({ children }) => {
+export const ScreenLayout = ({ children, managed = false }) => {
   return (
-    <ScreenContainer>
+    <ScreenContainer style={managed && { paddingLeft: 16, paddingRight: 16 }}>
       <StatusBar backgroundColor="#fff" />
       {children}
     </ScreenContainer>

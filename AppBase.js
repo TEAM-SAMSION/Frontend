@@ -13,7 +13,7 @@ import { accessTokenState, loggedInState, onboardedState, userInfoState } from '
 
 export default function AppBase() {
   const [appIsReady, setAppIsReady] = useState(false)
-  const { loggedIn, onboarded, accessToken } = useRecoilValue(userInfoState)
+  const { loggedIn } = useRecoilValue(userInfoState)
 
   const setLoggedIn = useSetRecoilState(loggedInState)
   const setToken = useSetRecoilState(accessTokenState)
@@ -38,7 +38,6 @@ export default function AppBase() {
             setOnboarded(true)
           }
         })
-
         await Font.loadAsync({
           'Spoqa-Bold': require('./assets/Fonts/SpoqaHanSansNeo-Bold.otf'),
           'Spoqa-Medium': require('./assets/Fonts/SpoqaHanSansNeo-Medium.otf'),

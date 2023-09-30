@@ -9,8 +9,8 @@ import * as WebBrowser from 'expo-web-browser'
 import { appleAuth, AppleButton } from '@invertase/react-native-apple-authentication'
 import LoginButton from '../../components/OnBoarding/LoginButton'
 import { colors } from '../../colors'
-import { ScreenLayout } from '../../components/Shared'
-import OnBoarding from './OnBoarding'
+import { useSetRecoilState, useRecoilValue } from 'recoil'
+import { loggedInState } from '../../recoil/AuthAtom'
 
 WebBrowser.maybeCompleteAuthSession()
 
@@ -24,6 +24,8 @@ export default function Auth({ navigation }) {
     androidClientId: '317985927887-lk1mf2lb341hiu5kht8a4p1oeigg2f98.apps.googleusercontent.com',
     webClientId: '317985927887-jk1lb4tj27lvvb750v2pfs6ud7k1doaa.apps.googleusercontent.com',
   })
+
+  const setLoggedIn = useSetRecoilState(loggedInState)
 
   const loginKakao = () => {
     KakaoLogin.login()
@@ -78,7 +80,10 @@ export default function Auth({ navigation }) {
       serviceUrlScheme: 'pawithnaverlogin',
     })
     try {
-      getTokenNaver(successResponse.accessToken).then((res) => console.log('NaverLogin API실행결과??:', res))
+      getTokenNaver(successResponse.accessToken).then((res) => {
+        console.log('NaverLogin API실행결과??:', res)
+        setLoggedIn(true)
+      })
       // setSuccessRes(successResponse);
     } catch (error) {
       console.error('Failed to fetch data:', error)
@@ -128,7 +133,10 @@ export default function Auth({ navigation }) {
     // console.log("appleAuthRequestResponse", appleAuthRequestResponse);
     const { user: newUser, email, nonce, identityToken, realUserStatus /* etc */ } = appleAuthRequestResponse
     try {
-      getTokenApple(identityToken).then((res) => console.log('AppleLogin API실행결과??:', res))
+      getTokenApple(identityToken).then((res) => {
+        console.log('AppleLogin API실행결과??:', res)
+        setLoggedIn(true)
+      })
     } catch (error) {
       console.error('Failed to fetch data:', error)
     }
@@ -154,14 +162,15 @@ export default function Auth({ navigation }) {
   useEffect(() => {
     if (GoogleRes) {
       if (GoogleRes?.type === 'success') {
-        loginGoogle(GoogleRes.authentication.accessToken).then((result) =>
-          console.log('GoogleLogin API실행결과:', result),
-        )
+        loginGoogle(GoogleRes.authentication.accessToken).then((result) => {
+          console.log('GoogleLogin API실행결과:', result)
+          setLoggedIn(true)
+        })
       }
     }
   }, [GoogleRes])
   return (
-    <ScreenLayout style={{ paddingLeft: 16, paddingRight: 16 }}>
+    <Container>
       <SymbolContainer>
         <SymbolIcon source={require('../../assets/Imgs/onboarding01.png')} />
       </SymbolContainer>
@@ -179,13 +188,14 @@ export default function Auth({ navigation }) {
           onPress={() => onAppleButtonPress()}
         />
       )}
-    </ScreenLayout>
+    </Container>
   )
 }
 
 const Container = styled.View`
   padding: 0px 16px;
   flex-direction: column;
+  height: 100%;
   background-color: ${colors.grey_100};
   align-items: center;
 `
