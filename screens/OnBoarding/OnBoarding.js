@@ -1,13 +1,14 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { styled } from 'styled-components/native'
 import { FlatList, Animated } from 'react-native'
 import SlideItem from '../../components/OnBoarding/SlideItem'
-import { ScreenLayout } from '../../components/Shared'
+import { ScreenLayout, ScreenWidth } from '../../components/Shared'
 import Paginator from '../../components/OnBoarding/Paginator'
 import Button from '../../components/OnBoarding/Button'
 
 export default function OnBoarding({ navigation }) {
   const scrollX = useRef(new Animated.Value(0)).current
+  console.log('scrollX:', scrollX)
   const slidesRef = useRef(null)
   const [currentIdx, setCurrentIdx] = useState(0)
   const PAGES = [
@@ -43,6 +44,8 @@ export default function OnBoarding({ navigation }) {
       image: require('../../assets/Imgs/onboarding05.png'),
     },
   ]
+
+  // console.log(ScreenWidth)
   const onViewableItemsChanged = ({ viewableItems }) => {
     console.log(viewableItems[0].index)
     setCurrentIdx(viewableItems[0].index)
@@ -51,6 +54,7 @@ export default function OnBoarding({ navigation }) {
 
   const scrollTo = () => {
     if (currentIdx < PAGES.length - 1) {
+      console.log('scrollToAvailable', currentIdx)
       slidesRef.current.scrollToIndex({ index: currentIdx + 1 })
     }
   }

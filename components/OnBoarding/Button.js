@@ -1,18 +1,22 @@
 import styled from 'styled-components/native'
 import { colors } from '../../colors'
 import LOGO_Symbol from '../../assets/Svgs/LOGO_Symbol.svg'
+import { Platform } from 'react-native'
 
 export default Button = ({ func, lastFunc, currentIdx, data }) => {
-  const isLastItem = currentIdx == data.length - 1
+  const isLastItem = currentIdx === data.length - 1
+  console.log('currentIdx:', isLastItem)
   return (
     <MyButton
       style={[
         !isLastItem
-          ? {
-              borderWidth: 2,
-              borderColor: colors.primary,
-              backgroundColor: colors.grey_100,
-            }
+          ? Platform.OS == 'ios'
+            ? {
+                borderWidth: 2,
+                borderColor: colors.primary,
+                backgroundColor: colors.grey_100,
+              }
+            : { opacity: 0, height: 44 }
           : {
               backgroundColor: colors.primary,
             },

@@ -3,10 +3,15 @@ import { styled } from 'styled-components/native'
 import { ScreenWidth } from '../Shared'
 import { colors } from '../../colors'
 import LOGOTypo from '../../assets/Svgs/LOGOTypo.svg'
+import { Platform } from 'react-native'
 
 const SlideItem = ({ item }) => {
   return (
-    <SlideBase>
+    //Android기기 ScreenWidth가 실제보다 살짝 작게 측정되어 나오기에, 전체적인 SlideItem의 너비를 늘려서?
+    //ScreenWidth가 소수점으로 나오는 경우, SlideBase 컴퍼넌트에서의 너비로 넘어가면서 자연스레 소수점이 사라짐 ->
+    //따라서 소수점이 사라지더라도 기존 요건에 충족하도록 1 더해줌.
+
+    <SlideBase style={{ width: Platform.OS == 'android' ? ScreenWidth.toFixed(1) : ScreenWidth }}>
       <TextContainer>
         {item.title ? <TitleText>{item.title}</TitleText> : <LOGOTypo width={157} height={35} />}
         <ContentText style={item.title && { marginTop: 8 }}>{item.content}</ContentText>
@@ -21,7 +26,7 @@ const SlideItem = ({ item }) => {
 export default SlideItem
 
 const SlideBase = styled.View`
-  width: ${ScreenWidth}px;
+  /* width: ${ScreenWidth + 2}px; */
   justify-content: space-between;
 `
 const TextContainer = styled.View`
@@ -46,7 +51,7 @@ const ImageContainer = styled.View`
   margin-bottom: 64px;
 `
 const Image = styled.Image`
-  height: 325;
-  width: ${ScreenWidth}px;
+  height: 325px;
+  width: ${ScreenWidth + 1}px;
   object-fit: fill;
 `
