@@ -1,10 +1,10 @@
 import React from 'react'
 import { Text, View } from 'react-native'
 
-export default Todo = () => {
+export default ToDo = () => {
   return (
     <View>
-      <Text> Todo </Text>
+      <Text> ToDo </Text>
     </View>
   )
 }
