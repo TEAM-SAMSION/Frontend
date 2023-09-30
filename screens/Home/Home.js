@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Image, Text, View } from 'react-native'
+import { FlatList, Image, Text, View } from 'react-native'
 import { ScreenLayout } from '../../components/Shared'
 import { TopHeader } from '../../components/Home/TopHeader'
 import styled from 'styled-components/native'
@@ -46,7 +46,7 @@ export default function Home({ navigation }) {
         headers: { Authorization: `Bearer ${ACCESSTOKEN}` },
       })
       setProgress(response.data.progress)
-      setProgress(5)
+      setProgress(4)
     } catch (error) {
       console.error(error.message)
     }
@@ -54,6 +54,14 @@ export default function Home({ navigation }) {
   useEffect(() => {
     getTodoProgress(1)
   }, [])
+
+  const [myTodo, setMyTodo] = useState('')
+  // const fetchMyTodo = async () => {
+  //   try {
+  //   }
+  // }
+  // todo team 조회 -> team마다 할당 todo get
+  // 할당 todo -> todo 완료 가능하도록 체크박스..
 
   return (
     <ScreenLayout>
@@ -115,7 +123,14 @@ export default function Home({ navigation }) {
               {month}월 {date}일, 나에게 할당된 TODO
             </TitleText>
           </TodoTitle>
-          <TodoContainer></TodoContainer>
+          <TodoContainer>
+            <FlatList
+              data={myTodo}
+              renderItem={({ item }) => {
+                return <TodoBox data={item} />
+              }}
+            />
+          </TodoContainer>
         </>
       )}
     </ScreenLayout>

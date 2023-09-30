@@ -44,16 +44,20 @@ const BackBar = styled.View`
 const Percentage = styled.View`
   height: 100%;
   width: ${(props) => props.percentage}%;
-  border-top-left-radius: 99px;
-  border-bottom-left-radius: 99px;
+  border-radius: 99px;
   background-color: ${colors.primary_outline};
   justify-content: center;
-  padding-left: 7px;
+  //padding-left: 7px;
 `
 const PercentagePickIcon = styled.Image`
   position: absolute;
   bottom: -5px;
-  left: ${(props) => ((screenWidth - 153) * props.percentage) / 100 - 18}px;
+  left: ${(props) =>
+    props.percentage < 5
+      ? ((screenWidth - 153) * 4) / 100 - 18
+      : props.percentage > 94
+      ? ((screenWidth - 153) * 94) / 100 - 18
+      : ((screenWidth - 153) * props.percentage) / 100 - 18}px;
   width: 36px;
   height: 35px;
 `
