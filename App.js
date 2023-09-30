@@ -5,6 +5,8 @@ import * as SplashScreen from 'expo-splash-screen'
 import * as Font from 'expo-font'
 import { View } from 'react-native'
 import LoggedInNav from './navigators/LoggedInNav'
+import 'moment'
+import 'moment/locale/ko' // language must match config
 
 export default function App() {
   const [appIsReady, setAppIsReady] = useState(false)

@@ -8,6 +8,7 @@ import * as WebBrowser from 'expo-web-browser'
 import { appleAuth, AppleButton } from '@invertase/react-native-apple-authentication'
 import LoginButton from '../../components/OnBoarding/LoginButton'
 import { colors } from '../../colors'
+import { ScreenLayout } from '../../components/Shared'
 
 WebBrowser.maybeCompleteAuthSession()
 
@@ -160,7 +161,7 @@ export default function Auth({ navigation }) {
     }
   }, [GoogleRes])
   return (
-    <Container>
+    <ScreenLayout>
       <SymbolContainer>
         <SymbolIcon source={require('../../assets/Imgs/onboarding01.png')} />
       </SymbolContainer>
@@ -178,7 +179,7 @@ export default function Auth({ navigation }) {
           onPress={() => onAppleButtonPress()}
         />
       )}
-    </Container>
+    </ScreenLayout>
   )
 }
 
