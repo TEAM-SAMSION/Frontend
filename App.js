@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from 'react'
 import * as SplashScreen from 'expo-splash-screen'
 import * as Font from 'expo-font'
 import { View } from 'react-native'
+import LoggedInNav from './navigators/LoggedInNav'
 
 export default function App() {
   const [appIsReady, setAppIsReady] = useState(false)
@@ -39,7 +40,8 @@ export default function App() {
   return (
     <NavigationContainer>
       <View style={{ flex: 1 }} onLayout={onLayoutRootView}>
-        <AuthNav />
+        {/* <AuthNav /> */}
+        <LoggedInNav />
       </View>
     </NavigationContainer>
   )
