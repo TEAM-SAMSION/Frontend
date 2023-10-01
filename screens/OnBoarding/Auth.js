@@ -10,28 +10,55 @@ import { appleAuth, AppleButton } from '@invertase/react-native-apple-authentica
 import LoginButton from '../../components/OnBoarding/LoginButton'
 import { colors } from '../../colors'
 import { useSetRecoilState, useRecoilValue } from 'recoil'
-import { loggedInState } from '../../recoil/AuthAtom'
+import { accessTokenState, loggedInState, refreshTokenState } from '../../recoil/AuthAtom'
+import { url } from '../../components/Shared'
 
 WebBrowser.maybeCompleteAuthSession()
 
 export default function Auth({ navigation }) {
-  const [successNaver, setSuccessRes] = useState()
-  const [failureNaver, setFailureRes] = useState()
-  const [getProfileRes, setGetProfileRes] = useState()
   const [GoogleReq, GoogleRes, GooglepromptAsync] = Google.useAuthRequest({
     expoClientId: '317985927887-jk1lb4tj27lvvb750v2pfs6ud7k1doaa.apps.googleusercontent.com',
     iosClientId: '317985927887-qm9cppbaanvfnehe3kd94hd93190r2cj.apps.googleusercontent.com',
     androidClientId: '317985927887-lk1mf2lb341hiu5kht8a4p1oeigg2f98.apps.googleusercontent.com',
     webClientId: '317985927887-jk1lb4tj27lvvb750v2pfs6ud7k1doaa.apps.googleusercontent.com',
   })
-
   const setLoggedIn = useSetRecoilState(loggedInState)
+  const setRefreshToken = useSetRecoilState(refreshTokenState)
+  const setAccessToken = useSetRecoilState(accessTokenState)
+
+  const finishLogin = (accessToken, refreshToken) => {
+    //토큰 저장
+    setAccessToken(accessToken)
+    setRefreshToken(refreshToken)
+    //권한확인 API 통해서 닉네임 변경 거치는지 or 홈화면 바로 가는지
+    checkAuthority(accessToken).then((res) => {
+      if (res.authority == 'GUEST') {
+        navigation.navigate('UserSetting')
+      } else {
+        setLoggedIn(true)
+      }
+    })
+  }
+  const checkAuthority = async (accessToken) => {
+    let API = 'user/authority'
+    const response = await axios.get(url + API, {
+      headers: {
+        Authorization: accessToken,
+        'Content-Type': `application/json; charset=UTF-8`,
+      },
+    })
+    return response.data
+  }
 
   const loginKakao = () => {
     KakaoLogin.login()
       .then((result) => {
         try {
-          getTokenKakao(JSON.stringify(result.accessToken)).then((res) => console.log('KakaoLogin API실행결과??:', res))
+          getToken(JSON.stringify(result.accessToken), 'KAKAO').then((res) => {
+            // console.log('KakaoLogin API실행결과??:', res)
+            console.log(res.accessToken)
+            finishLogin(res.accessToken, res.refreshToken)
+          })
         } catch (error) {
           console.error('Failed to fetch data:', error)
         }
@@ -43,18 +70,6 @@ export default function Auth({ navigation }) {
           console.log(`Login Fail(code:${error.code})`, error.message)
         }
       })
-  }
-  const getTokenKakao = async (accessToken) => {
-    let url = 'http://52.78.52.47:8080/'
-    let detailAPI = `oauth/KAKAO?accessToken=${accessToken}` //500
-    //google에서 발급받는 동일한 AccessToken 집어 넣어도 + 같은 호출문 구조 사용해도 [AxiosError: Request failed with status code 500] 발생
-    const response = await axios.get(url + detailAPI, {
-      headers: {
-        'Content-Type': `application/json`,
-      },
-    })
-    const result = response.data
-    return result
   }
   const loginGoogle = async (accessToken) => {
     try {
@@ -71,7 +86,6 @@ export default function Auth({ navigation }) {
       console.error('Failed to fetch data:', error)
     }
   }
-
   const loginNaver = async () => {
     const { failureResponse, successResponse } = await NaverLogin.login({
       appName: 'Pawith',
@@ -80,50 +94,16 @@ export default function Auth({ navigation }) {
       serviceUrlScheme: 'pawithnaverlogin',
     })
     try {
-      getTokenNaver(successResponse.accessToken).then((res) => {
+      getToken(successResponse.accessToken, 'NAVER').then((res) => {
         console.log('NaverLogin API실행결과??:', res)
-        setLoggedIn(true)
+        // setLoggedIn(true)
       })
       // setSuccessRes(successResponse);
     } catch (error) {
       console.error('Failed to fetch data:', error)
     }
   }
-  const getTokenNaver = async (accessToken) => {
-    let url = 'http://52.78.52.47:8080/'
-    let detailAPI = `oauth/NAVER?accessToken=${accessToken}` //500
-    //google에서 발급받는 동일한 AccessToken 집어 넣어도 + 같은 호출문 구조 사용해도 [AxiosError: Request failed with status code 500] 발생
-    const response = await axios.get(url + detailAPI, {
-      headers: {
-        'Content-Type': `application/json`,
-      },
-    })
-    const result = response.data
-    return result
-  }
-  const getTokenApple = async (accessToken) => {
-    let url = 'http://52.78.52.47:8080/'
-    let detailAPI = `oauth/APPLE?accessToken=${accessToken}` //500
-    const response = await axios.get(url + detailAPI, {
-      headers: {
-        'Content-Type': `application/json`,
-      },
-    })
-    const result = response.data
-    return result
-  }
-  const logoutNaver = async () => {
-    console.log('Naver Logout')
-    try {
-      await NaverLogin.logout()
-      setSuccessRes(undefined)
-      setFailureRes(undefined)
-      setGetProfileRes(undefined)
-    } catch (e) {
-      console.error(e)
-    }
-  }
-  async function onAppleButtonPress() {
+  const loginApple = async () => {
     // performs login request
     const appleAuthRequestResponse = await appleAuth.performRequest({
       requestedOperation: appleAuth.Operation.LOGIN,
@@ -133,9 +113,9 @@ export default function Auth({ navigation }) {
     // console.log("appleAuthRequestResponse", appleAuthRequestResponse);
     const { user: newUser, email, nonce, identityToken, realUserStatus /* etc */ } = appleAuthRequestResponse
     try {
-      getTokenApple(identityToken).then((res) => {
+      getToken(identityToken, 'APPLE').then((res) => {
         console.log('AppleLogin API실행결과??:', res)
-        setLoggedIn(true)
+        // setLoggedIn(true)
       })
     } catch (error) {
       console.error('Failed to fetch data:', error)
@@ -151,6 +131,18 @@ export default function Auth({ navigation }) {
     }
   }
 
+  const getToken = async (accessToken, provider) => {
+    let API = `oauth/${provider}?accessToken=${accessToken}` //500
+    //google에서 발급받는 동일한 AccessToken 집어 넣어도 + 같은 호출문 구조 사용해도 [AxiosError: Request failed with status code 500] 발생
+    const response = await axios.get(url + API, {
+      headers: {
+        'Content-Type': `application/json`,
+      },
+    })
+    const result = response.data
+    return result
+  }
+
   useEffect(() => {
     if (!appleAuth.isSupported) return
     return appleAuth.onCredentialRevoked(async () => {
@@ -164,11 +156,12 @@ export default function Auth({ navigation }) {
       if (GoogleRes?.type === 'success') {
         loginGoogle(GoogleRes.authentication.accessToken).then((result) => {
           console.log('GoogleLogin API실행결과:', result)
-          setLoggedIn(true)
+          // setLoggedIn(true)
         })
       }
     }
   }, [GoogleRes])
+
   return (
     <Container>
       <SymbolContainer>
@@ -185,7 +178,7 @@ export default function Auth({ navigation }) {
             width: '100%',
             height: 44,
           }}
-          onPress={() => onAppleButtonPress()}
+          onPress={() => loginApple()}
         />
       )}
     </Container>
@@ -207,3 +200,14 @@ const SymbolIcon = styled.Image`
   width: 315px;
   height: 273px;
 `
+// const logoutNaver = async () => {
+//   console.log('Naver Logout')
+//   try {
+//     await NaverLogin.logout()
+//     setSuccessRes(undefined)
+//     setFailureRes(undefined)
+//     setGetProfileRes(undefined)
+//   } catch (e) {
+//     console.error(e)
+//   }
+// }

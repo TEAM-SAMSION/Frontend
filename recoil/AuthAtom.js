@@ -5,6 +5,11 @@ export const accessTokenState = atom({
   default:
     'eyJhbGciOiJIUzM4NCJ9.eyJ0b2tlbl90eXBlIjoiQUNDRVNTX1RPS0VOIiwiZW1haWwiOiJ0ZXN0IiwiaXNzIjoicGF3aXRoIiwiaWF0IjoxNjk1ODk1ODc2LCJleHAiOjE2OTU5ODIyNzZ9.i58lt1IYpj9YHOK1QZ3v3U0jjplv5SR4rkbQyM_qwCT3Tt2rbmVxi0U3BNuAUOcV',
 })
+export const refreshTokenState = atom({
+  key: 'accessToken',
+  default:
+    'eyJhbGciOiJIUzM4NCJ9.eyJ0b2tlbl90eXBlIjoiQUNDRVNTX1RPS0VOIiwiZW1haWwiOiJ0ZXN0IiwiaXNzIjoicGF3aXRoIiwiaWF0IjoxNjk1ODk1ODc2LCJleHAiOjE2OTU5ODIyNzZ9.i58lt1IYpj9YHOK1QZ3v3U0jjplv5SR4rkbQyM_qwCT3Tt2rbmVxi0U3BNuAUOcV',
+})
 export const loggedInState = atom({
   key: 'loggedIn',
   default: false,
@@ -18,18 +23,21 @@ export const userInfoState = selector({
   key: 'userInfo',
   get: ({ get }) => {
     const accessToken = get(accessTokenState)
+    const refreshToken = get(refreshTokenState)
     const loggedIn = get(loggedInState)
     const onboarded = get(onboardedState)
-    return { accessToken, loggedIn, onboarded }
+    return { accessToken, refreshToken, loggedIn, onboarded }
   },
   set: ({ set }, value) => {
     if (value instanceof DefaultValue) {
       set(accessTokenState, value)
+      set(refreshTokenState, value)
       set(loggedInState, value)
       set(onboardedState, value)
       return
     }
     set(accessTokenState, value.accessToken)
+    set(refreshTokenState, value.refreshToken)
     set(loggedInState, value.loggedIn)
     set(onboardedState, value.onboarded)
   },

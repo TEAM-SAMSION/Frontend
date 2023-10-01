@@ -24,3 +24,5 @@ const Margin_16 = styled.View`
   margin: 0 16px;
   flex: 1;
 `
+
+export const url = 'http://52.78.52.47:8080/'
