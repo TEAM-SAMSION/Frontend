@@ -4,7 +4,6 @@ import { styled } from 'styled-components/native'
 import * as KakaoLogin from '@react-native-seoul/kakao-login'
 import NaverLogin from '@react-native-seoul/naver-login'
 import * as Google from 'expo-auth-session/providers/google'
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import * as WebBrowser from 'expo-web-browser'
 import { appleAuth, AppleButton } from '@invertase/react-native-apple-authentication'
 import LoginButton from '../../components/OnBoarding/LoginButton'
@@ -28,6 +27,7 @@ export default function Auth({ navigation }) {
 
   const finishLogin = (accessToken, refreshToken) => {
     //토큰 저장
+    console.log(accessToken)
     setAccessToken(accessToken)
     setRefreshToken(refreshToken)
     //권한확인 API 통해서 닉네임 변경 거치는지 or 홈화면 바로 가는지

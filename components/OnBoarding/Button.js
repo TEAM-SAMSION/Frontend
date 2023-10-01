@@ -1,7 +1,7 @@
 import styled from 'styled-components/native'
 import { colors } from '../../colors'
 import LOGO_Symbol from '../../assets/Svgs/LOGO_Symbol.svg'
-import { Platform } from 'react-native'
+import { ActivityIndicator, Platform } from 'react-native'
 
 export const OnboardingButton = ({ func, lastFunc, currentIdx, data }) => {
   const isLastItem = currentIdx === data.length - 1
@@ -30,7 +30,7 @@ export const OnboardingButton = ({ func, lastFunc, currentIdx, data }) => {
     </MyButton>
   )
 }
-export const UserSettingButton = ({ isEnabled, func }) => {
+export const UserSettingButton = ({ isEnabled, func, text, isLoading }) => {
   return (
     <MyButton
       disabled={!isEnabled}
@@ -40,7 +40,11 @@ export const UserSettingButton = ({ isEnabled, func }) => {
       }}
       onPress={func}
     >
-      <ButtonText style={{ color: isEnabled ? colors.primary : colors.grey_500 }}>입력 완료</ButtonText>
+      {isLoading ? (
+        <ActivityIndicator></ActivityIndicator>
+      ) : (
+        <ButtonText style={{ color: isEnabled ? colors.primary : colors.grey_500 }}>{text}</ButtonText>
+      )}
     </MyButton>
   )
 }

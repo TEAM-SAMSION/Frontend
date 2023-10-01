@@ -30,3 +30,5 @@ export const PAGES = [
     image: require('../../assets/Imgs/onboarding05.png'),
   },
 ]
+
+export const routeList = ['인스타', '지인추천', '반려동물 커뮤니티', '검색', '기타']
