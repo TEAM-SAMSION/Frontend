@@ -32,10 +32,14 @@ export default function Auth({ navigation }) {
     setRefreshToken(refreshToken)
     //권한확인 API 통해서 닉네임 변경 거치는지 or 홈화면 바로 가는지
     checkAuthority(accessToken).then((res) => {
-      if (res.authority == 'GUEST') {
+      if (res.authority == 'USER') {
+        console.log('권한 User라서 홈화면으로 넘어감')
+        setLoggedIn(true)
+      } else if (res.authority == 'GUEST') {
+        console.log('권한 Guest라서 닉네임설정으로 넘어감')
         navigation.navigate('UserSetting')
       } else {
-        setLoggedIn(true)
+        console.log('유저 권한: ', res)
       }
     })
   }
@@ -54,11 +58,7 @@ export default function Auth({ navigation }) {
     KakaoLogin.login()
       .then((result) => {
         try {
-          getToken(JSON.stringify(result.accessToken), 'KAKAO').then((res) => {
-            // console.log('KakaoLogin API실행결과??:', res)
-            console.log(res.accessToken)
-            finishLogin(res.accessToken, res.refreshToken)
-          })
+          getToken(JSON.stringify(result.accessToken), 'KAKAO')
         } catch (error) {
           console.error('Failed to fetch data:', error)
         }
@@ -71,21 +71,6 @@ export default function Auth({ navigation }) {
         }
       })
   }
-  const loginGoogle = async (accessToken) => {
-    try {
-      let url = 'http://52.78.52.47:8080/'
-      let detailAPI = `oauth/GOOGLE?accessToken=${accessToken}` //500
-      const response = await axios.get(url + detailAPI, {
-        headers: {
-          'Content-Type': `application/json`,
-        },
-      })
-      const result = response.data
-      return result
-    } catch (error) {
-      console.error('Failed to fetch data:', error)
-    }
-  }
   const loginNaver = async () => {
     const { failureResponse, successResponse } = await NaverLogin.login({
       appName: 'Pawith',
@@ -94,33 +79,22 @@ export default function Auth({ navigation }) {
       serviceUrlScheme: 'pawithnaverlogin',
     })
     try {
-      getToken(successResponse.accessToken, 'NAVER').then((res) => {
-        console.log('NaverLogin API실행결과??:', res)
-        // setLoggedIn(true)
-      })
-      // setSuccessRes(successResponse);
+      getToken(successResponse.accessToken, 'NAVER')
     } catch (error) {
       console.error('Failed to fetch data:', error)
     }
   }
   const loginApple = async () => {
-    // performs login request
     const appleAuthRequestResponse = await appleAuth.performRequest({
       requestedOperation: appleAuth.Operation.LOGIN,
-      // Note: it appears putting FULL_NAME first is important, see issue #293
       requestedScopes: [appleAuth.Scope.FULL_NAME, appleAuth.Scope.EMAIL],
     })
-    // console.log("appleAuthRequestResponse", appleAuthRequestResponse);
     const { user: newUser, email, nonce, identityToken, realUserStatus /* etc */ } = appleAuthRequestResponse
     try {
-      getToken(identityToken, 'APPLE').then((res) => {
-        console.log('AppleLogin API실행결과??:', res)
-        // setLoggedIn(true)
-      })
+      getToken(identityToken, 'APPLE')
     } catch (error) {
       console.error('Failed to fetch data:', error)
     }
-
     // get current authentication state for user
     // /!\ This method must be tested on a real device. On the iOS simulator it always throws an error.
     const credentialState = await appleAuth.getCredentialStateForUser(appleAuthRequestResponse.user)
@@ -133,14 +107,8 @@ export default function Auth({ navigation }) {
 
   const getToken = async (accessToken, provider) => {
     let API = `oauth/${provider}?accessToken=${accessToken}` //500
-    //google에서 발급받는 동일한 AccessToken 집어 넣어도 + 같은 호출문 구조 사용해도 [AxiosError: Request failed with status code 500] 발생
-    const response = await axios.get(url + API, {
-      headers: {
-        'Content-Type': `application/json`,
-      },
-    })
-    const result = response.data
-    return result
+    const response = await axios.get(url + API, { headers: { 'Content-Type': `application/json` } })
+    finishLogin(response.data.accessToken, response.data.refreshToken)
   }
 
   useEffect(() => {
@@ -154,10 +122,7 @@ export default function Auth({ navigation }) {
   useEffect(() => {
     if (GoogleRes) {
       if (GoogleRes?.type === 'success') {
-        loginGoogle(GoogleRes.authentication.accessToken).then((result) => {
-          console.log('GoogleLogin API실행결과:', result)
-          // setLoggedIn(true)
-        })
+        getToken(GoogleRes.authentication.accessToken, 'GOOGLE')
       }
     }
   }, [GoogleRes])

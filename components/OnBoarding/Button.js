@@ -3,7 +3,7 @@ import { colors } from '../../colors'
 import LOGO_Symbol from '../../assets/Svgs/LOGO_Symbol.svg'
 import { Platform } from 'react-native'
 
-export default Button = ({ func, lastFunc, currentIdx, data }) => {
+export const OnboardingButton = ({ func, lastFunc, currentIdx, data }) => {
   const isLastItem = currentIdx === data.length - 1
   console.log('currentIdx:', isLastItem)
   return (
@@ -30,8 +30,22 @@ export default Button = ({ func, lastFunc, currentIdx, data }) => {
     </MyButton>
   )
 }
+export const UserSettingButton = ({ isEnabled, func }) => {
+  return (
+    <MyButton
+      disabled={!isEnabled}
+      style={{
+        backgroundColor: isEnabled ? colors.primary_container : colors.grey_150,
+        marginBottom: Platform.OS == 'android' ? 32 : 0,
+      }}
+      onPress={func}
+    >
+      <ButtonText style={{ color: isEnabled ? colors.primary : colors.grey_500 }}>입력 완료</ButtonText>
+    </MyButton>
+  )
+}
 const MyButton = styled.TouchableOpacity`
-  margin: 0 16px 20px 16px;
+  width: 100%;
   flex-direction: row;
   height: 44px;
   border-radius: 8px;

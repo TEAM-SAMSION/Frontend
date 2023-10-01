@@ -4,7 +4,7 @@ import { FlatList, Animated } from 'react-native'
 import SlideItem from '../../components/OnBoarding/SlideItem'
 import { ScreenLayout } from '../../components/Shared'
 import Paginator from '../../components/OnBoarding/Paginator'
-import Button from '../../components/OnBoarding/Button'
+import Button, { OnboardingButton } from '../../components/OnBoarding/Button'
 import { onboardedState } from '../../recoil/AuthAtom'
 import { useRecoilValue, useSetRecoilState } from 'recoil'
 import AsyncStorage from '@react-native-async-storage/async-storage'
@@ -68,7 +68,12 @@ export default function OnBoarding({ navigation }) {
             />
             <Paginator data={PAGES} scrollX={scrollX} />
           </Container>
-          <Button func={() => scrollTo()} lastFunc={() => OnBoardingReady()} currentIdx={currentIdx} data={PAGES} />
+          <OnboardingButton
+            func={() => scrollTo()}
+            lastFunc={() => OnBoardingReady()}
+            currentIdx={currentIdx}
+            data={PAGES}
+          />
         </ScreenLayout>
       )}
     </>
