@@ -8,7 +8,7 @@ import * as WebBrowser from 'expo-web-browser'
 import { appleAuth, AppleButton } from '@invertase/react-native-apple-authentication'
 import LoginButton from '../../components/OnBoarding/LoginButton'
 import { colors } from '../../colors'
-import { useSetRecoilState, useRecoilValue } from 'recoil'
+import { useSetRecoilState } from 'recoil'
 import { accessTokenState, loggedInState, refreshTokenState } from '../../recoil/AuthAtom'
 import { url } from '../../components/Shared'
 
@@ -130,7 +130,7 @@ export default function Auth({ navigation }) {
   return (
     <Container>
       <SymbolContainer>
-        <SymbolIcon source={require('../../assets/Imgs/onboarding01.png')} />
+        <SymbolIcon source={require('../../assets/Imgs/LOGO_Symbol.png')} />
       </SymbolContainer>
       <LoginButton loginFunc={() => GooglepromptAsync()} id={0} />
       <LoginButton loginFunc={() => loginKakao()} id={1} />
@@ -158,12 +158,15 @@ const Container = styled.View`
   align-items: center;
 `
 const SymbolContainer = styled.View`
-  margin-bottom: 38px;
+  margin-bottom: 90px;
+  margin-top: 76px;
+  justify-content: center;
+  align-items: center;
 `
 const SymbolIcon = styled.Image`
   margin-top: 75px;
-  width: 315px;
-  height: 273px;
+  width: 168px;
+  height: 168px;
 `
 // const logoutNaver = async () => {
 //   console.log('Naver Logout')
