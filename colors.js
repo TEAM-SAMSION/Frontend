@@ -13,6 +13,8 @@ export const colors = {
   grey_800: '#191919',
   grey_900: '#000',
 
+  blue_200: '#D1D6FF',
+
   primary: '#F84D35',
   primary_container: '#FFE2E0',
   primary_outline: '#FD8D81',
