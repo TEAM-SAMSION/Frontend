@@ -3,9 +3,10 @@ import Checkbox from '../../assets/Svgs/Checkbox.svg'
 import Checkbox_off from '../../assets/Svgs/Checkbox_off.svg'
 import { colors } from '../../colors'
 import { useState } from 'react'
-import { UserSettingButton } from './Button'
+import { UserSettingButton } from '../Buttons'
 import { useSetRecoilState } from 'recoil'
 import { loggedInState } from '../../recoil/AuthAtom'
+import { BodyBold_Text } from '../Fonts'
 
 export const TermsBottomSheet = ({ registerNickname, nickname }) => {
   const [termState, setTermState] = useState({ 0: false, 1: false, 2: false })
@@ -56,7 +57,7 @@ export const TermsBottomSheet = ({ registerNickname, nickname }) => {
       }}
     >
       <BottomSheetHeader>
-        <TermTitle>포잇 접근 권한 안내</TermTitle>
+        <BodyBold_Text color={colors.grey_800}>포잇 접근 권한 안내</BodyBold_Text>
         <TermSubTitle>{`권한을 허용하지 않아도 포잇 이용은 가능하지만
 일부서비스 제한될 수 있습니다.`}</TermSubTitle>
       </BottomSheetHeader>
@@ -91,12 +92,6 @@ const Divider = styled.View`
 `
 const BottomContainer = styled.View`
   width: 100%;
-`
-const TermTitle = styled.Text`
-  font-family: Spoqa-Bold;
-  color: ${colors.grey_800};
-  font-size: 16px;
-  line-height: 22px;
 `
 const TermSubTitle = styled.Text`
   font-family: Spoqa-Medium;

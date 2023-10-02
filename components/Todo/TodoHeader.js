@@ -32,14 +32,12 @@ export const TodoHeader = ({ navigation }) => {
 
 const CustomHeader = styled.View`
   flex-direction: row;
-  padding: 0px 16px;
   justify-content: space-between;
   align-items: center;
   height: 52px;
 `
 const DropDownContainer = styled.TouchableOpacity`
   width: 109px;
-  height: 32px;
   border-radius: 8px;
   background-color: #f2f2f2;
   padding: 10px;

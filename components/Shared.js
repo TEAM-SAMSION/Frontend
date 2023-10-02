@@ -68,11 +68,11 @@ const KeyBoardAwareContainer = styled.KeyboardAvoidingView`
   flex: 1;
 `
 
-export const ScreenKeyboardLayout = ({ children, onPress = null, verticalOffset }) => {
+export const ScreenKeyboardLayout = ({ children, onPress = null, verticalOffset, behavior = 'padding' }) => {
   return (
     <ScreenContainer style={{ paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0 }}>
       <Pressable onPress={onPress} style={{ width: '100%', flex: 1 }}>
-        <KeyBoardAwareContainer keyboardVerticalOffset={verticalOffset} behavior={Platform.select({ ios: 'padding' })}>
+        <KeyBoardAwareContainer keyboardVerticalOffset={verticalOffset} behavior={behavior}>
           {children}
         </KeyBoardAwareContainer>
       </Pressable>
