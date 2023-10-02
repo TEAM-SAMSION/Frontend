@@ -10,6 +10,7 @@ import axios from 'axios'
 import { MainStat } from '../../components/Home/MainStat'
 import { PamilyChoiceToggle } from '../../components/Home/PamilyChoiceToggle'
 import { MainImage } from '../../components/Home/MainImage'
+import { TodoBox } from '../../components/Home/TodoBox'
 
 export default function Home({ navigation }) {
   const [name, setName] = useState('포잇')
@@ -124,13 +125,17 @@ export default function Home({ navigation }) {
             </TitleText>
           </TodoTitle>
           <TodoContainer>
-            <FlatList
+            {/* <FlatList
               data={myTodo}
               renderItem={({ item }) => {
                 return <TodoBox data={item} />
               }}
-            />
+            /> */}
+            <TodoBox />
           </TodoContainer>
+          <AllTodoButton onPress={() => navigation.navigate('ToDoNav')}>
+            <ButtonText>전체 TODO 확인하기</ButtonText>
+          </AllTodoButton>
         </>
       )}
     </ScreenLayout>
@@ -237,4 +242,22 @@ const TitleText = styled.Text`
   line-height: 28px;
   color: ${colors.grey_600};
 `
-const TodoContainer = styled.View``
+const TodoContainer = styled.View`
+  padding: 16px;
+`
+const AllTodoButton = styled.TouchableOpacity`
+  height: 44px;
+  margin: 0px 16px;
+  padding: 12px 16px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 8px;
+  background-color: ${colors.primary};
+`
+const ButtonText = styled.Text`
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 19px;
+  color: ${colors.grey_100};
+`
