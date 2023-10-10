@@ -1,6 +1,6 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 
-import { ScreenKeyboardLayout, ScreenLayout } from '../../components/Shared'
+import { ScreenKeyboardLayout, ScreenLayout, url } from '../../components/Shared'
 import CalendarStrip from 'react-native-calendar-strip'
 import { colors } from '../../colors'
 import styled from 'styled-components/native'
@@ -12,11 +12,14 @@ import { TodoHeader } from '../../components/Todo/TodoHeader'
 import { BodyBoldSm_Text, BodyBold_Text, BodySm_Text, DetailSm_Text, Detail_Text } from '../../components/Fonts'
 import { NotificationButton } from '../../components/Buttons'
 import { Keyboard, NativeModules, Platform, TextInput } from 'react-native'
-import AsyncStorage from '@react-native-async-storage/async-storage'
+import AsyncStorage from '@react-native-async-storage/async-storage' //캐시 지우기 때문에 임시로
+import { useRecoilValue } from 'recoil'
+import { userInfoState } from '../../recoil/AuthAtom'
+import axios from 'axios'
 
 export default Todo = ({ navigation }) => {
   const { StatusBarManager } = NativeModules
-
+  const { accessToken } = useRecoilValue(userInfoState)
   const [statusBarHeight, setStatusBarHeight] = useState(0)
   Platform.OS == 'ios'
     ? StatusBarManager.getHeight((statusBarFrameData) => {
@@ -25,16 +28,59 @@ export default Todo = ({ navigation }) => {
     : null
 
   const today = new Date()
-  const markedDate = [
-    {
-      date: today,
-      dots: [
-        {
-          color: 'red',
-        },
-      ],
-    },
-  ]
+  // const markedDate = [
+  //   {
+  //     date: today,
+  //     dots: [
+  //       {
+  //         color: 'red',
+  //       },
+  //     ],
+  //   },
+  // ]
+  const createRandomCode = async () => {
+    let API = `/todo/team/code`
+    const response = await axios.get(url + API, {
+      headers: {
+        Authorization: accessToken,
+        'Content-Type': 'application/json;charset=UTF-8',
+      },
+    })
+    console.log('createRandomCode 결과', response.data)
+  }
+  const createTodoTeam = async (name) => {
+    let API = `/todo/team`
+    const randomCode = createRandomCode()
+    const teamData = new FormData()
+    teamData.append('teamName', 'TestTeamName')
+    teamData.append('randomCode', randomCode)
+
+    teamData.append('petRegisters[0].name', 'testPetName')
+    teamData.append('petRegisters[0].age', 2)
+    teamData.append('petRegisters[0].description', 'testDescription')
+
+    const response = await axios.post(url + API, teamData, {
+      headers: {
+        Authorization: accessToken,
+        'Content-Type': 'multipart/form-data;charset=UTF-8; boundary=6o2knFse3p53ty9dmcQvWAIx1zInP11uCfbm',
+      },
+    })
+    console.log(response.data)
+  }
+
+  const fetchTodoTeam = async (page, size) => {
+    let API = `/todo/team/list?page=${page}&size=${size}` //500
+    const response = await axios.get(url + API, {
+      headers: {
+        Authorization: accessToken,
+      },
+    })
+    console.log(response.data)
+  }
+  useEffect(() => {
+    // createTodoTeam()
+    fetchTodoTeam(1, 10)
+  }, [])
 
   const calendarRef = useRef(null)
   const [category, setCategory] = useState('')

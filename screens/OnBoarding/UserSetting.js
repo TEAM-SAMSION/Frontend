@@ -27,8 +27,8 @@ export const UserSetting = ({ navigation }) => {
 
   const registerNickname = async (nickname) => {
     console.log(nickname, accessToken)
-    let API = `user/name?nickname=${nickname}`
-    // let API = `user/name`
+    let API = `/user/name?nickname=${nickname}`
+
     const response = await axios.put(
       url + API,
       {},

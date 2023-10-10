@@ -23,7 +23,7 @@ export const ScreenLayout = ({ children, managed = false }) => {
   )
 }
 
-export const url = 'https://dev.pawith.com/'
+export const url = 'https://dev.pawith.com'
 
 //****************** Input  *******************************************************/
 const TitleText = styled.Text`

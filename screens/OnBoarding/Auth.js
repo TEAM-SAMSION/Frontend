@@ -43,7 +43,7 @@ export default function Auth({ navigation }) {
     })
   }
   const checkAuthority = async (accessToken) => {
-    let API = 'user/authority'
+    let API = '/user/authority'
     const response = await axios.get(url + API, {
       headers: {
         Authorization: accessToken,
@@ -106,7 +106,7 @@ export default function Auth({ navigation }) {
 
   const getToken = async (accessToken, provider) => {
     console.log('hello')
-    let API = `oauth/${provider}?accessToken=${accessToken}` //500
+    let API = `/oauth/${provider}?accessToken=${accessToken}` //500
     const response = await axios.get(url + API, {
       headers: {
         Authorization: accessToken,
