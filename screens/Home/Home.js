@@ -17,7 +17,7 @@ export default function Home({ navigation }) {
   const [now, setNow] = useState(new Date(Date.now() + 9 * 60 * 60 * 1000))
   const date = parseInt(now.toISOString().substring(8, 10))
   const month = now.getMonth() + 1
-  const [progress, setProgress] = useState(70)
+  const [progress, setProgress] = useState(80)
 
   const PamilyNum = 1
 

@@ -23,7 +23,7 @@ export const ScreenLayout = ({ children, managed = false }) => {
   )
 }
 
-export const url = 'http://52.78.52.47:8080/'
+export const url = 'https://dev.pawith.com/'
 
 //****************** Input  *******************************************************/
 const TitleText = styled.Text`

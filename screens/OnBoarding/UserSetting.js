@@ -29,7 +29,7 @@ export const UserSetting = ({ navigation }) => {
     console.log(nickname, accessToken)
     let API = `user/name?nickname=${nickname}`
     // let API = `user/name`
-    const response = await axios.post(
+    const response = await axios.put(
       url + API,
       {},
       {

@@ -27,7 +27,6 @@ export default function Auth({ navigation }) {
 
   const finishLogin = (accessToken, refreshToken) => {
     //토큰 저장
-    console.log(accessToken)
     setAccessToken(accessToken)
     setRefreshToken(refreshToken)
     //권한확인 API 통해서 닉네임 변경 거치는지 or 홈화면 바로 가는지
@@ -106,8 +105,15 @@ export default function Auth({ navigation }) {
   }
 
   const getToken = async (accessToken, provider) => {
+    console.log('hello')
     let API = `oauth/${provider}?accessToken=${accessToken}` //500
-    const response = await axios.get(url + API, { headers: { 'Content-Type': `application/json` } })
+    const response = await axios.get(url + API, {
+      headers: {
+        Authorization: accessToken,
+        'Content-Type': `application/json; charset=UTF-8`,
+      },
+    })
+    console.log(response.data)
     finishLogin(response.data.accessToken, response.data.refreshToken)
   }
 
