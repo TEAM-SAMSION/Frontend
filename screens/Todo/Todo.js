@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { ScreenKeyboardLayout, ScreenLayout, url } from '../../components/Shared'
 import CalendarStrip from 'react-native-calendar-strip'
 import { colors } from '../../colors'
@@ -17,6 +17,7 @@ import { userInfoState } from '../../recoil/AuthAtom'
 import axios from 'axios'
 import { TodoItem } from '../../components/Todo/TodoItem'
 import { NoItem } from '../../components/Todo/NoToDoItem'
+import BottomSheet, { BottomSheetBackdrop } from '@gorhom/bottom-sheet'
 
 export default Todo = ({ navigation }) => {
   const { StatusBarManager } = NativeModules
@@ -41,6 +42,14 @@ export default Todo = ({ navigation }) => {
   //     ],
   //   },
   // ]
+  const bottomModal = useRef()
+  const popModal = () => {
+    bottomModal.current?.snapToIndex(0)
+  }
+  const renderBackdrop = useCallback(
+    (props) => <BottomSheetBackdrop {...props} pressBehavior="close" appearsOnIndex={0} disappearsOnIndex={-1} />,
+    [],
+  )
   const createRandomCode = async () => {
     let API = `/todo/team/code`
     const response = await axios.get(url + API, {
@@ -113,9 +122,9 @@ export default Todo = ({ navigation }) => {
     setTodoData(response.data.content) //{"content": [{"status": "INCOMPLETE", "task": "test", "todoId": 6145}, {"status": "INCOMPLETE", "task": "test", "todoId": 6146}, {"status": "INCOMPLETE", "task": "test", "todoId": 6147}, {"status": "INCOMPLETE", "task": "test", "todoId": 6148}], "hasNext": false, "page": 0, "size": 10}
   }
   //getTeamUsers(data).then(() => console.log(data))
-  const getDatas = () => {
-    getTodoTeamList(0, 10).then((data) => {})
-  }
+  // const getDatas = () => {
+  //   getTodoTeamList(0, 10).then((data) => {})
+  // }
   useEffect(() => {
     // getDatas()
     getTodos(1)
@@ -130,6 +139,10 @@ export default Todo = ({ navigation }) => {
     config: {
       weekdays: '화수목금토일월',
     },
+  }
+  const toggleDetail = (index) => {
+    console.log(index)
+    popModal()
   }
   return (
     <ScreenLayout verticalOffset={statusBarHeight + 44} behavior="position">
@@ -227,7 +240,16 @@ export default Todo = ({ navigation }) => {
                 onChangeText={(text) => setCategory(text)}
               />
             </CategoryInputContainer>
-            {todoData && todoData.map((data) => <TodoItem title={data.task} status={data.status} />)}
+            {todoData &&
+              todoData.map((data, index) => (
+                <TodoItem
+                  title={data.task}
+                  status={data.status}
+                  key={index}
+                  index={index}
+                  toggleDetail={toggleDetail}
+                />
+              ))}
             <TodayButton
               style={{ marginTop: 32 }}
               onPress={() => {
@@ -242,6 +264,24 @@ export default Todo = ({ navigation }) => {
           </ContentBase>
         </ScrollView>
       </ContentContainer>
+      <BottomSheet
+        ref={bottomModal}
+        backdropComponent={renderBackdrop}
+        index={-1}
+        snapPoints={['55%']}
+        enablePanDownToClose={false}
+        enableHandlePanningGesture={false}
+        enableContentPanningGesture={false}
+        handleHeight={0}
+        enableDismissOnClose
+        // backgroundComponent={() => <View />}
+        // handleIndicatorStyle={{ height: 0 }}
+        handleIndicatorStyle={{ backgroundColor: colors.grey_300, width: 72, height: 6 }}
+      >
+        <ContentBase>
+          <BodyBold_Text>HELLO</BodyBold_Text>
+        </ContentBase>
+      </BottomSheet>
     </ScreenLayout>
   )
 }
