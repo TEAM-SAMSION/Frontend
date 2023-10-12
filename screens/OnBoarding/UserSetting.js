@@ -23,24 +23,6 @@ export const UserSetting = ({ navigation }) => {
 
   const [nickname, setNickname] = useState('')
   const bottomModal = useRef()
-  const { accessToken } = useRecoilValue(userInfoState)
-
-  const registerNickname = async (nickname) => {
-    console.log(nickname, accessToken)
-    let API = `/user/name?nickname=${nickname}`
-
-    const response = await axios.put(
-      url + API,
-      {},
-      {
-        headers: {
-          Authorization: accessToken,
-          'Content-Type': `application/json; charset=UTF-8`,
-        },
-      },
-    )
-    return response.data
-  }
   const handleSubmit = () => {
     Keyboard.dismiss()
     popModal()
@@ -106,7 +88,7 @@ export const UserSetting = ({ navigation }) => {
         // handleIndicatorStyle={{ height: 0 }}
         handleIndicatorStyle={{ backgroundColor: colors.grey_300, width: 72, height: 6 }}
       >
-        <TermsBottomSheet registerNickname={registerNickname} nickname={nickname} />
+        <TermsBottomSheet nickname={nickname} />
       </BottomSheet>
     </ScreenKeyboardLayout>
   )

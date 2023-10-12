@@ -9,7 +9,14 @@ import Arrow_right from '../../assets/Svgs/arrow_right.svg'
 import Reset from '../../assets/Svgs/Reset.svg'
 import Close from '../../assets/Svgs/Close.svg'
 import { TodoHeader } from '../../components/Todo/TodoHeader'
-import { BodyBoldSm_Text, BodyBold_Text, BodySm_Text, DetailSm_Text, Detail_Text } from '../../components/Fonts'
+import {
+  BodyBoldSm_Text,
+  BodyBold_Text,
+  BodySm_Text,
+  DetailSm_Text,
+  Detail_Text,
+  Label_Text,
+} from '../../components/Fonts'
 import { NotificationButton } from '../../components/Buttons'
 import { Keyboard, NativeModules, Platform, TextInput } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage' //캐시 지우기 때문에 임시로
@@ -68,7 +75,6 @@ export default Todo = ({ navigation }) => {
     })
     console.log(response.data)
   }
-
   const getTodoTeam = async (page, size) => {
     let API = `/todo/team/list?page=${page}&size=${size}` //500
     const response = await axios.get(url + API, {
@@ -198,10 +204,11 @@ export default Todo = ({ navigation }) => {
             </Detail_Text>
           </TodayButton>
         </TodoListHeader>
-        <NoSchedule>
+        <TodoContainer>{/* <Label_Text color={}></Label_Text> */}</TodoContainer>
+        {/* <NoTodoContainer>
           <BodySm_Text color={colors.grey_600}>오늘은 예정된 일정이 없어요.</BodySm_Text>
           <DetailSm_Text color={colors.grey_400}>우측 상단 캘린더 버튼을 클릭하여 일정을 기록해보세요.</DetailSm_Text>
-        </NoSchedule>
+        </NoTodoContainer> */}
         {/* <CategoryInputContainer style={{ width: category ? 32 + category.length * 16 : 190 }}> */}
         <CategoryInputContainer style={{ width: 190 }}>
           <Circle style={{ backgroundColor: colors.primary }}></Circle>
@@ -216,6 +223,7 @@ export default Todo = ({ navigation }) => {
             onChangeText={(text) => setCategory(text)}
           />
         </CategoryInputContainer>
+
         <TodayButton
           style={{ marginTop: 32 }}
           onPress={() => {
@@ -223,6 +231,9 @@ export default Todo = ({ navigation }) => {
           }}
         >
           <BodyBold_Text color={colors.grey_400}>캐시 지우기</BodyBold_Text>
+        </TodayButton>
+        <TodayButton style={{ marginTop: 32 }} onPress={() => logout()}>
+          <BodyBold_Text color={colors.grey_400}>로그아웃</BodyBold_Text>
         </TodayButton>
       </ContentContainer>
     </ScreenKeyboardLayout>
@@ -254,7 +265,13 @@ const TodoListHeader = styled.View`
   align-items: center;
   justify-content: space-between;
 `
-const NoSchedule = styled.View`
+const NoTodoContainer = styled.View`
+  padding: 20px 16px;
+  border-radius: 8px;
+  display: inline-block;
+  background-color: ${colors.grey_150};
+`
+const TodoContainer = styled.View`
   padding: 20px 16px;
   border-radius: 8px;
   display: inline-block;

@@ -1,9 +1,9 @@
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import HomeNav from "./HomeNav";
-import MyPageNav from "./MyPageNav";
-import ToDoNav from "./ToDoNav";
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
+import HomeNav from './HomeNav'
+import MyPageNav from './MyPageNav'
+import ToDoNav from './ToDoNav'
 
-const Tabs = createBottomTabNavigator();
+const Tabs = createBottomTabNavigator()
 
 export default function LoggedInNav() {
   return (
@@ -12,9 +12,9 @@ export default function LoggedInNav() {
         headerShown: false,
       }}
     >
-      <Tabs.Screen name="HomeNav">{() => <HomeNav />}</Tabs.Screen>
       <Tabs.Screen name="ToDoNav">{() => <ToDoNav />}</Tabs.Screen>
+      <Tabs.Screen name="HomeNav">{() => <HomeNav />}</Tabs.Screen>
       <Tabs.Screen name="MyPageNav">{() => <MyPageNav />}</Tabs.Screen>
     </Tabs.Navigator>
-  );
+  )
 }

@@ -15,6 +15,13 @@ export const Detail_Text = ({ color, children, style = null }) => {
     </Text>
   )
 }
+export const Label_Text = ({ color, children, style = null }) => {
+  return (
+    <Text style={[{ fontFamily: 'Spoqa-Medium', fontSize: 14, lineHeight: 19, color: color }, { ...style }]}>
+      {children}
+    </Text>
+  )
+}
 
 export const BodyBoldSm_Text = ({ color, children, style = null }) => {
   return (
