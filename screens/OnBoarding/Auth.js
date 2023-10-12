@@ -34,7 +34,7 @@ export default function Auth({ navigation }) {
     //권한확인 API 통해서 닉네임 변경 거치는지 or 홈화면 바로 가는지
     checkAuthority(accessToken).then((res) => {
       if (res.authority == 'USER') {
-        //향후 앱을 껐다가 켜도 유효한 사용자가 앱을 접속하는 것이기 때문에, 캐시에 토큰 저장
+        //향후 앱을 껐다가 켜도 유효한 사용자가 앱을 접속하는 것이기 때문에, 캐시에 토큰 저장
         console.log('권한 User라서 홈화면으로 넘어감')
         AsyncStorage.setItem('accessToken', accessToken)
         setLoggedIn(true)
@@ -47,6 +47,7 @@ export default function Auth({ navigation }) {
       }
     })
   }
+
   const checkAuthority = async (accessToken) => {
     let API = '/user/authority'
     const response = await axios.get(url + API, {

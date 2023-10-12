@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-
-import { ScreenKeyboardLayout, ScreenLayout, url } from '../../components/Shared'
+import { ScreenKeyboardLayout, url } from '../../components/Shared'
 import CalendarStrip from 'react-native-calendar-strip'
 import { colors } from '../../colors'
 import styled from 'styled-components/native'
@@ -9,25 +8,20 @@ import Arrow_right from '../../assets/Svgs/arrow_right.svg'
 import Reset from '../../assets/Svgs/Reset.svg'
 import Close from '../../assets/Svgs/Close.svg'
 import { TodoHeader } from '../../components/Todo/TodoHeader'
-import {
-  BodyBoldSm_Text,
-  BodyBold_Text,
-  BodySm_Text,
-  DetailSm_Text,
-  Detail_Text,
-  Label_Text,
-} from '../../components/Fonts'
+import { BodyBoldSm_Text, BodyBold_Text, BodySm_Text, DetailSm_Text, Detail_Text } from '../../components/Fonts'
 import { NotificationButton } from '../../components/Buttons'
 import { Keyboard, NativeModules, Platform, TextInput } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage' //캐시 지우기 때문에 임시로
 import { useRecoilValue } from 'recoil'
 import { userInfoState } from '../../recoil/AuthAtom'
 import axios from 'axios'
+import { TodoItem } from '../../components/Todo/TodoItem'
 
 export default Todo = ({ navigation }) => {
   const { StatusBarManager } = NativeModules
   const { accessToken } = useRecoilValue(userInfoState)
   const [statusBarHeight, setStatusBarHeight] = useState(0)
+  const [todoData, setTodoData] = useState([])
   console.log(accessToken)
   Platform.OS == 'ios'
     ? StatusBarManager.getHeight((statusBarFrameData) => {
@@ -56,7 +50,8 @@ export default Todo = ({ navigation }) => {
     })
     console.log('createRandomCode 결과', response.data)
   }
-  const createTodoTeam = async (name) => {
+  //prettier-ignore
+  const createTodoTeam = async (name) => {//임시로 팀 생성하기 위해 만들어본 함수호출문 -> FormData 어렵다ㅏㅏ~~
     let API = `/todo/team`
     const randomCode = createRandomCode()
     const teamData = new FormData()
@@ -75,7 +70,7 @@ export default Todo = ({ navigation }) => {
     })
     console.log(response.data)
   }
-  const getTodoTeam = async (page, size) => {
+  const getTodoTeamList = async (page, size) => {
     let API = `/todo/team/list?page=${page}&size=${size}` //500
     const response = await axios.get(url + API, {
       headers: {
@@ -94,9 +89,7 @@ export default Todo = ({ navigation }) => {
     })
     return response.data
   }
-  const getTodoItemDatas = () => {
-    getTodoTeam(0, 10).then((data) => getTeamUsers(data).then(() => console.log(data)))
-  }
+
   const getTeamUsers = async (data) => {
     let tempArr = []
     const promises = data.content.map(function (team) {
@@ -105,19 +98,27 @@ export default Todo = ({ navigation }) => {
     })
     await Promise.all(promises)
   }
-  const getTodos = async (teamId, page, size) => {
+  const getTodos = async (teamId, page = 0, size = 10) => {
     let API = `/todo/list/${teamId}`
     const response = await axios.get(url + API, {
+      params: {
+        page: 0,
+        size: 10,
+      },
       headers: {
         Authorization: accessToken,
       },
     })
-    return response.data
+    setTodoData(response.data.content) //{"content": [{"status": "INCOMPLETE", "task": "test", "todoId": 6145}, {"status": "INCOMPLETE", "task": "test", "todoId": 6146}, {"status": "INCOMPLETE", "task": "test", "todoId": 6147}, {"status": "INCOMPLETE", "task": "test", "todoId": 6148}], "hasNext": false, "page": 0, "size": 10}
+  }
+  //getTeamUsers(data).then(() => console.log(data))
+  const getDatas = () => {
+    getTodoTeamList(0, 10).then((data) => {})
   }
   useEffect(() => {
-    // getTodoItemDatas()
+    // getDatas()
+    getTodos(1)
     // getTeamUser(1).then((res) => console.log(res))
-    getTodos(1, 0, 10).then((res) => console.log(res))
   }, [])
 
   const calendarRef = useRef(null)
@@ -204,11 +205,14 @@ export default Todo = ({ navigation }) => {
             </Detail_Text>
           </TodayButton>
         </TodoListHeader>
-        <TodoContainer>{/* <Label_Text color={}></Label_Text> */}</TodoContainer>
+
         {/* <NoTodoContainer>
           <BodySm_Text color={colors.grey_600}>오늘은 예정된 일정이 없어요.</BodySm_Text>
           <DetailSm_Text color={colors.grey_400}>우측 상단 캘린더 버튼을 클릭하여 일정을 기록해보세요.</DetailSm_Text>
         </NoTodoContainer> */}
+        {todoData.map((data) => (
+          <TodoItem title={data.task} status={data.status} />
+        ))}
         {/* <CategoryInputContainer style={{ width: category ? 32 + category.length * 16 : 190 }}> */}
         <CategoryInputContainer style={{ width: 190 }}>
           <Circle style={{ backgroundColor: colors.primary }}></Circle>
@@ -266,12 +270,6 @@ const TodoListHeader = styled.View`
   justify-content: space-between;
 `
 const NoTodoContainer = styled.View`
-  padding: 20px 16px;
-  border-radius: 8px;
-  display: inline-block;
-  background-color: ${colors.grey_150};
-`
-const TodoContainer = styled.View`
   padding: 20px 16px;
   border-radius: 8px;
   display: inline-block;
