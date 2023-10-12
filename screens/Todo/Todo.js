@@ -21,6 +21,7 @@ export default Todo = ({ navigation }) => {
   const { StatusBarManager } = NativeModules
   const { accessToken } = useRecoilValue(userInfoState)
   const [statusBarHeight, setStatusBarHeight] = useState(0)
+  console.log(accessToken)
   Platform.OS == 'ios'
     ? StatusBarManager.getHeight((statusBarFrameData) => {
         setStatusBarHeight(statusBarFrameData.height)
@@ -68,18 +69,49 @@ export default Todo = ({ navigation }) => {
     console.log(response.data)
   }
 
-  const fetchTodoTeam = async (page, size) => {
+  const getTodoTeam = async (page, size) => {
     let API = `/todo/team/list?page=${page}&size=${size}` //500
     const response = await axios.get(url + API, {
       headers: {
         Authorization: accessToken,
       },
     })
-    console.log(response.data)
+    return response.data
+  }
+  const getTeamUser = async (teamId) => {
+    console.log(teamId)
+    let API = `/register/list?teamId=${teamId}`
+    const response = await axios.get(url + API, {
+      headers: {
+        Authorization: accessToken,
+      },
+    })
+    return response.data
+  }
+  const getTodoItemDatas = () => {
+    getTodoTeam(0, 10).then((data) => getTeamUsers(data).then(() => console.log(data)))
+  }
+  const getTeamUsers = async (data) => {
+    let tempArr = []
+    const promises = data.content.map(function (team) {
+      //team = {"authority": "PRESIDENT", "registerPeriod": 1, "teamId": 7, "teamName": "test", "teamProfileImageUrl": "https://pawith.s3.ap-northeast-2.amazonaws.com/9ec9d1e9-ebde-4d59-b74d-b515b04c5d98.png"}
+      tempArr.push(getTeamUser(team.teamId))
+    })
+    await Promise.all(promises)
+  }
+  const getTodos = async (teamId, page, size) => {
+    let API = `/todo/list/${teamId}`
+    const response = await axios.get(url + API, {
+      headers: {
+        Authorization: accessToken,
+      },
+    })
+    return response.data
   }
   useEffect(() => {
-    // createTodoTeam()
-    fetchTodoTeam(1, 10)
+    // getTodoItemDatas()
+    // getTeamUser(1).then((res) => console.log(res))
+    getTodos(1, 0, 10).then((res) => console.log(res))
   }, [])
 
   const calendarRef = useRef(null)
