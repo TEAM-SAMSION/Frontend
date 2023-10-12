@@ -12,8 +12,8 @@ export default function LoggedInNav() {
         headerShown: false,
       }}
     >
-      <Tabs.Screen name="ToDoNav">{() => <ToDoNav />}</Tabs.Screen>
       <Tabs.Screen name="HomeNav">{() => <HomeNav />}</Tabs.Screen>
+      <Tabs.Screen name="ToDoNav">{() => <ToDoNav />}</Tabs.Screen>
       <Tabs.Screen name="MyPageNav">{() => <MyPageNav />}</Tabs.Screen>
     </Tabs.Navigator>
   )
