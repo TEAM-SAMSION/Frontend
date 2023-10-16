@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import axios from 'axios'
-import { Platform, Pressable, StatusBar, StyleSheet, Text } from 'react-native'
+import { Keyboard, Platform, Pressable, StatusBar, StyleSheet, Text } from 'react-native'
 import styled from 'styled-components/native'
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator, TransitionPresets } from '@react-navigation/stack'

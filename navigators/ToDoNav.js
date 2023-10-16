@@ -1,6 +1,6 @@
 import React from 'react'
 import { createStackNavigator } from '@react-navigation/stack'
-import Todo from '../screens/ToDo/Todo'
+import Todo from '../screens/Todo/Todo'
 
 const Stack = createStackNavigator()
 
