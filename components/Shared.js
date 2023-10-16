@@ -7,16 +7,16 @@ import { colors } from '../colors'
 ////////// safearea //////////
 export const ScreenContainer = styled.SafeAreaView`
   flex: 1;
-  width: 100%;
+  /* width: 100%; */
   background-color: white;
 `
 
 export const ScreenWidth = Dimensions.get('window').width
 export const ScreenHeight = Dimensions.get('screen').height
 
-export const ScreenLayout = ({ children, managed = false }) => {
+export const ScreenLayout = ({ children }) => {
   return (
-    <ScreenContainer style={managed && { paddingLeft: 16, paddingRight: 16 }}>
+    <ScreenContainer>
       <StatusBar backgroundColor="#fff" />
       {children}
     </ScreenContainer>

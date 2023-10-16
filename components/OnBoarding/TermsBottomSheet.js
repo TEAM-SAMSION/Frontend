@@ -3,7 +3,7 @@ import Checkbox from '../../assets/Svgs/Checkbox.svg'
 import Checkbox_off from '../../assets/Svgs/Checkbox_off.svg'
 import { colors } from '../../colors'
 import { useState } from 'react'
-import { UserSettingButton } from '../Buttons'
+import { Button_PinkBg } from '../Buttons'
 import { useRecoilValue, useSetRecoilState } from 'recoil'
 import { loggedInState, userInfoState } from '../../recoil/AuthAtom'
 import { BodyBold_Text } from '../Fonts'
@@ -96,7 +96,7 @@ export const TermsBottomSheet = ({ nickname }) => {
           <TermItem id={1} mandatory={false} title="알림" subtitle="푸시 알림 및 메시지 수신 안내" />
           <TermItem id={2} mandatory={false} title="사진" subtitle="유저 및 펫 프로필 사진, Pamily 대표 사진 업로드" />
         </TermContainer>
-        <UserSettingButton isLoading={isLoading} isEnabled={termState[0]} text="확인" func={() => handleSubmit()} />
+        <Button_PinkBg isLoading={isLoading} isEnabled={termState[0]} text="확인" func={() => handleSubmit()} />
       </BottomContainer>
     </BottomSheetBase>
   )

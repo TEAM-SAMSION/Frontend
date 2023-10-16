@@ -46,3 +46,11 @@ export const DetailSm_Text = ({ color, children, style = null }) => {
     </Text>
   )
 }
+
+export const Body_Text = ({ color, children, style = null }) => {
+  return (
+    <Text style={[{ fontFamily: 'Spoqa-Medium', fontSize: 16, lineHeight: 22, color: color }, { ...style }]}>
+      {children}
+    </Text>
+  )
+}

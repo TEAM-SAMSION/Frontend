@@ -3,7 +3,7 @@ import { Input, InputTitle, ScreenKeyboardLayout, url } from '../../components/S
 import styled from 'styled-components/native'
 import { colors } from '../../colors'
 import BackArrow from '../../assets/Svgs/chevron_back.svg'
-import { UserSettingButton } from '../../components/Buttons'
+import { Button_PinkBg } from '../../components/Buttons'
 import { Keyboard, NativeModules } from 'react-native'
 import BottomSheet, { BottomSheetBackdrop } from '@gorhom/bottom-sheet'
 import { routeList } from '../../datas/OnBoarding/data'
@@ -72,7 +72,7 @@ export const UserSetting = ({ navigation }) => {
             </RouteItemContainer>
           </InputContainer>
         </TopContainer>
-        <UserSettingButton text="입력 완료" isEnabled={nickname.length > 0} func={() => handleSubmit()} />
+        <Button_PinkBg text="입력 완료" isEnabled={nickname.length > 0} func={() => handleSubmit()} />
       </ContentContainer>
       <BottomSheet
         ref={bottomModal}
