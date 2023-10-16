@@ -28,6 +28,9 @@ export default function HomeNav() {
         name="CreateTeam"
         component={CreateTeam}
         options={({ navigation }) => ({
+          headerStyle: {
+            backgroundColor: colors.grey_150,
+          },
           headerTitle: 'Pamily',
           headerLeft: () => (
             <TouchableOpacity
@@ -47,6 +50,9 @@ export default function HomeNav() {
         name="JoinTeam"
         component={JoinTeam}
         options={({ navigation }) => ({
+          headerStyle: {
+            backgroundColor: colors.grey_150,
+          },
           headerTitle: 'Pamily',
           headerLeft: () => (
             <TouchableOpacity
