@@ -1,6 +1,8 @@
 import styled from 'styled-components/native'
 import { Dimensions, StatusBar, Platform, Pressable } from 'react-native'
 import { colors } from '../colors'
+import { useEffect, useRef, useState } from 'react'
+import { Animated, Image, Modal } from 'react-native'
 // import { Picker } from 'react-native-wheel-pick'
 // import WheelPickerExpo from 'react-native-wheel-picker-expo'
 
@@ -17,7 +19,7 @@ export const ScreenHeight = Dimensions.get('screen').height
 export const ScreenLayout = ({ children, managed = false }) => {
   return (
     <ScreenContainer style={managed && { paddingLeft: 16, paddingRight: 16 }}>
-      <StatusBar backgroundColor="#fff" />
+      <StatusBar backgroundColor="fff" />
       {children}
     </ScreenContainer>
   )
@@ -123,3 +125,55 @@ export const NumberInput = ({ onPress, value, placeholder, active, isDark }) => 
     </NumberContainer>
   )
 }
+
+// ************ Modal PopUp *************
+
+export const ModalPopUp = ({ petIcon, visible, height, children }) => {
+  const [showModal, setShowModal] = useState(visible)
+  //   const scaleValue = useRef(new Animated.Value(0)).current
+  useEffect(() => {
+    toggleModal()
+  }, [visible])
+  const toggleModal = () => {
+    if (visible) {
+      setShowModal(true)
+      //   Animated.spring(scaleValue, {
+      //     toValue: 1,
+      //     duration: 300,
+      //     useNativeDriver: true,
+      //   }).start()
+    } else {
+      setShowModal(false)
+      //   Animated.timing(scaleValue, {
+      //     toValue: 0,
+      //     duration: 300,
+      //     useNativeDriver: true,
+      //   })
+    }
+  }
+  return (
+    <Modal transparent visible={showModal}>
+      <ModalBackground>
+        {petIcon ? <PopImage source={require('../assets/Imgs/TopPopup.png')} /> : ''}
+        <ModalContainer style={{ height: `${height}px` }}>{children}</ModalContainer>
+      </ModalBackground>
+    </Modal>
+  )
+}
+
+const ModalBackground = styled.View`
+  flex: 1;
+  background-color: rgba(0, 0, 0, 0.5);
+  justify-content: center;
+  align-items: center;
+`
+const ModalContainer = styled.View`
+  width: 343px;
+  background-color: ${colors.grey_100};
+  border-radius: 20px;
+  padding: 16px;
+`
+const PopImage = styled.Image`
+  width: 112px;
+  height: 118px;
+`

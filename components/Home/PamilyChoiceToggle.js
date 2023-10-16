@@ -4,7 +4,7 @@ import DownIcon from '../../assets/Svgs/arrow_down.svg'
 import UpIcon from '../../assets/Svgs/arrow_up.svg'
 import styled from 'styled-components/native'
 import { colors } from '../../colors'
-import { ModalPopUp } from './ModalPopUp'
+import { ModalPopUp } from '../Shared'
 import Close from '../../assets/Svgs/Close.svg'
 import { useNavigation } from '@react-navigation/native'
 
@@ -52,7 +52,7 @@ export const PamilyChoiceToggle = () => {
           </DropdownBox>
         </>
       )}
-      <ModalPopUp visible={visible}>
+      <ModalPopUp visible={visible} petIcon={true} height={211}>
         <ModalHeader>
           <CloseButton
             onPress={() => {
