@@ -16,17 +16,24 @@ import Edit from '../../assets/Svgs/Todo_edit.svg'
 
 export const TodoCreateBottomSheet = ({ selectedTodo }) => {
   const [users, setUsers] = useState([
-    { name: '하현정', selected: false },
-    { name: '하현정', selected: false },
-    { name: '하현정', selected: false },
-    { name: '하현정', selected: false },
-    { name: '하현정', selected: false },
-    { name: '하현정', selected: false },
-    { name: '하현정', selected: false },
-    { name: '하현정', selected: false },
-    { name: '하현정', selected: false },
-    { name: '하현정', selected: false },
+    { name: '홍길동1', selected: false },
+    { name: '홍길동2', selected: false },
+    { name: '홍길동3', selected: false },
+    { name: '홍길동4', selected: false },
+    { name: '홍길동5', selected: false },
+    { name: '홍길동6', selected: false },
+    { name: '홍길동7', selected: false },
+    { name: '홍길동8', selected: false },
+    { name: '홍길동9', selected: false },
+    { name: '홍길동10', selected: false },
   ])
+  const [name, setName] = useState()
+  const selectedUser = users.reduce((acc, user) => {
+    if (user.selected) {
+      acc.push(user.name)
+    }
+    return acc
+  }, [])
 
   const selectAll = () => {
     const tempArr = JSON.parse(JSON.stringify(users))
@@ -43,7 +50,7 @@ export const TodoCreateBottomSheet = ({ selectedTodo }) => {
     setUsers(tempArr)
   }
   const handleSubmit = () => {
-    console.log('submitted')
+    console.log('submitted') //name, selectedUser
   }
   return (
     <BottomSheetBase
@@ -69,7 +76,7 @@ export const TodoCreateBottomSheet = ({ selectedTodo }) => {
           returnKeyType="done"
           inputMode="text"
           blurOnSubmit={false}
-          onChangeText={(text) => setNickname(text)}
+          onChangeText={(text) => setName(text)}
         />
       </InputContainer>
       <BodyBoldSm_Text style={{ marginBottom: 10 }}>담당자 지정</BodyBoldSm_Text>
@@ -143,7 +150,7 @@ export const TodoEditBottomSheet = ({ selectedTodo }) => {
           </SmallBox>
         </RowContainer>
         <BigBox>
-          <Alarm width={24} height={24} />
+          <Alarm color={colors.grey_800} width={24} height={24} />
           <Detail_Text>시간 알림</Detail_Text>
         </BigBox>
         <BigBox>
@@ -170,15 +177,18 @@ const ContentContainer = styled.View`
   gap: 8px;
   flex: 1;
 `
-const SmallBox = styled.View`
+const SmallBox = styled.TouchableOpacity`
   padding: 20px 16px;
   border-radius: 8px;
   flex: 1;
+  gap: 4;
   align-items: center;
   background-color: ${colors.grey_150};
 `
-const BigBox = styled.View`
+const BigBox = styled.TouchableOpacity`
   height: 48px;
+  gap: 4;
+  flex-direction: row;
   width: 100%;
   border-radius: 8px;
   align-items: center;
