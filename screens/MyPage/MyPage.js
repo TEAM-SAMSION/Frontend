@@ -12,7 +12,10 @@ import { resolveDiscoveryAsync } from 'expo-auth-session'
 import 'react-native-gesture-handler'
 import { BottomSheetBackdrop, BottomSheetModal, BottomSheetModalProvider } from '@gorhom/bottom-sheet'
 import { useRecoilValue } from 'recoil'
-import { AccessTokenAtom } from '../../recoil/AuthAtom'
+import { accessTokenState } from '../../recoil/AuthAtom'
+import Close from '../../assets/Svgs/Close.svg'
+import { ModalPopUp } from '../../components/Shared'
+import { colors } from '../../colors'
 
 export default function MyPage({ navigation }) {
   const [name, setName] = useState('포잇')
@@ -20,9 +23,7 @@ export default function MyPage({ navigation }) {
   const [profileUrl, setProfileUrl] = useState('')
 
   const swipeableRefs = useRef([])
-  // const ACCESSTOKEN = useRecoilValue(AccessTokenAtom);
-  const ACCESSTOKEN =
-    'eyJhbGciOiJIUzM4NCJ9.eyJ0b2tlbl90eXBlIjoiQUNDRVNTX1RPS0VOIiwiZW1haWwiOiJ0ZXN0IiwiaXNzIjoicGF3aXRoIiwiaWF0IjoxNjk2MDg5Nzc3LCJleHAiOjE2OTYxNzYxNzd9.txu_qkuBf1TMGmqjJLnwu0zHsWEM8XuLUd0EVGRBVvTq0MQ5aWf_RZbMbI-OH99i'
+  const ACCESSTOKEN = useRecoilValue(accessTokenState)
 
   const getUserInfo = async () => {
     try {
@@ -79,6 +80,9 @@ export default function MyPage({ navigation }) {
     fetchTeamList()
   }, [])
 
+  const [visible, setVisible] = useState(false)
+  const [deleteTeamId, setDeleteTeamId] = useState('')
+
   const deleteTeam = async (teamId) => {
     const url = `https://dev.pawith.com/register/${teamId}`
     try {
@@ -94,22 +98,26 @@ export default function MyPage({ navigation }) {
     }
   }
 
-  const deleteItem = (deleteId) => {
-    Alert.alert('탈퇴하시겠습니까?', '', [
-      {
-        text: '아니요',
-        style: 'cancel',
-      },
-      {
-        text: '네',
-        onPress: async () => {
-          console.log(deleteId)
-          await deleteTeam(deleteId)
-          swipeableRefs.current[deleteId]?.close()
-          fetchTeamList()
-        },
-      },
-    ])
+  const deleteItem = async () => {
+    console.log(deleteTeamId)
+    await deleteTeam(deleteTeamId)
+    swipeableRefs.current[deleteTeamId]?.close()
+    fetchTeamList()
+    // Alert.alert('탈퇴하시겠습니까?', '', [
+    //   {
+    //     text: '아니요',
+    //     style: 'cancel',
+    //   },
+    //   {
+    //     text: '네',
+    //     onPress: async () => {
+    //       console.log(deleteId)
+    //       await deleteTeam(deleteId)
+    //       swipeableRefs.current[deleteId]?.close()
+    //       fetchTeamList()
+    //     },
+    //   },
+    // ])
   }
 
   const bottomSheetModalRef = useRef(null)
@@ -154,7 +162,10 @@ export default function MyPage({ navigation }) {
                   return (
                     <GroupBox
                       data={item}
-                      handleDelete={() => deleteItem(item.teamId)}
+                      handleDelete={() => {
+                        setDeleteTeamId(item.teamId)
+                        setVisible(true)
+                      }}
                       swipeableRef={(ref) => (swipeableRefs.current[item.teamId] = ref)}
                     />
                   )
@@ -167,6 +178,37 @@ export default function MyPage({ navigation }) {
             <Guide>포잇가이드</Guide>
           </FooterContainer>
         </ScrollView>
+        {/* 팝업 */}
+        <ModalPopUp visible={visible} petIcon={false} height={290}>
+          <PopContent>
+            <PopSubTitle>정말 Pamily를 나가시겠습니까?</PopSubTitle>
+            <PopTitleBox>
+              <PopTitle style={{ color: colors.primary_outline }}>패밀리</PopTitle>
+              <PopTitle>와 함께한 {name} 님의 시간</PopTitle>
+            </PopTitleBox>
+          </PopContent>
+          <DateContent
+            style={{
+              shadowColor: 'rgb(0,0,0)',
+              shadowRadius: 4,
+              shadowOpacity: 0.2,
+              shadowOffset: [0, 0],
+            }}
+          >
+            <DateText>24일</DateText>
+          </DateContent>
+          <PopButtonContainer>
+            <PopButton
+              onPress={deleteItem}
+              style={{ backgroundColor: colors.grey_100, borderColor: colors.grey_150, borderWidth: 2 }}
+            >
+              <PopButtonText>예</PopButtonText>
+            </PopButton>
+            <PopButton onPress={() => setVisible(false)}>
+              <PopButtonText>아니오</PopButtonText>
+            </PopButton>
+          </PopButtonContainer>
+        </ModalPopUp>
         <BottomSheetModal
           ref={bottomSheetModalRef}
           index={0}
@@ -176,7 +218,7 @@ export default function MyPage({ navigation }) {
             borderRadius: 22,
           }}
         >
-          <ProfileImageModal profileUrl={profileUrl} setProfileUrl={setProfileUrl} />
+          <ProfileImageModal profileUrl={profileUrl} setProfileUrl={setProfileUrl} accessToken={ACCESSTOKEN} />
         </BottomSheetModal>
       </ScreenLayout>
     </BottomSheetModalProvider>
@@ -251,4 +293,65 @@ const Guide = styled.Text`
   font-weight: 700;
   line-height: 19px;
   text-decoration-line: underline;
+`
+/////////////
+const PopContent = styled.View`
+  justify-content: center;
+  align-items: center;
+  margin-top: 64px;
+  margin-bottom: 16px;
+`
+const PopTitle = styled.Text`
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 28px;
+  color: ${colors.grey_700};
+`
+const PopSubTitle = styled.Text`
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 22px;
+  color: ${colors.grey_500};
+`
+const PopButtonContainer = styled.View`
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+`
+const PopButton = styled.TouchableOpacity`
+  display: flex;
+  flex: 1 0 0;
+  height: 44px;
+  padding: 12px 16px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 8px;
+  background-color: ${colors.primary_container};
+`
+const PopButtonText = styled.Text`
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 19px;
+  color: ${colors.primary};
+`
+const PopTitleBox = styled.View`
+  flex-direction: row;
+`
+const DateContent = styled.View`
+  height: 56px;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 40px;
+  border-radius: 8px;
+  background-color: ${colors.grey_100};
+`
+const DateText = styled.Text`
+  font-size: 22px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 30px;
 `

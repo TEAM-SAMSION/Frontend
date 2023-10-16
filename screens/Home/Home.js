@@ -11,6 +11,8 @@ import { MainStat } from '../../components/Home/MainStat'
 import { PamilyChoiceToggle } from '../../components/Home/PamilyChoiceToggle'
 import { MainImage } from '../../components/Home/MainImage'
 import { TodoBox } from '../../components/Home/TodoBox'
+import { useRecoilValue } from 'recoil'
+import { accessTokenState } from '../../recoil/AuthAtom'
 
 export default function Home({ navigation }) {
   const [name, setName] = useState('포잇')
@@ -19,10 +21,9 @@ export default function Home({ navigation }) {
   const month = now.getMonth() + 1
   const [progress, setProgress] = useState(80)
 
-  const PamilyNum = 1
+  const PamilyNum = 0
 
-  const ACCESSTOKEN =
-    'eyJhbGciOiJIUzM4NCJ9.eyJ0b2tlbl90eXBlIjoiQUNDRVNTX1RPS0VOIiwiZW1haWwiOiJ0ZXN0IiwiaXNzIjoicGF3aXRoIiwiaWF0IjoxNjk2MDg5Nzc3LCJleHAiOjE2OTYxNzYxNzd9.txu_qkuBf1TMGmqjJLnwu0zHsWEM8XuLUd0EVGRBVvTq0MQ5aWf_RZbMbI-OH99i'
+  const ACCESSTOKEN = useRecoilValue(accessTokenState)
 
   const getUserInfo = async () => {
     try {
@@ -47,7 +48,6 @@ export default function Home({ navigation }) {
         headers: { Authorization: `Bearer ${ACCESSTOKEN}` },
       })
       setProgress(response.data.progress)
-      setProgress(4)
     } catch (error) {
       console.error(error.message)
     }
@@ -77,7 +77,7 @@ export default function Home({ navigation }) {
         </NickBox>
         <PamilyContainer>
           <PamilyChoiceToggle />
-          <MainImage progress={progress} />
+          <MainImage progress={progress} pamilyNum={PamilyNum} />
           <PamilyStatContainer>
             {PamilyNum == 0 ? <NoneText>소속된 Pamily가 없습니다.</NoneText> : <MainStat progress={progress} />}
           </PamilyStatContainer>
@@ -92,11 +92,14 @@ export default function Home({ navigation }) {
               shadowOpacity: 0.15,
               shadowOffset: [0, 0],
             }}
+            onPress={() => {
+              navigation.navigate('CreateTeam')
+            }}
           >
             <Title>Pamily 생성하기</Title>
             <SubTitle>
-              함께할 TODO Pamily를{'\n'}
-              생성해 볼까요?
+              TODO를 함께할{'\n'}
+              Pamily를 생성해 볼까요?
             </SubTitle>
             <StartIcon>
               <Plus />
@@ -109,9 +112,12 @@ export default function Home({ navigation }) {
               shadowOpacity: 0.15,
               shadowOffset: [0, 0],
             }}
+            onPress={() => {
+              navigation.navigate('JoinTeam')
+            }}
           >
             <Title>Pamily 참여하기</Title>
-            <SubTitle>함께할 TODO Pamily를{'\n'}들어가 볼까요?</SubTitle>
+            <SubTitle>TODO를 함께할{'\n'}Pamily에 참여해 볼까요?</SubTitle>
             <StartIcon>
               <Go />
             </StartIcon>
@@ -198,16 +204,15 @@ const NoneText = styled.Text`
   line-height: 19px;
   color: ${colors.grey_400};
 `
-const PamilyStat = styled.View``
 const TeamContainer = styled.View`
   flex-direction: row;
   background-color: ${colors.grey_150};
   justify-content: center;
   padding: 16px;
   gap: 8px;
-  padding-bottom: 100px;
+  padding-bottom: 200px;
 `
-const StartTeamContainer = styled.View`
+const StartTeamContainer = styled.TouchableOpacity`
   width: 170px;
   height: 159px;
   border-radius: 8px;

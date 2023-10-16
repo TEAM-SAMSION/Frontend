@@ -7,7 +7,9 @@ export const MainImage = (props) => {
   const petCategory = 'Dog'
 
   const getImageSource = () => {
-    if (petCategory === 'Dog') {
+    if (props.pamilyNum == 0) {
+      return require(`../../assets/Imgs/DogDefault.png`)
+    } else if (petCategory === 'Dog') {
       if (progress === 0) return require(`../../assets/Imgs/Dog0.png`)
       if (progress <= 25) return require(`../../assets/Imgs/Dog25.png`)
       if (progress <= 50) return require(`../../assets/Imgs/Dog50.png`)
