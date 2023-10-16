@@ -12,7 +12,7 @@ import { resolveDiscoveryAsync } from 'expo-auth-session'
 import 'react-native-gesture-handler'
 import { BottomSheetBackdrop, BottomSheetModal, BottomSheetModalProvider } from '@gorhom/bottom-sheet'
 import { useRecoilValue } from 'recoil'
-import { AccessTokenAtom } from '../../recoil/AuthAtom'
+import { accessTokenState } from '../../recoil/AuthAtom'
 
 export default function MyPage({ navigation }) {
   const [name, setName] = useState('포잇')
@@ -20,9 +20,7 @@ export default function MyPage({ navigation }) {
   const [profileUrl, setProfileUrl] = useState('')
 
   const swipeableRefs = useRef([])
-  // const ACCESSTOKEN = useRecoilValue(AccessTokenAtom);
-  const ACCESSTOKEN =
-    'eyJhbGciOiJIUzM4NCJ9.eyJ0b2tlbl90eXBlIjoiQUNDRVNTX1RPS0VOIiwiZW1haWwiOiJ0ZXN0IiwiaXNzIjoicGF3aXRoIiwiaWF0IjoxNjk2MDg5Nzc3LCJleHAiOjE2OTYxNzYxNzd9.txu_qkuBf1TMGmqjJLnwu0zHsWEM8XuLUd0EVGRBVvTq0MQ5aWf_RZbMbI-OH99i'
+  const ACCESSTOKEN = useRecoilValue(accessTokenState)
 
   const getUserInfo = async () => {
     try {
@@ -176,7 +174,7 @@ export default function MyPage({ navigation }) {
             borderRadius: 22,
           }}
         >
-          <ProfileImageModal profileUrl={profileUrl} setProfileUrl={setProfileUrl} />
+          <ProfileImageModal profileUrl={profileUrl} setProfileUrl={setProfileUrl} accessToken={ACCESSTOKEN} />
         </BottomSheetModal>
       </ScreenLayout>
     </BottomSheetModalProvider>
