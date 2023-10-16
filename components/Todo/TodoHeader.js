@@ -3,6 +3,7 @@ import Alarm from '../../assets/Svgs/Alarm.svg'
 import ArrowDown from '../../assets/Svgs/arrow_down.svg'
 import Report from '../../assets/Svgs/report.svg'
 import Schedule from '../../assets/Svgs/Calendar.svg'
+import { colors } from '../../colors'
 
 export const TodoHeader = ({ navigation }) => {
   return (
@@ -16,14 +17,14 @@ export const TodoHeader = ({ navigation }) => {
           <Schedule width={24} height={24} />
         </IconContainer>
         <IconContainer>
-          <Report width={24} height={24} />
+          <Report color={colors.grey_350} width={24} height={24} />
         </IconContainer>
         <IconContainer
           onPress={() => {
             navigation.navigate('Setting')
           }}
         >
-          <Alarm width={24} height={24} />
+          <Alarm color={colors.grey_350} width={24} height={24} />
         </IconContainer>
       </RightIcon>
     </CustomHeader>

@@ -11,7 +11,7 @@ import { userInfoState } from '../../recoil/AuthAtom'
 import axios from 'axios'
 import { TodoItem } from '../../components/Todo/TodoItem'
 import { NoItem } from '../../components/Todo/NoToDoItem'
-import BottomSheet, { BottomSheetBackdrop } from '@gorhom/bottom-sheet'
+import { BottomSheetBackdrop, BottomSheetModal, BottomSheetModalProvider } from '@gorhom/bottom-sheet'
 import { TodoCreateBottomSheet, TodoEditBottomSheet } from '../../components/Todo/TodoBottomSheets'
 
 import Add from '../../assets/Svgs/add.svg'
@@ -26,6 +26,7 @@ export default Todo = ({ navigation }) => {
   const [category, setCategory] = useState('')
   const [isCreateMode, setIsCreateMode] = useState(false)
   const bottomModal = useRef()
+  const [snappoints, setSnappoints] = useState([])
 
   //KeyboardAwareView가 정상 작동하기 위해서 StatusBar의 높이값을 초기에 구해야함.
   Platform.OS == 'ios'
@@ -72,14 +73,19 @@ export default Todo = ({ navigation }) => {
     // getTeamUser(1).then((res) => console.log(res))
   }, [])
 
+  const popKeyboard = () => {
+    setSnappoints(['90%'])
+  }
   const createTodo = () => {
     setIsCreateMode(true)
-    bottomModal.current?.snapToIndex(0)
+    setSnappoints(['55%'])
+    bottomModal.current?.present()
   }
   const editTodo = (index) => {
     setIsCreateMode(false)
     setSelectedTodo(todoData[index])
-    bottomModal.current?.snapToIndex(1)
+    setSnappoints(['42%'])
+    bottomModal.current?.present()
   }
   return (
     <ScreenLayout verticalOffset={statusBarHeight + 44} behavior="position">
@@ -126,11 +132,12 @@ export default Todo = ({ navigation }) => {
           </ContentBase>
         </ScrollView>
       </ContentContainer>
-      <BottomSheet
+      <BottomSheetModal
         ref={bottomModal}
+        onDismiss={() => Keyboard.dismiss()}
         backdropComponent={renderBackdrop}
-        index={-1}
-        snapPoints={['55%', '40%']}
+        // index={-1}
+        snapPoints={snappoints}
         enablePanDownToClose={false}
         enableHandlePanningGesture={false}
         enableContentPanningGesture={false}
@@ -141,11 +148,11 @@ export default Todo = ({ navigation }) => {
         handleIndicatorStyle={{ backgroundColor: colors.grey_300, width: 72, height: 6, marginTop: 8 }}
       >
         {isCreateMode ? (
-          <TodoCreateBottomSheet selectedTodo={selectedTodo} />
+          <TodoCreateBottomSheet popKeyboard={popKeyboard} selectedTodo={selectedTodo} />
         ) : (
-          <TodoEditBottomSheet selectedTodo={selectedTodo} />
+          <TodoEditBottomSheet popKeyboard={popKeyboard} selectedTodo={selectedTodo} />
         )}
-      </BottomSheet>
+      </BottomSheetModal>
     </ScreenLayout>
   )
 }

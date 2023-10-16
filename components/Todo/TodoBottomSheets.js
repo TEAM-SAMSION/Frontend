@@ -38,7 +38,9 @@ export const TodoEditBottomSheet = ({ selectedTodo }) => {
   return (
     <NavigationContainer independent={true}>
       <Stack.Navigator screenOptions={screenOptions} headerMode="screen">
-        <Stack.Screen name="TodoEdit" options={screenAOptions} component={TodoEdit} selectedTodo={selectedTodo} />
+        <Stack.Screen name="TodoEdit" options={screenAOptions}>
+          {(props) => <TodoEdit {...props} selectedTodo={selectedTodo} />}
+        </Stack.Screen>
         <Stack.Screen name="TimeSetting" options={screenBOptions} component={TimeSetting} />
       </Stack.Navigator>
     </NavigationContainer>
@@ -46,26 +48,33 @@ export const TodoEditBottomSheet = ({ selectedTodo }) => {
 }
 const TimeSetting = ({ navigation }) => {
   const [date, setDate] = useState(new Date(1598051730000))
-  const [mode, setMode] = useState('date')
+  const [mode, setMode] = useState('time')
+
   return (
     <BottomSheetBase
       style={{
         backgroundColor: colors.grey_100,
-        height: '142%', //*** */
         paddingTop: Platform.OS === 'android' ? 8 : 0,
       }}
     >
-      <BackButton onPress={() => navigation.goBack()}>
-        <Back width={24} height={24} />
-      </BackButton>
+      <TimeSettingHeader>
+        <BackButton style={{ position: 'absolute', top: 12 }} onPress={() => navigation.goBack()}>
+          <Back width={24} height={24} />
+        </BackButton>
+        <Body_Text style={{ width: '100%', textAlign: 'center' }}>시간 설정</Body_Text>
+      </TimeSettingHeader>
       <DateTimePicker
-        style={{ backgroundColor: 'chartreuse' }}
+        style={{ height: '70%' }}
+        textColor={colors.grey_700}
         testID="dateTimePicker"
         value={date}
+        display="spinner"
         mode={mode}
-        is24Hour={true}
+        is24Hour={false}
+        // minuteInterval={5}
         onChange={() => console.log('hello')}
       />
+      <Button_PinkBg isLoading={false} isEnabled={true} text="완료" func={() => console.log('submitted')} />
     </BottomSheetBase>
   )
 }
@@ -124,7 +133,7 @@ export const TodoEdit = ({ navigation, selectedTodo }) => {
   )
 }
 
-export const TodoCreateBottomSheet = ({ navigation }) => {
+export const TodoCreateBottomSheet = ({ popKeyboard }) => {
   const [users, setUsers] = useState([
     { name: '홍길동1', selected: false },
     { name: '홍길동2', selected: false },
@@ -166,7 +175,6 @@ export const TodoCreateBottomSheet = ({ navigation }) => {
     <BottomSheetBase
       style={{
         backgroundColor: colors.grey_100,
-        height: '142%', //*** */
         paddingTop: Platform.OS === 'android' ? 8 : 0,
       }}
     >
@@ -185,6 +193,7 @@ export const TodoCreateBottomSheet = ({ navigation }) => {
           inputMode="text"
           blurOnSubmit={false}
           onChangeText={(text) => setName(text)}
+          onFocus={() => popKeyboard()}
         />
       </InputContainer>
       <BodyBoldSm_Text style={{ marginBottom: 10 }}>담당자 지정</BodyBoldSm_Text>
@@ -260,14 +269,19 @@ const RowContainer = styled.View`
 const BottomSheetBase = styled.View`
   width: 100%;
   height: 100%;
-  padding: 24px;
+  padding: 24px 24px 32px 24px;
   flex-direction: column;
   justify-content: space-between;
 `
 const BottomSheetHeader = styled.View`
-  flex-direction: column;
+  flex-direction: row;
   padding: 16px;
-  align-items: center;
+  justify-content: center;
+`
+const TimeSettingHeader = styled.View`
+  flex-direction: row;
+  padding: 16px 16px 0px 16px;
+  justify-content: space-between;
 `
 const UserItem = styled.TouchableOpacity`
   padding: 8px 12px;
