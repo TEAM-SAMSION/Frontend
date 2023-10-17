@@ -4,7 +4,7 @@ import { colors } from '../../colors'
 import styled from 'styled-components/native'
 import { TodoHeader } from '../../components/Todo/TodoHeader'
 import { BodyBold_Text, Label_Text } from '../../components/Fonts'
-import { Keyboard, NativeModules, Platform, ScrollView } from 'react-native'
+import { Keyboard, NativeModules, Platform, ScrollView, TextInput } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage' //캐시 지우기 때문에 임시로
 import { useRecoilValue } from 'recoil'
 import { userInfoState } from '../../recoil/AuthAtom'
@@ -16,17 +16,22 @@ import { TodoCreateBottomSheet, TodoEditBottomSheet } from '../../components/Tod
 
 import Add from '../../assets/Svgs/add.svg'
 import { MyCalendarStrip } from '../../components/Todo/CalendarStrip'
+import { CategoryCreate } from '../../components/Todo/CategoryCreate'
 
 export default Todo = ({ navigation }) => {
   const { StatusBarManager } = NativeModules
   const { accessToken } = useRecoilValue(userInfoState)
+
   const [statusBarHeight, setStatusBarHeight] = useState(0)
+  const [inputWidth, setInputWidth] = useState(100)
   const [todoData, setTodoData] = useState(null)
   const [selectedTodo, setSelectedTodo] = useState(null)
   const [category, setCategory] = useState('')
   const [isCreateMode, setIsCreateMode] = useState(false)
-  const bottomModal = useRef()
   const [snappoints, setSnappoints] = useState([])
+
+  const bottomModal = useRef()
+  const inputRef = useRef()
 
   //KeyboardAwareView가 정상 작동하기 위해서 StatusBar의 높이값을 초기에 구해야함.
   Platform.OS == 'ios'
@@ -53,26 +58,35 @@ export default Todo = ({ navigation }) => {
     // setTodoData(response.data.content)
     //{"content": [{"status": "INCOMPLETE", "task": "test", "todoId": 6145}, {"status": "INCOMPLETE", "task": "test", "todoId": 6146}, {"status": "INCOMPLETE", "task": "test", "todoId": 6147}, {"status": "INCOMPLETE", "task": "test", "todoId": 6148}], "hasNext": false, "page": 0, "size": 10}
     // }
-    let tempArr = {
-      //Todo 생성이 원활하지 못하기 때문에, 우선 임시로 더미데이터 채워넣기
-      content: [
-        { status: 'INCOMPLETE', task: 'test1', todoId: 6145 },
-        { status: 'INCOMPLETE', task: 'test2', todoId: 6146 },
-        { status: 'INCOMPLETE', task: 'test3', todoId: 6147 },
-        { status: 'INCOMPLETE', task: 'test4', todoId: 6148 },
-      ],
-      hasNext: false,
-      page: 0,
-      size: 10,
-    }
-    setTodoData(tempArr.content)
+    // let tempArr = {
+    //   //Todo 생성이 원활하지 못하기 때문에, 우선 임시로 더미데이터 채워넣기
+    //   content: [
+    //     { status: 'INCOMPLETE', task: 'test1', todoId: 6145 },
+    //     { status: 'INCOMPLETE', task: 'test2', todoId: 6146 },
+    //     { status: 'INCOMPLETE', task: 'test3', todoId: 6147 },
+    //     { status: 'INCOMPLETE', task: 'test4', todoId: 6148 },
+    //   ],
+    //   hasNext: false,
+    //   page: 0,
+    //   size: 10,
+    // }
+    // setTodoData(tempArr.content)
+    console.log(response.data)
+  }
+  const handleTextInputText = (text) => {
+    console.log(text)
+    setCategory(text)
   }
   useEffect(() => {
     // getDatas()
-    getTodos(1)
+    getTodos(3)
     // getTeamUser(1).then((res) => console.log(res))
   }, [])
 
+  const createCategory = () => {
+    Keyboard.dismiss()
+    console.log('categoryCreated')
+  }
   const popKeyboard = () => {
     setSnappoints(['90%'])
   }
@@ -91,29 +105,17 @@ export default Todo = ({ navigation }) => {
     <ScreenLayout verticalOffset={statusBarHeight + 44} behavior="position">
       <ContentContainer>
         <TodoHeader navigation={navigation} />
-        <ScrollView>
+        <ScrollView showsVerticalScrollIndicator={false}>
           <ContentBase>
             <MyCalendarStrip />
             {/* <CategoryInputContainer style={{ width: category ? 32 + category.length * 16 : 190 }}> */}
             {!todoData && <NoItem />}
-            {/* <CategoryInputContainer style={{ width: 190 }}>
-              <Circle style={{ backgroundColor: colors.primary }}></Circle>
-              <CategoryInput
-                autoCapitalize="none"
-                placeholderTextColor={colors.grey_600}
-                onSubmitEditing={() => Keyboard.dismiss()}
-                placeholder="카테고리를 입력해주세요"
-                returnKeyType="done"
-                inputMode="text"
-                blurOnSubmit={false}
-                onChangeText={(text) => setCategory(text)}
-              />
-            </CategoryInputContainer> */}
-            <CategoryInputContainer onPress={() => createTodo()}>
+            <CategoryCreate createCategory={createCategory} handleTextInputText={handleTextInputText} />
+            <CategoryContainer onPress={() => createTodo()}>
               <Circle style={{ backgroundColor: colors.primary }}></Circle>
               <Label_Text>고고쉼 운영</Label_Text>
               <Add width={16} height={16} />
-            </CategoryInputContainer>
+            </CategoryContainer>
             {todoData &&
               todoData?.map((data, index) => (
                 <TodoItem title={data.task} status={data.status} key={index} index={index} editTodo={editTodo} />
@@ -156,11 +158,6 @@ export default Todo = ({ navigation }) => {
     </ScreenLayout>
   )
 }
-const CategoryInput = styled.TextInput`
-  margin-left: 8px;
-  font-family: Spoqa-Medium;
-  font-size: 14px;
-`
 const ContentBase = styled.View`
   flex: 1;
 `
@@ -169,7 +166,7 @@ const Circle = styled.View`
   height: 12px;
   border-radius: 6px;
 `
-const CategoryInputContainer = styled.TouchableOpacity`
+const CategoryContainer = styled.TouchableOpacity`
   align-self: flex-start;
   flex-direction: row;
   align-items: center;

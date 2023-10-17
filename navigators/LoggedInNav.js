@@ -7,7 +7,9 @@ import { colors } from '../colors'
 
 import Home from '../assets/Svgs/Home.svg'
 import Logo from '../assets/Svgs/LOGO_Symbol.svg'
+import MyPage from '../assets/Svgs/Mypage.svg'
 import { DetailSm_Text } from '../components/Fonts'
+import { Platform } from 'react-native'
 
 const Tabs = createBottomTabNavigator()
 
@@ -19,7 +21,8 @@ export default function LoggedInNav() {
           headerShown: false,
           tabBarShowLabel: false,
           tabBarStyle: {
-            paddingTop: 16,
+            height: Platform.OS == 'android' ? 68 : 88,
+            paddingTop: Platform.OS == 'android' ? 0 : 16,
           },
         }}
       >
@@ -50,7 +53,21 @@ export default function LoggedInNav() {
         >
           {() => <ToDoNav />}
         </Tabs.Screen>
-        <Tabs.Screen name="MyPageNav">{() => <MyPageNav />}</Tabs.Screen>
+        <Tabs.Screen
+          name="MyPageNav"
+          options={{
+            tabBarIcon: ({ focused }) => (
+              <>
+                <MyPage style={{ color: focused ? colors.grey_700 : colors.grey_350 }} width={24} height={24} />
+                <DetailSm_Text color={focused ? colors.grey_700 : colors.grey_350} style={{ marginTop: 4 }}>
+                  마이페이지
+                </DetailSm_Text>
+              </>
+            ),
+          }}
+        >
+          {() => <MyPageNav />}
+        </Tabs.Screen>
       </Tabs.Navigator>
     </BottomSheetModalProvider>
   )

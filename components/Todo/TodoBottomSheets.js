@@ -5,6 +5,7 @@ import styled from 'styled-components/native'
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator, TransitionPresets } from '@react-navigation/stack'
 import DateTimePicker from '@react-native-community/datetimepicker'
+// import WheelPickerExpo from 'react-native-wheel-picker-expo'
 
 import { colors } from '../../colors'
 import { Input, url } from '../Shared'
@@ -48,7 +49,6 @@ export const TodoEditBottomSheet = ({ selectedTodo }) => {
 }
 const TimeSetting = ({ navigation }) => {
   const [date, setDate] = useState(new Date(1598051730000))
-  const [mode, setMode] = useState('time')
 
   return (
     <BottomSheetBase
@@ -69,11 +69,33 @@ const TimeSetting = ({ navigation }) => {
         testID="dateTimePicker"
         value={date}
         display="spinner"
-        mode={mode}
+        mode={'time'}
         is24Hour={false}
         // minuteInterval={5}
         onChange={() => console.log('hello')}
       />
+      {/* ) : (
+        <WheelPickerExpo
+          height={200}
+          width="100%"
+          initialSelectedIndex={0}
+          items={selectableDatas.map((name) => ({ label: name, value: '' }))}
+          onChange={({ item }) => setValue(item.label)}
+          backgroundColor={isDark ? colors.grey_8 : colors.white}
+          selectedStyle={{ borderColor: colors.grey_5, borderWidth: StyleSheet.hairlineWidth }}
+          renderItem={(props) => (
+            <Text
+              style={{
+                fontFamily: 'Pretendard-Regular',
+                fontSize: 20,
+                color: isDark ? colors.white : colors.black,
+              }}
+            >
+              {props.label}
+            </Text>
+          )}
+        />
+      )} */}
       <Button_PinkBg isLoading={false} isEnabled={true} text="완료" func={() => console.log('submitted')} />
     </BottomSheetBase>
   )

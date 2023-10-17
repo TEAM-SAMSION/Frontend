@@ -40,7 +40,7 @@ export const MyCalendarStrip = () => {
           backgroundColor: colors.primary_container,
           borderRadius: 4,
         }}
-        // scrollerPaging //논의 필요
+        scrollerPaging //논의 필요
         calendarHeaderContainerStyle={{ height: 0 }}
         onWeekChanged={(a, b) => {
           setMonth(b.month() + 1)
