@@ -128,9 +128,6 @@ export default Todo = ({ navigation }) => {
             >
               <BodyBold_Text color={colors.grey_400}>캐시 지우기</BodyBold_Text>
             </TodayButton>
-            <TodayButton style={{ marginTop: 32 }} onPress={() => logout()}>
-              <BodyBold_Text color={colors.grey_400}>로그아웃</BodyBold_Text>
-            </TodayButton>
           </ContentBase>
         </ScrollView>
       </ContentContainer>

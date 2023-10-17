@@ -8,27 +8,6 @@ export const createRandomCode = async (accessToken) => {
   })
 }
 
-export const createTodoTeam = async (accessToken, name) => {
-  //임시로 팀 생성하기 위해 만들어본 함수호출문 -> FormData 어렵다ㅏㅏ~~
-  let API = `/todo/team`
-  const randomCode = createRandomCode(accessToken)
-  const teamData = new FormData()
-  teamData.append('teamName', 'TestTeamName')
-  teamData.append('randomCode', randomCode)
-
-  teamData.append('petRegisters[0].name', 'testPetName')
-  teamData.append('petRegisters[0].age', 2)
-  teamData.append('petRegisters[0].description', 'testDescription')
-
-  const response = await axios.post(url + API, teamData, {
-    headers: {
-      Authorization: accessToken,
-      'Content-Type': 'multipart/form-data;charset=UTF-8; boundary=6o2knFse3p53ty9dmcQvWAIx1zInP11uCfbm',
-    },
-  })
-  console.log(response.data)
-}
-
 export const getTodoTeamList = async (accessToken, page, size) => {
   let API = `/todo/team/list?page=${page}&size=${size}` //500
   const response = await axios.get(url + API, {
