@@ -4,18 +4,18 @@ import { colors } from '../../colors'
 import Add from '../../assets/Svgs/add.svg'
 import { TextInput } from 'react-native'
 
-export const CategoryCreate = ({ handleTextInputText, createCategory }) => {
+export const CategoryCreate = ({ createCategory }) => {
   return (
     <CategoryCreateContainer>
       <Circle style={{ backgroundColor: colors.primary }}></Circle>
       <TextInput
         style={{ fontFamily: 'Spoqa-Medium', minWidth: 80, width: this.state?.inputWidth }}
         placeholderTextColor={colors.grey_600}
-        onSubmitEditing={() => createCategory()}
+        onSubmitEditing={(input) => createCategory(input.nativeEvent.text)}
         placeholder="카테고리를 입력해주세요"
         returnKeyType="done"
         inputMode="text"
-        onChangeText={(text) => handleTextInputText(text)}
+        // onChangeText={(text) => handleTextInputText(text)}
       />
       <Add width={16} height={16} />
     </CategoryCreateContainer>

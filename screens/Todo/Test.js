@@ -7,7 +7,13 @@ import { useRecoilValue } from 'recoil'
 import { userInfoState } from '../../recoil/AuthAtom'
 import { colors } from '../../colors'
 import { BodyBold_Text } from '../../components/Fonts'
-import { createRandomCode } from '../../components/Todo/Apis'
+import {
+  createRandomCode,
+  getCategoryList,
+  getTeamUser,
+  getTeamUsers,
+  getTodoTeamList,
+} from '../../components/Todo/Apis'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
 export default Test = () => {
@@ -34,10 +40,14 @@ export default Test = () => {
     })
     console.log(response.data)
   }
+
   return (
     <SafeAreaView>
-      <MyButton style={{ marginTop: 32 }} onPress={() => createTodoTeam(accessToken)}>
-        <BodyBold_Text color={colors.grey_400}>로그아웃</BodyBold_Text>
+      <MyButton
+        style={{ marginTop: 32 }}
+        onPress={() => getCategoryList(1, accessToken).then((res) => console.log(res))}
+      >
+        <BodyBold_Text color={colors.grey_400}>함수</BodyBold_Text>
       </MyButton>
       <MyButton
         style={{ marginTop: 32 }}

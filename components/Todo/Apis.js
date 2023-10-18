@@ -1,3 +1,6 @@
+import axios from 'axios'
+import { url } from '../Shared'
+
 export const createRandomCode = async (accessToken) => {
   let API = `/todo/team/code`
   const response = await axios.get(url + API, {
@@ -7,7 +10,7 @@ export const createRandomCode = async (accessToken) => {
     },
   })
 }
-
+//정상작동됨
 export const getTodoTeamList = async (accessToken, page, size) => {
   let API = `/todo/team/list?page=${page}&size=${size}` //500
   const response = await axios.get(url + API, {
@@ -16,6 +19,16 @@ export const getTodoTeamList = async (accessToken, page, size) => {
     },
   })
   return response.data
+}
+export const getCategoryList = async (teamId, accessToken) => {
+  let API = `/category/${teamId}`
+  console.log(teamId, accessToken)
+  const response = await axios.get(url + API, {
+    headers: {
+      Authorization: accessToken,
+    },
+  })
+  return response.data.categories
 }
 
 export const getTeamUsers = async (data) => {
@@ -26,8 +39,8 @@ export const getTeamUsers = async (data) => {
   })
   await Promise.all(promises)
 }
-export const getTeamUser = async (teamId) => {
-  console.log(teamId)
+//정상작동됨
+export const getTeamUser = async (teamId, accessToken) => {
   let API = `/register/list?teamId=${teamId}`
   const response = await axios.get(url + API, {
     headers: {
@@ -35,4 +48,31 @@ export const getTeamUser = async (teamId) => {
     },
   })
   return response.data
+}
+
+export const getTodos = async (categoryId, accessToken) => {
+  let API = `/todo/${categoryId}`
+  const response = await axios.get(url + API, {
+    params: {
+      moveDate: '2023-10-18',
+    },
+    headers: {
+      Authorization: accessToken,
+    },
+  })
+  return response.data.todos
+}
+
+export const getAssignedTodos = async (teamId, accessToken, page = 0, size = 20) => {
+  let API = `/todo/list/${teamId}`
+  const response = await axios.get(url + API, {
+    params: {
+      page,
+      size,
+    },
+    headers: {
+      Authorization: accessToken,
+    },
+  })
+  return response.data.content
 }

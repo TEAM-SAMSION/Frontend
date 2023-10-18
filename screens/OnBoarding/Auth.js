@@ -28,14 +28,14 @@ export default function Auth({ navigation }) {
 
   const finishLogin = (accessToken, refreshToken) => {
     //토큰 저장
-    console.log('AsyncStorae에 토큰 저장됨')
+    console.log('토큰 값들 recoil에 갱신됨')
     setAccessToken(accessToken)
     setRefreshToken(refreshToken)
     //권한확인 API 통해서 닉네임 변경 거치는지 or 홈화면 바로 가는지
     checkAuthority(accessToken).then((res) => {
       if (res.authority == 'USER') {
         //향후 앱을 껐다가 켜도 유효한 사용자가 앱을 접속하는 것이기 때문에, 캐시에 토큰 저장
-        console.log('권한 User라서 홈화면으로 넘어감')
+        console.log('권한 User라서 홈화면으로 넘어감 , AsyncStorage에 토큰 저장됨')
         AsyncStorage.setItem('accessToken', accessToken)
         setLoggedIn(true)
       } else if (res.authority == 'GUEST') {

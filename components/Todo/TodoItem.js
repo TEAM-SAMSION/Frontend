@@ -6,7 +6,6 @@ import InComplete from '../../assets/Imgs/InComplete.png'
 import styled from 'styled-components/native'
 
 export const TodoItem = ({ editTodo, title, status, mate = ['김형석1', '김형석2', '김형석3'], index }) => {
-  console.log('김형석1')
   const [isDone, setIsDone] = useState(status == 'COMPLETE')
   const handlePress = () => {
     //backend쪽으로 isPressed 변경된 값 보내는 구문
@@ -19,9 +18,9 @@ export const TodoItem = ({ editTodo, title, status, mate = ['김형석1', '김�
           {title}
         </Label_Text>
         <MateContainer>
-          {mate.map((name) => {
+          {mate.map((name, id) => {
             return (
-              <MateItem>
+              <MateItem key={id}>
                 <Detail_Text color={colors.grey_600}>{name}</Detail_Text>
               </MateItem>
             )

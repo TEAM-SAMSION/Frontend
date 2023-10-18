@@ -17,23 +17,27 @@ import { TodoCreateBottomSheet, TodoEditBottomSheet } from '../../components/Tod
 import Add from '../../assets/Svgs/add.svg'
 import { MyCalendarStrip } from '../../components/Todo/CalendarStrip'
 import { CategoryCreate } from '../../components/Todo/CategoryCreate'
+import { getCategoryList, getTeamUser, getTodoTeamList, getTodos } from '../../components/Todo/Apis'
 
 export default Todo = ({ navigation }) => {
   const { StatusBarManager } = NativeModules
   const { accessToken } = useRecoilValue(userInfoState)
 
   const [statusBarHeight, setStatusBarHeight] = useState(0)
-  const [inputWidth, setInputWidth] = useState(100)
-  const [todoData, setTodoData] = useState(null)
+
+  const [teamList, setTeamList] = useState([])
+  const [teamUserList, setTeamUserList] = useState([])
+  const [categoryList, setCategoryList] = useState([])
+  const [selectedTeamID, setSelectedTeamID] = useState(null)
+
+  const [todosByCategory, setTodosByCategory] = useState(null)
   const [selectedTodo, setSelectedTodo] = useState(null)
-  const [category, setCategory] = useState('')
   const [isCreateMode, setIsCreateMode] = useState(false)
   const [snappoints, setSnappoints] = useState([])
 
   const bottomModal = useRef()
-  const inputRef = useRef()
 
-  //KeyboardAwareView가 정상 작동하기 위해서 StatusBar의 높이값을 초기에 구해야함.
+  //KeyboardAwareView가 정상 작동하기 위해서 StatusBar의 높이값을 초기에 구해야함. prettier-ignore
   Platform.OS == 'ios'
     ? StatusBarManager.getHeight((statusBarFrameData) => {
         setStatusBarHeight(statusBarFrameData.height)
@@ -43,50 +47,55 @@ export default Todo = ({ navigation }) => {
   //prettier-ignore
   const renderBackdrop = useCallback((props) => <BottomSheetBackdrop {...props} pressBehavior="close" appearsOnIndex={0} disappearsOnIndex={-1} />,[],)
 
-  const getTodos = async (teamId, page = 0, size = 10) => {
-    let API = `/todo/list/${teamId}`
-    const response = await axios.get(url + API, {
-      params: {
-        page: 0,
-        size: 10,
-      },
-      headers: {
-        Authorization: accessToken,
-      },
-    })
-    // if (response.data.content.length != 0) {//content가 비어있을때
-    // setTodoData(response.data.content)
-    //{"content": [{"status": "INCOMPLETE", "task": "test", "todoId": 6145}, {"status": "INCOMPLETE", "task": "test", "todoId": 6146}, {"status": "INCOMPLETE", "task": "test", "todoId": 6147}, {"status": "INCOMPLETE", "task": "test", "todoId": 6148}], "hasNext": false, "page": 0, "size": 10}
-    // }
-    // let tempArr = {
-    //   //Todo 생성이 원활하지 못하기 때문에, 우선 임시로 더미데이터 채워넣기
-    //   content: [
-    //     { status: 'INCOMPLETE', task: 'test1', todoId: 6145 },
-    //     { status: 'INCOMPLETE', task: 'test2', todoId: 6146 },
-    //     { status: 'INCOMPLETE', task: 'test3', todoId: 6147 },
-    //     { status: 'INCOMPLETE', task: 'test4', todoId: 6148 },
-    //   ],
-    //   hasNext: false,
-    //   page: 0,
-    //   size: 10,
-    // }
-    // setTodoData(tempArr.content)
-    console.log(response.data)
-  }
-  const handleTextInputText = (text) => {
+  const createCategory = (text) => {
+    Keyboard.dismiss()
     console.log(text)
-    setCategory(text)
+  }
+  const getInitDatas = () => {
+    //TodoTeam과 Default TodoTeam에 한해 User들을 일시적으로 반환(나중에 Team 변경하면 해당 변수 대체됨)
+    getTodoTeamList(accessToken, 0, 10)
+      .then((res) => {
+        //1. TeamList를 저장
+        let tempTeamList = []
+        res.content?.map((team) => tempTeamList.push({ id: team.teamId, name: team.teamName }))
+        setTeamList(tempTeamList)
+        setSelectedTeamID(tempTeamList[tempTeamList.length - 1]?.id)
+        return tempTeamList[tempTeamList.length - 1]?.id
+      })
+      .then((selectedID_temp) => {
+        getCategoryList(selectedID_temp, accessToken).then((categories) => {
+          setCategoryList(categories) //[{"categoryId": 1, "categoryName": "test"}, {"categoryId": 2, "categoryName": "test2"}, {"categoryId": 3, "categoryName": "페밀리 카테고리"}]
+          getTodosByCategory(categories)
+        })
+        return selectedID_temp
+      })
+      .then((selectedID_temp) =>
+        getTeamUser(selectedID_temp, accessToken).then((res) => {
+          //4. TeamUser를 저장/ teamList의 가장 마지막 요소가 가장 처음에 만들어진 Team이라서 length-1번째 teamId를 인자로 넣었음
+          let tempTeamUserList = []
+          res.registers?.map((user) => tempTeamUserList.push({ id: user.registerId, name: user.registerName }))
+          setTeamUserList(tempTeamUserList) //나중에 Team 변경하면 해당 변수 대체됨
+        }),
+      )
+  }
+  const getTodosByCategory = async (categories) => {
+    // 각 categoryId에 대해 getTodo 함수를 병렬로 호출
+    const todoPromises = categories.map((category) => getTodos(category.categoryId, accessToken))
+    // Promise.all()를 사용하여 모든 비동기 작업 완료를 기다림
+    const todosArr = await Promise.all(todoPromises)
+    // 각 categoryId와 그에 해당하는 todo 객체들을 묶음
+    const todosByCategory = categories.reduce((acc, category, id) => {
+      acc[category.categoryId - 1] = todosArr[id] //categoryId가 1에서부터 시작하기에 배열 첫번째 요소를 비우지 않게 하기 위해, id-1로 처리함
+      return acc
+    }, {})
+    // console.log(JSON.stringify(todosByCategory))
+    console.log(Object.entries(todosByCategory))
+    setTodosByCategory(Object.entries(todosByCategory))
   }
   useEffect(() => {
-    // getDatas()
-    getTodos(3)
-    // getTeamUser(1).then((res) => console.log(res))
+    getInitDatas()
   }, [])
 
-  const createCategory = () => {
-    Keyboard.dismiss()
-    console.log('categoryCreated')
-  }
   const popKeyboard = () => {
     setSnappoints(['90%'])
   }
@@ -109,17 +118,23 @@ export default Todo = ({ navigation }) => {
           <ContentBase>
             <MyCalendarStrip />
             {/* <CategoryInputContainer style={{ width: category ? 32 + category.length * 16 : 190 }}> */}
-            {!todoData && <NoItem />}
-            <CategoryCreate createCategory={createCategory} handleTextInputText={handleTextInputText} />
-            <CategoryContainer onPress={() => createTodo()}>
-              <Circle style={{ backgroundColor: colors.primary }}></Circle>
-              <Label_Text>고고쉼 운영</Label_Text>
-              <Add width={16} height={16} />
-            </CategoryContainer>
-            {todoData &&
-              todoData?.map((data, index) => (
-                <TodoItem title={data.task} status={data.status} key={index} index={index} editTodo={editTodo} />
-              ))}
+            {!todosByCategory && <NoItem />}
+            <CategoryCreate createCategory={createCategory} />
+            {todosByCategory &&
+              todosByCategory?.map((todos, id) => {
+                return (
+                  <>
+                    <CategoryContainer onPress={() => createTodo()}>
+                      <Circle style={{ backgroundColor: colors.primary }}></Circle>
+                      <Label_Text>{categoryList[id].categoryName}</Label_Text>
+                      <Add width={16} height={16} />
+                    </CategoryContainer>
+                    {todos[1].map((todo, id) => (
+                      <TodoItem title={todo.task} status={todo.status} key={id} index={id} editTodo={editTodo} />
+                    ))}
+                  </>
+                )
+              })}
             <TodayButton
               style={{ marginTop: 32 }}
               onPress={() => {
