@@ -155,19 +155,13 @@ export const TodoEdit = ({ navigation, selectedTodo }) => {
   )
 }
 
-export const TodoCreateBottomSheet = ({ popKeyboard }) => {
-  const [users, setUsers] = useState([
-    { name: '홍길동1', selected: false },
-    { name: '홍길동2', selected: false },
-    { name: '홍길동3', selected: false },
-    { name: '홍길동4', selected: false },
-    { name: '홍길동5', selected: false },
-    { name: '홍길동6', selected: false },
-    { name: '홍길동7', selected: false },
-    { name: '홍길동8', selected: false },
-    { name: '홍길동9', selected: false },
-    { name: '홍길동10', selected: false },
-  ])
+export const TodoCreateBottomSheet = ({ popKeyboard, teamUserList }) => {
+  const [users, setUsers] = useState(
+    teamUserList?.map((users) => ({
+      ...users,
+      selected: false,
+    })),
+  )
   const [name, setName] = useState()
   const selectedUser = users.reduce((acc, user) => {
     if (user.selected) {
@@ -306,7 +300,8 @@ const TimeSettingHeader = styled.View`
   justify-content: space-between;
 `
 const UserItem = styled.TouchableOpacity`
-  padding: 8px 12px;
+  height: 31px;
+  padding: 0px 14px;
   margin-bottom: 8px;
   margin-right: 8px;
   border-radius: 99px;

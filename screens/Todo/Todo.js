@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { ScreenLayout, url } from '../../components/Shared'
+import { ScreenLayout } from '../../components/Shared'
 import { colors } from '../../colors'
 import styled from 'styled-components/native'
 import { TodoHeader } from '../../components/Todo/TodoHeader'
@@ -8,7 +8,6 @@ import { Keyboard, NativeModules, Platform, ScrollView } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage' //캐시 지우기 때문에 임시로
 import { useRecoilValue } from 'recoil'
 import { userInfoState } from '../../recoil/AuthAtom'
-import axios from 'axios'
 import { TodoItem } from '../../components/Todo/TodoItem'
 import { NoItem } from '../../components/Todo/NoToDoItem'
 import { BottomSheetBackdrop, BottomSheetModal } from '@gorhom/bottom-sheet'
@@ -22,12 +21,12 @@ import { getCategoryList, getTeamUser, getTodoTeamList, getTodos } from '../../c
 export default Todo = ({ navigation }) => {
   const { StatusBarManager } = NativeModules
   const { accessToken } = useRecoilValue(userInfoState)
+  const today = new Date().toISOString().substring(0, 10)
 
   const [statusBarHeight, setStatusBarHeight] = useState(0)
 
   const [teamList, setTeamList] = useState([])
   const [teamUserList, setTeamUserList] = useState([])
-  const [categoryList, setCategoryList] = useState([])
   const [selectedTeamID, setSelectedTeamID] = useState(null)
 
   const [todosByCategory, setTodosByCategory] = useState(null)
@@ -37,12 +36,8 @@ export default Todo = ({ navigation }) => {
 
   const bottomModal = useRef()
 
-  //KeyboardAwareView가 정상 작동하기 위해서 StatusBar의 높이값을 초기에 구해야함. prettier-ignore
-  Platform.OS == 'ios'
-    ? StatusBarManager.getHeight((statusBarFrameData) => {
-        setStatusBarHeight(statusBarFrameData.height)
-      })
-    : null
+  //prettier-ignore
+  Platform.OS == 'ios'? StatusBarManager.getHeight((statusBarFrameData) => {setStatusBarHeight(statusBarFrameData.height)}): null //KeyboardAwareView가 정상 작동하기 위해서 StatusBar의 높이값을 초기에 구해야함.
 
   //prettier-ignore
   const renderBackdrop = useCallback((props) => <BottomSheetBackdrop {...props} pressBehavior="close" appearsOnIndex={0} disappearsOnIndex={-1} />,[],)
@@ -64,8 +59,7 @@ export default Todo = ({ navigation }) => {
       })
       .then((selectedID_temp) => {
         getCategoryList(selectedID_temp, accessToken).then((categories) => {
-          setCategoryList(categories) //[{"categoryId": 1, "categoryName": "test"}, {"categoryId": 2, "categoryName": "test2"}, {"categoryId": 3, "categoryName": "페밀리 카테고리"}]
-          getTodosByCategory(categories)
+          getTodosByCategory(categories, today)
         })
         return selectedID_temp
       })
@@ -78,19 +72,27 @@ export default Todo = ({ navigation }) => {
         }),
       )
   }
-  const getTodosByCategory = async (categories) => {
+  const handleDateSelect = (date) => {
+    //date = 2023-10-15
+    getCategoryList(selectedTeamID, accessToken).then((categories) => {
+      getTodosByCategory(categories, date.substring(0, 10))
+    })
+  }
+  const getTodosByCategory = async (categories, date) => {
+    //** */
     // 각 categoryId에 대해 getTodo 함수를 병렬로 호출
-    const todoPromises = categories.map((category) => getTodos(category.categoryId, accessToken))
+    const todoPromises = categories.map(
+      (category) => getTodos(category.categoryId, accessToken, date), //[{"assignNames": [[Object], [Object], [Object], [Object]], "status": "INCOMPLETE", "task": "test", "todoId": 6149}, {"assignNames": [[Object], [Object], [Object], [Object]], "status": "INCOMPLETE", "task": "test", "todoId": 6150},
+    )
     // Promise.all()를 사용하여 모든 비동기 작업 완료를 기다림
-    const todosArr = await Promise.all(todoPromises)
-    // 각 categoryId와 그에 해당하는 todo 객체들을 묶음
+    const todosArr = await Promise.all(todoPromises) //todosArr = {"0":[1,"test",{"todoId":6161,"task":"test","status":"INCOMPLETE","assignNames":[{"assigneeId":1,"assigneeName":"test"},{"assigneeId":5,"assigneeName":"김형석"},{"assigneeId":6,"assigneeName":null},{"assigneeId":7,"assigneeName":"neon"}]}],
+    // 각 categoryId와 그에 해당하는 todo 객체들을 묶음/ 누적값, 현재값, id
     const todosByCategory = categories.reduce((acc, category, id) => {
-      acc[category.categoryId - 1] = todosArr[id] //categoryId가 1에서부터 시작하기에 배열 첫번째 요소를 비우지 않게 하기 위해, id-1로 처리함
+      acc[id] = [category.categoryId, category.categoryName, todosArr[id]]
       return acc
-    }, {})
-    // console.log(JSON.stringify(todosByCategory))
-    console.log(Object.entries(todosByCategory))
+    }, [])
     setTodosByCategory(Object.entries(todosByCategory))
+    //todosByCategory[0]= ["0",[1,"test",[{"todoId":6161,"task":"test","status":"INCOMPLETE","assignNames":[{"assigneeId":1,"assigneeName":"test"},{"assigneeId":5,"assigneeName":"김형석"},{"assigneeId":6,"assigneeName":null},{"assigneeId":7,"assigneeName":"neon"}]},{"todoId":6162,"task":"test","status":"INCOMPLETE","assignNames":[{"assigneeId":1,"assigneeName":"test"},{"assigneeId":5,"assigneeName":"김형석"},{"assigneeId":6,"assigneeName":null},{"assigneeId":7,"assigneeName":"neon"}]},{"todoId":6163,"task":"test","status":"INCOMPLETE","assignNames":[{"assigneeId":1,"assigneeName":"test"},{"assigneeId":5,"assigneeName":"김형석"},{"assigneeId":6,"assigneeName":null},{"assigneeId":7,"assigneeName":"neon"}]},{"todoId":6164,"task":"test","status":"INCOMPLETE","assignNames":[{"assigneeId":1,"assigneeName":"test"},{"assigneeId":5,"assigneeName":"김형석"},{"assigneeId":6,"assigneeName":null},{"assigneeId":7,"assigneeName":"neon"}]}]]]
   }
   useEffect(() => {
     getInitDatas()
@@ -116,21 +118,28 @@ export default Todo = ({ navigation }) => {
         <TodoHeader navigation={navigation} />
         <ScrollView showsVerticalScrollIndicator={false}>
           <ContentBase>
-            <MyCalendarStrip />
-            {/* <CategoryInputContainer style={{ width: category ? 32 + category.length * 16 : 190 }}> */}
+            <MyCalendarStrip handleDateSelect={handleDateSelect} />
             {!todosByCategory && <NoItem />}
             <CategoryCreate createCategory={createCategory} />
+            {/*** todosByCategory[0][1][0] = categoryId, todosByCategory[0][1][1] = categoryName,todosByCategory[0][1][2] = todos*/}
             {todosByCategory &&
               todosByCategory?.map((todos, id) => {
                 return (
                   <>
-                    <CategoryContainer onPress={() => createTodo()}>
+                    <CategoryContainer key={id} onPress={() => createTodo()}>
                       <Circle style={{ backgroundColor: colors.primary }}></Circle>
-                      <Label_Text>{categoryList[id].categoryName}</Label_Text>
+                      <Label_Text>{todos[1][1]}</Label_Text>
                       <Add width={16} height={16} />
                     </CategoryContainer>
-                    {todos[1].map((todo, id) => (
-                      <TodoItem title={todo.task} status={todo.status} key={id} index={id} editTodo={editTodo} />
+                    {todos[1][2].map((todo, id) => (
+                      <TodoItem
+                        key={id}
+                        assignees={todo.assignNames}
+                        title={todo.task}
+                        status={todo.status}
+                        index={id}
+                        editTodo={editTodo}
+                      />
                     ))}
                   </>
                 )
@@ -150,7 +159,6 @@ export default Todo = ({ navigation }) => {
         ref={bottomModal}
         onDismiss={() => Keyboard.dismiss()}
         backdropComponent={renderBackdrop}
-        // index={-1}
         snapPoints={snappoints}
         enablePanDownToClose={false}
         enableHandlePanningGesture={false}
@@ -162,7 +170,7 @@ export default Todo = ({ navigation }) => {
         handleIndicatorStyle={{ backgroundColor: colors.grey_300, width: 72, height: 6, marginTop: 8 }}
       >
         {isCreateMode ? (
-          <TodoCreateBottomSheet popKeyboard={popKeyboard} selectedTodo={selectedTodo} />
+          <TodoCreateBottomSheet popKeyboard={popKeyboard} teamUserList={teamUserList} />
         ) : (
           <TodoEditBottomSheet popKeyboard={popKeyboard} selectedTodo={selectedTodo} />
         )}

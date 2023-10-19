@@ -22,7 +22,6 @@ export const getTodoTeamList = async (accessToken, page, size) => {
 }
 export const getCategoryList = async (teamId, accessToken) => {
   let API = `/category/${teamId}`
-  console.log(teamId, accessToken)
   const response = await axios.get(url + API, {
     headers: {
       Authorization: accessToken,
@@ -50,11 +49,11 @@ export const getTeamUser = async (teamId, accessToken) => {
   return response.data
 }
 
-export const getTodos = async (categoryId, accessToken) => {
+export const getTodos = async (categoryId, accessToken, date) => {
   let API = `/todo/${categoryId}`
   const response = await axios.get(url + API, {
     params: {
-      moveDate: '2023-10-18',
+      moveDate: date,
     },
     headers: {
       Authorization: accessToken,
