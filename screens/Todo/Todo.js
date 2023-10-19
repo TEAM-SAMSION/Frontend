@@ -4,7 +4,7 @@ import { colors } from '../../colors'
 import styled from 'styled-components/native'
 import { TodoHeader } from '../../components/Todo/TodoHeader'
 import { BodyBold_Text } from '../../components/Fonts'
-import { Keyboard, NativeModules, Platform, Pressable, ScrollView } from 'react-native'
+import { ActivityIndicator, Keyboard, NativeModules, Platform, Pressable, ScrollView } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage' //캐시 지우기 때문에 임시로
 import { useRecoilValue } from 'recoil'
 import { userInfoState } from '../../recoil/AuthAtom'
@@ -31,12 +31,13 @@ export default Todo = ({ navigation }) => {
   const [teamUserList, setTeamUserList] = useState([])
   const [snappoints, setSnappoints] = useState([])
 
-  const [selectedTeamID, setSelectedTeamID] = useState(null)
+  const [selectedTeam, setSelectedTeam] = useState(null)
   const [selectedCategoryID, setSelectedCategoryID] = useState(null)
   const [selectedTodoID, setSelectedTodoID] = useState(null)
   const [selectedDate, setSelectedDate] = useState(null)
 
   const [isCreateMode, setIsCreateMode] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
 
   const bottomModal = useRef()
 
@@ -71,10 +72,15 @@ export default Todo = ({ navigation }) => {
       acc[id] = [category.categoryId, category.categoryName, todosArr[id]]
       return acc
     }, [])
-    setTodosByCategory(Object.entries(todosByCategory))
+    if (Object.entries(todosByCategory).length > 0) {
+      setTodosByCategory(Object.entries(todosByCategory))
+    } else {
+      setTodosByCategory(null)
+    }
     //todosByCategory[0]= ["0",[1,"test",[{"todoId":6161,"task":"test","status":"INCOMPLETE","assignNames":[{"assigneeId":1,"assigneeName":"test"},{"assigneeId":5,"assigneeName":"김형석"},{"assigneeId":6,"assigneeName":null},{"assigneeId":7,"assigneeName":"neon"}]},{"todoId":6162,"task":"test","status":"INCOMPLETE","assignNames":[{"assigneeId":1,"assigneeName":"test"},{"assigneeId":5,"assigneeName":"김형석"},{"assigneeId":6,"assigneeName":null},{"assigneeId":7,"assigneeName":"neon"}]},{"todoId":6163,"task":"test","status":"INCOMPLETE","assignNames":[{"assigneeId":1,"assigneeName":"test"},{"assigneeId":5,"assigneeName":"김형석"},{"assigneeId":6,"assigneeName":null},{"assigneeId":7,"assigneeName":"neon"}]},{"todoId":6164,"task":"test","status":"INCOMPLETE","assignNames":[{"assigneeId":1,"assigneeName":"test"},{"assigneeId":5,"assigneeName":"김형석"},{"assigneeId":6,"assigneeName":null},{"assigneeId":7,"assigneeName":"neon"}]}]]]
   }
   const getInitDatas = () => {
+    setIsLoading(true)
     //TodoTeam과 Default TodoTeam에 한해 User들을 일시적으로 반환(나중에 Team 변경하면 해당 변수 대체됨)
     getTodoTeamList(accessToken, 0, 10)
       .then((res) => {
@@ -82,12 +88,15 @@ export default Todo = ({ navigation }) => {
         let tempTeamList = []
         res.content?.map((team) => tempTeamList.push({ id: team.teamId, name: team.teamName }))
         setTodoTeamList(tempTeamList)
-        setSelectedTeamID(tempTeamList[tempTeamList.length - 1]?.id)
+        setSelectedTeam({
+          name: tempTeamList[tempTeamList.length - 1]?.name,
+          id: tempTeamList[tempTeamList.length - 1]?.id,
+        })
         return tempTeamList[tempTeamList.length - 1]?.id
       })
       .then((selectedID_temp) => {
         getCategoryList(selectedID_temp, accessToken).then((categories) => {
-          getTodosByCategory(categories, today)
+          getTodosByCategory(categories, today).then(setIsLoading(false))
         })
         return selectedID_temp
       })
@@ -102,9 +111,10 @@ export default Todo = ({ navigation }) => {
   }
   const handleDateSelect = (date) => {
     //date = 2023-10-15 //날짜를 선택 시, 해당 날짜에서의 Todo 조회 및 todosByCategory 갱신
+    setIsLoading(true)
     setSelectedDate(date)
-    getCategoryList(selectedTeamID, accessToken).then((categories) => {
-      getTodosByCategory(categories, date)
+    getCategoryList(selectedTeam.id, accessToken).then((categories) => {
+      getTodosByCategory(categories, date).then(setIsLoading(false))
     })
   }
   useEffect(() => {
@@ -136,30 +146,42 @@ export default Todo = ({ navigation }) => {
   return (
     <ScreenLayout verticalOffset={statusBarHeight + 44} behavior="position">
       <ContentLayout>
-        <TodoHeader changeTodoTeam={changeTodoTeam} todoTeamList={todoTeamList} navigation={navigation} />
+        <TodoHeader
+          selectedTeam={selectedTeam}
+          setSelectedTeam={setSelectedTeam}
+          changeTodoTeam={changeTodoTeam}
+          todoTeamList={todoTeamList}
+          navigation={navigation}
+        />
         <ScrollView style={{ zIndex: -1 }} showsVerticalScrollIndicator={false}>
           <MyCalendarStrip handleDateSelect={handleDateSelect} />
           {!todosByCategory && <NoItem />}
-          <CategoryCreate createCategory={createCategory} />
+          {/* <CategoryCreate createCategory={createCategory} /> */}
           {/*** todosByCategory[0][1][0] = categoryId, todosByCategory[0][1][1] = categoryName,todosByCategory[0][1][2] = todos*/}
-          {todosByCategory?.map((todos, id) => {
-            return (
-              <>
-                <CategoryIndicator startCreateTodo={startCreateTodo} todos={todos[1]} index={id} />
-                {todos[1][2].map((todo, index) => (
-                  <TodoItem
-                    key={index}
-                    assignees={todo.assignNames}
-                    title={todo.task}
-                    status={todo.status}
-                    categoryId={id}
-                    todoId={index}
-                    editTodo={startEditTodo}
-                  />
-                ))}
-              </>
-            )
-          })}
+          {isLoading ? (
+            <LoadingContainer>
+              <ActivityIndicator />
+            </LoadingContainer>
+          ) : (
+            todosByCategory?.map((todos, id) => {
+              return (
+                <>
+                  <CategoryIndicator startCreateTodo={startCreateTodo} todos={todos[1]} categoryId={todos[1][0]} />
+                  {todos[1][2].map((todo, index) => (
+                    <TodoItem
+                      key={index}
+                      assignees={todo.assignNames}
+                      title={todo.task}
+                      status={todo.status}
+                      categoryId={id}
+                      todoId={index}
+                      editTodo={startEditTodo}
+                    />
+                  ))}
+                </>
+              )
+            })
+          )}
           <TodayButton
             style={{ marginTop: 32 }}
             onPress={() => {
@@ -209,6 +231,13 @@ const TodayButton = styled.TouchableOpacity`
   padding: 4px 10px;
   border-radius: 99px;
   display: inline-block;
+`
+const LoadingContainer = styled.View`
+  flex: 1;
+  height: 300px;
+  justify-content: center;
+
+  /* background-color: chartreuse; */
 `
 const ContentLayout = styled.View`
   padding: 0px 16px;

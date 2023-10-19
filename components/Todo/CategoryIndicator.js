@@ -4,14 +4,14 @@ import { colors } from '../../colors'
 import Add from '../../assets/Svgs/add.svg'
 import { Detail_Text, Label_Text } from '../Fonts'
 
-export const CategoryIndicator = ({ startCreateTodo, index, todos }) => {
+export const CategoryIndicator = ({ startCreateTodo, categoryId, todos }) => {
   function random() {
-    var x = Math.sin(todos[0]++) * 109900000
+    var x = Math.sin(todos[0]) * 109900000
     return x - Math.floor(x)
   }
   return (
     <CategoryContainer>
-      <CategoryBox categoryIndex={index} key={index} onPress={() => startCreateTodo(id)}>
+      <CategoryBox onPress={() => startCreateTodo(categoryId)}>
         <Circle style={{ backgroundColor: `#${random().toString().substring(2, 8)}` }}></Circle>
         <Label_Text>{todos[1]}</Label_Text>
         <Add width={16} height={16} />

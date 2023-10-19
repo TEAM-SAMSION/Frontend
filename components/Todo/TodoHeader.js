@@ -8,10 +8,9 @@ import { useState } from 'react'
 import DownIcon from '../../assets/Svgs/arrow_down.svg'
 import UpIcon from '../../assets/Svgs/arrow_up.svg'
 import { Detail_Text } from '../Fonts'
-export const TodoHeader = ({ navigation, changeTodoTeam, todoTeamList }) => {
+export const TodoHeader = ({ navigation, changeTodoTeam, todoTeamList, setSelectedTeam, selectedTeam }) => {
   const [isOpen, setIsOpen] = useState(false)
   const [visible, setVisible] = useState(false)
-  const [selectedTodoTeam, setSelectedTodoTeam] = useState(null)
   const toggleDropdown = () => {
     setIsOpen(!isOpen)
   }
@@ -20,7 +19,7 @@ export const TodoHeader = ({ navigation, changeTodoTeam, todoTeamList }) => {
     <CustomHeader>
       <DropDownListContainer>
         <DropdownContainer isOpen={isOpen} onPress={toggleDropdown}>
-          <Detail_Text>{selectedTodoTeam || '패밀리 선택 '}</Detail_Text>
+          <Detail_Text>{selectedTeam?.name || '패밀리 선택 '}</Detail_Text>
           {isOpen ? (
             <UpIcon width={16} height={16} style={{ position: 'absolute', right: 10 }} />
           ) : (
@@ -33,21 +32,16 @@ export const TodoHeader = ({ navigation, changeTodoTeam, todoTeamList }) => {
             {todoTeamList.map((todoTeam, id) => (
               <DropdownBox
                 key={id}
+                style={id == todoTeamList.length - 1 && { borderBottomLeftRadius: 8, borderBottomRightRadius: 8 }}
                 onPress={() => {
                   setIsOpen(false)
                   changeTodoTeam(todoTeam.id)
-                  setSelectedTodoTeam(todoTeam.name)
+                  setSelectedTeam({ id: todoTeam.id, name: todoTeam.name })
                 }}
               >
                 <Detail_Text>{todoTeam.name}</Detail_Text>
               </DropdownBox>
             ))}
-            <DropdownBox
-              style={{ borderBottomLeftRadius: 8, borderBottomRightRadius: 8 }}
-              onPress={() => setVisible(true)}
-            >
-              <Detail_Text>+</Detail_Text>
-            </DropdownBox>
           </>
         )}
       </DropDownListContainer>
@@ -71,7 +65,7 @@ export const TodoHeader = ({ navigation, changeTodoTeam, todoTeamList }) => {
 }
 const DropdownContainer = styled.Pressable`
   width: 109px;
-  height: 32px;
+  height: ${({ isOpen }) => (isOpen ? '33px' : '32px')};
   z-index: 1;
   border-radius: ${({ isOpen }) => (isOpen ? '8px 8px 0px 0px' : '8px')};
   border-bottom-width: ${({ isOpen }) => (isOpen ? '1px' : '0px')};
