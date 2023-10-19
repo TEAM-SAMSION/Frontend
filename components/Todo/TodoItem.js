@@ -5,14 +5,14 @@ import Complete from '../../assets/Imgs/Complete.png'
 import InComplete from '../../assets/Imgs/InComplete.png'
 import styled from 'styled-components/native'
 
-export const TodoItem = ({ editTodo, title, status, assignees, index }) => {
+export const TodoItem = ({ editTodo, title, status, assignees, categoryId, todoId }) => {
   const [isDone, setIsDone] = useState(status == 'COMPLETE')
   const handlePress = () => {
     //backend쪽으로 isPressed 변경된 값 보내는 구문 "assignNames":[{"assigneeId":1,"assigneeName":"test"},
     setIsDone(!isDone)
   }
   return (
-    <TodoContainer onPress={() => editTodo(index)}>
+    <TodoContainer onPress={() => editTodo(categoryId, todoId)}>
       <LeftContainer>
         <Label_Text style={{ padding: 4 }} color={colors.grey_800}>
           {title}

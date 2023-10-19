@@ -1,17 +1,56 @@
 import styled from 'styled-components/native'
 import Alarm from '../../assets/Svgs/Alarm.svg'
-import ArrowDown from '../../assets/Svgs/arrow_down.svg'
 import Report from '../../assets/Svgs/report.svg'
 import Schedule from '../../assets/Svgs/Calendar.svg'
 import { colors } from '../../colors'
+import { useState } from 'react'
 
-export const TodoHeader = ({ navigation }) => {
+import DownIcon from '../../assets/Svgs/arrow_down.svg'
+import UpIcon from '../../assets/Svgs/arrow_up.svg'
+import { Detail_Text } from '../Fonts'
+export const TodoHeader = ({ navigation, changeTodoTeam, todoTeamList }) => {
+  const [isOpen, setIsOpen] = useState(false)
+  const [visible, setVisible] = useState(false)
+  const [selectedTodoTeam, setSelectedTodoTeam] = useState(null)
+  const toggleDropdown = () => {
+    setIsOpen(!isOpen)
+  }
+
   return (
     <CustomHeader>
-      <DropDownContainer onPress={() => console.log('touched')}>
-        <DropDownText>패밀리 선택</DropDownText>
-        <ArrowDown width={16} height={16} />
-      </DropDownContainer>
+      <DropDownListContainer>
+        <DropdownContainer isOpen={isOpen} onPress={toggleDropdown}>
+          <Detail_Text>{selectedTodoTeam || '패밀리 선택 '}</Detail_Text>
+          {isOpen ? (
+            <UpIcon width={16} height={16} style={{ position: 'absolute', right: 10 }} />
+          ) : (
+            <DownIcon width={16} height={16} style={{ position: 'absolute', right: 10 }} />
+          )}
+        </DropdownContainer>
+
+        {isOpen && (
+          <>
+            {todoTeamList.map((todoTeam, id) => (
+              <DropdownBox
+                key={id}
+                onPress={() => {
+                  setIsOpen(false)
+                  changeTodoTeam(todoTeam.id)
+                  setSelectedTodoTeam(todoTeam.name)
+                }}
+              >
+                <Detail_Text>{todoTeam.name}</Detail_Text>
+              </DropdownBox>
+            ))}
+            <DropdownBox
+              style={{ borderBottomLeftRadius: 8, borderBottomRightRadius: 8 }}
+              onPress={() => setVisible(true)}
+            >
+              <Detail_Text>+</Detail_Text>
+            </DropdownBox>
+          </>
+        )}
+      </DropDownListContainer>
       <RightIcon>
         <IconContainer>
           <Schedule width={24} height={24} />
@@ -30,21 +69,37 @@ export const TodoHeader = ({ navigation }) => {
     </CustomHeader>
   )
 }
-
+const DropdownContainer = styled.Pressable`
+  width: 109px;
+  height: 32px;
+  z-index: 1;
+  border-radius: ${({ isOpen }) => (isOpen ? '8px 8px 0px 0px' : '8px')};
+  border-bottom-width: ${({ isOpen }) => (isOpen ? '1px' : '0px')};
+  border-bottom-color: rgba(0, 0, 0, 0.12);
+  align-items: center;
+  padding-left: 16px;
+  flex-direction: row;
+  background-color: ${colors.grey_150};
+`
+const DropDownListContainer = styled.View`
+  position: absolute;
+  left: 0;
+  top: 6px;
+`
+const DropdownBox = styled.Pressable`
+  width: 109px;
+  height: 32px;
+  padding: 8px 10px 8px 16px;
+  align-items: center;
+  flex-direction: row;
+  background-color: ${colors.grey_150};
+`
 const CustomHeader = styled.View`
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
   height: 52px;
-`
-const DropDownContainer = styled.TouchableOpacity`
-  width: 109px;
-  border-radius: 8px;
-  background-color: #f2f2f2;
-  padding: 10px;
-  justify-content: space-between;
-  align-items: center;
-  flex-direction: row;
+  padding: 8px 6px 8px 0px;
 `
 const DropDownText = styled.Text`
   color: #4d4d4d;

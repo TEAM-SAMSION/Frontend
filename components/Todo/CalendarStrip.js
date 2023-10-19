@@ -8,14 +8,16 @@ import Arrow_right from '../../assets/Svgs/arrow_right.svg'
 import Reset from '../../assets/Svgs/Reset.svg'
 
 import { BodyBoldSm_Text, Detail_Text } from '../Fonts'
+import moment from 'moment'
 
 export const MyCalendarStrip = ({ handleDateSelect }) => {
-  const today = new Date()
-  const [selectedDate, setSelectedDate] = useState(today.toISOString().substring(0, 10))
-  const [month, setMonth] = useState(today.getMonth() + 1)
+  const today = moment(new Date()).format('YYYY-MM-DD-d')
+  const [selectedDate, setSelectedDate] = useState(today)
+  const [month, setMonth] = useState(today.substring(5, 7))
   const locale = { name: 'ko', config: { weekdays: '화수목금토일월' } } // const markedDate = [{ date: today,dots: [ {color: 'red' },],} ]
   const weekdays = ['일', '월', '화', '수', '목', '금', '토']
   const calendarRef = useRef(null)
+
   return (
     <>
       <CalendarHeader>
@@ -35,12 +37,11 @@ export const MyCalendarStrip = ({ handleDateSelect }) => {
         scrollable
         onDateSelected={(date) => {
           setSelectedDate(date.format('YYYY-MM-DD-d'))
-          console.log(date.format('YYYY-MM-DD-d'))
           handleDateSelect(date.format('YYYY-MM-DD'))
         }}
         // daySelectionAnimation={true}
         style={{ height: 68 }}
-        selectedDate={today}
+        selectedDate={new Date()}
         // markedDates={markedDate}
         highlightDateNumberContainerStyle={{
           backgroundColor: colors.primary_container,
@@ -81,7 +82,7 @@ export const MyCalendarStrip = ({ handleDateSelect }) => {
           {selectedDate.substring(5, 7)}월 {selectedDate.substring(8, 10)}일 {weekdays[selectedDate.substring(11, 12)]}
           요일
         </BodyBoldSm_Text>
-        <TodayButton onPress={() => calendarRef.current.setSelectedDate(today)}>
+        <TodayButton onPress={() => calendarRef.current.setSelectedDate(new Date())}>
           <Reset width={16} height={16} />
           <Detail_Text color={colors.grey_600} style={{ marginLeft: 4 }}>
             오늘

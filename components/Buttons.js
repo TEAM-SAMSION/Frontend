@@ -15,7 +15,7 @@ const NonLayoutButton = styled.TouchableOpacity`
 `
 export const OnboardingButton = ({ func, lastFunc, currentIdx, data }) => {
   const isLastItem = currentIdx === data.length - 1
-  console.log('currentIdx:', isLastItem)
+
   return (
     <NonLayoutButton
       style={[

@@ -18,7 +18,7 @@ import Alarm from '../../assets/Svgs/Alarm.svg'
 import Back from '../../assets/Svgs/chevron_back.svg'
 import Edit from '../../assets/Svgs/Todo_edit.svg'
 
-export const TodoEditBottomSheet = ({ selectedTodo }) => {
+export const TodoEditBottomSheet = ({ todosByCategory, selectedCategoryID, selectedTodoID, handleKeyboard }) => {
   const screenOptions = useMemo(
     () => ({
       ...TransitionPresets.SlideFromRightIOS,
@@ -32,6 +32,7 @@ export const TodoEditBottomSheet = ({ selectedTodo }) => {
     }),
     [],
   )
+  const [selectedTodo, setSelectedTodo] = useState(todosByCategory[selectedCategoryID][1][2][selectedTodoID])
   const Stack = createStackNavigator()
 
   const screenAOptions = useMemo(() => ({ headerLeft: () => null }), [])
@@ -45,6 +46,60 @@ export const TodoEditBottomSheet = ({ selectedTodo }) => {
         <Stack.Screen name="TimeSetting" options={screenBOptions} component={TimeSetting} />
       </Stack.Navigator>
     </NavigationContainer>
+  )
+}
+
+const TodoEdit = ({ navigation, selectedTodo }) => {
+  const [tempArr, setTempArr] = useState(selectedTodo)
+  const editTodo = async (name) => {
+    let API = `/user/name`
+    const response = await axios.put(
+      url + API,
+      { nickname: nickname },
+      {
+        headers: {
+          Authorization: accessToken,
+          'Content-Type': `application/json; charset=UTF-8`,
+        },
+      },
+    )
+    return response.status
+  }
+
+  const handleSubmit = () => {
+    console.log('submitted')
+  }
+  return (
+    <BottomSheetBase
+      style={{
+        backgroundColor: colors.grey_100,
+        paddingTop: Platform.OS === 'android' ? 8 : 0,
+      }}
+    >
+      <BottomSheetHeader>
+        <Body_Text color={colors.grey_800}>{selectedTodo?.task}</Body_Text>
+      </BottomSheetHeader>
+      <ContentContainer>
+        <RowContainer>
+          <SmallBox>
+            <Edit width={24} height={24} />
+            <Detail_Text>수정하기</Detail_Text>
+          </SmallBox>
+          <SmallBox>
+            <Delete width={24} height={24} />
+            <Detail_Text>삭제하기</Detail_Text>
+          </SmallBox>
+        </RowContainer>
+        <BigBox onPress={() => navigation.navigate('TimeSetting')}>
+          <Alarm color={colors.grey_800} width={24} height={24} />
+          <Detail_Text>시간 알림</Detail_Text>
+        </BigBox>
+        <BigBox>
+          <Change width={24} height={24} />
+          <Detail_Text>날짜 변경</Detail_Text>
+        </BigBox>
+      </ContentContainer>
+    </BottomSheetBase>
   )
 }
 const TimeSetting = ({ navigation }) => {
@@ -100,62 +155,9 @@ const TimeSetting = ({ navigation }) => {
     </BottomSheetBase>
   )
 }
-export const TodoEdit = ({ navigation, selectedTodo }) => {
-  const [tempArr, setTempArr] = useState(selectedTodo)
-  // console.log(':selectedTodo', selectedTodo)
-  const editTodo = async (name) => {
-    let API = `/user/name`
-    const response = await axios.put(
-      url + API,
-      { nickname: nickname },
-      {
-        headers: {
-          Authorization: accessToken,
-          'Content-Type': `application/json; charset=UTF-8`,
-        },
-      },
-    )
-    return response.status
-  }
 
-  const handleSubmit = () => {
-    console.log('submitted')
-  }
-  return (
-    <BottomSheetBase
-      style={{
-        backgroundColor: colors.grey_100,
-        paddingTop: Platform.OS === 'android' ? 8 : 0,
-      }}
-    >
-      <BottomSheetHeader>
-        <Body_Text color={colors.grey_800}>{selectedTodo?.task}</Body_Text>
-      </BottomSheetHeader>
-      <ContentContainer>
-        <RowContainer>
-          <SmallBox>
-            <Edit width={24} height={24} />
-            <Detail_Text>수정하기</Detail_Text>
-          </SmallBox>
-          <SmallBox>
-            <Delete width={24} height={24} />
-            <Detail_Text>삭제하기</Detail_Text>
-          </SmallBox>
-        </RowContainer>
-        <BigBox onPress={() => navigation.navigate('TimeSetting')}>
-          <Alarm color={colors.grey_800} width={24} height={24} />
-          <Detail_Text>시간 알림</Detail_Text>
-        </BigBox>
-        <BigBox>
-          <Change width={24} height={24} />
-          <Detail_Text>날짜 변경</Detail_Text>
-        </BigBox>
-      </ContentContainer>
-    </BottomSheetBase>
-  )
-}
-
-export const TodoCreateBottomSheet = ({ popKeyboard, teamUserList }) => {
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+export const TodoCreateBottomSheet = ({ handleKeyboard, teamUserList }) => {
   const [users, setUsers] = useState(
     teamUserList?.map((users) => ({
       ...users,
@@ -203,13 +205,16 @@ export const TodoCreateBottomSheet = ({ popKeyboard, teamUserList }) => {
           style={{ backgroundColor: colors.grey_150, color: colors.grey_700 }}
           autoCapitalize="none"
           placeholderTextColor={colors.grey_450}
-          onSubmitEditing={() => Keyboard.dismiss()}
+          onSubmitEditing={() => {
+            Keyboard.dismiss()
+            handleKeyboard(1)
+          }}
           placeholder="할 일을 입력해주세요"
           returnKeyType="done"
           inputMode="text"
           blurOnSubmit={false}
           onChangeText={(text) => setName(text)}
-          onFocus={() => popKeyboard()}
+          onFocus={() => handleKeyboard(2)}
         />
       </InputContainer>
       <BodyBoldSm_Text style={{ marginBottom: 10 }}>담당자 지정</BodyBoldSm_Text>
@@ -264,7 +269,7 @@ const SmallBox = styled.TouchableOpacity`
   padding: 20px 16px;
   border-radius: 8px;
   flex: 1;
-  gap: 4;
+  gap: 4px;
   align-items: center;
   background-color: ${colors.grey_150};
 `
