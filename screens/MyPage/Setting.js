@@ -1,28 +1,29 @@
-import React from "react";
-import { Text, View } from "react-native";
-import { ScreenLayout } from "../../components/Shared";
-import { styled } from "styled-components/native";
-import ContentIcon from "../../assets/Svgs/chevron_right.svg";
+import React from 'react'
+import { Text, View } from 'react-native'
+import { ScreenLayout } from '../../components/Shared'
+import { styled } from 'styled-components/native'
+import ContentIcon from '../../assets/Svgs/chevron_right.svg'
+import { colors } from '../../colors'
 
 export default function Setting({ navigation }) {
   return (
     <ScreenLayout>
-      <ContentContainer onPress={() => navigation.navigate("Account")}>
+      <ContentContainer onPress={() => navigation.navigate('Account')}>
         <ContentText>계정</ContentText>
         <TouchableIcon>
-          <ContentIcon width={16} height={16} />
+          <ContentIcon width={16} height={16} color={colors.grey_450} />
         </TouchableIcon>
       </ContentContainer>
       <ContentContainer>
         <ContentText>포잇가이드</ContentText>
         <TouchableIcon>
-          <ContentIcon width={16} height={16} />
+          <ContentIcon width={16} height={16} color={colors.grey_450} />
         </TouchableIcon>
       </ContentContainer>
       <ContentContainer>
         <ContentText>개인정보처리방침</ContentText>
         <TouchableIcon>
-          <ContentIcon width={16} height={16} />
+          <ContentIcon width={16} height={16} color={colors.grey_450} />
         </TouchableIcon>
       </ContentContainer>
       <ContentContainer>
@@ -32,7 +33,7 @@ export default function Setting({ navigation }) {
         <ContentText>공지사항</ContentText>
       </ContentContainer>
     </ScreenLayout>
-  );
+  )
 }
 
 const ContentContainer = styled.TouchableOpacity`
@@ -41,11 +42,11 @@ const ContentContainer = styled.TouchableOpacity`
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-`;
+`
 const ContentText = styled.Text`
   font-size: 16px;
   font-style: normal;
   font-weight: 700;
   line-height: 22px;
-`;
-const TouchableIcon = styled.TouchableOpacity``;
+`
+const TouchableIcon = styled.TouchableOpacity``
