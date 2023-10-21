@@ -88,7 +88,7 @@ export default function Home({ navigation }) {
           <StartTeamContainer
             style={{
               shadowColor: 'rgb(0,0,0)',
-              shadowRadius: 4,
+              shadowRadius: 2,
               shadowOpacity: 0.15,
               shadowOffset: [0, 0],
             }}
@@ -108,7 +108,7 @@ export default function Home({ navigation }) {
           <StartTeamContainer
             style={{
               shadowColor: 'rgb(0,0,0)',
-              shadowRadius: 4,
+              shadowRadius: 2,
               shadowOpacity: 0.15,
               shadowOffset: [0, 0],
             }}
@@ -207,13 +207,14 @@ const NoneText = styled.Text`
 const TeamContainer = styled.View`
   flex-direction: row;
   background-color: ${colors.grey_150};
-  justify-content: center;
+  justify-content: space-between;
   padding: 16px;
-  gap: 8px;
   padding-bottom: 200px;
+  gap: 8px;
 `
 const StartTeamContainer = styled.TouchableOpacity`
-  width: 170px;
+  //width: 170px;
+  flex: 1;
   height: 159px;
   border-radius: 8px;
   background-color: ${colors.grey_100};

@@ -190,7 +190,7 @@ export default function MyPage({ navigation }) {
           <DateContent
             style={{
               shadowColor: 'rgb(0,0,0)',
-              shadowRadius: 4,
+              shadowRadius: 2,
               shadowOpacity: 0.2,
               shadowOffset: [0, 0],
             }}
@@ -199,7 +199,10 @@ export default function MyPage({ navigation }) {
           </DateContent>
           <PopButtonContainer>
             <PopButton
-              onPress={deleteItem}
+              onPress={() => {
+                setVisible(false)
+                navigation.navigate('DeletePamily')
+              }}
               style={{ backgroundColor: colors.grey_100, borderColor: colors.grey_150, borderWidth: 2 }}
             >
               <PopButtonText>예</PopButtonText>
@@ -350,6 +353,7 @@ const DateContent = styled.View`
   background-color: ${colors.grey_100};
 `
 const DateText = styled.Text`
+  color: ${colors.secondary};
   font-size: 22px;
   font-style: normal;
   font-weight: 700;
