@@ -52,7 +52,7 @@ export const NotificationButton = ({ func }) => {
     </MyButton>
   )
 }
-export const UserSettingButton = ({ isEnabled, func, text, isLoading }) => {
+export const Button_PinkBg = ({ isEnabled, func, text, isLoading }) => {
   return (
     <MyButton
       disabled={!isEnabled}

@@ -3,15 +3,33 @@ import Checkbox from '../../assets/Svgs/Checkbox.svg'
 import Checkbox_off from '../../assets/Svgs/Checkbox_off.svg'
 import { colors } from '../../colors'
 import { useState } from 'react'
-import { UserSettingButton } from '../Buttons'
-import { useSetRecoilState } from 'recoil'
-import { loggedInState } from '../../recoil/AuthAtom'
+import { Button_PinkBg } from '../Buttons'
+import { useRecoilValue, useSetRecoilState } from 'recoil'
+import { loggedInState, userInfoState } from '../../recoil/AuthAtom'
 import { BodyBold_Text } from '../Fonts'
+import axios from 'axios'
+import { url } from '../Shared'
 
-export const TermsBottomSheet = ({ registerNickname, nickname }) => {
+export const TermsBottomSheet = ({ nickname }) => {
   const [termState, setTermState] = useState({ 0: false, 1: false, 2: false })
   const [isLoading, setIsLoading] = useState(false)
   const setLoggedIn = useSetRecoilState(loggedInState)
+  const { accessToken } = useRecoilValue(userInfoState)
+
+  const registerNickname = async (nickname) => {
+    let API = `/user/name`
+    const response = await axios.put(
+      url + API,
+      { nickname: nickname },
+      {
+        headers: {
+          Authorization: accessToken,
+          'Content-Type': `application/json; charset=UTF-8`,
+        },
+      },
+    )
+    return response.status
+  }
 
   const handleTermPress = (id) => {
     let tempTermState = JSON.parse(JSON.stringify(termState))
@@ -27,11 +45,15 @@ export const TermsBottomSheet = ({ registerNickname, nickname }) => {
   }
   const handleSubmit = () => {
     setIsLoading(true)
-    // registerNickname(nickname).then((res) =>
-    // console.log(res))
-    setTimeout(() => {
-      setLoggedIn(true)
-    }, 2000)
+    registerNickname(nickname).then((result) => {
+      if (result == 200) {
+        console.log('닉네임등록 및 회원가입 완료')
+        setLoggedIn(true)
+      } else {
+        console.log('닉네임등록이 잘 안되었는뎁쇼')
+        setIsLoading(false)
+      }
+    })
   }
 
   const TermItem = ({ mandatory, title, subtitle, id }) => {
@@ -74,7 +96,7 @@ export const TermsBottomSheet = ({ registerNickname, nickname }) => {
           <TermItem id={1} mandatory={false} title="알림" subtitle="푸시 알림 및 메시지 수신 안내" />
           <TermItem id={2} mandatory={false} title="사진" subtitle="유저 및 펫 프로필 사진, Pamily 대표 사진 업로드" />
         </TermContainer>
-        <UserSettingButton isLoading={isLoading} isEnabled={termState[0]} text="확인" func={() => handleSubmit()} />
+        <Button_PinkBg isLoading={isLoading} isEnabled={termState[0]} text="확인" func={() => handleSubmit()} />
       </BottomContainer>
     </BottomSheetBase>
   )

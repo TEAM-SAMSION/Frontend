@@ -1,5 +1,5 @@
 import styled from 'styled-components/native'
-import AlramIcon from '../../assets/Svgs/AlramIcon.svg'
+import Alarm from '../../assets/Svgs/Alarm.svg'
 import ArrowDown from '../../assets/Svgs/arrow_down.svg'
 import Report from '../../assets/Svgs/report.svg'
 import Schedule from '../../assets/Svgs/Calendar.svg'
@@ -23,7 +23,7 @@ export const TodoHeader = ({ navigation }) => {
             navigation.navigate('Setting')
           }}
         >
-          <AlramIcon width={24} height={24} />
+          <Alarm width={24} height={24} />
         </IconContainer>
       </RightIcon>
     </CustomHeader>
@@ -56,11 +56,6 @@ const IconContainer = styled.TouchableOpacity``
 const RightIcon = styled.View`
   flex-direction: row;
   gap: 16px;
-`
-const Alram = styled.View`
-  width: 24px;
-  height: 24px;
-  background-color: pink;
 `
 const Setting = styled.View`
   width: 24px;

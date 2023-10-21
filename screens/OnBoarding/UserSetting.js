@@ -3,7 +3,7 @@ import { Input, InputTitle, ScreenKeyboardLayout, url } from '../../components/S
 import styled from 'styled-components/native'
 import { colors } from '../../colors'
 import BackArrow from '../../assets/Svgs/chevron_back.svg'
-import { UserSettingButton } from '../../components/Buttons'
+import { Button_PinkBg } from '../../components/Buttons'
 import { Keyboard, NativeModules } from 'react-native'
 import BottomSheet, { BottomSheetBackdrop } from '@gorhom/bottom-sheet'
 import { routeList } from '../../datas/OnBoarding/data'
@@ -23,24 +23,6 @@ export const UserSetting = ({ navigation }) => {
 
   const [nickname, setNickname] = useState('')
   const bottomModal = useRef()
-  const { accessToken } = useRecoilValue(userInfoState)
-
-  const registerNickname = async (nickname) => {
-    console.log(nickname, accessToken)
-    let API = `/user/name?nickname=${nickname}`
-
-    const response = await axios.put(
-      url + API,
-      {},
-      {
-        headers: {
-          Authorization: accessToken,
-          'Content-Type': `application/json; charset=UTF-8`,
-        },
-      },
-    )
-    return response.data
-  }
   const handleSubmit = () => {
     Keyboard.dismiss()
     popModal()
@@ -90,7 +72,7 @@ export const UserSetting = ({ navigation }) => {
             </RouteItemContainer>
           </InputContainer>
         </TopContainer>
-        <UserSettingButton text="입력 완료" isEnabled={nickname.length > 0} func={() => handleSubmit()} />
+        <Button_PinkBg text="입력 완료" isEnabled={nickname.length > 0} func={() => handleSubmit()} />
       </ContentContainer>
       <BottomSheet
         ref={bottomModal}
@@ -106,7 +88,7 @@ export const UserSetting = ({ navigation }) => {
         // handleIndicatorStyle={{ height: 0 }}
         handleIndicatorStyle={{ backgroundColor: colors.grey_300, width: 72, height: 6 }}
       >
-        <TermsBottomSheet registerNickname={registerNickname} nickname={nickname} />
+        <TermsBottomSheet nickname={nickname} />
       </BottomSheet>
     </ScreenKeyboardLayout>
   )

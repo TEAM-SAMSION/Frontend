@@ -11,6 +11,7 @@ import { colors } from '../../colors'
 import { useSetRecoilState } from 'recoil'
 import { accessTokenState, loggedInState, refreshTokenState } from '../../recoil/AuthAtom'
 import { url } from '../../components/Shared'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 WebBrowser.maybeCompleteAuthSession()
 
@@ -27,14 +28,18 @@ export default function Auth({ navigation }) {
 
   const finishLogin = (accessToken, refreshToken) => {
     //토큰 저장
+    console.log('AsyncStorae에 토큰 저장됨')
     setAccessToken(accessToken)
     setRefreshToken(refreshToken)
     //권한확인 API 통해서 닉네임 변경 거치는지 or 홈화면 바로 가는지
     checkAuthority(accessToken).then((res) => {
       if (res.authority == 'USER') {
+        //향후 앱을 껐다가 켜도 유효한 사용자가 앱을 접속하는 것이기 때문에, 캐시에 토큰 저장
         console.log('권한 User라서 홈화면으로 넘어감')
+        AsyncStorage.setItem('accessToken', accessToken)
         setLoggedIn(true)
       } else if (res.authority == 'GUEST') {
+        //닉네임 설정전까지는 앱 내부로 들여오게 해서는 안되기 때문에, 캐시에 저장아직 안함
         console.log('권한 Guest라서 닉네임설정으로 넘어감')
         navigation.navigate('UserSetting')
       } else {
@@ -42,6 +47,7 @@ export default function Auth({ navigation }) {
       }
     })
   }
+
   const checkAuthority = async (accessToken) => {
     let API = '/user/authority'
     const response = await axios.get(url + API, {
