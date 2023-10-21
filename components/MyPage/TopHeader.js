@@ -2,6 +2,7 @@ import styled from 'styled-components/native'
 import LogoIcon from '../../assets/Svgs/LogoIcon.svg'
 import SettingIcon from '../../assets/Svgs/SettingIcon.svg'
 import Alarm from '../../assets/Svgs/Alarm.svg'
+import { colors } from '../../colors'
 
 export const TopHeader = ({ navigation }) => {
   return (
@@ -11,7 +12,7 @@ export const TopHeader = ({ navigation }) => {
       </IconContainer>
       <RightIcon>
         <IconContainer>
-          <Alarm width={24} height={24} />
+          <Alarm width={24} height={24} color={colors.grey_350} />
         </IconContainer>
         <IconContainer
           onPress={() => {

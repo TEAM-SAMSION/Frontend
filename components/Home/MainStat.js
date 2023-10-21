@@ -11,7 +11,7 @@ export const MainStat = (props) => {
   return (
     <MainStatContainer>
       <TouchableOpacity>
-        <Report width={24} height={24} />
+        <Report width={24} height={24} color={'#FD8D81'} />
       </TouchableOpacity>
       <BarContainer>
         <BackBar>
