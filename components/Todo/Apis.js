@@ -1,3 +1,6 @@
+import axios from 'axios'
+import { url } from '../Shared'
+
 export const createRandomCode = async (accessToken) => {
   let API = `/todo/team/code`
   const response = await axios.get(url + API, {
@@ -7,28 +10,7 @@ export const createRandomCode = async (accessToken) => {
     },
   })
 }
-
-export const createTodoTeam = async (accessToken, name) => {
-  //임시로 팀 생성하기 위해 만들어본 함수호출문 -> FormData 어렵다ㅏㅏ~~
-  let API = `/todo/team`
-  const randomCode = createRandomCode(accessToken)
-  const teamData = new FormData()
-  teamData.append('teamName', 'TestTeamName')
-  teamData.append('randomCode', randomCode)
-
-  teamData.append('petRegisters[0].name', 'testPetName')
-  teamData.append('petRegisters[0].age', 2)
-  teamData.append('petRegisters[0].description', 'testDescription')
-
-  const response = await axios.post(url + API, teamData, {
-    headers: {
-      Authorization: accessToken,
-      'Content-Type': 'multipart/form-data;charset=UTF-8; boundary=6o2knFse3p53ty9dmcQvWAIx1zInP11uCfbm',
-    },
-  })
-  console.log(response.data)
-}
-
+//정상작동됨
 export const getTodoTeamList = async (accessToken, page, size) => {
   let API = `/todo/team/list?page=${page}&size=${size}` //500
   const response = await axios.get(url + API, {
@@ -37,6 +19,15 @@ export const getTodoTeamList = async (accessToken, page, size) => {
     },
   })
   return response.data
+}
+export const getCategoryList = async (teamId, accessToken) => {
+  let API = `/category/${teamId}`
+  const response = await axios.get(url + API, {
+    headers: {
+      Authorization: accessToken,
+    },
+  })
+  return response.data.categories
 }
 
 export const getTeamUsers = async (data) => {
@@ -47,8 +38,8 @@ export const getTeamUsers = async (data) => {
   })
   await Promise.all(promises)
 }
-export const getTeamUser = async (teamId) => {
-  console.log(teamId)
+//정상작동됨
+export const getTeamUser = async (teamId, accessToken) => {
   let API = `/register/list?teamId=${teamId}`
   const response = await axios.get(url + API, {
     headers: {
@@ -56,4 +47,31 @@ export const getTeamUser = async (teamId) => {
     },
   })
   return response.data
+}
+
+export const getTodos = async (categoryId, accessToken, date) => {
+  let API = `/todo/${categoryId}`
+  const response = await axios.get(url + API, {
+    params: {
+      moveDate: date,
+    },
+    headers: {
+      Authorization: accessToken,
+    },
+  })
+  return response.data.todos
+}
+
+export const getAssignedTodos = async (teamId, accessToken, page = 0, size = 20) => {
+  let API = `/todo/list/${teamId}`
+  const response = await axios.get(url + API, {
+    params: {
+      page,
+      size,
+    },
+    headers: {
+      Authorization: accessToken,
+    },
+  })
+  return response.data.content
 }

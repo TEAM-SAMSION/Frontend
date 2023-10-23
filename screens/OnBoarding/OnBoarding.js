@@ -28,7 +28,6 @@ export default function OnBoarding({ navigation }) {
 
   const scrollTo = () => {
     if (currentIdx < PAGES.length - 1) {
-      console.log('scrollToAvailable', currentIdx)
       slidesRef.current.scrollToIndex({ index: currentIdx + 1 })
     }
   }

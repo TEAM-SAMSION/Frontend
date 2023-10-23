@@ -5,24 +5,23 @@ import Complete from '../../assets/Imgs/Complete.png'
 import InComplete from '../../assets/Imgs/InComplete.png'
 import styled from 'styled-components/native'
 
-export const TodoItem = ({ editTodo, title, status, mate = ['김형석1', '김형석2', '김형석3'], index }) => {
-  console.log('김형석1')
+export const TodoItem = ({ editTodo, title, status, assignees, categoryId, todoId }) => {
   const [isDone, setIsDone] = useState(status == 'COMPLETE')
   const handlePress = () => {
-    //backend쪽으로 isPressed 변경된 값 보내는 구문
+    //backend쪽으로 isPressed 변경된 값 보내는 구문 "assignNames":[{"assigneeId":1,"assigneeName":"test"},
     setIsDone(!isDone)
   }
   return (
-    <TodoContainer onPress={() => editTodo(index)}>
+    <TodoContainer onPress={() => editTodo(categoryId, todoId)}>
       <LeftContainer>
         <Label_Text style={{ padding: 4 }} color={colors.grey_800}>
           {title}
         </Label_Text>
         <MateContainer>
-          {mate.map((name) => {
+          {assignees?.map((assignee, id) => {
             return (
-              <MateItem>
-                <Detail_Text color={colors.grey_600}>{name}</Detail_Text>
+              <MateItem key={id}>
+                <Detail_Text color={colors.grey_600}>{assignee.assigneeName}</Detail_Text>
               </MateItem>
             )
           })}

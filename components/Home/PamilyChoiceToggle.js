@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { FlatList, Modal, Text, View } from 'react-native'
 import DownIcon from '../../assets/Svgs/arrow_down.svg'
 import UpIcon from '../../assets/Svgs/arrow_up.svg'
 import styled from 'styled-components/native'
