@@ -12,7 +12,7 @@ export const TopHeader = ({ navigation }) => {
       </IconContainer>
       <RightIcon>
         <IconContainer>
-          <Alarm color={colors.grey_350} width={24} height={24} />
+          <Alarm width={24} height={24} color={colors.grey_350} />
         </IconContainer>
       </RightIcon>
     </CustomHeader>

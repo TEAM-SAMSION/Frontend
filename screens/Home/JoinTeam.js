@@ -4,6 +4,7 @@ import { colors } from '../../colors'
 import { ScreenLayout } from '../../components/Shared'
 import styled from 'styled-components/native'
 import SearchIcon from '../../assets/Svgs/Search.svg'
+import { TeamSearchBox } from '../../components/Home/TeamSearchBox'
 export default function JoinTeam({ navigation }) {
   const [pamilyCode, setPamilyCode] = useState('')
   return (
@@ -33,6 +34,7 @@ export default function JoinTeam({ navigation }) {
               <SearchIcon width={16} height={16} />
             </IconBox>
           </Block>
+          <TeamSearchBox />
         </Container>
       </TouchableWithoutFeedback>
     </ScreenLayout>
@@ -43,7 +45,6 @@ const Container = styled.View`
   background-color: ${colors.grey_150};
   padding-top: 16px;
   height: 1000px;
-  align-items: center;
 `
 const InputBlock = styled.TextInput`
   background-color: ${colors.grey_100};
@@ -58,11 +59,10 @@ const Block = styled.View`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  width: 343px;
+  margin: 16px;
   height: 44px;
   padding: 0px 16px;
   border-radius: 8px;
   background-color: ${colors.grey_100};
-  margin-top: 16px;
 `
 const IconBox = styled.TouchableOpacity``

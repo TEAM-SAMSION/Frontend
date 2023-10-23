@@ -19,7 +19,7 @@ export const ScreenHeight = Dimensions.get('screen').height
 export const ScreenLayout = ({ children }) => {
   return (
     <ScreenContainer>
-      <StatusBar backgroundColor="#fff" />
+      <StatusBar />
       {children}
     </ScreenContainer>
   )

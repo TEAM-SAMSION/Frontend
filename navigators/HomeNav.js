@@ -7,6 +7,7 @@ import CreateTeam from '../screens/Home/CreateTeam'
 import JoinTeam from '../screens/Home/JoinTeam'
 import { TouchableOpacity } from 'react-native'
 import BackButton from '../assets/Svgs/chevron_back.svg'
+import AddPetProfile from '../screens/Home/AddPetProfile'
 
 const Stack = createStackNavigator()
 
@@ -54,6 +55,28 @@ export default function HomeNav() {
             backgroundColor: colors.grey_150,
           },
           headerTitle: 'Pamily',
+          headerLeft: () => (
+            <TouchableOpacity
+              onPress={() => navigation.goBack()}
+              style={{
+                justifyContent: 'center',
+                alignItems: 'center',
+                marginLeft: 16,
+              }}
+            >
+              <BackButton width={24} height={24} />
+            </TouchableOpacity>
+          ),
+        })}
+      />
+      <Stack.Screen
+        name="AddPetProfile"
+        component={AddPetProfile}
+        options={({ navigation }) => ({
+          headerStyle: {
+            backgroundColor: colors.grey_150,
+          },
+          headerTitle: '펫 프로필',
           headerLeft: () => (
             <TouchableOpacity
               onPress={() => navigation.goBack()}
