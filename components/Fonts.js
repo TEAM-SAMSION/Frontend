@@ -54,3 +54,26 @@ export const Body_Text = ({ color, children, style = null }) => {
     </Text>
   )
 }
+
+export const HeadLine_Text = ({ color, children, style = null }) => {
+  return (
+    <Text style={[{ fontFamily: 'Spoqa-Bold', fontSize: 22, lineHeight: 30, color: color }, { ...style }]}>
+      {children}
+    </Text>
+  )
+}
+
+export const HeadLineSm_Text = ({ color, children, style = null }) => {
+  return (
+    <Text style={[{ fontFamily: 'Spoqa-Medium', fontSize: 16, lineHeight: 22, color: color }, { ...style }]}>
+      {children}
+    </Text>
+  )
+}
+export const SubHead_Text = ({ color, children, style = null }) => {
+  return (
+    <Text style={[{ fontFamily: 'Spoqa-Medium', fontSize: 20, lineHeight: 28, color: color }, { ...style }]}>
+      {children}
+    </Text>
+  )
+}

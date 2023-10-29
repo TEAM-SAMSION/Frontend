@@ -11,6 +11,7 @@ import { useRecoilValue } from 'recoil'
 import { accessTokenState } from '../../recoil/AuthAtom'
 import SlideItem from '../../components/Home/SlideItem'
 import { profileSample } from '../../datas/Home/data'
+import { BodySm_Text } from '../../components/Fonts'
 
 export default function CreateTeam({ navigation }) {
   const [enabled, setEnabled] = useState(false)
@@ -134,10 +135,10 @@ export default function CreateTeam({ navigation }) {
           </ImageContainer>
           <ButtonContainer>
             <CancelButton onPress={() => bottomSheetModalRef.current?.dismiss()}>
-              <ButtonText>취소</ButtonText>
+              <BodySm_Text color={colors.red_350}>취소</BodySm_Text>
             </CancelButton>
             <OkButton>
-              <ButtonText>확인</ButtonText>
+              <BodySm_Text color={colors.red_350}>확인</BodySm_Text>
             </OkButton>
           </ButtonContainer>
         </BottomSheetModal>
@@ -158,6 +159,7 @@ const Bar = styled.View`
   background-color: rgba(0, 0, 0, 0.12);
 `
 const InputBlock = styled.TextInput`
+  font-family: 'Spoqa-Medium';
   background-color: ${colors.grey_100};
   color: ${colors.grey_600};
   padding: 0px 16px;
@@ -166,7 +168,6 @@ const InputBlock = styled.TextInput`
   height: 44px;
   border-radius: 8px;
   font-size: 14px;
-  font-weight: 500;
 `
 const Block = styled.TouchableOpacity`
   flex-direction: row;
@@ -180,9 +181,8 @@ const Block = styled.TouchableOpacity`
   margin-top: 16px;
 `
 const BlockText = styled.Text`
+  font-family: 'Spoqa-Medium';
   font-size: 14px;
-  font-style: normal;
-  font-weight: 500;
   line-height: 19px;
 `
 const BottomTitle = styled.View`
@@ -191,10 +191,8 @@ const BottomTitle = styled.View`
   padding-bottom: 16px;
 `
 const BottomTitleText = styled.Text`
-  font-family: Spoqa Han Sans Neo;
+  font-family: 'Spoqa-Medium';
   font-size: 16px;
-  font-style: normal;
-  font-weight: 500;
   line-height: 22px;
   color: ${colors.grey_800};
 `
@@ -244,7 +242,7 @@ const CancelButton = styled.TouchableOpacity`
   border-radius: 8px;
 `
 const OkButton = styled.TouchableOpacity`
-  background-color: ${colors.primary_container};
+  background-color: ${colors.red_200};
   display: flex;
   height: 44px;
   padding: 12px 16px;
@@ -252,11 +250,4 @@ const OkButton = styled.TouchableOpacity`
   align-items: center;
   flex: 1 0 0;
   border-radius: 8px;
-`
-const ButtonText = styled.Text`
-  color: ${colors.primary};
-  font-family: Spoqa Han Sans Neo;
-  font-size: 14px;
-  font-style: normal;
-  font-weight: 500;
 `

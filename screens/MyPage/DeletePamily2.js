@@ -4,7 +4,7 @@ import { ScreenLayout } from '../../components/Shared'
 
 export default function DeletePamily2({ navigation }) {
   return (
-    <ScreenLayout color={colors.primary_container}>
+    <ScreenLayout color={colors.red_200}>
       <Container>
         <MessageBox>
           <MessageText>패밀리 나가기가 완료되었습니다{'\n'}그동안 함께 해주셔서 감사합니다.</MessageText>
@@ -24,7 +24,7 @@ export default function DeletePamily2({ navigation }) {
 
 const Container = styled.View`
   flex: 1;
-  background-color: ${colors.primary_container};
+  background-color: ${colors.red_200};
   align-items: center;
 `
 const MessageBox = styled.View`
@@ -74,8 +74,6 @@ const DeleteButton = styled.TouchableOpacity`
 `
 const ButtonText = styled.Text`
   color: ${colors.primary};
-  font-family: Spoqa Han Sans Neo;
+  font-family: 'Spoqa-Bold';
   font-size: 14px;
-  font-style: normal;
-  font-weight: 700;
 `

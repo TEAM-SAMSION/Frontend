@@ -86,18 +86,14 @@ const TimeBox = styled.View`
 `
 const Title = styled.Text`
   color: ${colors.grey_700};
-  font-family: Spoqa Han Sans Neo;
+  font-family: 'Spoqa-Bold';
   font-size: 16px;
-  font-style: normal;
-  font-weight: 700;
   line-height: 22px;
 `
 const TeamNameText = styled.Text`
   color: ${colors.primary_outline};
-  font-family: Spoqa Han Sans Neo;
+  font-family: 'Spoqa-Bold';
   font-size: 16px;
-  font-style: normal;
-  font-weight: 700;
   line-height: 22px;
 `
 const DateContent = styled.View`
@@ -109,9 +105,8 @@ const DateContent = styled.View`
 `
 const DateText = styled.Text`
   color: ${colors.secondary};
+  font-family: 'Spoqa-Bold';
   font-size: 22px;
-  font-style: normal;
-  font-weight: 700;
   line-height: 30px;
 `
 const TodoBox = styled.View`
@@ -143,17 +138,14 @@ const ContentContainer = styled.View`
   justify-content: center;
 `
 const Category = styled.Text`
-  font-family: Spoqa Han Sans Neo;
+  font-family: 'Spoqa-Medium';
   font-size: 12px;
-  font-style: normal;
   font-weight: 400;
   line-height: 15px;
 `
 const TodoText = styled.Text`
-  font-family: Spoqa Han Sans Neo;
+  font-family: 'Spoqa-Bold';
   font-size: 14px;
-  font-style: normal;
-  font-weight: 700;
   line-height: 19px;
 `
 const DeleteButton = styled.TouchableOpacity`
@@ -161,7 +153,7 @@ const DeleteButton = styled.TouchableOpacity`
   bottom: 10px;
   left: 16px;
   right: 16px;
-  background-color: ${colors.primary_container};
+  background-color: ${colors.red_200};
   height: 44px;
   padding: 12px 16px;
   justify-content: center;
@@ -169,9 +161,8 @@ const DeleteButton = styled.TouchableOpacity`
   border-radius: 8px;
 `
 const ButtonText = styled.Text`
-  color: ${colors.primary};
-  font-family: Spoqa Han Sans Neo;
+  color: ${colors.red_350};
+  font-family: 'Spoqa-Bold';
   font-size: 14px;
-  font-style: normal;
-  font-weight: 700;
+  line-height: 19px;
 `

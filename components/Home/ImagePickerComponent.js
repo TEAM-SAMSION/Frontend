@@ -4,6 +4,7 @@ import styled from 'styled-components/native'
 import { colors } from '../../colors'
 import axios from 'axios'
 import * as ImageManipulator from 'expo-image-manipulator'
+import { BodySm_Text } from '../Fonts'
 
 export const ImagePickerComponent = () => {
   const [status, requestPermission] = ImagePicker.useMediaLibraryPermissions()
@@ -59,7 +60,7 @@ export const ImagePickerComponent = () => {
 
   return (
     <LibraryBox onPress={uploadImage}>
-      <LibraryText>라이브러리에서 선택</LibraryText>
+      <BodySm_Text color={colors.red_350}>라이브러리에서 선택</BodySm_Text>
     </LibraryBox>
   )
 }
@@ -71,13 +72,5 @@ const LibraryBox = styled.TouchableOpacity`
   padding: 12px 16px;
   align-items: center;
   justify-content: center;
-  background-color: ${colors.primary};
-`
-const LibraryText = styled.Text`
-  color: ${colors.grey_100};
-  font-size: 14px;
-  font-style: normal;
-  font-weight: 500;
-  line-height: 19px;
-  text-align: center;
+  background-color: ${colors.red_200};
 `

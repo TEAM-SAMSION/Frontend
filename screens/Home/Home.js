@@ -160,22 +160,19 @@ const NickBox = styled.View`
   padding-left: 8px;
 `
 const NickText = styled.Text`
+  font-family: 'Spoqa-Bold';
   font-size: 22px;
-  font-style: normal;
-  font-weight: 700;
   line-height: 30px;
   color: #fd8d81;
 `
 const NickSubText = styled.Text`
+  font-family: 'Spoqa-Bold';
   font-size: 22px;
-  font-style: normal;
-  font-weight: 700;
   line-height: 30px;
 `
 const SubText = styled.Text`
+  font-family: 'Spoqa-Medium';
   font-size: 16px;
-  font-style: normal;
-  font-weight: 500;
   line-height: 22px;
   color: ${colors.grey_600};
 `
@@ -198,9 +195,8 @@ const PamilyStatContainer = styled.View`
   top: 210px;
 `
 const NoneText = styled.Text`
+  font-family: 'Spoqa-Bold';
   font-size: 14px;
-  font-style: normal;
-  font-weight: 700;
   line-height: 19px;
   color: ${colors.grey_400};
 `
@@ -221,15 +217,13 @@ const StartTeamContainer = styled.TouchableOpacity`
   padding: 16px 16px 0px 16px;
 `
 const Title = styled.Text`
+  font-family: 'Spoqa-Bold';
   font-size: 14px;
-  font-style: normal;
-  font-weight: 700;
   line-height: 19px;
 `
 const SubTitle = styled.Text`
+  font-family: 'Spoqa-Medium';
   font-size: 12px;
-  font-style: normal;
-  font-weight: 500;
   line-height: 15px;
   color: rgba(0, 0, 0, 0.6);
 `
@@ -242,9 +236,8 @@ const TodoTitle = styled.View`
   padding: 24px 16px 0px 16px;
 `
 const TitleText = styled.Text`
+  font-family: 'Spoqa-Bold';
   font-size: 20px;
-  font-style: normal;
-  font-weight: 700;
   line-height: 28px;
   color: ${colors.grey_600};
 `
@@ -261,9 +254,8 @@ const AllTodoButton = styled.TouchableOpacity`
   background-color: ${colors.primary};
 `
 const ButtonText = styled.Text`
+  font-family: 'Spoqa-Bold';
   font-size: 14px;
-  font-style: normal;
-  font-weight: 700;
   line-height: 19px;
   color: ${colors.grey_100};
 `

@@ -1,11 +1,11 @@
-import React from "react";
-import { Text, View } from "react-native";
-import { ScreenLayout } from "../../components/Shared";
-import styled from "styled-components/native";
-import { colors } from "../../colors";
+import React from 'react'
+import { Text, View } from 'react-native'
+import { ScreenLayout } from '../../components/Shared'
+import styled from 'styled-components/native'
+import { colors } from '../../colors'
 
 export default function Account() {
-  const SocialAccount = "카카오톡";
+  const SocialAccount = '카카오톡'
 
   return (
     <ScreenLayout>
@@ -17,7 +17,7 @@ export default function Account() {
         <ContentText>계정 탈퇴</ContentText>
       </ContentContainer>
     </ScreenLayout>
-  );
+  )
 }
 
 const ContentContainer = styled.TouchableOpacity`
@@ -26,17 +26,15 @@ const ContentContainer = styled.TouchableOpacity`
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-`;
+`
 const ContentText = styled.Text`
+  font-family: 'Spoqa-Bold';
   font-size: 16px;
-  font-style: normal;
-  font-weight: 700;
   line-height: 22px;
-`;
+`
 const AccountText = styled.Text`
+  font-family: 'Spoqa-Medium';
   font-size: 14px;
-  font-style: normal;
-  font-weight: 500;
   line-height: 19px;
   color: ${colors.grey_450};
-`;
+`

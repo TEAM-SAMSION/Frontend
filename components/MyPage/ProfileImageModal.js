@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react'
 import axios from 'axios'
 import { useRecoilValue } from 'recoil'
 import { accessTokenState } from '../../recoil/AuthAtom'
+import { BodySm_Text } from '../Fonts'
 
 export const ProfileImageModal = (props) => {
   const ACCESSTOKEN = props.accessToken
@@ -42,7 +43,7 @@ export const ProfileImageModal = (props) => {
         </ImageContainer>
         <BoxContainer>
           <DefaultBox onPress={uploadDefaultImage}>
-            <DefaultText>기본 프로필로 선택</DefaultText>
+            <BodySm_Text color={colors.red_350}>기본 프로필로 선택</BodySm_Text>
           </DefaultBox>
           <ImagePickerComponent setImageUrl={props.setProfileUrl} accessToken={ACCESSTOKEN} />
         </BoxContainer>
@@ -74,19 +75,11 @@ const BoxContainer = styled.View`
 `
 const DefaultBox = styled.TouchableOpacity`
   border: 2px solid;
-  border-color: ${colors.primary};
+  border-color: ${colors.grey_150};
   width: 156px;
   height: 44px;
   border-radius: 8px;
   padding: 12px 16px;
   align-items: center;
   justify-content: center;
-`
-const DefaultText = styled.Text`
-  color: ${colors.primary};
-  font-size: 14px;
-  font-style: normal;
-  font-weight: 500;
-  line-height: 19px;
-  text-align: center;
 `

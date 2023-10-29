@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { TouchableOpacity, View } from 'react-native'
 import styled from 'styled-components/native'
 import { colors } from '../../colors'
+import { BodySm_Text } from '../../components/Fonts'
 
 export default function AddPetProfile({ navigation }) {
   const [petName, setPetName] = useState('')
@@ -69,10 +70,10 @@ export default function AddPetProfile({ navigation }) {
       </InfoContainer>
       <ButtonContainer>
         <CancelButton onPress={() => navigation.goBack()}>
-          <ButtonText>취소</ButtonText>
+          <BodySm_Text color={colors.red_350}>취소</BodySm_Text>
         </CancelButton>
         <OkButton>
-          <ButtonText>확인</ButtonText>
+          <BodySm_Text color={colors.red_350}>확인</BodySm_Text>
         </OkButton>
       </ButtonContainer>
     </>
@@ -91,13 +92,13 @@ const ProfileImage = styled.Image`
   border-radius: 16px;
 `
 const InputBlock = styled.TextInput`
+  font-family: 'Spoqa-Medium';
   background-color: ${colors.grey_100};
   color: ${colors.grey_600};
   padding: 0px 16px;
   height: 44px;
   border-radius: 8px;
   font-size: 14px;
-  font-weight: 500;
 `
 const InfoContainer = styled.View`
   gap: 12px;
@@ -131,7 +132,7 @@ const CancelButton = styled.TouchableOpacity`
   border-radius: 8px;
 `
 const OkButton = styled.TouchableOpacity`
-  background-color: ${colors.primary_container};
+  background-color: ${colors.red_200};
   display: flex;
   height: 44px;
   padding: 12px 16px;
@@ -139,11 +140,4 @@ const OkButton = styled.TouchableOpacity`
   align-items: center;
   flex: 1 0 0;
   border-radius: 8px;
-`
-const ButtonText = styled.Text`
-  color: ${colors.primary};
-  font-family: Spoqa Han Sans Neo;
-  font-size: 14px;
-  font-style: normal;
-  font-weight: 500;
 `

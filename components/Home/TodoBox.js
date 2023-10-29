@@ -38,18 +38,16 @@ const TodoBoxContainer = styled.View`
 `
 const TodoTeam = styled.View``
 const TeamText = styled.Text`
+  font-family: 'Spoqa-Medium';
   font-size: 14px;
-  font-style: normal;
-  font-weight: 500;
   line-height: 19px;
   align-self: flex-start;
-  background-color: ${colors.primary_container};
+  background-color: ${colors.red_250};
 `
 const TodoItem = styled.View``
 const ItemText = styled.Text`
+  font-family: 'Spoqa-Medium';
   font-size: 14px;
-  font-style: normal;
-  font-weight: 500;
   line-height: 19px;
   overflow: hidden;
   color: ${colors.grey_600};
