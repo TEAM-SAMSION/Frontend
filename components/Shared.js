@@ -176,4 +176,7 @@ const ModalContainer = styled.View`
 const PopImage = styled.Image`
   width: 112px;
   height: 118px;
+  overflow: visible;
+  top: 48px;
+  //z-index: -1;
 `
