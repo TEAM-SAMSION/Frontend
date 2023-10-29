@@ -1,4 +1,3 @@
-import { NavigationContainer } from '@react-navigation/native'
 import AuthNav from './navigators/AuthNav'
 import { useCallback, useEffect, useState } from 'react'
 import * as SplashScreen from 'expo-splash-screen'
@@ -10,6 +9,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import 'moment'
 import 'moment/locale/ko' // language must match config
 import { accessTokenState, loggedInState, onboardedState, userInfoState } from './recoil/AuthAtom'
+import { BottomSheetModalProvider } from '@gorhom/bottom-sheet'
 
 export default function AppBase() {
   const [appIsReady, setAppIsReady] = useState(false)

@@ -1,10 +1,11 @@
 import { useMemo, useState } from 'react'
 import axios from 'axios'
-import { Platform, Pressable, StatusBar, StyleSheet, Text } from 'react-native'
+import { Keyboard, Platform, Pressable, StatusBar, StyleSheet, Text } from 'react-native'
 import styled from 'styled-components/native'
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator, TransitionPresets } from '@react-navigation/stack'
 import DateTimePicker from '@react-native-community/datetimepicker'
+// import WheelPickerExpo from 'react-native-wheel-picker-expo'
 
 import { colors } from '../../colors'
 import { Input, url } from '../Shared'
@@ -17,7 +18,7 @@ import Alarm from '../../assets/Svgs/Alarm.svg'
 import Back from '../../assets/Svgs/chevron_back.svg'
 import Edit from '../../assets/Svgs/Todo_edit.svg'
 
-export const TodoEditBottomSheet = ({ selectedTodo }) => {
+export const TodoEditBottomSheet = ({ todosByCategory, selectedCategoryID, selectedTodoID, handleKeyboard }) => {
   const screenOptions = useMemo(
     () => ({
       ...TransitionPresets.SlideFromRightIOS,
@@ -31,6 +32,7 @@ export const TodoEditBottomSheet = ({ selectedTodo }) => {
     }),
     [],
   )
+  const [selectedTodo, setSelectedTodo] = useState(todosByCategory[selectedCategoryID][1][2][selectedTodoID])
   const Stack = createStackNavigator()
 
   const screenAOptions = useMemo(() => ({ headerLeft: () => null }), [])
@@ -38,40 +40,17 @@ export const TodoEditBottomSheet = ({ selectedTodo }) => {
   return (
     <NavigationContainer independent={true}>
       <Stack.Navigator screenOptions={screenOptions} headerMode="screen">
-        <Stack.Screen name="TodoEdit" options={screenAOptions} component={TodoEdit} selectedTodo={selectedTodo} />
+        <Stack.Screen name="TodoEdit" options={screenAOptions}>
+          {(props) => <TodoEdit {...props} selectedTodo={selectedTodo} />}
+        </Stack.Screen>
         <Stack.Screen name="TimeSetting" options={screenBOptions} component={TimeSetting} />
       </Stack.Navigator>
     </NavigationContainer>
   )
 }
-const TimeSetting = ({ navigation }) => {
-  const [date, setDate] = useState(new Date(1598051730000))
-  const [mode, setMode] = useState('date')
-  return (
-    <BottomSheetBase
-      style={{
-        backgroundColor: colors.grey_100,
-        height: '142%', //*** */
-        paddingTop: Platform.OS === 'android' ? 8 : 0,
-      }}
-    >
-      <BackButton onPress={() => navigation.goBack()}>
-        <Back width={24} height={24} />
-      </BackButton>
-      <DateTimePicker
-        style={{ backgroundColor: 'chartreuse' }}
-        testID="dateTimePicker"
-        value={date}
-        mode={mode}
-        is24Hour={true}
-        onChange={() => console.log('hello')}
-      />
-    </BottomSheetBase>
-  )
-}
-export const TodoEdit = ({ navigation, selectedTodo }) => {
+
+const TodoEdit = ({ navigation, selectedTodo }) => {
   const [tempArr, setTempArr] = useState(selectedTodo)
-  // console.log(':selectedTodo', selectedTodo)
   const editTodo = async (name) => {
     let API = `/user/name`
     const response = await axios.put(
@@ -123,20 +102,68 @@ export const TodoEdit = ({ navigation, selectedTodo }) => {
     </BottomSheetBase>
   )
 }
+const TimeSetting = ({ navigation }) => {
+  const [date, setDate] = useState(new Date(1598051730000))
 
-export const TodoCreateBottomSheet = ({ navigation }) => {
-  const [users, setUsers] = useState([
-    { name: '홍길동1', selected: false },
-    { name: '홍길동2', selected: false },
-    { name: '홍길동3', selected: false },
-    { name: '홍길동4', selected: false },
-    { name: '홍길동5', selected: false },
-    { name: '홍길동6', selected: false },
-    { name: '홍길동7', selected: false },
-    { name: '홍길동8', selected: false },
-    { name: '홍길동9', selected: false },
-    { name: '홍길동10', selected: false },
-  ])
+  return (
+    <BottomSheetBase
+      style={{
+        backgroundColor: colors.grey_100,
+        paddingTop: Platform.OS === 'android' ? 8 : 0,
+      }}
+    >
+      <TimeSettingHeader>
+        <BackButton style={{ position: 'absolute', top: 12 }} onPress={() => navigation.goBack()}>
+          <Back width={24} height={24} />
+        </BackButton>
+        <Body_Text style={{ width: '100%', textAlign: 'center' }}>시간 설정</Body_Text>
+      </TimeSettingHeader>
+      <DateTimePicker
+        style={{ height: '70%' }}
+        textColor={colors.grey_700}
+        testID="dateTimePicker"
+        value={date}
+        display="spinner"
+        mode={'time'}
+        is24Hour={false}
+        // minuteInterval={5}
+        onChange={() => console.log('hello')}
+      />
+      {/* ) : (
+        <WheelPickerExpo
+          height={200}
+          width="100%"
+          initialSelectedIndex={0}
+          items={selectableDatas.map((name) => ({ label: name, value: '' }))}
+          onChange={({ item }) => setValue(item.label)}
+          backgroundColor={isDark ? colors.grey_8 : colors.white}
+          selectedStyle={{ borderColor: colors.grey_5, borderWidth: StyleSheet.hairlineWidth }}
+          renderItem={(props) => (
+            <Text
+              style={{
+                fontFamily: 'Pretendard-Regular',
+                fontSize: 20,
+                color: isDark ? colors.white : colors.black,
+              }}
+            >
+              {props.label}
+            </Text>
+          )}
+        />
+      )} */}
+      <Button_PinkBg isLoading={false} isEnabled={true} text="완료" func={() => console.log('submitted')} />
+    </BottomSheetBase>
+  )
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+export const TodoCreateBottomSheet = ({ handleKeyboard, teamUserList }) => {
+  const [users, setUsers] = useState(
+    teamUserList?.map((users) => ({
+      ...users,
+      selected: false,
+    })),
+  )
   const [name, setName] = useState()
   const selectedUser = users.reduce((acc, user) => {
     if (user.selected) {
@@ -166,7 +193,6 @@ export const TodoCreateBottomSheet = ({ navigation }) => {
     <BottomSheetBase
       style={{
         backgroundColor: colors.grey_100,
-        height: '142%', //*** */
         paddingTop: Platform.OS === 'android' ? 8 : 0,
       }}
     >
@@ -179,12 +205,16 @@ export const TodoCreateBottomSheet = ({ navigation }) => {
           style={{ backgroundColor: colors.grey_150, color: colors.grey_700 }}
           autoCapitalize="none"
           placeholderTextColor={colors.grey_450}
-          onSubmitEditing={() => Keyboard.dismiss()}
+          onSubmitEditing={() => {
+            Keyboard.dismiss()
+            handleKeyboard(1)
+          }}
           placeholder="할 일을 입력해주세요"
           returnKeyType="done"
           inputMode="text"
           blurOnSubmit={false}
           onChangeText={(text) => setName(text)}
+          onFocus={() => handleKeyboard(2)}
         />
       </InputContainer>
       <BodyBoldSm_Text style={{ marginBottom: 10 }}>담당자 지정</BodyBoldSm_Text>
@@ -239,7 +269,7 @@ const SmallBox = styled.TouchableOpacity`
   padding: 20px 16px;
   border-radius: 8px;
   flex: 1;
-  gap: 4;
+  gap: 4px;
   align-items: center;
   background-color: ${colors.grey_150};
 `
@@ -260,17 +290,23 @@ const RowContainer = styled.View`
 const BottomSheetBase = styled.View`
   width: 100%;
   height: 100%;
-  padding: 24px;
+  padding: 24px 24px 32px 24px;
   flex-direction: column;
   justify-content: space-between;
 `
 const BottomSheetHeader = styled.View`
-  flex-direction: column;
+  flex-direction: row;
   padding: 16px;
-  align-items: center;
+  justify-content: center;
+`
+const TimeSettingHeader = styled.View`
+  flex-direction: row;
+  padding: 16px 16px 0px 16px;
+  justify-content: space-between;
 `
 const UserItem = styled.TouchableOpacity`
-  padding: 8px 12px;
+  height: 31px;
+  padding: 0px 14px;
   margin-bottom: 8px;
   margin-right: 8px;
   border-radius: 99px;

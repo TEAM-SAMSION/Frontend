@@ -1,136 +1,201 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { ScreenLayout, url } from '../../components/Shared'
+import { ScreenLayout } from '../../components/Shared'
 import { colors } from '../../colors'
 import styled from 'styled-components/native'
 import { TodoHeader } from '../../components/Todo/TodoHeader'
-import { BodyBold_Text, Label_Text } from '../../components/Fonts'
-import { Keyboard, NativeModules, Platform, ScrollView } from 'react-native'
+import { BodyBold_Text } from '../../components/Fonts'
+import { ActivityIndicator, Keyboard, NativeModules, Platform, Pressable, ScrollView } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage' //캐시 지우기 때문에 임시로
 import { useRecoilValue } from 'recoil'
 import { userInfoState } from '../../recoil/AuthAtom'
-import axios from 'axios'
 import { TodoItem } from '../../components/Todo/TodoItem'
 import { NoItem } from '../../components/Todo/NoToDoItem'
-import BottomSheet, { BottomSheetBackdrop } from '@gorhom/bottom-sheet'
+import { BottomSheetBackdrop, BottomSheetModal } from '@gorhom/bottom-sheet'
 import { TodoCreateBottomSheet, TodoEditBottomSheet } from '../../components/Todo/TodoBottomSheets'
 
-import Add from '../../assets/Svgs/add.svg'
 import { MyCalendarStrip } from '../../components/Todo/CalendarStrip'
+import { CategoryCreate } from '../../components/Todo/CategoryCreate'
+import { getCategoryList, getTeamUser, getTodoTeamList, getTodos } from '../../components/Todo/Apis'
+import { CategoryIndicator } from '../../components/Todo/CategoryIndicator'
 
 export default Todo = ({ navigation }) => {
   const { StatusBarManager } = NativeModules
   const { accessToken } = useRecoilValue(userInfoState)
+  const today = new Date().toISOString().substring(0, 10)
+
   const [statusBarHeight, setStatusBarHeight] = useState(0)
-  const [todoData, setTodoData] = useState(null)
-  const [selectedTodo, setSelectedTodo] = useState(null)
-  const [category, setCategory] = useState('')
+
+  const [todosByCategory, setTodosByCategory] = useState(null)
+
+  const [todoTeamList, setTodoTeamList] = useState([])
+  const [teamUserList, setTeamUserList] = useState([])
+  const [snappoints, setSnappoints] = useState([])
+
+  const [selectedTeam, setSelectedTeam] = useState(null)
+  const [selectedCategoryID, setSelectedCategoryID] = useState(null)
+  const [selectedTodoID, setSelectedTodoID] = useState(null)
+  const [selectedDate, setSelectedDate] = useState(null)
+
   const [isCreateMode, setIsCreateMode] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
+
   const bottomModal = useRef()
 
-  //KeyboardAwareView가 정상 작동하기 위해서 StatusBar의 높이값을 초기에 구해야함.
-  Platform.OS == 'ios'
-    ? StatusBarManager.getHeight((statusBarFrameData) => {
-        setStatusBarHeight(statusBarFrameData.height)
-      })
-    : null
+  //prettier-ignore
+  Platform.OS == 'ios'? StatusBarManager.getHeight((statusBarFrameData) => {setStatusBarHeight(statusBarFrameData.height)}): null //KeyboardAwareView가 정상 작동하기 위해서 StatusBar의 높이값을 초기에 구해야함.
 
   //prettier-ignore
-  const renderBackdrop = useCallback((props) => <BottomSheetBackdrop {...props} pressBehavior="close" appearsOnIndex={0} disappearsOnIndex={-1} />,[],)
+  const renderBackdrop = useCallback((props) => <BottomSheetBackdrop {...props} pressBehavior="close" appearsOnIndex={0} disappearsOnIndex={-1} ><Pressable onPress={()=>Keyboard.dismiss()} style={{flex:1}}/></BottomSheetBackdrop>,[],)
 
-  const getTodos = async (teamId, page = 0, size = 10) => {
-    let API = `/todo/list/${teamId}`
-    const response = await axios.get(url + API, {
-      params: {
-        page: 0,
-        size: 10,
-      },
-      headers: {
-        Authorization: accessToken,
-      },
+  const createCategory = (text) => {
+    console.log('creatingCategory', text)
+  }
+  const changeTodoTeam = (todoTeamId) => {
+    getCategoryList(todoTeamId, accessToken).then((categories) => {
+      getTodosByCategory(categories, selectedDate)
     })
-    // if (response.data.content.length != 0) {//content가 비어있을때
-    // setTodoData(response.data.content)
-    //{"content": [{"status": "INCOMPLETE", "task": "test", "todoId": 6145}, {"status": "INCOMPLETE", "task": "test", "todoId": 6146}, {"status": "INCOMPLETE", "task": "test", "todoId": 6147}, {"status": "INCOMPLETE", "task": "test", "todoId": 6148}], "hasNext": false, "page": 0, "size": 10}
-    // }
-    let tempArr = {
-      //Todo 생성이 원활하지 못하기 때문에, 우선 임시로 더미데이터 채워넣기
-      content: [
-        { status: 'INCOMPLETE', task: 'test1', todoId: 6145 },
-        { status: 'INCOMPLETE', task: 'test2', todoId: 6146 },
-        { status: 'INCOMPLETE', task: 'test3', todoId: 6147 },
-        { status: 'INCOMPLETE', task: 'test4', todoId: 6148 },
-      ],
-      hasNext: false,
-      page: 0,
-      size: 10,
+    getTeamUser(todoTeamId, accessToken).then((res) => {
+      let tempTeamUserList = []
+      res.registers?.map((user) => tempTeamUserList.push({ id: user.registerId, name: user.registerName }))
+      setTeamUserList(tempTeamUserList)
+    })
+  }
+  const getTodosByCategory = async (categories, date) => {
+    // 각 categoryId에 대해 getTodo 함수를 병렬로 호출
+    const todoPromises = categories.map(
+      (category) => getTodos(category.categoryId, accessToken, date), //[{"assignNames": [[Object], [Object], [Object], [Object]], "status": "INCOMPLETE", "task": "test", "todoId": 6149}, {"assignNames": [[Object], [Object], [Object], [Object]], "status": "INCOMPLETE", "task": "test", "todoId": 6150},
+    )
+    // Promise.all()를 사용하여 모든 비동기 작업 완료를 기다림
+    const todosArr = await Promise.all(todoPromises) //todosArr = {"0":[1,"test",{"todoId":6161,"task":"test","status":"INCOMPLETE","assignNames":[{"assigneeId":1,"assigneeName":"test"},{"assigneeId":5,"assigneeName":"김형석"},{"assigneeId":6,"assigneeName":null},{"assigneeId":7,"assigneeName":"neon"}]}],
+    // 각 categoryId와 그에 해당하는 todo 객체들을 묶음/ 누적값, 현재값, id
+    const todosByCategory = categories.reduce((acc, category, id) => {
+      acc[id] = [category.categoryId, category.categoryName, todosArr[id]]
+      return acc
+    }, [])
+    if (Object.entries(todosByCategory).length > 0) {
+      setTodosByCategory(Object.entries(todosByCategory))
+    } else {
+      setTodosByCategory(null)
     }
-    setTodoData(tempArr.content)
+    //todosByCategory[0]= ["0",[1,"test",[{"todoId":6161,"task":"test","status":"INCOMPLETE","assignNames":[{"assigneeId":1,"assigneeName":"test"},{"assigneeId":5,"assigneeName":"김형석"},{"assigneeId":6,"assigneeName":null},{"assigneeId":7,"assigneeName":"neon"}]},{"todoId":6162,"task":"test","status":"INCOMPLETE","assignNames":[{"assigneeId":1,"assigneeName":"test"},{"assigneeId":5,"assigneeName":"김형석"},{"assigneeId":6,"assigneeName":null},{"assigneeId":7,"assigneeName":"neon"}]},{"todoId":6163,"task":"test","status":"INCOMPLETE","assignNames":[{"assigneeId":1,"assigneeName":"test"},{"assigneeId":5,"assigneeName":"김형석"},{"assigneeId":6,"assigneeName":null},{"assigneeId":7,"assigneeName":"neon"}]},{"todoId":6164,"task":"test","status":"INCOMPLETE","assignNames":[{"assigneeId":1,"assigneeName":"test"},{"assigneeId":5,"assigneeName":"김형석"},{"assigneeId":6,"assigneeName":null},{"assigneeId":7,"assigneeName":"neon"}]}]]]
+  }
+  const getInitDatas = () => {
+    setIsLoading(true)
+    //TodoTeam과 Default TodoTeam에 한해 User들을 일시적으로 반환(나중에 Team 변경하면 해당 변수 대체됨)
+    getTodoTeamList(accessToken, 0, 10)
+      .then((res) => {
+        //1. TeamList를 저장
+        let tempTeamList = []
+        res.content?.map((team) => tempTeamList.push({ id: team.teamId, name: team.teamName }))
+        setTodoTeamList(tempTeamList)
+        setSelectedTeam({
+          name: tempTeamList[tempTeamList.length - 1]?.name,
+          id: tempTeamList[tempTeamList.length - 1]?.id,
+        })
+        return tempTeamList[tempTeamList.length - 1]?.id
+      })
+      .then((selectedID_temp) => {
+        getCategoryList(selectedID_temp, accessToken).then((categories) => {
+          getTodosByCategory(categories, today).then(setIsLoading(false))
+        })
+        return selectedID_temp
+      })
+      .then((selectedID_temp) =>
+        getTeamUser(selectedID_temp, accessToken).then((res) => {
+          //4. TeamUser를 저장/ teamList의 가장 마지막 요소가 가장 처음에 만들어진 Team이라서 length-1번째 teamId를 인자로 넣었음
+          let tempTeamUserList = []
+          res.registers?.map((user) => tempTeamUserList.push({ id: user.registerId, name: user.registerName }))
+          setTeamUserList(tempTeamUserList) //나중에 Team 변경하면 해당 변수 대체됨
+        }),
+      )
+  }
+  const handleDateSelect = (date) => {
+    //date = 2023-10-15 //날짜를 선택 시, 해당 날짜에서의 Todo 조회 및 todosByCategory 갱신
+    setIsLoading(true)
+    setSelectedDate(date)
+    getCategoryList(selectedTeam.id, accessToken).then((categories) => {
+      getTodosByCategory(categories, date).then(setIsLoading(false))
+    })
   }
   useEffect(() => {
-    // getDatas()
-    getTodos(1)
-    // getTeamUser(1).then((res) => console.log(res))
+    getInitDatas()
   }, [])
 
-  const createTodo = () => {
-    setIsCreateMode(true)
-    bottomModal.current?.snapToIndex(0)
+  const handleKeyboard = (status) => {
+    if (status == 0) {
+      setSnappoints(['42%'])
+    } else if (status == 1) {
+      setSnappoints(['55%'])
+    } else {
+      setSnappoints(['90%'])
+    }
   }
-  const editTodo = (index) => {
+  const startCreateTodo = (index) => {
+    setIsCreateMode(true)
+    setSelectedCategoryID(index)
+    handleKeyboard(1)
+    bottomModal.current?.present()
+  }
+  const startEditTodo = (categoryId, todoId) => {
     setIsCreateMode(false)
-    setSelectedTodo(todoData[index])
-    bottomModal.current?.snapToIndex(1)
+    setSelectedCategoryID(categoryId)
+    setSelectedTodoID(todoId)
+    handleKeyboard(0)
+    bottomModal.current?.present()
   }
   return (
     <ScreenLayout verticalOffset={statusBarHeight + 44} behavior="position">
-      <ContentContainer>
-        <TodoHeader navigation={navigation} />
-        <ScrollView>
-          <ContentBase>
-            <MyCalendarStrip />
-            {/* <CategoryInputContainer style={{ width: category ? 32 + category.length * 16 : 190 }}> */}
-            {!todoData && <NoItem />}
-            {/* <CategoryInputContainer style={{ width: 190 }}>
-              <Circle style={{ backgroundColor: colors.primary }}></Circle>
-              <CategoryInput
-                autoCapitalize="none"
-                placeholderTextColor={colors.grey_600}
-                onSubmitEditing={() => Keyboard.dismiss()}
-                placeholder="카테고리를 입력해주세요"
-                returnKeyType="done"
-                inputMode="text"
-                blurOnSubmit={false}
-                onChangeText={(text) => setCategory(text)}
-              />
-            </CategoryInputContainer> */}
-            <CategoryInputContainer onPress={() => createTodo()}>
-              <Circle style={{ backgroundColor: colors.primary }}></Circle>
-              <Label_Text>고고쉼 운영</Label_Text>
-              <Add width={16} height={16} />
-            </CategoryInputContainer>
-            {todoData &&
-              todoData?.map((data, index) => (
-                <TodoItem title={data.task} status={data.status} key={index} index={index} editTodo={editTodo} />
-              ))}
-            <TodayButton
-              style={{ marginTop: 32 }}
-              onPress={() => {
-                AsyncStorage.clear()
-              }}
-            >
-              <BodyBold_Text color={colors.grey_400}>캐시 지우기</BodyBold_Text>
-            </TodayButton>
-            <TodayButton style={{ marginTop: 32 }} onPress={() => logout()}>
-              <BodyBold_Text color={colors.grey_400}>로그아웃</BodyBold_Text>
-            </TodayButton>
-          </ContentBase>
+      <ContentLayout>
+        <TodoHeader
+          selectedTeam={selectedTeam}
+          setSelectedTeam={setSelectedTeam}
+          changeTodoTeam={changeTodoTeam}
+          todoTeamList={todoTeamList}
+          navigation={navigation}
+        />
+        <ScrollView style={{ zIndex: -1 }} showsVerticalScrollIndicator={false}>
+          <MyCalendarStrip handleDateSelect={handleDateSelect} />
+          {!todosByCategory && <NoItem />}
+          {/* <CategoryCreate createCategory={createCategory} /> */}
+          {/*** todosByCategory[0][1][0] = categoryId, todosByCategory[0][1][1] = categoryName,todosByCategory[0][1][2] = todos*/}
+          {isLoading ? (
+            <LoadingContainer>
+              <ActivityIndicator />
+            </LoadingContainer>
+          ) : (
+            todosByCategory?.map((todos, id) => {
+              return (
+                <>
+                  <CategoryIndicator startCreateTodo={startCreateTodo} todos={todos[1]} categoryId={todos[1][0]} />
+                  {todos[1][2].map((todo, index) => (
+                    <TodoItem
+                      key={index}
+                      assignees={todo.assignNames}
+                      title={todo.task}
+                      status={todo.status}
+                      categoryId={id}
+                      todoId={index}
+                      editTodo={startEditTodo}
+                    />
+                  ))}
+                </>
+              )
+            })
+          )}
+          <TodayButton
+            style={{ marginTop: 32 }}
+            onPress={() => {
+              AsyncStorage.clear()
+            }}
+          >
+            <BodyBold_Text color={colors.grey_400}>캐시 지우기</BodyBold_Text>
+          </TodayButton>
         </ScrollView>
-      </ContentContainer>
-      <BottomSheet
+      </ContentLayout>
+      <BottomSheetModal
         ref={bottomModal}
         backdropComponent={renderBackdrop}
-        index={-1}
-        snapPoints={['55%', '40%']}
+        snapPoints={snappoints}
         enablePanDownToClose={false}
         enableHandlePanningGesture={false}
         enableContentPanningGesture={false}
@@ -141,37 +206,23 @@ export default Todo = ({ navigation }) => {
         handleIndicatorStyle={{ backgroundColor: colors.grey_300, width: 72, height: 6, marginTop: 8 }}
       >
         {isCreateMode ? (
-          <TodoCreateBottomSheet selectedTodo={selectedTodo} />
+          <TodoCreateBottomSheet
+            selectedCategoryID={selectedCategoryID}
+            handleKeyboard={handleKeyboard}
+            teamUserList={teamUserList}
+          />
         ) : (
-          <TodoEditBottomSheet selectedTodo={selectedTodo} />
+          <TodoEditBottomSheet
+            handleKeyboard={handleKeyboard}
+            todosByCategory={todosByCategory}
+            selectedCategoryID={selectedCategoryID}
+            selectedTodoID={selectedTodoID}
+          />
         )}
-      </BottomSheet>
+      </BottomSheetModal>
     </ScreenLayout>
   )
 }
-const CategoryInput = styled.TextInput`
-  margin-left: 8px;
-  font-family: Spoqa-Medium;
-  font-size: 14px;
-`
-const ContentBase = styled.View`
-  flex: 1;
-`
-const Circle = styled.View`
-  width: 12px;
-  height: 12px;
-  border-radius: 6px;
-`
-const CategoryInputContainer = styled.TouchableOpacity`
-  align-self: flex-start;
-  flex-direction: row;
-  align-items: center;
-  border-radius: 4px;
-  padding: ${Platform.OS == 'android' ? '2px 8px' : '6px 8px'};
-  border: 1px solid ${colors.grey_200};
-  margin: 16px 0px;
-  gap: 8px;
-`
 const TodayButton = styled.TouchableOpacity`
   flex-direction: row;
   border: 1px solid ${colors.grey_250};
@@ -181,6 +232,13 @@ const TodayButton = styled.TouchableOpacity`
   border-radius: 99px;
   display: inline-block;
 `
-const ContentContainer = styled.View`
+const LoadingContainer = styled.View`
+  flex: 1;
+  height: 300px;
+  justify-content: center;
+
+  /* background-color: chartreuse; */
+`
+const ContentLayout = styled.View`
   padding: 0px 16px;
 `
