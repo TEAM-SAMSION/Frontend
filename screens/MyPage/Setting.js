@@ -44,9 +44,8 @@ const ContentContainer = styled.TouchableOpacity`
   justify-content: space-between;
 `
 const ContentText = styled.Text`
+  font-family: 'Spoqa-Bold';
   font-size: 16px;
-  font-style: normal;
-  font-weight: 700;
   line-height: 22px;
 `
 const TouchableIcon = styled.TouchableOpacity``

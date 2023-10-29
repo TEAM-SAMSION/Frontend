@@ -3,6 +3,7 @@ import { colors } from '../../colors'
 import { useState } from 'react'
 import { Dimensions, TouchableOpacity } from 'react-native'
 import Report from '../../assets/Svgs/report.svg'
+import { Detail_Text } from '../Fonts'
 
 const screenWidth = Dimensions.get('window').width
 
@@ -20,7 +21,7 @@ export const MainStat = (props) => {
         </BackBar>
       </BarContainer>
       <StatButton>
-        <StatText>{percentage}%</StatText>
+        <Detail_Text color={colors.primary}>{percentage}%</Detail_Text>
       </StatButton>
     </MainStatContainer>
   )
@@ -70,11 +71,4 @@ const StatButton = styled.View`
   align-items: center;
   border-radius: 8px;
   background-color: ${colors.primary_container};
-`
-const StatText = styled.Text`
-  font-size: 12px;
-  font-style: normal;
-  font-weight: 500;
-  line-height: 15px;
-  color: ${colors.primary};
 `

@@ -154,7 +154,7 @@ export default function MyPage({ navigation }) {
             </UserDetailContainer>
           </UserContainer>
           <GroupContainer>
-            <Title>내가 속한 모임</Title>
+            <Title>내가 속한 Pamily</Title>
             <Groups>
               <FlatList
                 data={groupInfo}
@@ -247,16 +247,14 @@ const UserNameBox = styled.View`
   gap: 8px;
 `
 const Username = styled.Text`
+  font-family: 'Spoqa-Bold';
   font-size: 20px;
-  font-style: normal;
-  font-weight: 700;
   line-height: 28px;
 `
 const EmailBox = styled.View``
 const EmailText = styled.Text`
+  font-family: 'Spoqa-Medium';
   font-size: 14px;
-  font-style: normal;
-  font-weight: 500;
   line-height: 19px;
 `
 const GroupContainer = styled.View`
@@ -264,10 +262,9 @@ const GroupContainer = styled.View`
   gap: 12px;
 `
 const Title = styled.Text`
+  font-family: 'Spoqa-Bold';
   padding: 0px 20px;
   font-size: 20px;
-  font-style: normal;
-  font-weight: 700;
   line-height: 28px;
 `
 const Groups = styled.View`
@@ -285,15 +282,13 @@ const FooterContainer = styled.View`
   padding-bottom: 500px;
 `
 const FooterText = styled.Text`
+  font-family: 'Spoqa-Medium';
   font-size: 12px;
-  font-style: normal;
-  font-weight: 500;
   line-height: 15px;
 `
 const Guide = styled.Text`
+  font-family: 'Spoqa-Bold';
   font-size: 14px;
-  font-style: normal;
-  font-weight: 700;
   line-height: 19px;
   text-decoration-line: underline;
 `
@@ -305,16 +300,14 @@ const PopContent = styled.View`
   margin-bottom: 16px;
 `
 const PopTitle = styled.Text`
+  font-family: 'Spoqa-Bold';
   font-size: 20px;
-  font-style: normal;
-  font-weight: 700;
   line-height: 28px;
   color: ${colors.grey_700};
 `
 const PopSubTitle = styled.Text`
+  font-family: 'Spoqa-Medium';
   font-size: 16px;
-  font-style: normal;
-  font-weight: 500;
   line-height: 22px;
   color: ${colors.grey_500};
 `
@@ -332,14 +325,13 @@ const PopButton = styled.TouchableOpacity`
   justify-content: center;
   align-items: center;
   border-radius: 8px;
-  background-color: ${colors.primary_container};
+  background-color: ${colors.red_200};
 `
 const PopButtonText = styled.Text`
+  font-family: 'Spoqa-Medium';
   font-size: 14px;
-  font-style: normal;
-  font-weight: 500;
   line-height: 19px;
-  color: ${colors.primary};
+  color: ${colors.red_350};
 `
 const PopTitleBox = styled.View`
   flex-direction: row;
@@ -353,9 +345,8 @@ const DateContent = styled.View`
   background-color: ${colors.grey_100};
 `
 const DateText = styled.Text`
+  font-family: 'Spoqa-Bold';
   color: ${colors.secondary};
   font-size: 22px;
-  font-style: normal;
-  font-weight: 700;
   line-height: 30px;
 `

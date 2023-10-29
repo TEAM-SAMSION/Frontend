@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import styled from 'styled-components/native'
 import { colors } from '../../colors'
+import { BodyBoldSm_Text, BodySm_Text, Detail_Text } from '../Fonts'
 
 export const TeamSearchBox = () => {
   const teamName = useState('펫모리')
@@ -12,44 +13,42 @@ export const TeamSearchBox = () => {
     <>
       <Card>
         <TeamCodeBox>
-          <TeamCodeText>JEkDJDK</TeamCodeText>
+          <BodyBoldSm_Text color={colors.primary_outline}>JEkDJDK</BodyBoldSm_Text>
         </TeamCodeBox>
         <TeamContentBox>
           <TeamImage source={require('../../assets/Imgs/sample_5.png')} />
           <TeamInfoBox>
             <TeamInfoDetailBox>
               <Box>
-                <Category>Pamily 이름</Category>
+                <Detail_Text color={colors.grey_600}>Pamily 이름</Detail_Text>
               </Box>
-              <Info>{teamName}</Info>
+              <Detail_Text color={colors.grey_450}>{teamName}</Detail_Text>
             </TeamInfoDetailBox>
             <TeamInfoDetailBox>
               <Box>
-                <Category>Pamily 대표</Category>
+                <Detail_Text color={colors.grey_600}>Pamily 대표</Detail_Text>
               </Box>
-              <Info>{teamLeader}</Info>
+              <Detail_Text color={colors.grey_450}>{teamLeader}</Detail_Text>
             </TeamInfoDetailBox>
             <TeamInfoDetailBox>
               <Box>
-                <Category>참여 멤버 수</Category>
+                <Detail_Text color={colors.grey_600}>참여 멤버 수</Detail_Text>
               </Box>
-
-              <Info>{teamNumber}명</Info>
+              <Detail_Text color={colors.grey_450}>{teamNumber}명</Detail_Text>
             </TeamInfoDetailBox>
             <TeamInfoDetailBox>
               <Box>
-                <Category>모임 공개 여부</Category>
+                <Detail_Text color={colors.grey_600}>모임 공개 여부</Detail_Text>
               </Box>
-
-              <Info>{teamPrivacy}</Info>
+              <Detail_Text color={colors.grey_450}>{teamPrivacy}</Detail_Text>
             </TeamInfoDetailBox>
           </TeamInfoBox>
         </TeamContentBox>
         <TeamIntroBox>
-          <TeamIntroText>{teamIntro}</TeamIntroText>
+          <Detail_Text color={colors.grey_450}>{teamIntro}</Detail_Text>
         </TeamIntroBox>
         <JoinButton>
-          <ButtonText>참여하기</ButtonText>
+          <BodySm_Text color={colors.red_350}>참여하기</BodySm_Text>
         </JoinButton>
       </Card>
     </>
@@ -64,14 +63,6 @@ const Card = styled.View`
   gap: 16px;
 `
 const TeamCodeBox = styled.View``
-const TeamCodeText = styled.Text`
-  color: ${colors.primary_outline};
-  font-family: Spoqa Han Sans Neo;
-  font-size: 14px;
-  font-style: normal;
-  font-weight: 700;
-  line-height: 19px;
-`
 const TeamContentBox = styled.View`
   flex-direction: row;
   align-items: center;
@@ -97,44 +88,12 @@ const Box = styled.View`
   justify-content: center;
   width: 72px;
 `
-const Category = styled.Text`
-  color: ${colors.grey_600};
-  font-family: Spoqa Han Sans Neo;
-  font-size: 12px;
-  font-style: normal;
-  font-weight: 500;
-  line-height: 15px;
-`
-const Info = styled.Text`
-  color: ${colors.grey_450};
-  font-family: Spoqa Han Sans Neo;
-  font-size: 12px;
-  font-style: normal;
-  font-weight: 500;
-  line-height: 15px;
-`
-
 const TeamIntroBox = styled.View``
-const TeamIntroText = styled.Text`
-  color: ${colors.grey_450};
-  font-family: Spoqa Han Sans Neo;
-  font-size: 12px;
-  font-style: normal;
-  font-weight: 500;
-  line-height: 15px;
-`
 const JoinButton = styled.TouchableOpacity`
-  background-color: ${colors.primary_container};
+  background-color: ${colors.red_200};
   height: 44px;
   padding: 12px 16px;
   justify-content: center;
   align-items: center;
   border-radius: 8px;
-`
-const ButtonText = styled.Text`
-  color: ${colors.primary};
-  font-family: Spoqa Han Sans Neo;
-  font-size: 14px;
-  font-style: normal;
-  font-weight: 500;
 `

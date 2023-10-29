@@ -47,12 +47,11 @@ const Container = styled.View`
   height: 1000px;
 `
 const InputBlock = styled.TextInput`
+  font-family: 'Spoqa-Medium';
   background-color: ${colors.grey_100};
   color: ${colors.grey_600};
   height: 44px;
   font-size: 14px;
-  font-style: normal;
-  font-weight: 500;
   line-height: 19px;
 `
 const Block = styled.View`

@@ -4,6 +4,7 @@ import { styled } from 'styled-components/native'
 import { Swipeable } from 'react-native-gesture-handler'
 import { colors } from '../../colors'
 import CrownIcon from '../../assets/Svgs/Crown.svg'
+import { BodyBoldSm_Text, BodySm_Text } from '../Fonts'
 
 const SCREEN_WIDTH = Dimensions.get('window').width
 
@@ -17,7 +18,7 @@ const GroupBox = (props) => {
         activeOpacity={0.6}
       >
         <DeleteBox>
-          <DeleteText>나가기</DeleteText>
+          <BodySm_Text color={colors.grey_100}>나가기</BodySm_Text>
         </DeleteBox>
       </TouchableOpacity>
     )
@@ -34,8 +35,10 @@ const GroupBox = (props) => {
       >
         <GroupImage source={{ uri: `${props.data.teamProfileImageUrl}` }} />
         <GroupInfoBox>
-          <GroupName>{props.data.teamName}</GroupName>
-          <GroupDate>가입한지 {props.data.registerPeriod}일째</GroupDate>
+          <BodyBoldSm_Text color={colors.grey_800}>{props.data.teamName}</BodyBoldSm_Text>
+          <BodySm_Text color={colors.grey_450}>
+            가입한지 <BodyBoldSm_Text color={colors.primary_outline}>{props.data.registerPeriod}</BodyBoldSm_Text>일째
+          </BodySm_Text>
         </GroupInfoBox>
         {props.data.authority == 'PRESIDENT' ? <CrownIcon width={34} height={34} /> : <View width={34} height={34} />}
       </GroupBoxContainer>
@@ -68,18 +71,6 @@ const GroupInfoBox = styled.View`
   justify-content: center;
   width: 212px;
 `
-const GroupName = styled.Text`
-  font-size: 14px;
-  font-style: normal;
-  font-weight: 700;
-  line-height: 19px;
-`
-const GroupDate = styled.Text`
-  font-size: 14px;
-  font-style: normal;
-  font-weight: 500;
-  line-height: 19px;
-`
 const DeleteBox = styled.View`
   width: 89px;
   height: 71px;
@@ -90,11 +81,4 @@ const DeleteBox = styled.View`
   margin-top: 8px;
   margin-bottom: 8px;
   margin-right: 16px;
-`
-const DeleteText = styled.Text`
-  font-size: 14px;
-  font-style: normal;
-  font-weight: 500;
-  line-height: 19px;
-  color: ${colors.grey_100};
 `

@@ -7,6 +7,7 @@ import { colors } from '../../colors'
 import { ModalPopUp } from '../Shared'
 import Close from '../../assets/Svgs/Close.svg'
 import { useNavigation } from '@react-navigation/native'
+import { BodySm_Text, Detail_Text, SubHead_Text } from '../Fonts'
 
 export const PamilyChoiceToggle = () => {
   // 패밀리 선택 toggle isOpen
@@ -29,7 +30,7 @@ export const PamilyChoiceToggle = () => {
   return (
     <>
       <DropdownContainer isOpen={isOpen} onPress={toggleDropdown}>
-        <DropdownTitle>{selectedValue || '패밀리 선택 '}</DropdownTitle>
+        <Detail_Text color={colors.grey_600}>{selectedValue || '패밀리 선택 '}</Detail_Text>
         {isOpen ? (
           <UpIcon width={16} height={16} style={{ position: 'absolute', right: 10 }} />
         ) : (
@@ -41,14 +42,14 @@ export const PamilyChoiceToggle = () => {
         <>
           {options.map((option) => (
             <DropdownBox key={option} onPress={() => handleOptionSelect(option)}>
-              <DropdownTitle>{option}</DropdownTitle>
+              <Detail_Text color={colors.grey_600}>{option}</Detail_Text>
             </DropdownBox>
           ))}
           <DropdownBox
             style={{ borderBottomLeftRadius: 8, borderBottomRightRadius: 8 }}
             onPress={() => setVisible(true)}
           >
-            <DropdownTitle>+</DropdownTitle>
+            <Detail_Text color={colors.grey_600}>+</Detail_Text>
           </DropdownBox>
         </>
       )}
@@ -64,8 +65,8 @@ export const PamilyChoiceToggle = () => {
           </CloseButton>
         </ModalHeader>
         <PopContent>
-          <PopTitle>Pamily와 함께하시겠습니까?</PopTitle>
-          <PopSubTitle>Pamily는 나의 반려동물을 함께 키우는 모임을 말합니다.</PopSubTitle>
+          <SubHead_Text color={colors.grey_700}>Pamily와 함께하시겠습니까?</SubHead_Text>
+          <Detail_Text color={colors.grey_500}>Pamily는 나의 반려동물을 함께 키우는 모임을 말합니다.</Detail_Text>
         </PopContent>
         <PopButtonContainer>
           <PopButton
@@ -75,7 +76,7 @@ export const PamilyChoiceToggle = () => {
               setIsOpen(false)
             }}
           >
-            <PopButtonText>Pamily 생성하기</PopButtonText>
+            <BodySm_Text color={colors.red_350}>Pamily 생성하기</BodySm_Text>
           </PopButton>
           <PopButton
             onPress={() => {
@@ -84,7 +85,7 @@ export const PamilyChoiceToggle = () => {
               setIsOpen(false)
             }}
           >
-            <PopButtonText>Pamily 참여하기</PopButtonText>
+            <BodySm_Text color={colors.red_350}>Pamily 참여하기</BodySm_Text>
           </PopButton>
         </PopButtonContainer>
       </ModalPopUp>
@@ -105,13 +106,6 @@ const DropdownContainer = styled.Pressable`
   flex-direction: row;
   background-color: ${colors.grey_100};
 `
-const DropdownTitle = styled.Text`
-  font-size: 12px;
-  font-style: normal;
-  font-weight: 500;
-  line-height: 15px;
-  color: ${colors.grey_600};
-`
 const DropdownBox = styled.Pressable`
   width: 109px;
   height: 32px;
@@ -127,20 +121,6 @@ const PopContent = styled.View`
   align-items: center;
   margin-bottom: 40px;
 `
-const PopTitle = styled.Text`
-  font-size: 20px;
-  font-style: normal;
-  font-weight: 700;
-  line-height: 28px;
-  color: ${colors.grey_700};
-`
-const PopSubTitle = styled.Text`
-  font-size: 12px;
-  font-style: normal;
-  font-weight: 500;
-  line-height: 15px;
-  color: ${colors.grey_500};
-`
 const PopButtonContainer = styled.View`
   flex-direction: row;
   align-items: center;
@@ -155,14 +135,7 @@ const PopButton = styled.TouchableOpacity`
   justify-content: center;
   align-items: center;
   border-radius: 8px;
-  background-color: ${colors.primary_container};
-`
-const PopButtonText = styled.Text`
-  font-size: 14px;
-  font-style: normal;
-  font-weight: 500;
-  line-height: 19px;
-  color: ${colors.primary};
+  background-color: ${colors.red_200};
 `
 const CloseButton = styled.TouchableOpacity``
 const ModalHeader = styled.View`
