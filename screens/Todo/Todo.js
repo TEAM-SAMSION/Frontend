@@ -95,7 +95,9 @@ export default Todo = ({ navigation }) => {
         return tempTeamList[tempTeamList.length - 1]?.id
       })
       .then((selectedID_temp) => {
+        console.log(selectedID_temp)
         getCategoryList(selectedID_temp, accessToken).then((categories) => {
+          console.log(categories)
           getTodosByCategory(categories, today).then(setIsLoading(false))
         })
         return selectedID_temp

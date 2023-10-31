@@ -9,7 +9,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import 'moment'
 import 'moment/locale/ko' // language must match config
 import { accessTokenState, loggedInState, onboardedState, userInfoState } from './recoil/AuthAtom'
-import { BottomSheetModalProvider } from '@gorhom/bottom-sheet'
+import messaging from '@react-native-firebase/messaging'
 
 export default function AppBase() {
   const [appIsReady, setAppIsReady] = useState(false)
@@ -18,6 +18,13 @@ export default function AppBase() {
   const setLoggedIn = useSetRecoilState(loggedInState)
   const setToken = useSetRecoilState(accessTokenState)
   const setOnboarded = useSetRecoilState(onboardedState)
+
+  const checkFCMToken = async () => {
+    const fcmToken = await messaging().getToken()
+    if (fcmToken) {
+      console.log('fcmToken:', fcmToken)
+    }
+  }
 
   useEffect(() => {
     async function prepare() {
@@ -45,6 +52,7 @@ export default function AppBase() {
           'Spoqa-Light': require('./assets/Fonts/SpoqaHanSansNeo-Light.otf'),
           'Spoqa-Thin': require('./assets/Fonts/SpoqaHanSansNeo-Thin.otf'),
         })
+        checkFCMToken()
       } catch (e) {
         console.warn(e)
       } finally {
