@@ -77,3 +77,10 @@ export const SubHead_Text = ({ color, children, style = null }) => {
     </Text>
   )
 }
+export const SubHeadSm_Text = ({ color, children, style = null }) => {
+  return (
+    <Text style={[{ fontFamily: 'Spoqa-Medium', fontSize: 18, lineHeight: 25, color: color }, { ...style }]}>
+      {children}
+    </Text>
+  )
+}
