@@ -2,8 +2,7 @@ import { atom, DefaultValue, selector } from 'recoil'
 
 export const accessTokenState = atom({
   key: 'accessToken',
-  default:
-    'eyJhbGciOiJIUzM4NCJ9.eyJ0b2tlbl90eXBlIjoiQUNDRVNTX1RPS0VOIiwiZW1haWwiOiJuZW9zZWxmMTEwNUBnbWFpbC5jb20iLCJpc3MiOiJwYXdpdGgiLCJpYXQiOjE2OTcwODMyMzAsImV4cCI6MTY5NzE2OTYzMH0.HW53JVwtXuO228ZU-mXK6HCl9RJyloITsIX_ujnpXZKi4vk54_2-1gZ0v97N7xat',
+  default: '',
 })
 export const refreshTokenState = atom({
   key: 'refreshToken',
