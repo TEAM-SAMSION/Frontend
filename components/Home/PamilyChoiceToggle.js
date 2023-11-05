@@ -8,12 +8,12 @@ import Close from '../../assets/Svgs/Close.svg'
 import { useNavigation } from '@react-navigation/native'
 import { BodySm_Text, Detail_Text, SubHead_Text } from '../Fonts'
 
-export const PamilyChoiceToggle = () => {
+export const PamilyChoiceToggle = (props) => {
+  const pamilyList = props.pamilyList
+  const options = pamilyList.map((item) => item.teamName)
   // 패밀리 선택 toggle isOpen
   const [isOpen, setIsOpen] = useState(false)
   const [selectedValue, setSelectedValue] = useState('')
-  const options = ['패밀리1', '패밀리2']
-  // + 누르면 나오는 모달 팝업 visible
   const [visible, setVisible] = useState(false)
   const navigation = useNavigation()
 

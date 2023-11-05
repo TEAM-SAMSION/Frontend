@@ -4,22 +4,30 @@ import { styled } from 'styled-components/native'
 import { colors } from '../../colors'
 import CheckOn from '../../assets/Svgs/Check-box.svg'
 import CheckOff from '../../assets/Svgs/Check-box_off.svg'
+import { completeTodo } from './Apis'
 
 const SCREEN_WIDTH = Dimensions.get('window').width
 
 export const TodoBox = (props) => {
-  const [isChecked, setIsChecked] = useState(false)
+  const todo = props.data
+  const [isChecked, setIsChecked] = useState(todo.status)
+
   return (
     <TodoBoxContainer>
       <TodoContent>
         <TodoTeam>
-          <TeamText>패밀리 이름</TeamText>
+          <TeamText>{todo.teamName}</TeamText>
         </TodoTeam>
         <TodoItem>
-          <ItemText>산책시키기</ItemText>
+          <ItemText>{todo.task}</ItemText>
         </TodoItem>
       </TodoContent>
-      <CheckBox onPress={() => setIsChecked(!isChecked)}>
+      <CheckBox
+        onPress={() => {
+          setIsChecked(!isChecked)
+          completeTodo()
+        }}
+      >
         {isChecked ? <CheckOn width={24} height={24} /> : <CheckOff width={24} height={24} />}
       </CheckBox>
     </TodoBoxContainer>
