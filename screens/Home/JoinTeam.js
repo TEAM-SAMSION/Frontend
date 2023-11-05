@@ -5,8 +5,25 @@ import { ScreenLayout } from '../../components/Shared'
 import styled from 'styled-components/native'
 import SearchIcon from '../../assets/Svgs/Search.svg'
 import { TeamSearchBox } from '../../components/Home/TeamSearchBox'
+import { getSearchedTeam } from '../../components/Home/Apis'
+import { useRecoilValue } from 'recoil'
+import { accessTokenState } from '../../recoil/AuthAtom'
 export default function JoinTeam({ navigation }) {
+  const ACCESSTOKEN = useRecoilValue(accessTokenState)
   const [pamilyCode, setPamilyCode] = useState('')
+  const [searchedData, setSearchedData] = useState([])
+
+  const searchTeam = (teamCode) => {
+    getSearchedTeam(ACCESSTOKEN, teamCode).then((result) => {
+      {
+        result.length !== 0 && setSearchedData(result)
+      }
+      console.log(result)
+      // result 없을 경우 -> alert 창 뜨게 해야 함
+      // 검색 에러 코드 받아오기
+    })
+  }
+
   return (
     <ScreenLayout color={colors.grey_150}>
       <TouchableWithoutFeedback
@@ -26,15 +43,13 @@ export default function JoinTeam({ navigation }) {
                 borderTopRightRadius: 0,
               }}
               returnKeyType="done"
-              ref={(input) => {
-                this.secondInput = input
-              }}
+              onSubmitEditing={() => searchTeam(pamilyCode)}
             />
-            <IconBox>
+            <IconBox onPress={() => searchTeam(pamilyCode)}>
               <SearchIcon width={16} height={16} />
             </IconBox>
           </Block>
-          <TeamSearchBox />
+          {searchedData.length !== 0 && <TeamSearchBox data={searchedData} />}
         </Container>
       </TouchableWithoutFeedback>
     </ScreenLayout>
