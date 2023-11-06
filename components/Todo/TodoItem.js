@@ -4,14 +4,17 @@ import { colors } from '../../colors'
 import Complete from '../../assets/Imgs/Complete.png'
 import InComplete from '../../assets/Imgs/InComplete.png'
 import styled from 'styled-components/native'
+import { completeTodo } from './Apis'
 
-export const TodoItem = ({ editTodo, title, status, assignees, categoryId, todoId }) => {
+export const TodoItem = ({ editTodo, title, status, assignees, categoryId, todoId, accessToken, todo }) => {
   const [isComplete, setIsComplete] = useState(status == 'COMPLETE')
   const [isFinished, setIsFinished] = useState(true)
   const handlePress = () => {
     //backend쪽으로 isPressed 변경된 값 보내는 구문 "assignNames":[{"assigneeId":1,"assigneeName":"test"},
+    completeTodo(todo.todoId, accessToken)
     setIsComplete(!isComplete)
   }
+
   return (
     <TodoContainer
       style={
