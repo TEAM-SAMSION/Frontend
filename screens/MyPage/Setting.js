@@ -28,6 +28,7 @@ export default function Setting({ navigation }) {
       </ContentContainer>
       <ContentContainer>
         <ContentText>앱 정보</ContentText>
+        <ContentText2>ver 1.0.0</ContentText2>
       </ContentContainer>
       <ContentContainer>
         <ContentText>공지사항</ContentText>
@@ -48,4 +49,11 @@ const ContentText = styled.Text`
   font-size: 16px;
   line-height: 22px;
 `
+const ContentText2 = styled.Text`
+  font-family: 'Spoqa-Medium';
+  font-size: 14px;
+  line-height: 19px;
+  color: ${colors.grey_450};
+`
+
 const TouchableIcon = styled.TouchableOpacity``
