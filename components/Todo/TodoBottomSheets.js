@@ -1,14 +1,12 @@
 import { useMemo, useState } from 'react'
 import axios from 'axios'
-import { Keyboard, Platform, Pressable, StatusBar, StyleSheet, Text } from 'react-native'
+import { Keyboard, Platform } from 'react-native'
 import styled from 'styled-components/native'
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator, TransitionPresets } from '@react-navigation/stack'
-import DateTimePicker from '@react-native-community/datetimepicker'
-// import WheelPickerExpo from 'react-native-wheel-picker-expo'
 
 import { colors } from '../../colors'
-import { Input, url } from '../Shared'
+import { Input, ScreenWidth, url } from '../Shared'
 import { BodyBoldSm_Text, Body_Text, Detail_Text } from '../Fonts'
 import { Button_PinkBg } from '../Buttons'
 
@@ -17,6 +15,7 @@ import Delete from '../../assets/Svgs/Todo_delete.svg'
 import Alarm from '../../assets/Svgs/Alarm.svg'
 import Back from '../../assets/Svgs/chevron_back.svg'
 import Edit from '../../assets/Svgs/Todo_edit.svg'
+import DatePicker from 'react-native-date-picker'
 
 export const TodoEditBottomSheet = ({ todosByCategory, selectedCategoryID, selectedTodoID, handleKeyboard }) => {
   const screenOptions = useMemo(
@@ -118,39 +117,21 @@ const TimeSetting = ({ navigation }) => {
         </BackButton>
         <Body_Text style={{ width: '100%', textAlign: 'center' }}>시간 설정</Body_Text>
       </TimeSettingHeader>
-      <DateTimePicker
-        style={{ height: '70%' }}
+      <DatePicker
+        date={date}
+        onDateChange={() => console.log('hello')}
+        fadeToColor="none"
+        mode="time"
+        style={{ width: ScreenWidth * 0.9 }}
         textColor={colors.grey_700}
-        testID="dateTimePicker"
-        value={date}
-        display="spinner"
-        mode={'time'}
-        is24Hour={false}
-        // minuteInterval={5}
-        onChange={() => console.log('hello')}
+        dividerHeight={2}
       />
-      {/* ) : (
-        <WheelPickerExpo
-          height={200}
-          width="100%"
-          initialSelectedIndex={0}
-          items={selectableDatas.map((name) => ({ label: name, value: '' }))}
-          onChange={({ item }) => setValue(item.label)}
-          backgroundColor={isDark ? colors.grey_8 : colors.white}
-          selectedStyle={{ borderColor: colors.grey_5, borderWidth: StyleSheet.hairlineWidth }}
-          renderItem={(props) => (
-            <Text
-              style={{
-                fontFamily: 'Pretendard-Regular',
-                fontSize: 20,
-                color: isDark ? colors.white : colors.black,
-              }}
-            >
-              {props.label}
-            </Text>
-          )}
-        />
-      )} */}
+      {/* <DateTimePicker
+        style={{ height: '70%' }}
+        testID="dateTimePicker"
+        is24Hour={false}
+      /> */}
+
       <Button_PinkBg isLoading={false} isEnabled={true} text="완료" func={() => console.log('submitted')} />
     </BottomSheetBase>
   )

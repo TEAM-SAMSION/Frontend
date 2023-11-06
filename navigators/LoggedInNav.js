@@ -31,8 +31,8 @@ export default function LoggedInNav() {
           options={{
             tabBarIcon: ({ focused }) => (
               <>
-                <Home style={{ color: focused ? colors.grey_700 : colors.grey_350 }} width={24} height={24} />
-                <DetailSm_Text color={focused ? colors.grey_700 : colors.grey_350} style={{ marginTop: 4 }}>
+                <Home style={{ color: focused ? colors.primary_outline : colors.grey_250 }} width={24} height={24} />
+                <DetailSm_Text color={focused ? colors.primary_outline : colors.grey_250} style={{ marginTop: 4 }}>
                   홈
                 </DetailSm_Text>
               </>
@@ -46,7 +46,7 @@ export default function LoggedInNav() {
           options={{
             tabBarIcon: ({ focused }) => (
               <>
-                <Logo style={{ color: focused ? colors.grey_700 : colors.grey_350 }} width={65} height={65} />
+                <Logo style={{ color: focused ? colors.primary_outline : colors.grey_250 }} width={65} height={65} />
               </>
             ),
           }}
@@ -58,8 +58,8 @@ export default function LoggedInNav() {
           options={{
             tabBarIcon: ({ focused }) => (
               <>
-                <MyPage style={{ color: focused ? colors.grey_700 : colors.grey_350 }} width={24} height={24} />
-                <DetailSm_Text color={focused ? colors.grey_700 : colors.grey_350} style={{ marginTop: 4 }}>
+                <MyPage style={{ color: focused ? colors.primary_outline : colors.grey_250 }} width={24} height={24} />
+                <DetailSm_Text color={focused ? colors.primary_outline : colors.grey_250} style={{ marginTop: 4 }}>
                   마이페이지
                 </DetailSm_Text>
               </>
