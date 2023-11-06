@@ -20,7 +20,9 @@ import { getTeamList, getUserInfo } from '../../components/MyPage/Apis'
 export default function MyPage({ navigation }) {
   const [name, setName] = useState('포잇')
   const [email, setEmail] = useState('pawith@gmail.com')
-  const [profileUrl, setProfileUrl] = useState('')
+  const [profileUrl, setProfileUrl] = useState(
+    'https://pawith.s3.ap-northeast-2.amazonaws.com/base-image/profileDefault.png',
+  )
 
   const swipeableRefs = useRef([])
   const ACCESSTOKEN = useRecoilValue(accessTokenState)
