@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { FlatList, Image, Text, View } from 'react-native'
+import { FlatList, Image, ScrollView, Text, View } from 'react-native'
 import { ScreenLayout } from '../../components/Shared'
 import { TopHeader } from '../../components/Home/TopHeader'
 import styled from 'styled-components/native'
@@ -16,6 +16,7 @@ import { accessTokenState } from '../../recoil/AuthAtom'
 import { getMyTodoList, getTeamList, getTodoProgress, getUserInfo } from '../../components/Home/Apis'
 import { AccessTokenRequest } from 'expo-auth-session'
 import { useIsFocused } from '@react-navigation/native'
+import { BodySm_Text, DetailSm_Text } from '../../components/Fonts'
 
 export default function Home({ navigation }) {
   const isFocused = useIsFocused()
@@ -91,86 +92,122 @@ export default function Home({ navigation }) {
     fetchMyTodo()
   }, [pamilyList, todoPage])
 
+  const testTodo = [
+    {
+      teamName: '펫모리',
+      todoId: 319,
+      task: 'tatpehb',
+      status: 'COMPLETE',
+    },
+    {
+      teamName: '펫모리2',
+      todoId: 310,
+      task: 'tatpeh2023',
+      status: 'INCOMPLETE',
+    },
+    {
+      teamName: '펫모리3',
+      todoId: 3111,
+      task: 'tatpeh2023',
+      status: 'INCOMPLETE',
+    },
+    {
+      teamName: '펫모리4',
+      todoId: 3102,
+      task: 'tatpeh2023',
+      status: 'INCOMPLETE',
+    },
+  ]
   return (
     <ScreenLayout>
-      <TopHeader navigation={navigation} />
-      <BannerContainer>
-        <NickBox>
-          <NicknameContainer>
-            <NickText>{name} </NickText>
-            <NickSubText>님,</NickSubText>
-          </NicknameContainer>
-          <SubText>오늘도 포잇과 함께 마이펫을 관리해볼까요?</SubText>
-        </NickBox>
-        <PamilyContainer>
-          <PamilyChoiceToggle pamilyList={pamilyList} />
-          <MainImage progress={progress} pamilyNum={pamilyNum} />
-          <PamilyStatContainer>
-            {pamilyNum == 0 ? <NoneText>소속된 Pamily가 없습니다.</NoneText> : <MainStat progress={progress} />}
-          </PamilyStatContainer>
-        </PamilyContainer>
-      </BannerContainer>
-      {pamilyNum == 0 ? (
-        <TeamContainer>
-          <StartTeamContainer
-            style={{
-              shadowColor: 'rgb(0,0,0)',
-              shadowRadius: 2,
-              shadowOpacity: 0.15,
-              shadowOffset: [0, 0],
-            }}
-            onPress={() => {
-              navigation.navigate('CreateTeam')
-            }}
-          >
-            <Title>Pamily 생성하기</Title>
-            <SubTitle>
-              TODO를 함께할{'\n'}
-              Pamily를 생성해 볼까요?
-            </SubTitle>
-            <StartIcon>
-              <Plus />
-            </StartIcon>
-          </StartTeamContainer>
-          <StartTeamContainer
-            style={{
-              shadowColor: 'rgb(0,0,0)',
-              shadowRadius: 2,
-              shadowOpacity: 0.15,
-              shadowOffset: [0, 0],
-            }}
-            onPress={() => {
-              navigation.navigate('JoinTeam')
-            }}
-          >
-            <Title>Pamily 참여하기</Title>
-            <SubTitle>TODO를 함께할{'\n'}Pamily에 참여해 볼까요?</SubTitle>
-            <StartIcon>
-              <Go />
-            </StartIcon>
-          </StartTeamContainer>
-        </TeamContainer>
-      ) : (
-        <>
-          <TodoTitle>
-            <TitleText>
-              {month}월 {date}일, 나에게 할당된 TODO
-            </TitleText>
-          </TodoTitle>
-          <TodoContainer>
-            <FlatList
-              data={myTodo}
-              renderItem={({ item }) => {
-                return <TodoBox data={item} />
+      <ScrollView>
+        <TopHeader navigation={navigation} />
+        <BannerContainer>
+          <NickBox>
+            <NicknameContainer>
+              <NickText>{name} </NickText>
+              <NickSubText>님,</NickSubText>
+            </NicknameContainer>
+            <SubText>오늘도 포잇과 함께 마이펫을 관리해볼까요?</SubText>
+          </NickBox>
+          <PamilyContainer>
+            <PamilyChoiceToggle pamilyList={pamilyList} />
+            <MainImage progress={progress} pamilyNum={pamilyNum} />
+            <PamilyStatContainer>
+              {pamilyNum == 0 ? <NoneText>소속된 Pamily가 없습니다.</NoneText> : <MainStat progress={progress} />}
+            </PamilyStatContainer>
+          </PamilyContainer>
+        </BannerContainer>
+        {pamilyNum == 0 ? (
+          <TeamContainer>
+            <StartTeamContainer
+              style={{
+                shadowColor: 'rgb(0,0,0)',
+                shadowRadius: 2,
+                shadowOpacity: 0.15,
+                shadowOffset: [0, 0],
               }}
-            />
-            {/* Todo 2*2 배열로 만들어야 함!! */}
-          </TodoContainer>
-          <AllTodoButton onPress={() => navigation.navigate('ToDoNav')}>
-            <ButtonText>전체 TODO 확인하기</ButtonText>
-          </AllTodoButton>
-        </>
-      )}
+              onPress={() => {
+                navigation.navigate('CreateTeam')
+              }}
+            >
+              <Title>Pamily 생성하기</Title>
+              <SubTitle>
+                TODO를 함께할{'\n'}
+                Pamily를 생성해 볼까요?
+              </SubTitle>
+              <StartIcon>
+                <Plus />
+              </StartIcon>
+            </StartTeamContainer>
+            <StartTeamContainer
+              style={{
+                shadowColor: 'rgb(0,0,0)',
+                shadowRadius: 2,
+                shadowOpacity: 0.15,
+                shadowOffset: [0, 0],
+              }}
+              onPress={() => {
+                navigation.navigate('JoinTeam')
+              }}
+            >
+              <Title>Pamily 참여하기</Title>
+              <SubTitle>TODO를 함께할{'\n'}Pamily에 참여해 볼까요?</SubTitle>
+              <StartIcon>
+                <Go />
+              </StartIcon>
+            </StartTeamContainer>
+          </TeamContainer>
+        ) : (
+          <>
+            <TodoTitle>
+              <TitleText>
+                {month}월 {date}일, 나에게 할당된 TODO
+              </TitleText>
+            </TodoTitle>
+            <TodoContainer>
+              {myTodo.length == 0 ? (
+                <NoneTodoContainer>
+                  <BodySm_Text color={colors.grey_600}>아직 나에게 할당된 TODO가 없어요!</BodySm_Text>
+                  <DetailSm_Text color={colors.grey_400}>관리자에게 TODO를 요청해보세요.</DetailSm_Text>
+                </NoneTodoContainer>
+              ) : (
+                <FlatList
+                  data={myTodo}
+                  renderItem={({ item, index }) => {
+                    return <TodoBox data={item} index={index} />
+                  }}
+                  showsHorizontalScrollIndicator={false}
+                  numColumns={2}
+                />
+              )}
+            </TodoContainer>
+            <AllTodoButton onPress={() => navigation.navigate('ToDoNav')}>
+              <ButtonText>전체 TODO 확인하기</ButtonText>
+            </AllTodoButton>
+          </>
+        )}
+      </ScrollView>
     </ScreenLayout>
   )
 }
@@ -270,6 +307,8 @@ const TitleText = styled.Text`
 `
 const TodoContainer = styled.View`
   padding: 16px;
+  justify-content: center;
+  align-items: center;
 `
 const AllTodoButton = styled.TouchableOpacity`
   height: 44px;
@@ -285,4 +324,14 @@ const ButtonText = styled.Text`
   font-size: 14px;
   line-height: 19px;
   color: ${colors.grey_100};
+`
+const NoneTodoContainer = styled.View`
+  display: flex;
+  width: 100%;
+  padding: 20px 16px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  background-color: ${colors.grey_150};
+  border-radius: 8px;
 `
