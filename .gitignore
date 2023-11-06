@@ -33,3 +33,7 @@ yarn-error.*
 
 # typescript
 *.tsbuildinfo
+android/app/google-services.json
+.idea/modules.xml
+.idea/pawith.iml
+.idea/vcs.xml
