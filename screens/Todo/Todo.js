@@ -169,16 +169,15 @@ export default Todo = ({ navigation }) => {
               return (
                 <>
                   <CategoryIndicator startCreateTodo={startCreateTodo} todos={todos[1]} categoryId={todos[1][0]} />
-                  {todos[1][2].map((todo, index) =>
-                    console.log(todo),
-                    // <TodoItem
-                    //   key={index}
-                    //   todo={todo}
-                    //   categoryId={id}
-                    //   accessToken={accessToken}
-                    //   editTodo={startEditTodo}
-                    // />
-                  )}
+                  {todos[1][2].map((todo, index) => (
+                    <TodoItem
+                      key={index}
+                      todo={todo}
+                      categoryId={id}
+                      accessToken={accessToken}
+                      editTodo={startEditTodo}
+                    />
+                  ))}
                 </>
               )
             })
