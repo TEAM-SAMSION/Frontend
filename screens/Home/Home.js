@@ -13,56 +13,83 @@ import { MainImage } from '../../components/Home/MainImage'
 import { TodoBox } from '../../components/Home/TodoBox'
 import { useRecoilValue } from 'recoil'
 import { accessTokenState } from '../../recoil/AuthAtom'
+import { getMyTodoList, getTeamList, getTodoProgress, getUserInfo } from '../../components/Home/Apis'
+import { AccessTokenRequest } from 'expo-auth-session'
+import { useIsFocused } from '@react-navigation/native'
 
 export default function Home({ navigation }) {
+  const isFocused = useIsFocused()
+  const ACCESSTOKEN = useRecoilValue(accessTokenState)
+
   const [name, setName] = useState('포잇')
   const [now, setNow] = useState(new Date(Date.now() + 9 * 60 * 60 * 1000))
   const date = parseInt(now.toISOString().substring(8, 10))
   const month = now.getMonth() + 1
-  const [progress, setProgress] = useState(80)
+  const [pamilyList, setPamilyList] = useState([])
+  const [progress, setProgress] = useState(0)
+  const [pamilyNum, setPamilyNum] = useState(0)
 
-  const PamilyNum = 0
-
-  const ACCESSTOKEN = useRecoilValue(accessTokenState)
-
-  const getUserInfo = async () => {
-    try {
-      const url = 'https://dev.pawith.com/user'
-      const response = await axios.get(url, {
-        headers: { Authorization: `Bearer ${ACCESSTOKEN}` },
-      })
-      setName(response.data.nickname)
-    } catch (error) {
-      console.error(error.message)
-    }
+  const getUserNickname = () => {
+    getUserInfo(ACCESSTOKEN).then((result) => {
+      setName(result.nickname)
+    })
   }
+
   useEffect(() => {
-    getUserInfo()
+    getUserNickname()
   }, [])
 
-  const getTodoProgress = async (teamId) => {
-    try {
-      const url = `https://dev.pawith.com/todo/progress/${teamId}`
-      const response = await axios.get(url, {
-        params: { teamId: teamId },
-        headers: { Authorization: `Bearer ${ACCESSTOKEN}` },
-      })
-      setProgress(response.data.progress)
-    } catch (error) {
-      console.error(error.message)
-    }
+  const fetchTeamList = () => {
+    getTeamList(ACCESSTOKEN).then((result) => {
+      setPamilyList(result)
+      //console.log(result)
+      if (result.length !== 0) {
+        setPamilyNum(1)
+      }
+    })
   }
-  useEffect(() => {
-    getTodoProgress(1)
-  }, [])
 
-  const [myTodo, setMyTodo] = useState('')
-  // const fetchMyTodo = async () => {
-  //   try {
-  //   }
-  // }
-  // todo team 조회 -> team마다 할당 todo get
-  // 할당 todo -> todo 완료 가능하도록 체크박스..
+  const fetchProgress = () => {
+    const topTeamId = pamilyList[0].teamId
+    getTodoProgress(ACCESSTOKEN, topTeamId).then((result) => {
+      setProgress(result)
+    })
+  }
+
+  useEffect(() => {
+    fetchTeamList()
+    {
+      pamilyNum !== 0 && fetchMyTodo()
+    }
+  }, [isFocused])
+
+  const [myTodo, setMyTodo] = useState([])
+  const [todoPage, setTodoPage] = useState(0)
+
+  const fetchMyTodo = async () => {
+    const allTodos = []
+    for (const team of pamilyList) {
+      const teamId = team.teamId
+      try {
+        const todos = await getMyTodoList(ACCESSTOKEN, todoPage, teamId)
+        allTodos.push(
+          ...todos.map((todo) => ({
+            teamName: team.teamName,
+            todoId: todo.todoId,
+            task: todo.task,
+            status: todo.status,
+          })),
+        )
+      } catch (error) {
+        console.error('Error fetching todo list')
+      }
+    }
+    setMyTodo(allTodos)
+  }
+
+  useEffect(() => {
+    fetchMyTodo()
+  }, [pamilyList, todoPage])
 
   return (
     <ScreenLayout>
@@ -76,14 +103,14 @@ export default function Home({ navigation }) {
           <SubText>오늘도 포잇과 함께 마이펫을 관리해볼까요?</SubText>
         </NickBox>
         <PamilyContainer>
-          <PamilyChoiceToggle />
-          <MainImage progress={progress} pamilyNum={PamilyNum} />
+          <PamilyChoiceToggle pamilyList={pamilyList} />
+          <MainImage progress={progress} pamilyNum={pamilyNum} />
           <PamilyStatContainer>
-            {PamilyNum == 0 ? <NoneText>소속된 Pamily가 없습니다.</NoneText> : <MainStat progress={progress} />}
+            {pamilyNum == 0 ? <NoneText>소속된 Pamily가 없습니다.</NoneText> : <MainStat progress={progress} />}
           </PamilyStatContainer>
         </PamilyContainer>
       </BannerContainer>
-      {PamilyNum == 0 ? (
+      {pamilyNum == 0 ? (
         <TeamContainer>
           <StartTeamContainer
             style={{
@@ -131,13 +158,13 @@ export default function Home({ navigation }) {
             </TitleText>
           </TodoTitle>
           <TodoContainer>
-            {/* <FlatList
+            <FlatList
               data={myTodo}
               renderItem={({ item }) => {
                 return <TodoBox data={item} />
               }}
-            /> */}
-            <TodoBox />
+            />
+            {/* Todo 2*2 배열로 만들어야 함!! */}
           </TodoContainer>
           <AllTodoButton onPress={() => navigation.navigate('ToDoNav')}>
             <ButtonText>전체 TODO 확인하기</ButtonText>

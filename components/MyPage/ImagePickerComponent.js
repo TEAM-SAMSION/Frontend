@@ -56,8 +56,8 @@ export const ImagePickerComponent = (props) => {
     try {
       const response = await axios.post(url, routeData, {
         headers: {
-          'Content-Type': `multipart/form-data`,
-          Authorization: `Bearer ${ACCESSTOKEN}`,
+          // 'Content-Type': `multipart/form-data`,
+          Authorization: ACCESSTOKEN,
         },
       })
       console.log(response.data.imageUrl)

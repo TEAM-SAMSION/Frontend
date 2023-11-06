@@ -8,39 +8,35 @@ import { Alert, ScrollView, TouchableOpacity, View } from 'react-native'
 import EditIcon from '../../assets/Svgs/Edit.svg'
 import axios from 'axios'
 import { ProfileImageModal } from '../../components/MyPage/ProfileImageModal'
-import { resolveDiscoveryAsync } from 'expo-auth-session'
+import { AccessTokenRequest, resolveDiscoveryAsync } from 'expo-auth-session'
 import 'react-native-gesture-handler'
 import { BottomSheetBackdrop, BottomSheetModal, BottomSheetModalProvider } from '@gorhom/bottom-sheet'
 import { useRecoilValue } from 'recoil'
 import { accessTokenState } from '../../recoil/AuthAtom'
-import Close from '../../assets/Svgs/Close.svg'
 import { ModalPopUp } from '../../components/Shared'
 import { colors } from '../../colors'
+import { getTeamList, getUserInfo } from '../../components/MyPage/Apis'
 
 export default function MyPage({ navigation }) {
   const [name, setName] = useState('포잇')
   const [email, setEmail] = useState('pawith@gmail.com')
-  const [profileUrl, setProfileUrl] = useState('')
+  const [profileUrl, setProfileUrl] = useState(
+    'https://pawith.s3.ap-northeast-2.amazonaws.com/base-image/profileDefault.png',
+  )
 
   const swipeableRefs = useRef([])
   const ACCESSTOKEN = useRecoilValue(accessTokenState)
 
-  const getUserInfo = async () => {
-    try {
-      const url = 'https://dev.pawith.com/user'
-      const response = await axios.get(url, {
-        headers: { Authorization: `Bearer ${ACCESSTOKEN}` },
-      })
-      console.log(response.data)
-      setEmail(response.data.email)
-      setName(response.data.nickname)
-      setProfileUrl(response.data.profileImageUrl)
-    } catch (error) {
-      console.error(error.message)
-    }
+  const fetchUserInfo = () => {
+    getUserInfo(ACCESSTOKEN).then((result) => {
+      setEmail(result.email)
+      setName(result.nickname)
+      setProfileUrl(result.profileImageUrl)
+    })
   }
+
   useEffect(() => {
-    getUserInfo()
+    fetchUserInfo()
   }, [])
 
   const [groupInfo, setGroupInfo] = useState([
@@ -61,19 +57,9 @@ export default function MyPage({ navigation }) {
   ])
 
   const fetchTeamList = async () => {
-    try {
-      const page = 0
-      const size = 10000
-      const url = 'https://dev.pawith.com/todo/team/list'
-      const response = await axios.get(url, {
-        params: { page, size },
-        headers: { Authorization: `Bearer ${ACCESSTOKEN}` },
-      })
-      console.log(response.data.content)
-      setGroupInfo(response.data.content)
-    } catch (error) {
-      console.error(error.message)
-    }
+    getTeamList(ACCESSTOKEN).then((result) => {
+      setGroupInfo(result)
+    })
   }
 
   useEffect(() => {
@@ -89,7 +75,7 @@ export default function MyPage({ navigation }) {
       const response = await axios.delete(url, {
         params: { todoTeamId: teamId },
         headers: {
-          Authorization: `Bearer ${ACCESSTOKEN}`,
+          Authorization: `${ACCESSTOKEN}`,
         },
       })
       console.log(`${teamId} 삭제`)
@@ -103,21 +89,6 @@ export default function MyPage({ navigation }) {
     await deleteTeam(deleteTeamId)
     swipeableRefs.current[deleteTeamId]?.close()
     fetchTeamList()
-    // Alert.alert('탈퇴하시겠습니까?', '', [
-    //   {
-    //     text: '아니요',
-    //     style: 'cancel',
-    //   },
-    //   {
-    //     text: '네',
-    //     onPress: async () => {
-    //       console.log(deleteId)
-    //       await deleteTeam(deleteId)
-    //       swipeableRefs.current[deleteId]?.close()
-    //       fetchTeamList()
-    //     },
-    //   },
-    // ])
   }
 
   const bottomSheetModalRef = useRef(null)
