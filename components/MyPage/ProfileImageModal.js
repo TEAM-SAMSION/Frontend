@@ -15,7 +15,7 @@ export const ProfileImageModal = (props) => {
     const url = 'https://dev.pawith.com/user'
     const defaultData = new FormData()
     defaultData.append('profileImage', {
-      uri: 'https://pawith.s3.ap-northeast-2.amazonaws.com/44b0a657-e8fc-4bb3-883d-baf67a9c5d67.png',
+      uri: 'https://pawith.s3.ap-northeast-2.amazonaws.com/base-image/profileDefault.png',
       name: 'photo.jpeg',
       type: 'image/jpeg',
     })
@@ -29,7 +29,7 @@ export const ProfileImageModal = (props) => {
         },
       })
       console.log(response.data.imageUrl)
-      props.setProfileUrl('https://pawith.s3.ap-northeast-2.amazonaws.com/44b0a657-e8fc-4bb3-883d-baf67a9c5d67.png')
+      props.setProfileUrl('https://pawith.s3.ap-northeast-2.amazonaws.com/base-image/profileDefault.png')
     } catch (error) {
       console.error(error)
     }
