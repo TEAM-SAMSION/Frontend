@@ -10,10 +10,11 @@ const SCREEN_WIDTH = Dimensions.get('window').width
 
 export const TodoBox = (props) => {
   const todo = props.data
+  const index = props.index
   const [isChecked, setIsChecked] = useState(todo.status)
 
   return (
-    <TodoBoxContainer>
+    <TodoBoxContainer index={index}>
       <TodoContent>
         <TodoTeam>
           <TeamText>{todo.teamName}</TeamText>
@@ -43,6 +44,8 @@ const TodoBoxContainer = styled.View`
   gap: 4px;
   border-radius: 8px;
   background-color: ${colors.grey_150};
+  margin-bottom: 8px;
+  margin-right: ${(props) => (props.index % 2 == 0 ? 8 : 0)}px;
 `
 const TodoTeam = styled.View``
 const TeamText = styled.Text`
