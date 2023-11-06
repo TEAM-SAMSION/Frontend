@@ -4,7 +4,14 @@ import AppBase from './AppBase'
 import { LogBox } from 'react-native'
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
+import messaging from '@react-native-firebase/messaging'
+import { registerRootComponent } from 'expo'
+
 LogBox.ignoreAllLogs()
+messaging().setBackgroundMessageHandler(async (message) => {
+  console.log('BackgroundMessageHandler:', message)
+})
+registerRootComponent(App)
 export default function App() {
   return (
     <RecoilRoot>

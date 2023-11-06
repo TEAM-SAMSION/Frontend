@@ -14,7 +14,11 @@ import messaging from '@react-native-firebase/messaging'
 export default function AppBase() {
   const [appIsReady, setAppIsReady] = useState(false)
   const { loggedIn } = useRecoilValue(userInfoState)
-
+  const foregroundListener = useCallback(() => {
+    messaging().onMessage(async (message) => {
+      console.log('foregroundListener:', message)
+    })
+  }, [])
   const setLoggedIn = useSetRecoilState(loggedInState)
   const setToken = useSetRecoilState(accessTokenState)
   const setOnboarded = useSetRecoilState(onboardedState)
@@ -60,6 +64,7 @@ export default function AppBase() {
         setAppIsReady(true)
       }
     }
+    foregroundListener()
     prepare()
   }, [])
   const onLayoutRootView = useCallback(async () => {

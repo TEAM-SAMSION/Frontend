@@ -14,7 +14,6 @@ import { BottomSheetBackdrop, BottomSheetModal } from '@gorhom/bottom-sheet'
 import { TodoCreateBottomSheet, TodoEditBottomSheet } from '../../components/Todo/TodoBottomSheets'
 
 import { MyCalendarStrip } from '../../components/Todo/CalendarStrip'
-import { CategoryCreate } from '../../components/Todo/CategoryCreate'
 import { getCategoryList, getTeamUser, getTodoTeamList, getTodos } from '../../components/Todo/Apis'
 import { CategoryIndicator } from '../../components/Todo/CategoryIndicator'
 
@@ -47,10 +46,8 @@ export default Todo = ({ navigation }) => {
   //prettier-ignore
   const renderBackdrop = useCallback((props) => <BottomSheetBackdrop {...props} pressBehavior="close" appearsOnIndex={0} disappearsOnIndex={-1} ><Pressable onPress={()=>Keyboard.dismiss()} style={{flex:1}}/></BottomSheetBackdrop>,[],)
 
-  const createCategory = (text) => {
-    console.log('creatingCategory', text)
-  }
   const changeTodoTeam = (todoTeamId) => {
+    //상단 메뉴를 통해 TodoTeam을 변경할때 사용하는 Function
     getCategoryList(todoTeamId, accessToken).then((categories) => {
       getTodosByCategory(categories, selectedDate)
     })
@@ -60,6 +57,7 @@ export default Todo = ({ navigation }) => {
       setTeamUserList(tempTeamUserList)
     })
   }
+
   const getTodosByCategory = async (categories, date) => {
     // 각 categoryId에 대해 getTodo 함수를 병렬로 호출
     const todoPromises = categories.map(
@@ -95,9 +93,9 @@ export default Todo = ({ navigation }) => {
         return tempTeamList[tempTeamList.length - 1]?.id
       })
       .then((selectedID_temp) => {
-        console.log(selectedID_temp)
+        // console.log("selectedID_temp: 103",selectedID_temp)
         getCategoryList(selectedID_temp, accessToken).then((categories) => {
-          console.log(categories)
+          // console.log('categories: 105', categories)
           getTodosByCategory(categories, today).then(setIsLoading(false))
         })
         return selectedID_temp
@@ -123,10 +121,12 @@ export default Todo = ({ navigation }) => {
     getInitDatas()
   }, [])
 
-  const handleKeyboard = (status) => {
+  const handleBottomSheetHeight = (status) => {
     if (status == 0) {
-      setSnappoints(['42%'])
+      bottomModal.current?.dismiss()
     } else if (status == 1) {
+      setSnappoints(['42%'])
+    } else if (status == 2) {
       setSnappoints(['55%'])
     } else {
       setSnappoints(['90%'])
@@ -135,14 +135,14 @@ export default Todo = ({ navigation }) => {
   const startCreateTodo = (index) => {
     setIsCreateMode(true)
     setSelectedCategoryID(index)
-    handleKeyboard(1)
+    handleBottomSheetHeight(2)
     bottomModal.current?.present()
   }
   const startEditTodo = (categoryId, todoId) => {
     setIsCreateMode(false)
     setSelectedCategoryID(categoryId)
     setSelectedTodoID(todoId)
-    handleKeyboard(0)
+    handleBottomSheetHeight(1)
     bottomModal.current?.present()
   }
   return (
@@ -169,17 +169,16 @@ export default Todo = ({ navigation }) => {
               return (
                 <>
                   <CategoryIndicator startCreateTodo={startCreateTodo} todos={todos[1]} categoryId={todos[1][0]} />
-                  {todos[1][2].map((todo, index) => (
-                    <TodoItem
-                      key={index}
-                      assignees={todo.assignNames}
-                      title={todo.task}
-                      status={todo.status}
-                      categoryId={id}
-                      todoId={index}
-                      editTodo={startEditTodo}
-                    />
-                  ))}
+                  {todos[1][2].map((todo, index) =>
+                    console.log(todo),
+                    // <TodoItem
+                    //   key={index}
+                    //   todo={todo}
+                    //   categoryId={id}
+                    //   accessToken={accessToken}
+                    //   editTodo={startEditTodo}
+                    // />
+                  )}
                 </>
               )
             })
@@ -210,12 +209,16 @@ export default Todo = ({ navigation }) => {
         {isCreateMode ? (
           <TodoCreateBottomSheet
             selectedCategoryID={selectedCategoryID}
-            handleKeyboard={handleKeyboard}
+            handleBottomSheetHeight={handleBottomSheetHeight}
             teamUserList={teamUserList}
+            accessToken={accessToken}
+            today={today}
+            // updateTodos={updateTodos}
+            getInitDatas={getInitDatas}
           />
         ) : (
           <TodoEditBottomSheet
-            handleKeyboard={handleKeyboard}
+            handleBottomSheetHeight={handleBottomSheetHeight}
             todosByCategory={todosByCategory}
             selectedCategoryID={selectedCategoryID}
             selectedTodoID={selectedTodoID}

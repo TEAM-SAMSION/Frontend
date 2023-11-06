@@ -18,7 +18,12 @@ import Alarm from '../../assets/Svgs/Alarm.svg'
 import Back from '../../assets/Svgs/chevron_back.svg'
 import Edit from '../../assets/Svgs/Todo_edit.svg'
 
-export const TodoEditBottomSheet = ({ todosByCategory, selectedCategoryID, selectedTodoID, handleKeyboard }) => {
+export const TodoEditBottomSheet = ({
+  todosByCategory,
+  selectedCategoryID,
+  selectedTodoID,
+  handleBottomSheetHeight,
+}) => {
   const screenOptions = useMemo(
     () => ({
       ...TransitionPresets.SlideFromRightIOS,
@@ -66,9 +71,6 @@ const TodoEdit = ({ navigation, selectedTodo }) => {
     return response.status
   }
 
-  const handleSubmit = () => {
-    console.log('submitted')
-  }
   return (
     <BottomSheetBase
       style={{
@@ -157,17 +159,21 @@ const TimeSetting = ({ navigation }) => {
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-export const TodoCreateBottomSheet = ({ handleKeyboard, teamUserList }) => {
-  const [users, setUsers] = useState(
-    teamUserList?.map((users) => ({
-      ...users,
-      selected: false,
-    })),
-  )
+export const TodoCreateBottomSheet = ({
+  selectedCategoryID,
+  accessToken,
+  handleBottomSheetHeight,
+  teamUserList,
+  today,
+  getInitDatas,
+  // updateTodos,
+}) => {
+  const [users, setUsers] = useState(teamUserList?.map((users) => ({ ...users, selected: false })))
   const [name, setName] = useState()
+  const [isLoading, setIsLoading] = useState(false)
   const selectedUser = users.reduce((acc, user) => {
     if (user.selected) {
-      acc.push(user.name)
+      acc.push(user.id)
     }
     return acc
   }, [])
@@ -186,8 +192,34 @@ export const TodoCreateBottomSheet = ({ handleKeyboard, teamUserList }) => {
     tempArr[id].selected = !tempArr[id].selected
     setUsers(tempArr)
   }
+  const createTodo = async () => {
+    setIsLoading(true)
+    let data = {
+      categoryId: selectedCategoryID,
+      description: name,
+      scheduledDate: today,
+      registerIds: selectedUser,
+    }
+    try {
+      let API = `/teams/todos`
+      const response = axios.post(url + API, data, {
+        headers: { Authorization: accessToken },
+      })
+      console.log('CreateTodoSuccessed!, response:', response)
+    } catch (e) {
+      console.log('CreateTodo Error:', e)
+    }
+  }
   const handleSubmit = () => {
-    console.log('submitted') //name, selectedUser
+    createTodo().then(() => {
+      //추가된 todo아이템이 서버에 등록되는 데에 소요되는 시간이 길어서, 바로 fetch하면 의도치 않은 실행이 되는 문제 발생
+      //그게 아니고, updateTodo()에서 실행되는 함수만으로는 모든 요소가 반영되지 않는듯함,
+      //임시방편으로 initData함수를 가져왔으나, 나중에 실질적으로 필요로 하는 함수를 추려봐야할 것.
+      setIsLoading(false)
+      handleBottomSheetHeight(0)
+
+      getInitDatas()
+    })
   }
   return (
     <BottomSheetBase
@@ -207,14 +239,14 @@ export const TodoCreateBottomSheet = ({ handleKeyboard, teamUserList }) => {
           placeholderTextColor={colors.grey_450}
           onSubmitEditing={() => {
             Keyboard.dismiss()
-            handleKeyboard(1)
+            handleBottomSheetHeight(2)
           }}
           placeholder="할 일을 입력해주세요"
           returnKeyType="done"
           inputMode="text"
           blurOnSubmit={false}
           onChangeText={(text) => setName(text)}
-          onFocus={() => handleKeyboard(2)}
+          onFocus={() => handleBottomSheetHeight(3)}
         />
       </InputContainer>
       <BodyBoldSm_Text style={{ marginBottom: 10 }}>담당자 지정</BodyBoldSm_Text>
@@ -241,7 +273,12 @@ export const TodoCreateBottomSheet = ({ handleKeyboard, teamUserList }) => {
           )
         })}
       </UserContainer>
-      <Button_PinkBg isLoading={false} isEnabled={true} text="완료" func={() => handleSubmit()} />
+      <Button_PinkBg
+        isLoading={isLoading}
+        isEnabled={selectedUser.length > 0 && name}
+        text="완료"
+        func={() => handleSubmit()}
+      />
     </BottomSheetBase>
   )
 }

@@ -4,13 +4,17 @@ import { colors } from '../../colors'
 import Complete from '../../assets/Imgs/Complete.png'
 import InComplete from '../../assets/Imgs/InComplete.png'
 import styled from 'styled-components/native'
+import { completeTodo } from './Apis'
 
-export const TodoItem = ({ editTodo, title, status, assignees, categoryId, todoId }) => {
+export const TodoItem = ({ editTodo, todo, categoryId, accessToken }) => {
+  //{"assignNames": [{"assigneeId": 5, "assigneeName": "김형석", "completionStatus": null}, {"assigneeId": 6, "assigneeName": "test", "completionStatus": null}, {"assigneeId": 7, "assigneeName": "neon", "completionStatus": null}, {"assigneeId": 1, "assigneeName": "test🌕", "completionStatus": null}], "completionStatus": "INCOMPLETE", "task": "testtesttest", "todoId": 6244}
   const [isDone, setIsDone] = useState(status == 'COMPLETE')
   const handlePress = () => {
     //backend쪽으로 isPressed 변경된 값 보내는 구문 "assignNames":[{"assigneeId":1,"assigneeName":"test"},
+    completeTodo(todo.todoId, accessToken)
     setIsDone(!isDone)
   }
+
   return (
     <TodoContainer onPress={() => editTodo(categoryId, todoId)}>
       <LeftContainer>
