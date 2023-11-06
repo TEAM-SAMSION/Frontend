@@ -2178,13 +2178,18 @@
   dependencies:
     invariant "^2.2.4"
 
-"@react-native-firebase/app@^18.6.1":
-  version "18.6.1"
-  resolved "https://registry.yarnpkg.com/@react-native-firebase/app/-/app-18.6.1.tgz#9dd741b9b4e0493a7fa037c7e5717ba0c53086e4"
-  integrity sha512-lqINQLLTCmBSeln/cSPfvuJNQuwsPY9n6QyxSRRCTjyZdEPI3EY2df7isOCp8BwuxqYmkR9YhTNw2yFI72th+w==
+"@react-native-firebase/app@^18.6.0":
+  version "18.6.0"
+  resolved "https://registry.yarnpkg.com/@react-native-firebase/app/-/app-18.6.0.tgz#939c92fda17c2641079314f30d52797db43a673e"
+  integrity sha512-pJwq2D0VBk8QvmIw6qZ5P3Y5Uaq4LL9NarAcTdEIA342VlhmTB1rovcYHE/F/hohdGBwFzi5qXAQnZmTxv27sg==
   dependencies:
     opencollective-postinstall "^2.0.3"
     superstruct "^0.6.2"
+
+"@react-native-firebase/messaging@^18.6.0":
+  version "18.6.0"
+  resolved "https://registry.yarnpkg.com/@react-native-firebase/messaging/-/messaging-18.6.0.tgz#be0a7b8841c65a7b6d4dfd8407e9e216e7b57633"
+  integrity sha512-0fBDvbu13MJazAJhiT1rm//hnxhzOSu1ZpqmGUKpNu73llxPqVYDk4L8uZ7WBRtu3e6TP7Mw8IfH3gGB1qeelA==
 
 "@react-native-seoul/kakao-login@^5.3.0":
   version "5.3.0"
@@ -2195,7 +2200,7 @@
 
 "@react-native-seoul/naver-login@^3.0.0-rc.2":
   version "3.0.0-rc.2"
-  resolved "https://registry.npmjs.org/@react-native-seoul/naver-login/-/naver-login-3.0.0-rc.2.tgz"
+  resolved "https://registry.yarnpkg.com/@react-native-seoul/naver-login/-/naver-login-3.0.0-rc.2.tgz#fadfedff123eb58bbc3c3f0fd286aa3a4970b117"
   integrity sha512-/gI0WJC6FLgSOLYrDAPehs9x34vFfBgdA5wER8hiwFB4g+DjXdGd+0NuT4+ISzTYfhHTG4cBHqa70oGBs5uxtQ==
   dependencies:
     dooboolab-welcome "^1.3.2"

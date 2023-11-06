@@ -29,7 +29,7 @@ export const TodoHeader = ({ navigation, changeTodoTeam, todoTeamList, setSelect
 
         {isOpen && (
           <>
-            {todoTeamList.map((todoTeam, id) => (
+            {todoTeamList.reverse().map((todoTeam, id) => (
               <DropdownBox
                 key={id}
                 style={id == todoTeamList.length - 1 && { borderBottomLeftRadius: 8, borderBottomRightRadius: 8 }}

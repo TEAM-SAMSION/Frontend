@@ -1,16 +1,21 @@
+#import <Firebase.h>
 #import "AppDelegate.h"
+#import <NaverThirdPartyLogin/NaverThirdPartyLoginConnection.h>
 
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTLinkingManager.h>
-#import <NaverThirdPartyLogin/NaverThirdPartyLoginConnection.h>
 
 
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+  
   self.moduleName = @"main";
 
+  if ([FIRApp defaultApp] == nil) {
+      [FIRApp configure];
+    }
   // You can add your custom initial props in the dictionary below.
   // They will be passed down to the ViewController used by React Native.
   self.initialProps = @{};
@@ -31,7 +36,7 @@
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options {
 
   // naver
-   if ([url.scheme isEqualToString:@"{{ CUSTOM URL SCHEME }}"]) {
+  if ([url.scheme isEqualToString:@"{{ CUSTOM URL SCHEME }}"]) {
     return [[NaverThirdPartyLoginConnection getSharedInstance] application:application openURL:url options:options];
   }
   
