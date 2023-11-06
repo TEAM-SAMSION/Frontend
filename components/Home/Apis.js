@@ -37,7 +37,7 @@ export const getMyTodoList = async (accessToken, page, teamId) => {
 
 export const completeTodo = async (accessToken, todoId) => {
   let API = `/teams/todos/${todoId}/assign/complete`
-  const response = await axios.put(url + API, null, {
+  const response = await axios.put(url + API, _, {
     headers: { Authorization: accessToken },
   })
 }
@@ -54,7 +54,7 @@ export const getSearchedTeam = async (accessToken, teamCode) => {
 
 export const postJoiningTeam = async (accessToken, teamCode) => {
   let API = `/teams/registers?todoTeamCode=${teamCode}`
-  const response = await axios.post(url + API, null, {
+  const response = await axios.post(url + API, _, {
     headers: { Authorization: accessToken },
   })
 }
