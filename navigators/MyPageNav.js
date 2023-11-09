@@ -9,6 +9,7 @@ import { colors } from '../colors'
 import DeletePamily from '../screens/MyPage/DeletePamily'
 import DeletePamily2 from '../screens/MyPage/DeletePamily2'
 import HomeNav from './HomeNav'
+import AdministratorNav from './AdministratorNav'
 
 const Stack = createStackNavigator()
 
@@ -92,6 +93,7 @@ export default function MyPageNav() {
           headerBackTitleVisible: false,
         }}
       />
+      <Stack.Screen name="AdministratorNav">{() => AdministratorNav()}</Stack.Screen>
     </Stack.Navigator>
   )
 }
