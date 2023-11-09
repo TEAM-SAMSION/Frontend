@@ -6,11 +6,12 @@ import InComplete from '../../assets/Imgs/InComplete.png'
 import styled from 'styled-components/native'
 import { completeTodo } from './Apis'
 
-export const TodoItem = ({ editTodo, title, status, assignees, categoryId, todoId, accessToken, todo }) => {
-  const [isComplete, setIsComplete] = useState(status == 'COMPLETE')
-  const [isFinished, setIsFinished] = useState(true)
+export const TodoItem = ({ editTodo, categoryId, accessToken, todo, todoLocalId }) => {
+  const [isComplete, setIsComplete] = useState(todo.completionStatus == 'COMPLETE')
+  const [isFinished, setIsFinished] = useState(false)
   const handlePress = () => {
     //backend쪽으로 isPressed 변경된 값 보내는 구문 "assignNames":[{"assigneeId":1,"assigneeName":"test"},
+    console.log(accessToken)
     completeTodo(todo.todoId, accessToken)
     setIsComplete(!isComplete)
   }
@@ -22,22 +23,22 @@ export const TodoItem = ({ editTodo, title, status, assignees, categoryId, todoI
           ? { backgroundColor: colors.grey_150 }
           : { backgroundColor: colors.grey_100, borderColor: colors.outline, borderWidth: 1 }
       }
-      onPress={() => editTodo(categoryId, todoId)}
+      onPress={() => editTodo(categoryId, todoLocalId)}
     >
       <LeftContainer>
         <Label_Text style={{ padding: 4 }} color={isFinished ? colors.grey_400 : colors.grey_800}>
-          {title}
+          {todo.task}
         </Label_Text>
         <MateContainer>
-          {assignees?.map((assignee, id) => {
+          {todo?.assignNames?.map((assignee, id) => {
             return (
               <MateItem
+                key={id}
                 style={
                   isFinished
                     ? { backgroundColor: id == 0 ? colors.grey_250 : colors.grey_100 }
                     : { backgroundColor: id == 0 ? colors.grey_250 : colors.grey_150 }
                 }
-                key={id}
               >
                 <Detail_Text color={colors.grey_600}>{assignee.assigneeName}</Detail_Text>
               </MateItem>
@@ -46,7 +47,7 @@ export const TodoItem = ({ editTodo, title, status, assignees, categoryId, todoI
         </MateContainer>
       </LeftContainer>
       <CheckBox onPress={() => handlePress()}>
-        {/* {status == 'COMPLETE' ? <CheckIcon source={Complete} /> : <CheckIcon source={InComplete} />} */}
+        {/* {todo.completionStatus == 'COMPLETE' ? <CheckIcon source={Complete} /> : <CheckIcon source={InComplete} />} */}
         {isComplete ? <CheckIcon source={Complete} /> : <CheckIcon source={InComplete} />}
       </CheckBox>
     </TodoContainer>

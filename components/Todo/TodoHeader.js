@@ -10,7 +10,6 @@ import UpIcon from '../../assets/Svgs/arrow_up.svg'
 import { Detail_Text } from '../Fonts'
 export const TodoHeader = ({ navigation, changeTodoTeam, todoTeamList, setSelectedTeam, selectedTeam }) => {
   const [isOpen, setIsOpen] = useState(false)
-  const [visible, setVisible] = useState(false)
   const toggleDropdown = () => {
     setIsOpen(!isOpen)
   }
@@ -46,15 +45,15 @@ export const TodoHeader = ({ navigation, changeTodoTeam, todoTeamList, setSelect
         )}
       </DropDownListContainer>
       <RightIcon>
-        <IconContainer>
+        {/* <IconContainer>
           <Schedule width={24} height={24} />
         </IconContainer>
         <IconContainer>
           <Report color={colors.grey_350} width={24} height={24} />
-        </IconContainer>
+        </IconContainer> */}
         <IconContainer
           onPress={() => {
-            navigation.navigate('Setting')
+            navigation.navigate('Alarms')
           }}
         >
           <Alarm color={colors.grey_350} width={24} height={24} />

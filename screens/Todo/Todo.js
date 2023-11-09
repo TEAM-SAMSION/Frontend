@@ -20,7 +20,10 @@ import { CategoryIndicator } from '../../components/Todo/CategoryIndicator'
 export default Todo = ({ navigation }) => {
   const { StatusBarManager } = NativeModules
   const { accessToken } = useRecoilValue(userInfoState)
-  const today = new Date().toISOString().substring(0, 10)
+  // const today = new Date().toISOString().substring(0, 10)
+  const tempDate = new Date()
+  //** new Date()를 새벽에 호출하면 ISOString으로 가져올때 하루 전으로 반환하는 문제가 있다. getDate()를 직접 호출하여 정확한 날짜정보를 가져와야함 */
+  const today = `${tempDate.getFullYear()}-${tempDate.getMonth() + 1}-${tempDate.getDate()}`
 
   const [statusBarHeight, setStatusBarHeight] = useState(0)
 
@@ -32,7 +35,7 @@ export default Todo = ({ navigation }) => {
 
   const [selectedTeam, setSelectedTeam] = useState(null)
   const [selectedCategoryID, setSelectedCategoryID] = useState(null)
-  const [selectedTodoID, setSelectedTodoID] = useState(null)
+  const [selectedTodo, setSelectedTodo] = useState(null)
   const [selectedDate, setSelectedDate] = useState(null)
 
   const [isCreateMode, setIsCreateMode] = useState(false)
@@ -75,10 +78,10 @@ export default Todo = ({ navigation }) => {
     } else {
       setTodosByCategory(null)
     }
-    //todosByCategory[0]= ["0",[1,"test",[{"todoId":6161,"task":"test","status":"INCOMPLETE","assignNames":[{"assigneeId":1,"assigneeName":"test"},{"assigneeId":5,"assigneeName":"김형석"},{"assigneeId":6,"assigneeName":null},{"assigneeId":7,"assigneeName":"neon"}]},{"todoId":6162,"task":"test","status":"INCOMPLETE","assignNames":[{"assigneeId":1,"assigneeName":"test"},{"assigneeId":5,"assigneeName":"김형석"},{"assigneeId":6,"assigneeName":null},{"assigneeId":7,"assigneeName":"neon"}]},{"todoId":6163,"task":"test","status":"INCOMPLETE","assignNames":[{"assigneeId":1,"assigneeName":"test"},{"assigneeId":5,"assigneeName":"김형석"},{"assigneeId":6,"assigneeName":null},{"assigneeId":7,"assigneeName":"neon"}]},{"todoId":6164,"task":"test","status":"INCOMPLETE","assignNames":[{"assigneeId":1,"assigneeName":"test"},{"assigneeId":5,"assigneeName":"김형석"},{"assigneeId":6,"assigneeName":null},{"assigneeId":7,"assigneeName":"neon"}]}]]]
   }
-  const getInitDatas = () => {
+  const getInitDatas = (date = today) => {
     setIsLoading(true)
+    console.log('todaydate:', date)
     //TodoTeam과 Default TodoTeam에 한해 User들을 일시적으로 반환(나중에 Team 변경하면 해당 변수 대체됨)
     getTodoTeamList(accessToken, 0, 10)
       .then((res) => {
@@ -90,13 +93,14 @@ export default Todo = ({ navigation }) => {
           name: tempTeamList[tempTeamList.length - 1]?.name,
           id: tempTeamList[tempTeamList.length - 1]?.id,
         })
+        console.log(tempTeamList[tempTeamList.length - 1]?.id)
         return tempTeamList[tempTeamList.length - 1]?.id
       })
       .then((selectedID_temp) => {
         // console.log("selectedID_temp: 103",selectedID_temp)
         getCategoryList(selectedID_temp, accessToken).then((categories) => {
           // console.log('categories: 105', categories)
-          getTodosByCategory(categories, today).then(setIsLoading(false))
+          getTodosByCategory(categories, date).then(setIsLoading(false))
         })
         return selectedID_temp
       })
@@ -113,10 +117,12 @@ export default Todo = ({ navigation }) => {
     //date = 2023-10-15 //날짜를 선택 시, 해당 날짜에서의 Todo 조회 및 todosByCategory 갱신
     setIsLoading(true)
     setSelectedDate(date)
+    console.log('finalSelectedDate:', date)
     getCategoryList(selectedTeam.id, accessToken).then((categories) => {
       getTodosByCategory(categories, date).then(setIsLoading(false))
     })
   }
+
   useEffect(() => {
     getInitDatas()
   }, [])
@@ -140,8 +146,8 @@ export default Todo = ({ navigation }) => {
   }
   const startEditTodo = (categoryId, todoId) => {
     setIsCreateMode(false)
-    setSelectedCategoryID(categoryId)
-    setSelectedTodoID(todoId)
+    //todosByCategory[categoryId][1] = [2, "카테고리 수정", [{"assignNames": [Array], "completionStatus": "INCOMPLETE", "task": "Test3", "todoId": 6257}]]
+    setSelectedTodo(todosByCategory[categoryId][1][2][todoId])
     handleBottomSheetHeight(1)
     bottomModal.current?.present()
   }
@@ -168,12 +174,19 @@ export default Todo = ({ navigation }) => {
             todosByCategory?.map((todos, id) => {
               return (
                 <>
-                  <CategoryIndicator startCreateTodo={startCreateTodo} todos={todos[1]} categoryId={todos[1][0]} />
+                  <CategoryIndicator
+                    key={id}
+                    startCreateTodo={startCreateTodo}
+                    todos={todos[1]}
+                    categoryId={todos[1][0]}
+                  />
                   {todos[1][2].map((todo, index) => (
                     <TodoItem
                       key={index}
                       todo={todo}
+                      todoLocalId={index}
                       categoryId={id}
+                      //여기서 categoryID는 배열로 불러왔을때, 임의 순서를 나타낸 것이며, 서버 내에서 식별용으로 사용되는 ID값은 아님
                       accessToken={accessToken}
                       editTodo={startEditTodo}
                     />
@@ -218,9 +231,12 @@ export default Todo = ({ navigation }) => {
         ) : (
           <TodoEditBottomSheet
             handleBottomSheetHeight={handleBottomSheetHeight}
-            todosByCategory={todosByCategory}
-            selectedCategoryID={selectedCategoryID}
-            selectedTodoID={selectedTodoID}
+            teamUserList={teamUserList}
+            selectedTodo={selectedTodo}
+            accessToken={accessToken}
+            selectedDate={selectedDate}
+            setSelectedTodo={setSelectedTodo}
+            getInitDatas={getInitDatas}
           />
         )}
       </BottomSheetModal>
@@ -240,8 +256,6 @@ const LoadingContainer = styled.View`
   flex: 1;
   height: 300px;
   justify-content: center;
-
-  /* background-color: chartreuse; */
 `
 const ContentLayout = styled.View`
   padding: 0px 16px;

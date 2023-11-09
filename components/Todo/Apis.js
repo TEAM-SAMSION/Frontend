@@ -41,9 +41,9 @@ export const getTeamUsers = async (data) => {
   })
   await Promise.all(promises)
 }
-//정상작동됨
+
+//완성
 export const getTeamUser = async (teamId, accessToken) => {
-  // console.log('teamID:', teamId)
   let API = `/teams/${teamId}/registers`
   const response = await axios.get(url + API, {
     headers: {
@@ -67,24 +67,56 @@ export const getTodos = async (categoryId, accessToken, date) => {
   return response.data.todos
 }
 
+//미완성
 export const completeTodo = async (todoId, accessToken) => {
-  console.log(todoId)
-  let API = `/teams/todos/${todoId}/assign/complete`
-  const response = await axios.put(
-    url + API,
-    { todoId: todoId },
-    {
-      headers: {
-        Authorization: accessToken,
-      },
-    },
-  )
-  console.log(response)
-  // return response
+  console.log(todoId, accessToken)
+  // let API = `/teams/todos/${todoId}/assign/complete`
+  // let data = { todoId: todoId }
+  // const response = await axios.put(url + API, null, {
+  //   headers: {
+  //     Authorization: accessToken,
+  //   },
+  // })
+  // console.log(response)
+  // checkComplete(todoId, accessToken)
 }
+
+export const checkComplete = async (todoId, accessToken) => {
+  let API = `/teams/todos/${todoId}/completion`
+  const response = await axios.get(url + API, {
+    headers: {
+      Authorization: accessToken,
+    },
+  })
+  console.log(response.data)
+}
+export const editTodoName = async (todoId, name, accessToken) => {
+  let API = `/teams/todos/${todoId}/description`
+  let data = {
+    description: name,
+  }
+  const response = await axios.put(url + API, data, {
+    headers: {
+      Authorization: accessToken,
+      'Content-Type': 'application/json;charset=UTF-8',
+    },
+  })
+  return response
+}
+
+export const editTodoDate = async (todoId, scheduledDate, accessToken) => {
+  let API = `/teams/todos/${todoId}/date`
+  let data = { scheduledDate: scheduledDate }
+  const response = await axios.put(url + API, data, {
+    headers: {
+      Authorization: accessToken,
+    },
+  })
+  return response
+}
+
 export const getAssignedTodos = async (teamId, accessToken, page = 0, size = 20) => {
   let API = `/teams/${teamId}/todos`
-
   const response = await axios.get(url + API, {
     params: {
       page,
