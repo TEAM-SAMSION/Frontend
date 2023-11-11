@@ -110,7 +110,8 @@ export default Todo = ({ navigation }) => {
         getTeamUser(selectedID_temp, accessToken).then((res) => {
           //4. TeamUser를 저장/ teamList의 가장 마지막 요소가 가장 처음에 만들어진 Team이라서 length-1번째 teamId를 인자로 넣었음
           let tempTeamUserList = []
-          res.registers?.map((user) => tempTeamUserList.push({ id: user.registerId, name: user.registerName }))
+          console.log('hello')
+          res?.map((user) => tempTeamUserList.push({ id: user.registerId, name: user.registerName }))
           setTeamUserList(tempTeamUserList) //나중에 Team 변경하면 해당 변수 대체됨
         }),
       )

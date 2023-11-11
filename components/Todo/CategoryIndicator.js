@@ -11,7 +11,7 @@ export const CategoryIndicator = ({ startCreateTodo, categoryId, todos }) => {
   }
   return (
     <CategoryContainer>
-      <CategoryBox onPress={() => startCreateTodo(categoryId)}>
+      <CategoryBox style={{ marginTop: 16 }} onPress={() => startCreateTodo(categoryId)}>
         <Circle style={{ backgroundColor: `#${random().toString().substring(2, 8)}` }}></Circle>
         <Label_Text>{todos[1]}</Label_Text>
         <Add width={16} height={16} />
@@ -27,18 +27,18 @@ const CategoryContainer = styled.View`
   justify-content: space-between;
   align-items: center;
 `
-const Circle = styled.View`
+export const Circle = styled.View`
   width: 12px;
   height: 12px;
   border-radius: 6px;
 `
-const CategoryBox = styled.TouchableOpacity`
+export const CategoryBox = styled.TouchableOpacity`
   align-self: flex-start;
   flex-direction: row;
   align-items: center;
   border-radius: 4px;
   padding: ${Platform.OS == 'android' ? '2px 8px' : '6px 8px'};
   border: 1px solid ${colors.grey_200};
-  margin: 16px 0px;
+
   gap: 8px;
 `

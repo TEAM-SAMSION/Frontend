@@ -49,7 +49,8 @@ export const getTeamUser = async (teamId, accessToken) => {
       Authorization: accessToken,
     },
   })
-  return response.data
+  console.log('getTeamUser: 52', response.data.content)
+  return response.data.content
 }
 
 export const getTodos = async (categoryId, accessToken, date) => {
@@ -62,21 +63,20 @@ export const getTodos = async (categoryId, accessToken, date) => {
       Authorization: accessToken,
     },
   })
-  console.log('response.data.todos:', response.data.content) //{"assignNames": [[Object], [Object]], "completionStatus": "INCOMPLETE", "task": "test1", "todoId": 6182},
+  // console.log('response.data.todos:', response.data.content) //{"assignNames": [[Object], [Object]], "completionStatus": "INCOMPLETE", "task": "test1", "todoId": 6182},
   return response.data.content
 }
 
-//미완성
 export const completeTodo = async (todoId, accessToken) => {
   console.log(todoId, accessToken)
-  // let API = `/teams/todos/${todoId}/assign/complete`
-  // let data = { todoId: todoId }
-  // const response = await axios.put(url + API, null, {
-  //   headers: {
-  //     Authorization: accessToken,
-  //   },
-  // })
-  // console.log(response)
+  let API = `/teams/todos/${todoId}/assign/complete`
+  let data = {}
+  const response = await axios.put(url + API, data, {
+    headers: {
+      Authorization: accessToken,
+    },
+  })
+  console.log(response.status)
   // checkComplete(todoId, accessToken)
 }
 
@@ -87,7 +87,6 @@ export const checkComplete = async (todoId, accessToken) => {
       Authorization: accessToken,
     },
   })
-  console.log(response.data)
 }
 export const editTodoName = async (todoId, name, accessToken) => {
   let API = `/teams/todos/${todoId}/description`

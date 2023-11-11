@@ -26,7 +26,7 @@ export default function MyPageNav() {
         headerShadowVisible: false,
       }}
     >
-      <Stack.Screen name="MyPage" component={MyPage} options={{ headerShown: false }} />
+      {/* <Stack.Screen name="MyPage" component={MyPage} options={{ headerShown: false }} />
       <Stack.Screen
         name="Setting"
         component={Setting}
@@ -92,8 +92,10 @@ export default function MyPageNav() {
           headerShown: false,
           headerBackTitleVisible: false,
         }}
-      />
-      <Stack.Screen name="AdministratorNav">{() => AdministratorNav()}</Stack.Screen>
+      /> */}
+      <Stack.Screen name="AdministratorNav" options={{ headerShown: false }}>
+        {() => AdministratorNav()}
+      </Stack.Screen>
     </Stack.Navigator>
   )
 }
