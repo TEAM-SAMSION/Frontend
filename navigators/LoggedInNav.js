@@ -62,6 +62,7 @@ export default function LoggedInNav() {
           name="MyPageNav"
           options={{
             tabBarIcon: ({ focused }) => (
+              <>
                 <MyPage style={{ color: focused ? colors.primary_outline : colors.grey_250 }} width={24} height={24} />
                 <DetailSm_Text color={focused ? colors.primary_outline : colors.grey_250} style={{ marginTop: 4 }}>
                   마이페이지

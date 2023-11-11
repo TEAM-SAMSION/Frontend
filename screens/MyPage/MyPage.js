@@ -145,6 +145,9 @@ export default function MyPage({ navigation }) {
               />
             </Groups>
           </GroupContainer>
+          <TouchableOpacity onPress={() => navigation.navigate('AdministratorNav')}>
+            <Text style={{ color: colors.grey_800 }}>관리자페이지이동</Text>
+          </TouchableOpacity>
           <FooterContainer>
             <FooterText>포잇에 대해 더 알아볼까요?{'\n'}좀 더 똑똑하게 포잇을 사용하고 싶다면?</FooterText>
             <Guide>포잇가이드</Guide>
