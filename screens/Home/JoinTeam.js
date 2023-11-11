@@ -1,17 +1,28 @@
 import { useEffect, useState } from 'react'
 import { View, Text, TouchableOpacity, TouchableWithoutFeedback, Keyboard } from 'react-native'
 import { colors } from '../../colors'
-import { ScreenLayout } from '../../components/Shared'
+import { ScreenLayout, url } from '../../components/Shared'
 import styled from 'styled-components/native'
 import SearchIcon from '../../assets/Svgs/Search.svg'
 import { TeamSearchBox } from '../../components/Home/TeamSearchBox'
 import { getSearchedTeam } from '../../components/Home/Apis'
-import { useRecoilValue } from 'recoil'
+import { useRecoilState, useRecoilValue } from 'recoil'
 import { accessTokenState } from '../../recoil/AuthAtom'
+import axios from 'axios'
+import { TabBarAtom } from '../../recoil/TabAtom'
+import { useIsFocused } from '@react-navigation/native'
+
 export default function JoinTeam({ navigation }) {
+  const isFocused = useIsFocused()
+  const [isTabVisible, setIsTabVisible] = useRecoilState(TabBarAtom)
+
   const ACCESSTOKEN = useRecoilValue(accessTokenState)
   const [pamilyCode, setPamilyCode] = useState('')
   const [searchedData, setSearchedData] = useState([])
+
+  useEffect(() => {
+    isFocused && setIsTabVisible(false)
+  }, [isFocused, isTabVisible])
 
   const searchTeam = (teamCode) => {
     getSearchedTeam(ACCESSTOKEN, teamCode).then((result) => {
@@ -25,7 +36,7 @@ export default function JoinTeam({ navigation }) {
   }
 
   return (
-    <ScreenLayout color={colors.grey_150}>
+    <ScreenLayout>
       <TouchableWithoutFeedback
         onPress={() => {
           Keyboard.dismiss()
@@ -57,13 +68,11 @@ export default function JoinTeam({ navigation }) {
 }
 
 const Container = styled.View`
-  background-color: ${colors.grey_150};
   padding-top: 16px;
-  height: 1000px;
 `
 const InputBlock = styled.TextInput`
   font-family: 'Spoqa-Medium';
-  background-color: ${colors.grey_100};
+  background-color: ${colors.grey_150};
   color: ${colors.grey_600};
   height: 44px;
   font-size: 14px;
@@ -73,10 +82,10 @@ const Block = styled.View`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  margin: 16px;
+  margin: 0px 16px 16px 16px;
   height: 44px;
   padding: 0px 16px;
   border-radius: 8px;
-  background-color: ${colors.grey_100};
+  background-color: ${colors.grey_150};
 `
 const IconBox = styled.TouchableOpacity``

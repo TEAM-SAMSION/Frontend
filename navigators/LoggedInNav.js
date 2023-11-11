@@ -10,10 +10,14 @@ import Logo from '../assets/Svgs/LOGO_Symbol.svg'
 import MyPage from '../assets/Svgs/Mypage.svg'
 import { DetailSm_Text } from '../components/Fonts'
 import { Platform } from 'react-native'
+import { useRecoilValue } from 'recoil'
+import { TabBarAtom } from '../recoil/TabAtom'
 
 const Tabs = createBottomTabNavigator()
 
 export default function LoggedInNav() {
+  const isTabVisible = useRecoilValue(TabBarAtom)
+
   return (
     <BottomSheetModalProvider>
       <Tabs.Navigator
@@ -21,6 +25,7 @@ export default function LoggedInNav() {
           headerShown: false,
           tabBarShowLabel: false,
           tabBarStyle: {
+            display: isTabVisible ? 'flex' : 'none',
             height: Platform.OS == 'android' ? 68 : 88,
             paddingTop: Platform.OS == 'android' ? 0 : 16,
           },
@@ -31,8 +36,8 @@ export default function LoggedInNav() {
           options={{
             tabBarIcon: ({ focused }) => (
               <>
-                <Home style={{ color: focused ? colors.grey_700 : colors.grey_350 }} width={24} height={24} />
-                <DetailSm_Text color={focused ? colors.grey_700 : colors.grey_350} style={{ marginTop: 4 }}>
+                <Home style={{ color: focused ? colors.primary_outline : colors.grey_350 }} width={24} height={24} />
+                <DetailSm_Text color={focused ? colors.primary_outline : colors.grey_350} style={{ marginTop: 4 }}>
                   홈
                 </DetailSm_Text>
               </>
@@ -46,7 +51,7 @@ export default function LoggedInNav() {
           options={{
             tabBarIcon: ({ focused }) => (
               <>
-                <Logo style={{ color: focused ? colors.grey_700 : colors.grey_350 }} width={65} height={65} />
+                <Logo style={{ color: focused ? colors.primary_outline : colors.grey_350 }} width={65} height={65} />
               </>
             ),
           }}
@@ -58,8 +63,8 @@ export default function LoggedInNav() {
           options={{
             tabBarIcon: ({ focused }) => (
               <>
-                <MyPage style={{ color: focused ? colors.grey_700 : colors.grey_350 }} width={24} height={24} />
-                <DetailSm_Text color={focused ? colors.grey_700 : colors.grey_350} style={{ marginTop: 4 }}>
+                <MyPage style={{ color: focused ? colors.primary_outline : colors.grey_350 }} width={24} height={24} />
+                <DetailSm_Text color={focused ? colors.primary_outline : colors.grey_350} style={{ marginTop: 4 }}>
                   마이페이지
                 </DetailSm_Text>
               </>
