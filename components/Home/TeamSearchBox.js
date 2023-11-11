@@ -85,6 +85,7 @@ export const TeamSearchBox = (props) => {
           </PopButton>
           <PopButton
             onPress={() => {
+              console.log(teamCode)
               postJoiningTeam(teamCode)
               setVisible(false)
             }}

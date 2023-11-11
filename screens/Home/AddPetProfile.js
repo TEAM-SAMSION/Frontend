@@ -1,81 +1,208 @@
-import { useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { TouchableOpacity, View } from 'react-native'
 import styled from 'styled-components/native'
 import { colors } from '../../colors'
-import { BodySm_Text } from '../../components/Fonts'
+import { BodySm_Text, Body_Text, Detail_Text } from '../../components/Fonts'
+import {
+  BottomSheetBackdrop,
+  BottomSheetModal,
+  BottomSheetModalProvider,
+  TouchableWithoutFeedback,
+} from '@gorhom/bottom-sheet'
+import { useRecoilValue } from 'recoil'
+import { accessTokenState } from '../../recoil/AuthAtom'
+import { ProfileImageModal } from '../../components/Home/ProfileImageModal'
+import { ScreenLayout, ScreenWidth } from '../../components/Shared'
+import EditIcon from '../../assets/Svgs/Edit.svg'
 
-export default function AddPetProfile({ navigation }) {
+export default function AddPetProfile({ route, navigation }) {
+  const ACCESSTOKEN = useRecoilValue(accessTokenState)
+
+  const [enabled, setEnabled] = useState(false)
+  const [petImageUrl, setPetImageUrl] = useState(
+    'https://pawith.s3.ap-northeast-2.amazonaws.com/base-image/profileDefault.png',
+  )
   const [petName, setPetName] = useState('')
   const [petAge, setPetAge] = useState()
   const [petCategory, setPetCategroy] = useState('')
   const [petDetail, setPetDetail] = useState('')
   const [petIntro, setPetIntro] = useState('')
 
+  useEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <TouchableOpacity
+          disabled={!enabled}
+          onPress={async () => {
+            await completeAddingPet().then((result) => {
+              console.log(result)
+              navigation.navigate('CreateTeam', { result })
+            })
+          }}
+          style={{ marginRight: 16 }}
+        >
+          <Body_Text
+            style={{
+              color: enabled ? colors.primary : colors.grey_450,
+            }}
+          >
+            완료
+          </Body_Text>
+        </TouchableOpacity>
+      ),
+    })
+  }, [enabled])
+
+  useEffect(() => {
+    const isEmpty = petName === '' || petAge === '' || petCategory === '' || petDetail === '' || petIntro === ''
+    setEnabled(!isEmpty)
+  }, [petName, petAge, petCategory, petDetail, petIntro])
+
+  const bottomSheetModalRef = useRef(null)
+  const snapPoints = ['40%']
+  const handlePresentModal = useCallback(() => {
+    bottomSheetModalRef.current?.present()
+  }, [])
+  const renderBackdrop = useCallback(
+    (props) => <BottomSheetBackdrop {...props} disappearsOnIndex={-1} appearsOnIndex={0} pressBehavior="close" />,
+    [],
+  )
+
+  // // array 부분 다시 수정
+  // const [petArray, setPetArray] = useState([
+  //   {
+  //     name: '',
+  //     age: '',
+  //     description: '',
+  //     genus: '',
+  //     species: '',
+  //   },
+  // ])
+
+  const completeAddingPet = async () => {
+    const newPetArray = {
+      name: petName,
+      age: petAge,
+      description: petIntro,
+      genus: petCategory,
+      species: petDetail,
+    }
+    return newPetArray
+  }
+
   return (
     <>
-      <ProfileContainer>
-        <TouchableOpacity>
-          <ProfileImage />
-        </TouchableOpacity>
-      </ProfileContainer>
-      <InfoContainer>
-        <InputBlock
-          editable
-          onChangeText={(text) => setPetName(text)}
-          placeholder="이름"
-          placeholderTextColor={colors.grey_400}
-          returnKeyType="done"
-        />
-        <InputBlock
-          editable
-          onChangeText={(text) => setPetAge(text)}
-          placeholder="나이"
-          placeholderTextColor={colors.grey_400}
-          returnKeyType="done"
-        />
-        <CategoryBlock>
-          <InputBlock
-            editable
-            onChangeText={(text) => setPetCategroy(text)}
-            placeholder="펫종류"
-            placeholderTextColor={colors.grey_400}
-            style={{
-              flexGrow: 1,
-              borderTopRightRadius: 0,
-              borderBottomRightRadius: 0,
+      <BottomSheetModalProvider>
+        <ScreenLayout>
+          <TouchableWithoutFeedback
+            onPress={() => {
+              Keyboard.dismiss()
             }}
-            returnKeyType="done"
-          />
-          <Bar />
-          <InputBlock
-            editable
-            onChangeText={(text) => setPetDetail(text)}
-            placeholder="펫종류"
-            placeholderTextColor={colors.grey_400}
-            style={{
-              flexGrow: 1,
-              borderBottomLeftRadius: 0,
-              borderTopLeftRadius: 0,
+          >
+            <>
+              <ProfileContainer>
+                <TouchableOpacity onPress={handlePresentModal}>
+                  <ProfileImage
+                    source={{
+                      uri: `${petImageUrl}`,
+                    }}
+                  />
+                  <IconCover>
+                    <EditIcon width={16} height={16} color={'#4D4D4D'} />
+                  </IconCover>
+                </TouchableOpacity>
+              </ProfileContainer>
+              <InfoContainer>
+                <InputBox>
+                  <Detail_Text color={colors.grey_800}>이름</Detail_Text>
+                  <InputBlock
+                    editable
+                    onChangeText={(text) => setPetName(text)}
+                    placeholder="이름을 입력해주세요."
+                    placeholderTextColor={colors.grey_400}
+                    returnKeyType="done"
+                  />
+                </InputBox>
+                <InputBox>
+                  <Detail_Text color={colors.grey_800}>나이</Detail_Text>
+                  <InputBlock
+                    editable
+                    onChangeText={(text) => setPetAge(text)}
+                    placeholder="나이를 입력해주세요."
+                    placeholderTextColor={colors.grey_400}
+                    keyboardType="number"
+                    returnKeyType="done"
+                  />
+                </InputBox>
+                <CategoryBlock>
+                  <InputBox
+                    style={{
+                      width: (ScreenWidth - 40) / 2,
+                    }}
+                  >
+                    <Detail_Text color={colors.grey_800}>종류</Detail_Text>
+                    <InputBlock
+                      editable
+                      onChangeText={(text) => setPetCategroy(text)}
+                      placeholder="ex_강아지"
+                      placeholderTextColor={colors.grey_400}
+                      style={{
+                        flexGrow: 1,
+                        borderTopRightRadius: 0,
+                        borderBottomRightRadius: 0,
+                      }}
+                      returnKeyType="done"
+                    />
+                  </InputBox>
+                  <InputBox
+                    style={{
+                      width: (ScreenWidth - 40) / 2,
+                    }}
+                  >
+                    <Detail_Text color={colors.grey_800}>펫 종</Detail_Text>
+                    <InputBlock
+                      editable
+                      onChangeText={(text) => setPetDetail(text)}
+                      placeholder="ex_웰시코기"
+                      placeholderTextColor={colors.grey_400}
+                      style={{
+                        flexGrow: 1,
+                        borderBottomLeftRadius: 0,
+                        borderTopLeftRadius: 0,
+                      }}
+                      returnKeyType="done"
+                    />
+                  </InputBox>
+                </CategoryBlock>
+                <InputBox>
+                  <Detail_Text color={colors.grey_800}>한줄소개</Detail_Text>
+                  <InputBlock
+                    editable
+                    onChangeText={(text) => setPetIntro(text)}
+                    placeholder="한줄소개를 입력해주세요.(20자이내)"
+                    placeholderTextColor={colors.grey_400}
+                    returnKeyType="done"
+                  />
+                </InputBox>
+              </InfoContainer>
+            </>
+          </TouchableWithoutFeedback>
+          <BottomSheetModal
+            ref={bottomSheetModalRef}
+            index={0}
+            snapPoints={snapPoints}
+            backdropComponent={renderBackdrop}
+            backgroundStyle={{
+              borderRadius: 22,
             }}
-            returnKeyType="done"
-          />
-        </CategoryBlock>
-        <InputBlock
-          editable
-          onChangeText={(text) => setPetIntro(text)}
-          placeholder="한 줄 소개"
-          placeholderTextColor={colors.grey_400}
-          returnKeyType="done"
-        />
-      </InfoContainer>
-      <ButtonContainer>
-        <CancelButton onPress={() => navigation.goBack()}>
-          <BodySm_Text color={colors.red_350}>취소</BodySm_Text>
-        </CancelButton>
-        <OkButton>
-          <BodySm_Text color={colors.red_350}>확인</BodySm_Text>
-        </OkButton>
-      </ButtonContainer>
+          >
+            <BottomTitle>
+              <BottomTitleText>펫 프로필 등록</BottomTitleText>
+            </BottomTitle>
+            <ProfileImageModal profileUrl={petImageUrl} setProfileUrl={setPetImageUrl} accessToken={ACCESSTOKEN} />
+          </BottomSheetModal>
+        </ScreenLayout>
+      </BottomSheetModalProvider>
     </>
   )
 }
@@ -86,58 +213,54 @@ const ProfileContainer = styled.View`
   margin: 32px 0px;
 `
 const ProfileImage = styled.Image`
-  background-color: pink;
   width: 110px;
   height: 110px;
   border-radius: 16px;
 `
-const InputBlock = styled.TextInput`
-  font-family: 'Spoqa-Medium';
-  background-color: ${colors.grey_100};
-  color: ${colors.grey_600};
-  padding: 0px 16px;
+const IconCover = styled.View`
+  position: absolute;
+  bottom: -8;
+  right: -8;
+  background-color: ${colors.grey_200};
+  width: 32px;
+  height: 32px;
+  border: 2px solid ${colors.grey_100};
+  border-radius: 26px;
+  justify-content: center;
+  align-items: center;
+`
+const InputBox = styled.View`
+  flex-direction: row;
+  background-color: ${colors.grey_150};
+  padding: 12px;
   height: 44px;
   border-radius: 8px;
-  font-size: 14px;
+  align-items: center;
+  justify-content: space-between;
+`
+const InputBlock = styled.TextInput`
+  font-family: 'Spoqa-Medium';
+  background-color: ${colors.grey_150};
+  color: ${colors.grey_600};
+  font-size: 12px;
+  text-align: right;
 `
 const InfoContainer = styled.View`
-  gap: 12px;
+  gap: 8px;
   margin: 0px 16px;
 `
 const CategoryBlock = styled.View`
   flex-direction: row;
-`
-const Bar = styled.View`
-  width: 1px;
-  height: 44px;
-  background-color: 'rgba(0, 0, 0, 0.12)';
-`
-const ButtonContainer = styled.View`
-  position: absolute;
-  bottom: 10;
-  flex-direction: row;
-  margin: 0px 16px;
   gap: 8px;
 `
-const CancelButton = styled.TouchableOpacity`
-  border: 2px solid;
-  border-color: ${colors.grey_150};
-  background-color: ${colors.grey_100};
-  display: flex;
-  height: 44px;
-  padding: 12px 16px;
-  justify-content: center;
+const BottomTitle = styled.View`
   align-items: center;
-  flex: 1 0 0;
-  border-radius: 8px;
+  padding-top: 6px;
+  padding-bottom: 10px;
 `
-const OkButton = styled.TouchableOpacity`
-  background-color: ${colors.red_200};
-  display: flex;
-  height: 44px;
-  padding: 12px 16px;
-  justify-content: center;
-  align-items: center;
-  flex: 1 0 0;
-  border-radius: 8px;
+const BottomTitleText = styled.Text`
+  font-family: 'Spoqa-Medium';
+  font-size: 16px;
+  line-height: 22px;
+  color: ${colors.grey_800};
 `
