@@ -4,22 +4,51 @@ import { colors } from '../../colors'
 import { ScreenLayout } from '../../components/Shared'
 import styled from 'styled-components/native'
 import PlusIcon from '../../assets/Svgs/miniPlus.svg'
-import ChevronRight from '../../assets/Svgs/chevron_right.svg'
 import { BottomSheetBackdrop, BottomSheetModal, BottomSheetModalProvider } from '@gorhom/bottom-sheet'
 import { ProfileImageModal } from '../../components/Home/ProfileImageModal'
-import { useRecoilValue } from 'recoil'
+import { useRecoilState, useRecoilValue } from 'recoil'
 import { accessTokenState } from '../../recoil/AuthAtom'
 import SlideItem from '../../components/Home/SlideItem'
 import { profileSample } from '../../datas/Home/data'
-import { BodySm_Text } from '../../components/Fonts'
+import { BodySm_Text, Detail_Text } from '../../components/Fonts'
+import { getTeamCode } from '../../components/Home/Apis'
+import { TabBarAtom } from '../../recoil/TabAtom'
+import { useIsFocused } from '@react-navigation/native'
+import EditIcon from '../../assets/Svgs/Edit.svg'
+import Clipboard from '@react-native-clipboard/clipboard'
+import { AddPetBox } from '../../components/Home/AddPetBox'
 
-export default function CreateTeam({ navigation }) {
+export default function CreateTeam({ route, navigation }) {
+  const isFocused = useIsFocused()
+  const [isTabVisible, setIsTabVisible] = useRecoilState(TabBarAtom)
+
   const [enabled, setEnabled] = useState(false)
   const [pamilyName, setPamilyName] = useState('')
   const [pamilyCode, setPamilyCode] = useState('')
-  const [profileUrl, setProfileUrl] = useState('')
+  const [pamilyIntro, setPamilyIntro] = useState('')
+  const [profileUrl, setProfileUrl] = useState(
+    'https://pawith.s3.ap-northeast-2.amazonaws.com/base-image/profileDefault.png',
+  )
+  const [petArray, setPetArray] = useState([])
+  const [savedPets, setSavedPets] = useState([])
 
   const ACCESSTOKEN = useRecoilValue(accessTokenState)
+
+  useEffect(() => {
+    isFocused && setIsTabVisible(false)
+  }, [isFocused, isTabVisible])
+
+  useEffect(() => {
+    try {
+      const { result } = route.params || { result: [] } // route.params가 undefined일 경우 빈 배열로 설정
+      console.log(result) // 확인용 로그
+      const resultArray = Array.isArray(result) ? result : [result]
+      setPetArray(resultArray)
+      setSavedPets((prevArray) => [...prevArray, ...resultArray])
+    } catch (error) {
+      console.error('Error in useEffect:', error)
+    }
+  }, [route.params])
 
   useEffect(() => {
     navigation.setOptions({
@@ -29,10 +58,11 @@ export default function CreateTeam({ navigation }) {
           onPress={() => {
             navigation.navigate('Home')
           }}
-          style={{ marginRight: 24 }}
+          style={{ marginRight: 16 }}
         >
           <Text
             style={{
+              fontFamily: 'Spoqa-Medium',
               fontSize: 16,
               fontWeight: 500,
               lineHeight: 22,
@@ -45,6 +75,13 @@ export default function CreateTeam({ navigation }) {
       ),
     })
   }, [enabled])
+
+  const savePetArray = () => {
+    setSavedPets((prevArray) => [...prevArray, petArray.result])
+    // if (!petArrayAccumulated.some((item) => JSON.stringify(item) === JSON.stringify(petArray))) {
+    //   petArrayAccumulated.push(petArray)
+    // }
+  }
 
   const bottomSheetModalRef = useRef(null)
   const snapPoints = ['60%']
@@ -62,53 +99,82 @@ export default function CreateTeam({ navigation }) {
     </SampleImageContainer>
   )
 
+  const createTeamCode = () => {
+    getTeamCode(ACCESSTOKEN).then((result) => {
+      setPamilyCode(result)
+    })
+  }
+
+  const copyTeamCode = () => {
+    Clipboard.setString(pamilyCode)
+  }
+
   return (
     <BottomSheetModalProvider>
-      <ScreenLayout color={colors.grey_150}>
+      <ScreenLayout>
         <TouchableWithoutFeedback
           onPress={() => {
             Keyboard.dismiss()
           }}
         >
-          <Container>
-            <InputBlock
-              editable
-              onChangeText={(text) => setPamilyName(text)}
-              placeholder="Pamily 이름 입력"
-              placeholderTextColor={colors.grey_400}
-              style={{
-                borderBottomLeftRadius: 0,
-                borderBottomRightRadius: 0,
-              }}
-              returnKeyType="done"
-              // ref={(input) => {
-              //   this.firstInput = input
-              // }}
-            />
-            <Bar />
-            <InputBlock
-              editable
-              onChangeText={(text) => setPamilyCode(text)}
-              placeholder="Pamily 코드"
-              placeholderTextColor={colors.grey_400}
-              style={{
-                borderTopLeftRadius: 0,
-                borderTopRightRadius: 0,
-              }}
-              returnKeyType="done"
-              // ref={(input) => {
-              //   this.secondInput = input
-              // }}
-            />
-            <Block onPress={handlePresentModal}>
-              <BlockText>Pamily 프로필 설정</BlockText>
-              <ChevronRight width={16} height={16} color={colors.grey_800} />
-            </Block>
-            <Block onPress={() => navigation.navigate('AddPetProfile')}>
-              <BlockText>펫 프로필</BlockText>
-              <PlusIcon width={16} height={16} />
-            </Block>
-          </Container>
+          <>
+            <ProfileContainer>
+              <TouchableOpacity onPress={handlePresentModal}>
+                <ProfileImage
+                  source={{
+                    uri: `${profileUrl}`,
+                  }}
+                />
+                <IconCover>
+                  <EditIcon width={16} height={16} color={'#4D4D4D'} />
+                </IconCover>
+              </TouchableOpacity>
+            </ProfileContainer>
+            <Container>
+              <InputBox>
+                <Detail_Text color={colors.grey_800}>Pamily 코드</Detail_Text>
+                {pamilyCode == '' ? (
+                  <CodeButton onPress={createTeamCode}>
+                    <Detail_Text color={colors.secondary}>발급 받기</Detail_Text>
+                  </CodeButton>
+                ) : (
+                  <CodeBox>
+                    <Detail_Text style={{ color: colors.grey_400 }}>{pamilyCode}</Detail_Text>
+
+                    <CodeButton onPress={copyTeamCode}>
+                      <Detail_Text color={colors.secondary}>복사</Detail_Text>
+                    </CodeButton>
+                  </CodeBox>
+                )}
+              </InputBox>
+              <InputBox>
+                <Detail_Text color={colors.grey_800}> Pamily 이름</Detail_Text>
+                <InputBlock
+                  editable
+                  onChangeText={(text) => setPamilyName(text)}
+                  placeholder="이름을 입력해주세요."
+                  placeholderTextColor={colors.grey_400}
+                  returnKeyType="done"
+                />
+              </InputBox>
+              <InputBox>
+                <Detail_Text color={colors.grey_800}>한줄소개</Detail_Text>
+                <InputBlock
+                  editable
+                  onChangeText={(text) => setPamilyIntro(text)}
+                  placeholder="한줄소개를 입력해주세요. (20자이내)"
+                  placeholderTextColor={colors.grey_400}
+                  keyboardType="number"
+                  returnKeyType="done"
+                />
+              </InputBox>
+              <Block onPress={() => navigation.navigate('AddPetProfile')}>
+                <Detail_Text>펫 프로필</Detail_Text>
+                <PlusIcon width={16} height={16} />
+              </Block>
+              {savedPets.length < 0 ? '' : savedPets.map((pet, index) => <AddPetBox key={index} pet={pet} />)}
+            </Container>
+          </>
         </TouchableWithoutFeedback>
         <BottomSheetModal
           ref={bottomSheetModalRef}
@@ -147,29 +213,38 @@ export default function CreateTeam({ navigation }) {
   )
 }
 
-const Container = styled.View`
-  background-color: ${colors.grey_150};
-  padding-top: 16px;
-  height: 1000px;
+const ProfileContainer = styled.View`
+  justify-content: center;
   align-items: center;
+  margin: 32px 0px;
+`
+const ProfileImage = styled.Image`
+  width: 110px;
+  height: 110px;
+  border-radius: 16px;
+`
+const IconCover = styled.View`
+  position: absolute;
+  bottom: -8;
+  right: -8;
+  background-color: ${colors.grey_200};
+  width: 32px;
+  height: 32px;
+  border: 2px solid ${colors.grey_100};
+  border-radius: 26px;
+  justify-content: center;
+  align-items: center;
+`
+const Container = styled.View`
+  gap: 8px;
+  margin: 0px 16px;
 `
 const Bar = styled.View`
   width: 343px;
   height: 1px;
   background-color: rgba(0, 0, 0, 0.12);
 `
-const InputBlock = styled.TextInput`
-  font-family: 'Spoqa-Medium';
-  background-color: ${colors.grey_100};
-  color: ${colors.grey_600};
-  padding: 0px 16px;
-  margin: 0px 16px;
-  width: 343px;
-  height: 44px;
-  border-radius: 8px;
-  font-size: 14px;
-`
-const Block = styled.TouchableOpacity`
+const BlockView = styled.View`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
@@ -177,13 +252,17 @@ const Block = styled.TouchableOpacity`
   height: 44px;
   padding: 0px 16px;
   border-radius: 8px;
-  background-color: ${colors.grey_100};
+  background-color: ${colors.grey_150};
   margin-top: 16px;
 `
-const BlockText = styled.Text`
-  font-family: 'Spoqa-Medium';
-  font-size: 14px;
-  line-height: 19px;
+const Block = styled.TouchableOpacity`
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  height: 44px;
+  padding: 12px;
+  border-radius: 8px;
+  background-color: ${colors.grey_150};
 `
 const BottomTitle = styled.View`
   align-items: center;
@@ -250,4 +329,26 @@ const OkButton = styled.TouchableOpacity`
   align-items: center;
   flex: 1 0 0;
   border-radius: 8px;
+`
+const CodeButton = styled.TouchableOpacity``
+const CodeBox = styled.View`
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+`
+const InputBox = styled.View`
+  flex-direction: row;
+  background-color: ${colors.grey_150};
+  padding: 12px;
+  height: 44px;
+  border-radius: 8px;
+  align-items: center;
+  justify-content: space-between;
+`
+const InputBlock = styled.TextInput`
+  font-family: 'Spoqa-Medium';
+  background-color: ${colors.grey_150};
+  color: ${colors.grey_600};
+  font-size: 12px;
+  text-align: right;
 `

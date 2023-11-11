@@ -6,29 +6,32 @@ import axios from 'axios'
 import { useRecoilValue } from 'recoil'
 import { accessTokenState } from '../../recoil/AuthAtom'
 import { BodySm_Text } from '../Fonts'
+import RNFS from 'react-native-fs'
 
 export const ProfileImageModal = (props) => {
   const ACCESSTOKEN = props.accessToken
-  const [imageUrl, setImageUrl] = useState(`${props.profileUrl}`)
+  //const [imageUrl, setImageUrl] = useState(`${props.profileUrl}`)
+
+  const imagePath = RNFS.DocumentDirectoryPath + '/assets/Imgs/profileDefault.png'
 
   const uploadDefaultImage = async () => {
     const url = 'https://dev.pawith.com/user'
     const defaultData = new FormData()
     defaultData.append('profileImage', {
-      uri: 'https://pawith.s3.ap-northeast-2.amazonaws.com/base-image/profileDefault.png',
-      name: 'profileImage',
+      uri: 'file://' + imagePath,
+      name: 'profileDefault.png',
       type: 'image/png',
     })
     console.log(defaultData)
 
     try {
-      // const response = await axios.post(url, defaultData, {
-      //   headers: {
-      //     'Content-Type': `multipart/form-data`,
-      //     Authorization: ACCESSTOKEN,
-      //   },
-      // })
-      // console.log(response.data.imageUrl)
+      const response = await axios.post(url, defaultData, {
+        headers: {
+          'Content-Type': `multipart/form-data`,
+          Authorization: ACCESSTOKEN,
+        },
+      })
+      console.log(response.data.imageUrl)
       props.setProfileUrl('https://pawith.s3.ap-northeast-2.amazonaws.com/base-image/profileDefault.png')
     } catch (error) {
       console.error(error)

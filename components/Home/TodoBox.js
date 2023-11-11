@@ -11,13 +11,13 @@ const SCREEN_WIDTH = Dimensions.get('window').width
 export const TodoBox = (props) => {
   const todo = props.data
   const index = props.index
-  const [isChecked, setIsChecked] = useState(todo.status)
+  const [isChecked, setIsChecked] = useState(todo.completionStatus)
 
   return (
     <TodoBoxContainer index={index}>
       <TodoContent>
         <TodoTeam>
-          <TeamText>{todo.teamName}</TeamText>
+          <TeamText>{todo.categoryName}</TeamText>
         </TodoTeam>
         <TodoItem>
           <ItemText>{todo.task}</ItemText>

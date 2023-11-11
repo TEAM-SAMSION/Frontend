@@ -11,16 +11,22 @@ import { MainStat } from '../../components/Home/MainStat'
 import { PamilyChoiceToggle } from '../../components/Home/PamilyChoiceToggle'
 import { MainImage } from '../../components/Home/MainImage'
 import { TodoBox } from '../../components/Home/TodoBox'
-import { useRecoilValue } from 'recoil'
+import { useRecoilValue, useSetRecoilState } from 'recoil'
 import { accessTokenState } from '../../recoil/AuthAtom'
 import { getMyTodoList, getTeamList, getTodoProgress, getUserInfo } from '../../components/Home/Apis'
 import { AccessTokenRequest } from 'expo-auth-session'
 import { useIsFocused } from '@react-navigation/native'
 import { BodySm_Text, DetailSm_Text } from '../../components/Fonts'
+import { TabBarAtom } from '../../recoil/TabAtom'
 
 export default function Home({ navigation }) {
   const isFocused = useIsFocused()
   const ACCESSTOKEN = useRecoilValue(accessTokenState)
+  const setIsTabVisible = useSetRecoilState(TabBarAtom)
+
+  useEffect(() => {
+    isFocused && setIsTabVisible(true)
+  }, [isFocused])
 
   const [name, setName] = useState('포잇')
   const [now, setNow] = useState(new Date(Date.now() + 9 * 60 * 60 * 1000))
@@ -29,6 +35,7 @@ export default function Home({ navigation }) {
   const [pamilyList, setPamilyList] = useState([])
   const [progress, setProgress] = useState(0)
   const [pamilyNum, setPamilyNum] = useState(0)
+  const [topTeamId, setTopTeamId] = useState(0)
 
   const getUserNickname = () => {
     getUserInfo(ACCESSTOKEN).then((result) => {
@@ -38,14 +45,16 @@ export default function Home({ navigation }) {
 
   useEffect(() => {
     getUserNickname()
+    console.log(pamilyNum)
   }, [])
 
   const fetchTeamList = () => {
     getTeamList(ACCESSTOKEN).then((result) => {
       setPamilyList(result)
-      //console.log(result)
+      console.log(result)
       if (result.length !== 0) {
         setPamilyNum(1)
+        setTopTeamId(pamilyList[0].teamId)
       }
     })
   }
@@ -67,26 +76,31 @@ export default function Home({ navigation }) {
   const [myTodo, setMyTodo] = useState([])
   const [todoPage, setTodoPage] = useState(0)
 
-  const fetchMyTodo = async () => {
-    const allTodos = []
-    for (const team of pamilyList) {
-      const teamId = team.teamId
-      try {
-        const todos = await getMyTodoList(ACCESSTOKEN, todoPage, teamId)
-        allTodos.push(
-          ...todos.map((todo) => ({
-            teamName: team.teamName,
-            todoId: todo.todoId,
-            task: todo.task,
-            status: todo.status,
-          })),
-        )
-      } catch (error) {
-        console.error('Error fetching todo list')
-      }
-    }
-    setMyTodo(allTodos)
+  const fetchMyTodo = () => {
+    getMyTodoList(ACCESSTOKEN, todoPage, topTeamId).then((result) => {
+      setMyTodo(result)
+    })
   }
+  // const fetchMyTodo = async () => {
+  //   const allTodos = []
+  //   for (const team of pamilyList) {
+  //     const teamId = team.teamId
+  //     try {
+  //       const todos = await getMyTodoList(ACCESSTOKEN, todoPage, teamId)
+  //       allTodos.push(
+  //         ...todos.map((todo) => ({
+  //           categoryName: team.categoryName,
+  //           todoId: todo.todoId,
+  //           task: todo.task,
+  //           completionStatus: todo.completionStatus,
+  //         })),
+  //       )
+  //     } catch (error) {
+  //       console.error('Error fetching todo list')
+  //     }
+  //   }
+  //   setMyTodo(allTodos)
+  // }
 
   useEffect(() => {
     fetchMyTodo()
@@ -94,28 +108,28 @@ export default function Home({ navigation }) {
 
   const testTodo = [
     {
-      teamName: '펫모리',
+      categoryName: '펫모리',
       todoId: 319,
       task: 'tatpehb',
-      status: 'COMPLETE',
+      completionStatus: 'COMPLETE',
     },
     {
-      teamName: '펫모리2',
+      categoryName: '펫모리2',
       todoId: 310,
       task: 'tatpeh2023',
-      status: 'INCOMPLETE',
+      completionStatus: 'INCOMPLETE',
     },
     {
-      teamName: '펫모리3',
+      categoryName: '펫모리3',
       todoId: 3111,
       task: 'tatpeh2023',
-      status: 'INCOMPLETE',
+      completionStatus: 'INCOMPLETE',
     },
     {
-      teamName: '펫모리4',
+      categoryName: '펫모리4',
       todoId: 3102,
       task: 'tatpeh2023',
-      status: 'INCOMPLETE',
+      completionStatus: 'INCOMPLETE',
     },
   ]
   return (

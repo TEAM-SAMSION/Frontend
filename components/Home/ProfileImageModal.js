@@ -1,15 +1,18 @@
+import { useEffect, useState } from 'react'
+import { BodySm_Text } from '../Fonts'
+import { ImagePickerComponent } from './ImagePickerComponent'
 import styled from 'styled-components/native'
 import { colors } from '../../colors'
-import ImagePickerComponent from './ImagePickerComponent'
-import { useEffect, useState } from 'react'
-import axios from 'axios'
-import { useRecoilValue } from 'recoil'
-import { accessTokenState } from '../../recoil/AuthAtom'
-import { BodySm_Text } from '../Fonts'
 
 export const ProfileImageModal = (props) => {
   const ACCESSTOKEN = props.accessToken
-  const [imageUrl, setImageUrl] = useState(`${props.profileUrl}`)
+  const [imageUrl, setImageUrl] = useState(
+    'https://pawith.s3.ap-northeast-2.amazonaws.com/base-image/profileDefault.png',
+  )
+
+  useEffect(() => {
+    setImageUrl(props.profileUrl)
+  }, [])
 
   // const uploadDefaultImage = async () => {
   //   const url = 'https://dev.pawith.com/user'
@@ -39,8 +42,7 @@ export const ProfileImageModal = (props) => {
     <>
       <ModalContainer>
         <ImageContainer>
-          <ProfileImage source={require('../../assets/Imgs/profileDefault.png')} />
-          {/* <ProfileImage source={{ uri: `${props.profileUrl}` }} /> */}
+          <ProfileImage source={{ uri: imageUrl }} />
         </ImageContainer>
         <BoxContainer>
           <DefaultBox>

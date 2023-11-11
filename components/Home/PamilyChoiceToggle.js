@@ -10,7 +10,7 @@ import { BodySm_Text, Detail_Text, SubHead_Text } from '../Fonts'
 
 export const PamilyChoiceToggle = (props) => {
   const pamilyList = props.pamilyList
-  const options = pamilyList.map((item) => item.teamName)
+  const options = pamilyList.length > 0 ? pamilyList.map((item) => item.teamName) : []
   // 패밀리 선택 toggle isOpen
   const [isOpen, setIsOpen] = useState(false)
   const [selectedValue, setSelectedValue] = useState('')
