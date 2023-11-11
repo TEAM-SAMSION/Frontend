@@ -27,3 +27,16 @@ export const colors = {
   secondary_container: 'D1D6FF',
   outline: 'rgba(0, 0, 0, 0.12)',
 }
+
+export const categoryColors = [
+  '#F84D35',
+  '#FFC26E',
+  '#FFE600',
+  '#A6DB86',
+  '#9AE3CD',
+  '#63AFE6',
+  '#9389FD',
+  '#B79AE3',
+  '#CE8282',
+  '#FAA7D4',
+]

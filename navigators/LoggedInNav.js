@@ -31,7 +31,7 @@ export default function LoggedInNav() {
           },
         }}
       >
-        {/* <Tabs.Screen
+        <Tabs.Screen
           name="HomeNav"
           options={{
             tabBarIcon: ({ focused }) => (
@@ -57,7 +57,7 @@ export default function LoggedInNav() {
           }}
         >
           {() => <ToDoNav />}
-        </Tabs.Screen> */}
+        </Tabs.Screen>
         <Tabs.Screen
           name="MyPageNav"
           options={{

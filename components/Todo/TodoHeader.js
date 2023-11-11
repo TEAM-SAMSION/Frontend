@@ -1,7 +1,6 @@
 import styled from 'styled-components/native'
 import Alarm from '../../assets/Svgs/Alarm.svg'
-import Report from '../../assets/Svgs/report.svg'
-import Schedule from '../../assets/Svgs/Calendar.svg'
+import Setting from '../../assets/Svgs/SettingIcon.svg'
 import { colors } from '../../colors'
 import { useState } from 'react'
 
@@ -45,12 +44,9 @@ export const TodoHeader = ({ navigation, changeTodoTeam, todoTeamList, setSelect
         )}
       </DropDownListContainer>
       <RightIcon>
-        {/* <IconContainer>
-          <Schedule width={24} height={24} />
+        <IconContainer onPress={() => navigation.navigate('ManageTodo')}>
+          <Setting width={24} height={24} />
         </IconContainer>
-        <IconContainer>
-          <Report color={colors.grey_350} width={24} height={24} />
-        </IconContainer> */}
         <IconContainer
           onPress={() => {
             navigation.navigate('Alarms')
@@ -105,9 +101,4 @@ const IconContainer = styled.TouchableOpacity``
 const RightIcon = styled.View`
   flex-direction: row;
   gap: 16px;
-`
-const Setting = styled.View`
-  width: 24px;
-  height: 24px;
-  background-color: pink;
 `

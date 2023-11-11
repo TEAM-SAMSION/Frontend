@@ -70,14 +70,14 @@ export const getTodos = async (categoryId, accessToken, date) => {
 export const completeTodo = async (todoId, accessToken) => {
   console.log(todoId, accessToken)
   let API = `/teams/todos/${todoId}/assign/complete`
-  let data = {}
+  let data = { todoId: todoId }
   const response = await axios.put(url + API, data, {
     headers: {
       Authorization: accessToken,
     },
   })
-  console.log(response.status)
-  // checkComplete(todoId, accessToken)
+  // console.log(response)
+  checkComplete(todoId, accessToken)
 }
 
 export const checkComplete = async (todoId, accessToken) => {
@@ -87,6 +87,7 @@ export const checkComplete = async (todoId, accessToken) => {
       Authorization: accessToken,
     },
   })
+  console.log(response.data)
 }
 export const editTodoName = async (todoId, name, accessToken) => {
   let API = `/teams/todos/${todoId}/description`

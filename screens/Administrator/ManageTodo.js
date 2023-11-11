@@ -1,5 +1,5 @@
 import styled from 'styled-components/native'
-import { colors } from '../../colors'
+import { categoryColors, colors } from '../../colors'
 import { HeaderWithBack, ModalPopUp, ScreenKeyboardLayout, ScreenLayout } from '../../components/Shared'
 import { BodyBold_Text, BodySm_Text, Body_Text, Detail_Text, Label_Text, SubHead_Text } from '../../components/Fonts'
 import Plus from '../../assets/Svgs/miniPlus.svg'
@@ -10,7 +10,7 @@ import Add from '../../assets/Svgs/add.svg'
 import Switch_false from '../../assets/Svgs/switch_false.svg'
 import Switch_true from '../../assets/Svgs/switch_true.svg'
 import { createRef, useEffect, useRef, useState } from 'react'
-import { ActivityIndicator, Keyboard, Modal, TextInput } from 'react-native'
+import { ActivityIndicator, Keyboard, Modal, NativeModules, Platform, TextInput } from 'react-native'
 import { useRecoilValue } from 'recoil'
 import { userInfoState } from '../../recoil/AuthAtom'
 import { getCategoryList } from '../../components/Todo/Apis'
@@ -25,6 +25,14 @@ export default function ManageTodo({ navigation, teamId = 1 }) {
   const { accessToken } = useRecoilValue(userInfoState)
   const [categoryList, setCategoryList] = useState(null)
   const inputRefs = useRef([])
+
+  const { StatusBarManager } = NativeModules
+  const [statusBarHeight, setStatusBarHeight] = useState(0)
+  Platform.OS == 'ios'
+    ? StatusBarManager.getHeight((statusBarFrameData) => {
+        setStatusBarHeight(statusBarFrameData.height)
+      })
+    : null
 
   const [isEditable, setIsEditable] = useState(null)
   const [isLoading, setIsLoading] = useState(false)
@@ -48,6 +56,7 @@ export default function ManageTodo({ navigation, teamId = 1 }) {
     CreateCategory(text, teamId, accessToken).then((status) => {
       if (status == 200) {
         setIsLoading(false)
+        setIsCreate(false)
         refreshData()
       }
     })
@@ -103,7 +112,7 @@ export default function ManageTodo({ navigation, teamId = 1 }) {
     refreshData()
   }, [])
   return (
-    <ScreenKeyboardLayout onPress={() => setIsVisible(false)} behavior="height">
+    <ScreenKeyboardLayout verticalOffset={statusBarHeight + 44} onPress={() => setIsVisible(false)} behavior="padding">
       <HeaderWithBack navigation={navigation} title="TODO 관리" />
       <ContentLayout>
         <TopBase>
@@ -118,13 +127,13 @@ export default function ManageTodo({ navigation, teamId = 1 }) {
               <ActivityIndicator style={{ marginTop: 80 }} />
             ) : (
               categoryList?.map((category, index) => (
-                <>
+                <ListBase style={{ paddingTop: 10, paddingBottom: 10, marginBottom: 10 }} key={index}>
                   <Base>
                     <CategoryBox>
-                      <Circle style={{ backgroundColor: 'red' }} />
+                      <Circle style={{ backgroundColor: categoryColors[category.categoryId % 10] }} />
                       <TextInput
                         ref={inputRefs.current[index]}
-                        style={{ fontFamily: 'Spoqa-Medium', width: this.state?.inputWidth }}
+                        style={{ fontFamily: 'Spoqa-Medium', color: colors.grey_450, width: this.state?.inputWidth }}
                         placeholderTextColor={colors.grey_600}
                         onSubmitEditing={(data) => finishCategoryEdit(data.nativeEvent.text, category.categoryId)}
                         placeholder={category.categoryName}
@@ -141,7 +150,7 @@ export default function ManageTodo({ navigation, teamId = 1 }) {
                       )}
                     </ButtonBase>
                   </Base>
-                  <Base style={{ gap: 8, marginTop: 16 }}>
+                  <Base style={{ gap: 8, marginTop: 12 }}>
                     <ButtonBox onPress={() => editCategoryName(index)}>
                       {/*Index는 TextInput 활성화 컨트롤 위함 */}
                       <Edit width={16} height={16} color={colors.secondary} />
@@ -152,15 +161,17 @@ export default function ManageTodo({ navigation, teamId = 1 }) {
                       <Detail_Text color={colors.grey_600}>삭제하기</Detail_Text>
                     </ButtonBox>
                   </Base>
-                </>
+                </ListBase>
               ))
             )}
           </CategoryItem>
           {isCreate && (
             <CategoryBox>
-              <Circle style={{ backgroundColor: 'red' }} />
+              <Circle style={{ backgroundColor: categoryColors[0] }} />
               <TextInput
                 autoFocus
+                clearTextOnFocus
+                onEndEditing={() => setIsCreate(false)}
                 style={{ fontFamily: 'Spoqa-Medium', width: this.state?.inputWidth }}
                 placeholderTextColor={colors.grey_600}
                 onSubmitEditing={(data) => createCategory(data.nativeEvent.text)}
@@ -174,7 +185,7 @@ export default function ManageTodo({ navigation, teamId = 1 }) {
       </ContentLayout>
       <ModalPopUp visible={isVisible} petIcon={false} height={204}>
         <PopContent>
-          <BodyBold_Text color={colors.grey_700}>{selectedCategory.categoryName}</BodyBold_Text>
+          <BodyBold_Text color={colors.grey_700}>{selectedCategory?.categoryName}</BodyBold_Text>
           <Body_Text color={colors.grey_500}>을 삭제하시겠습니까?</Body_Text>
         </PopContent>
         <PopButtonContainer>
@@ -235,7 +246,6 @@ const TopBase = styled.View`
 `
 const Base = styled.View`
   flex-direction: row;
-  margin-top: 8px;
   align-items: center;
   justify-content: space-between;
 `

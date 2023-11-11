@@ -74,7 +74,6 @@ export default Todo = ({ navigation }) => {
       return acc
     }, [])
     if (Object.entries(todosByCategory).length > 0) {
-      // console.log(Object.entries(todosByCategory))//[["0", [2, "카테고리 수정", undefined]], ["1", [3, "페밀리 카테고리
       setTodosByCategory(Object.entries(todosByCategory))
     } else {
       setTodosByCategory(null)
@@ -110,8 +109,7 @@ export default Todo = ({ navigation }) => {
         getTeamUser(selectedID_temp, accessToken).then((res) => {
           //4. TeamUser를 저장/ teamList의 가장 마지막 요소가 가장 처음에 만들어진 Team이라서 length-1번째 teamId를 인자로 넣었음
           let tempTeamUserList = []
-          console.log('hello')
-          res?.map((user) => tempTeamUserList.push({ id: user.registerId, name: user.registerName }))
+          res.map((user) => tempTeamUserList.push({ id: user.registerId, name: user.registerName }))
           setTeamUserList(tempTeamUserList) //나중에 Team 변경하면 해당 변수 대체됨
         }),
       )
@@ -185,6 +183,7 @@ export default Todo = ({ navigation }) => {
                   />
                   {todos[1][2].map((todo, index) => (
                     <TodoItem
+                      getInitDatas={getInitDatas}
                       key={index}
                       todo={todo}
                       todoLocalId={index}
