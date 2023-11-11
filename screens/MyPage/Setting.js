@@ -31,6 +31,9 @@ export default function Setting({ navigation }) {
         <ContentText2>ver 1.0.0</ContentText2>
       </ContentContainer>
       <ContentContainer>
+        <ContentText>로그아웃</ContentText>
+      </ContentContainer>
+      <ContentContainer>
         <ContentText>공지사항</ContentText>
       </ContentContainer>
     </ScreenLayout>
