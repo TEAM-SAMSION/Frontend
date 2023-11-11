@@ -557,7 +557,7 @@ PODS:
     - React-perflogger (= 0.72.6)
   - RNAppleAuthentication (2.2.2):
     - React-Core
-  - RNCAsyncStorage (1.19.3):
+  - RNCAsyncStorage (1.19.5):
     - React-Core
   - RNCClipboard (1.12.1):
     - React-Core
@@ -919,7 +919,7 @@ SPEC CHECKSUMS:
   React-utils: fa59c9a3375fb6f4aeb66714fd3f7f76b43a9f16
   ReactCommon: dd03c17275c200496f346af93a7b94c53f3093a4
   RNAppleAuthentication: 0571c08da8c327ae2afc0261b48b4a515b0286a6
-  RNCAsyncStorage: c913ede1fa163a71cea118ed4670bbaaa4b511bb
+  RNCAsyncStorage: f2974eca860c16a3e56eea5771fda8d12e2d2057
   RNCClipboard: d77213bfa269013bf4b857b7a9ca37ee062d8ef1
   RNDateTimePicker: 8fb39263b721223e095248acaf6f406d5b7f6713
   RNFBApp: 5e457a31687a849c91ca96af024ec90e2cdb9e6c

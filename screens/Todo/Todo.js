@@ -74,11 +74,13 @@ export default Todo = ({ navigation }) => {
       return acc
     }, [])
     if (Object.entries(todosByCategory).length > 0) {
+      // console.log(Object.entries(todosByCategory))//[["0", [2, "카테고리 수정", undefined]], ["1", [3, "페밀리 카테고리
       setTodosByCategory(Object.entries(todosByCategory))
     } else {
       setTodosByCategory(null)
     }
   }
+
   const getInitDatas = (date = today) => {
     setIsLoading(true)
     console.log('todaydate:', date)
@@ -93,13 +95,13 @@ export default Todo = ({ navigation }) => {
           name: tempTeamList[tempTeamList.length - 1]?.name,
           id: tempTeamList[tempTeamList.length - 1]?.id,
         })
-        console.log(tempTeamList[tempTeamList.length - 1]?.id)
+        // console.log(tempTeamList[tempTeamList.length - 1]?.id)
         return tempTeamList[tempTeamList.length - 1]?.id
       })
       .then((selectedID_temp) => {
-        // console.log("selectedID_temp: 103",selectedID_temp)
+        // console.log('selectedID_temp: 103', selectedID_temp)
         getCategoryList(selectedID_temp, accessToken).then((categories) => {
-          // console.log('categories: 105', categories)
+          console.log('categories: 103', categories)
           getTodosByCategory(categories, date).then(setIsLoading(false))
         })
         return selectedID_temp
