@@ -117,7 +117,7 @@ export default function MyPage({ navigation }) {
             <UserDetailContainer>
               <UserNameBox>
                 <Username>{name}</Username>
-                <EditIcon width={24} height={24} />
+                <EditIcon width={24} height={24} color={'#4D4D4D'} />
               </UserNameBox>
               <EmailBox>
                 <EmailText>{email}</EmailText>
