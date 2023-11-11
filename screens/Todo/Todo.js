@@ -14,14 +14,16 @@ import { BottomSheetBackdrop, BottomSheetModal } from '@gorhom/bottom-sheet'
 import { TodoCreateBottomSheet, TodoEditBottomSheet } from '../../components/Todo/TodoBottomSheets'
 
 import { MyCalendarStrip } from '../../components/Todo/CalendarStrip'
-import { CategoryCreate } from '../../components/Todo/CategoryCreate'
 import { getCategoryList, getTeamUser, getTodoTeamList, getTodos } from '../../components/Todo/Apis'
 import { CategoryIndicator } from '../../components/Todo/CategoryIndicator'
 
 export default Todo = ({ navigation }) => {
   const { StatusBarManager } = NativeModules
   const { accessToken } = useRecoilValue(userInfoState)
-  const today = new Date().toISOString().substring(0, 10)
+  // const today = new Date().toISOString().substring(0, 10)
+  const tempDate = new Date()
+  //** new Date()를 새벽에 호출하면 ISOString으로 가져올때 하루 전으로 반환하는 문제가 있다. getDate()를 직접 호출하여 정확한 날짜정보를 가져와야함 */
+  const today = `${tempDate.getFullYear()}-${tempDate.getMonth() + 1}-${tempDate.getDate()}`
 
   const [statusBarHeight, setStatusBarHeight] = useState(0)
 
@@ -33,7 +35,7 @@ export default Todo = ({ navigation }) => {
 
   const [selectedTeam, setSelectedTeam] = useState(null)
   const [selectedCategoryID, setSelectedCategoryID] = useState(null)
-  const [selectedTodoID, setSelectedTodoID] = useState(null)
+  const [selectedTodo, setSelectedTodo] = useState(null)
   const [selectedDate, setSelectedDate] = useState(null)
 
   const [isCreateMode, setIsCreateMode] = useState(false)
@@ -47,10 +49,8 @@ export default Todo = ({ navigation }) => {
   //prettier-ignore
   const renderBackdrop = useCallback((props) => <BottomSheetBackdrop {...props} pressBehavior="close" appearsOnIndex={0} disappearsOnIndex={-1} ><Pressable onPress={()=>Keyboard.dismiss()} style={{flex:1}}/></BottomSheetBackdrop>,[],)
 
-  const createCategory = (text) => {
-    console.log('creatingCategory', text)
-  }
   const changeTodoTeam = (todoTeamId) => {
+    //상단 메뉴를 통해 TodoTeam을 변경할때 사용하는 Function
     getCategoryList(todoTeamId, accessToken).then((categories) => {
       getTodosByCategory(categories, selectedDate)
     })
@@ -60,6 +60,7 @@ export default Todo = ({ navigation }) => {
       setTeamUserList(tempTeamUserList)
     })
   }
+
   const getTodosByCategory = async (categories, date) => {
     // 각 categoryId에 대해 getTodo 함수를 병렬로 호출
     const todoPromises = categories.map(
@@ -77,10 +78,10 @@ export default Todo = ({ navigation }) => {
     } else {
       setTodosByCategory(null)
     }
-    //todosByCategory[0]= ["0",[1,"test",[{"todoId":6161,"task":"test","status":"INCOMPLETE","assignNames":[{"assigneeId":1,"assigneeName":"test"},{"assigneeId":5,"assigneeName":"김형석"},{"assigneeId":6,"assigneeName":null},{"assigneeId":7,"assigneeName":"neon"}]},{"todoId":6162,"task":"test","status":"INCOMPLETE","assignNames":[{"assigneeId":1,"assigneeName":"test"},{"assigneeId":5,"assigneeName":"김형석"},{"assigneeId":6,"assigneeName":null},{"assigneeId":7,"assigneeName":"neon"}]},{"todoId":6163,"task":"test","status":"INCOMPLETE","assignNames":[{"assigneeId":1,"assigneeName":"test"},{"assigneeId":5,"assigneeName":"김형석"},{"assigneeId":6,"assigneeName":null},{"assigneeId":7,"assigneeName":"neon"}]},{"todoId":6164,"task":"test","status":"INCOMPLETE","assignNames":[{"assigneeId":1,"assigneeName":"test"},{"assigneeId":5,"assigneeName":"김형석"},{"assigneeId":6,"assigneeName":null},{"assigneeId":7,"assigneeName":"neon"}]}]]]
   }
-  const getInitDatas = () => {
+  const getInitDatas = (date = today) => {
     setIsLoading(true)
+    console.log('todaydate:', date)
     //TodoTeam과 Default TodoTeam에 한해 User들을 일시적으로 반환(나중에 Team 변경하면 해당 변수 대체됨)
     getTodoTeamList(accessToken, 0, 10)
       .then((res) => {
@@ -92,13 +93,14 @@ export default Todo = ({ navigation }) => {
           name: tempTeamList[tempTeamList.length - 1]?.name,
           id: tempTeamList[tempTeamList.length - 1]?.id,
         })
+        console.log(tempTeamList[tempTeamList.length - 1]?.id)
         return tempTeamList[tempTeamList.length - 1]?.id
       })
       .then((selectedID_temp) => {
-        console.log(selectedID_temp)
+        // console.log("selectedID_temp: 103",selectedID_temp)
         getCategoryList(selectedID_temp, accessToken).then((categories) => {
-          console.log(categories)
-          getTodosByCategory(categories, today).then(setIsLoading(false))
+          // console.log('categories: 105', categories)
+          getTodosByCategory(categories, date).then(setIsLoading(false))
         })
         return selectedID_temp
       })
@@ -115,18 +117,22 @@ export default Todo = ({ navigation }) => {
     //date = 2023-10-15 //날짜를 선택 시, 해당 날짜에서의 Todo 조회 및 todosByCategory 갱신
     setIsLoading(true)
     setSelectedDate(date)
+    console.log('finalSelectedDate:', date)
     getCategoryList(selectedTeam.id, accessToken).then((categories) => {
       getTodosByCategory(categories, date).then(setIsLoading(false))
     })
   }
+
   useEffect(() => {
     getInitDatas()
   }, [])
 
-  const handleKeyboard = (status) => {
+  const handleBottomSheetHeight = (status) => {
     if (status == 0) {
-      setSnappoints(['42%'])
+      bottomModal.current?.dismiss()
     } else if (status == 1) {
+      setSnappoints(['42%'])
+    } else if (status == 2) {
       setSnappoints(['55%'])
     } else {
       setSnappoints(['90%'])
@@ -135,14 +141,14 @@ export default Todo = ({ navigation }) => {
   const startCreateTodo = (index) => {
     setIsCreateMode(true)
     setSelectedCategoryID(index)
-    handleKeyboard(1)
+    handleBottomSheetHeight(2)
     bottomModal.current?.present()
   }
   const startEditTodo = (categoryId, todoId) => {
     setIsCreateMode(false)
-    setSelectedCategoryID(categoryId)
-    setSelectedTodoID(todoId)
-    handleKeyboard(0)
+    //todosByCategory[categoryId][1] = [2, "카테고리 수정", [{"assignNames": [Array], "completionStatus": "INCOMPLETE", "task": "Test3", "todoId": 6257}]]
+    setSelectedTodo(todosByCategory[categoryId][1][2][todoId])
+    handleBottomSheetHeight(1)
     bottomModal.current?.present()
   }
   return (
@@ -168,15 +174,20 @@ export default Todo = ({ navigation }) => {
             todosByCategory?.map((todos, id) => {
               return (
                 <>
-                  <CategoryIndicator startCreateTodo={startCreateTodo} todos={todos[1]} categoryId={todos[1][0]} />
+                  <CategoryIndicator
+                    key={id}
+                    startCreateTodo={startCreateTodo}
+                    todos={todos[1]}
+                    categoryId={todos[1][0]}
+                  />
                   {todos[1][2].map((todo, index) => (
                     <TodoItem
                       key={index}
-                      assignees={todo.assignNames}
-                      title={todo.task}
-                      status={todo.status}
+                      todo={todo}
+                      todoLocalId={index}
                       categoryId={id}
-                      todoId={index}
+                      //여기서 categoryID는 배열로 불러왔을때, 임의 순서를 나타낸 것이며, 서버 내에서 식별용으로 사용되는 ID값은 아님
+                      accessToken={accessToken}
                       editTodo={startEditTodo}
                     />
                   ))}
@@ -210,15 +221,22 @@ export default Todo = ({ navigation }) => {
         {isCreateMode ? (
           <TodoCreateBottomSheet
             selectedCategoryID={selectedCategoryID}
-            handleKeyboard={handleKeyboard}
+            handleBottomSheetHeight={handleBottomSheetHeight}
             teamUserList={teamUserList}
+            accessToken={accessToken}
+            today={today}
+            // updateTodos={updateTodos}
+            getInitDatas={getInitDatas}
           />
         ) : (
           <TodoEditBottomSheet
-            handleKeyboard={handleKeyboard}
-            todosByCategory={todosByCategory}
-            selectedCategoryID={selectedCategoryID}
-            selectedTodoID={selectedTodoID}
+            handleBottomSheetHeight={handleBottomSheetHeight}
+            teamUserList={teamUserList}
+            selectedTodo={selectedTodo}
+            accessToken={accessToken}
+            selectedDate={selectedDate}
+            setSelectedTodo={setSelectedTodo}
+            getInitDatas={getInitDatas}
           />
         )}
       </BottomSheetModal>
@@ -238,8 +256,6 @@ const LoadingContainer = styled.View`
   flex: 1;
   height: 300px;
   justify-content: center;
-
-  /* background-color: chartreuse; */
 `
 const ContentLayout = styled.View`
   padding: 0px 16px;

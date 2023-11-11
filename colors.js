@@ -25,4 +25,5 @@ export const colors = {
   on_primary_container: '#731100',
   secondary: '#9389FD',
   secondary_container: 'D1D6FF',
+  outline: 'rgba(0, 0, 0, 0.12)',
 }

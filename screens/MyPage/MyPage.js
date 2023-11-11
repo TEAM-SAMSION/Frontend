@@ -137,6 +137,7 @@ export default function MyPage({ navigation }) {
                         setDeleteTeamId(item.teamId)
                         setVisible(true)
                       }}
+                      gotoAdminNav={() => navigation.navigate('AdministratorNav')}
                       swipeableRef={(ref) => (swipeableRefs.current[item.teamId] = ref)}
                     />
                   )

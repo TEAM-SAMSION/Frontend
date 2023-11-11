@@ -19,12 +19,11 @@ export const getTodoTeamList = async (accessToken, page, size) => {
       Authorization: accessToken,
     },
   })
-  console.log('response:', response.data)
   //response: [{"teamId": 1, "teamName": "test"}, {"teamId": 3, "teamName": "test"}, {"teamId": 6, "teamName": "test"}, {"teamId": 7, "teamName": "test"}]
   return response.data
 }
 export const getCategoryList = async (teamId, accessToken) => {
-  console.log(teamId)
+  // console.log(teamId)
   let API = `/teams/${teamId}/category`
   const response = await axios.get(url + API, {
     headers: {
@@ -42,9 +41,10 @@ export const getTeamUsers = async (data) => {
   })
   await Promise.all(promises)
 }
-//정상작동됨
+
+//완성
 export const getTeamUser = async (teamId, accessToken) => {
-  let API = `teams/${teamId}/registers`
+  let API = `/teams/${teamId}/registers`
   const response = await axios.get(url + API, {
     headers: {
       Authorization: accessToken,
@@ -63,12 +63,60 @@ export const getTodos = async (categoryId, accessToken, date) => {
       Authorization: accessToken,
     },
   })
+  // console.log('response.data.todos:', response.data.todos)//{"assignNames": [[Object], [Object]], "completionStatus": "INCOMPLETE", "task": "test1", "todoId": 6182},
   return response.data.todos
+}
+
+//미완성
+export const completeTodo = async (todoId, accessToken) => {
+  console.log(todoId, accessToken)
+  // let API = `/teams/todos/${todoId}/assign/complete`
+  // let data = { todoId: todoId }
+  // const response = await axios.put(url + API, null, {
+  //   headers: {
+  //     Authorization: accessToken,
+  //   },
+  // })
+  // console.log(response)
+  // checkComplete(todoId, accessToken)
+}
+
+export const checkComplete = async (todoId, accessToken) => {
+  let API = `/teams/todos/${todoId}/completion`
+  const response = await axios.get(url + API, {
+    headers: {
+      Authorization: accessToken,
+    },
+  })
+  console.log(response.data)
+}
+export const editTodoName = async (todoId, name, accessToken) => {
+  let API = `/teams/todos/${todoId}/description`
+  let data = {
+    description: name,
+  }
+  const response = await axios.put(url + API, data, {
+    headers: {
+      Authorization: accessToken,
+      'Content-Type': 'application/json;charset=UTF-8',
+    },
+  })
+  return response
+}
+
+export const editTodoDate = async (todoId, scheduledDate, accessToken) => {
+  let API = `/teams/todos/${todoId}/date`
+  let data = { scheduledDate: scheduledDate }
+  const response = await axios.put(url + API, data, {
+    headers: {
+      Authorization: accessToken,
+    },
+  })
+  return response
 }
 
 export const getAssignedTodos = async (teamId, accessToken, page = 0, size = 20) => {
   let API = `/teams/${teamId}/todos`
-
   const response = await axios.get(url + API, {
     params: {
       page,

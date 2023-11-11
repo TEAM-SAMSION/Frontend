@@ -33,7 +33,7 @@ const MainStatContainer = styled.View`
   align-items: center;
 `
 const BarContainer = styled.View`
-  width: ${screenWidth - 153};
+  width: ${screenWidth - 153}px;
   margin-left: 10px;
 `
 const BackBar = styled.View`

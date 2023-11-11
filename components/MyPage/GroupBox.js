@@ -40,7 +40,17 @@ const GroupBox = (props) => {
             가입한지 <BodyBoldSm_Text color={colors.primary_outline}>{props.data.registerPeriod}</BodyBoldSm_Text>일째
           </BodySm_Text>
         </GroupInfoBox>
-        {props.data.authority == 'PRESIDENT' ? <CrownIcon width={34} height={34} /> : <View width={34} height={34} />}
+        {props.data.authority == 'PRESIDENT' ? (
+          <CrownButton
+            onPress={() => {
+              props.gotoAdminNav()
+            }}
+          >
+            <CrownIcon width={34} height={34} />
+          </CrownButton>
+        ) : (
+          <View width={34} height={34} />
+        )}
       </GroupBoxContainer>
     </Swipeable>
   )
@@ -48,6 +58,7 @@ const GroupBox = (props) => {
 
 export default GroupBox
 
+const CrownButton = styled.TouchableOpacity``
 const GroupBoxContainer = styled.View`
   flex-direction: row;
   justify-content: space-between;
@@ -59,7 +70,7 @@ const GroupBoxContainer = styled.View`
   margin-top: 8px;
   margin-bottom: 8px;
   background-color: #fff;
-  width: calc(SCREEN_WIDTH - 24);
+  width: calc(SCREEN_WIDTH - 24) px;
 `
 const GroupImage = styled.Image`
   width: 48px;
