@@ -85,7 +85,7 @@ const Block = styled.View`
   margin: 0px 16px 16px 16px;
   height: 44px;
   padding: 0px 16px;
-  border-radius: 8px;
+  border-radius: 12px;
   background-color: ${colors.grey_150};
 `
 const IconBox = styled.TouchableOpacity``
