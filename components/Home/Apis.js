@@ -23,7 +23,7 @@ export const getTeamList = async (accessToken) => {
   const response = await axios.get(url + API, {
     headers: { Authorization: accessToken },
   })
-  return response.data
+  return response.data.content
 }
 
 export const getMyTodoList = async (accessToken, page, teamId) => {
@@ -59,3 +59,11 @@ export const postJoiningTeam = async (accessToken, teamCode) => {
   })
 }
 //////////////////////// 팀 생성 ////////////////////////
+
+export const getTeamCode = async (accessToken) => {
+  let API = `/teams/codes/random`
+  const response = await axios.get(url + API, {
+    headers: { Authorization: accessToken },
+  })
+  return response.data.randomCode
+}

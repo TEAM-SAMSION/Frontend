@@ -16,6 +16,7 @@ export default function HomeNav() {
     <Stack.Navigator
       screenOptions={{
         headerTitleStyle: {
+          fontFamily: 'Spoqa-Bold',
           fontSize: 16,
           lineHeight: 22,
           fontWeight: 700,
@@ -29,10 +30,7 @@ export default function HomeNav() {
         name="CreateTeam"
         component={CreateTeam}
         options={({ navigation }) => ({
-          headerStyle: {
-            backgroundColor: colors.grey_150,
-          },
-          headerTitle: 'Pamily',
+          headerTitle: 'Pamily 생성',
           headerLeft: () => (
             <TouchableOpacity
               onPress={() => navigation.goBack()}
@@ -51,10 +49,7 @@ export default function HomeNav() {
         name="JoinTeam"
         component={JoinTeam}
         options={({ navigation }) => ({
-          headerStyle: {
-            backgroundColor: colors.grey_150,
-          },
-          headerTitle: 'Pamily',
+          headerTitle: 'Pamily 참여',
           headerLeft: () => (
             <TouchableOpacity
               onPress={() => navigation.goBack()}
@@ -73,10 +68,7 @@ export default function HomeNav() {
         name="AddPetProfile"
         component={AddPetProfile}
         options={({ navigation }) => ({
-          headerStyle: {
-            backgroundColor: colors.grey_150,
-          },
-          headerTitle: '펫 프로필',
+          headerTitle: '펫 등록',
           headerLeft: () => (
             <TouchableOpacity
               onPress={() => navigation.goBack()}
