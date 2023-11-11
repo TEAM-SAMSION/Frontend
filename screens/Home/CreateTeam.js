@@ -330,7 +330,11 @@ const OkButton = styled.TouchableOpacity`
   flex: 1 0 0;
   border-radius: 8px;
 `
-const CodeButton = styled.TouchableOpacity``
+const CodeButton = styled.TouchableOpacity`
+  background-color: ${colors.grey_100};
+  padding: 6px 8px;
+  border-radius: 4px;
+`
 const CodeBox = styled.View`
   flex-direction: row;
   align-items: center;
@@ -339,7 +343,7 @@ const CodeBox = styled.View`
 const InputBox = styled.View`
   flex-direction: row;
   background-color: ${colors.grey_150};
-  padding: 12px;
+  padding: 0px 12px;
   height: 44px;
   border-radius: 8px;
   align-items: center;
