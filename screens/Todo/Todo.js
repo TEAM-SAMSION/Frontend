@@ -4,7 +4,7 @@ import { colors } from '../../colors'
 import styled from 'styled-components/native'
 import { TodoHeader } from '../../components/Todo/TodoHeader'
 import { BodyBold_Text } from '../../components/Fonts'
-import { ActivityIndicator, Keyboard, NativeModules, Platform, Pressable, ScrollView } from 'react-native'
+import { ActivityIndicator, Keyboard, NativeModules, Platform, Pressable, ScrollView, View } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage' //캐시 지우기 때문에 임시로
 import { useRecoilValue, useSetRecoilState } from 'recoil'
 import { userInfoState } from '../../recoil/AuthAtom'
@@ -224,8 +224,7 @@ export default Todo = ({ navigation }) => {
         enableContentPanningGesture={false}
         handleHeight={0}
         enableDismissOnClose
-        // backgroundComponent={() => <View />}
-        // handleIndicatorStyle={{ height: 0 }}
+        backgroundStyle={{ borderRadius: 24 }}
         handleIndicatorStyle={{ backgroundColor: colors.grey_300, width: 72, height: 6, marginTop: 8 }}
       >
         {isCreateMode ? (
@@ -235,7 +234,6 @@ export default Todo = ({ navigation }) => {
             teamUserList={teamUserList}
             accessToken={accessToken}
             today={today}
-            // updateTodos={updateTodos}
             getInitDatas={getInitDatas}
           />
         ) : (

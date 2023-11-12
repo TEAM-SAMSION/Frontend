@@ -220,7 +220,7 @@ export default function MyPage({ navigation }) {
           snapPoints={snapPoints}
           backdropComponent={renderBackdrop}
           backgroundStyle={{
-            borderRadius: 22,
+            borderRadius: 24,
           }}
         >
           <ProfileImageModal profileUrl={profileUrl} setProfileUrl={setProfileUrl} accessToken={ACCESSTOKEN} />

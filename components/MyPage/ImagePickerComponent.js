@@ -16,6 +16,7 @@ export const ImagePickerComponent = (props) => {
   const uploadImage = async () => {
     if (!status?.granted) {
       const permission = await requestPermission()
+      console.log('Hello')
       if (!permission.granted) {
         return null
       }
@@ -67,7 +68,7 @@ export const ImagePickerComponent = (props) => {
   }
 
   return (
-    <LibraryBox onPress={uploadImage}>
+    <LibraryBox onPress={() => uploadImage()}>
       <BodySm_Text color={colors.red_350}>라이브러리에서 선택</BodySm_Text>
     </LibraryBox>
   )
