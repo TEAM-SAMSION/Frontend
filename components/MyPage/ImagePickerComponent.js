@@ -12,11 +12,11 @@ import { BodySm_Text } from '../Fonts'
 export const ImagePickerComponent = (props) => {
   const ACCESSTOKEN = props.accessToken
   const [status, requestPermission] = ImagePicker.useMediaLibraryPermissions()
+  // const {status_roll} = await Permissions.askAsync(Permissions.CAMERA_ROLL);
 
   const uploadImage = async () => {
     if (!status?.granted) {
       const permission = await requestPermission()
-      console.log('Hello')
       if (!permission.granted) {
         return null
       }
@@ -30,13 +30,12 @@ export const ImagePickerComponent = (props) => {
     if (result.canceled) {
       return null
     }
-    console.log(result)
     props.setImageUrl(result.assets[0].uri)
     //이미지 변경 API 적용 후 SET?!
 
     const url = 'https://dev.pawith.com/user'
     const localUri = result.assets[0].uri
-    console.log(localUri)
+
     // const filename = localUri.split("/").pop();
     // const match = /\.(\w+)$/.exec(filename ?? "");
     // const type = match ? `image/${match[1]}` : `image/jpeg`;
@@ -45,26 +44,25 @@ export const ImagePickerComponent = (props) => {
       compress: 1,
       format: ImageManipulator.SaveFormat.JPEG,
     })
-
     const routeData = new FormData()
     routeData.append('profileImage', {
       uri: compressedImageUri.uri,
       name: 'photo.jpeg',
       type: 'image/jpeg',
     })
-    console.log(routeData)
+    console.log(routeData._parts)
 
-    try {
-      const response = await axios.post(url, routeData, {
-        headers: {
-          // 'Content-Type': `multipart/form-data`,
-          Authorization: ACCESSTOKEN,
-        },
-      })
-      console.log(response.data.imageUrl)
-    } catch (error) {
-      console.error(error)
-    }
+    // try {
+    //   const response = await axios.post(url, routeData, {
+    //     headers: {
+    //       'Content-Type': `multipart/form-data`,
+    //       Authorization: ACCESSTOKEN,
+    //     },
+    //   })
+
+    // } catch (error) {
+    //   console.error(error)
+    // }
   }
 
   return (

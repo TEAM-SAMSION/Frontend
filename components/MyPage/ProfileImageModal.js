@@ -1,29 +1,27 @@
 import styled from 'styled-components/native'
 import { colors } from '../../colors'
 import ImagePickerComponent from './ImagePickerComponent'
-import { useEffect, useState } from 'react'
 import axios from 'axios'
-import { useRecoilValue } from 'recoil'
-import { accessTokenState } from '../../recoil/AuthAtom'
 import { BodySm_Text } from '../Fonts'
 import RNFS from 'react-native-fs'
 
 export const ProfileImageModal = (props) => {
   const ACCESSTOKEN = props.accessToken
-  //const [imageUrl, setImageUrl] = useState(`${props.profileUrl}`)
 
-  const imagePath = RNFS.DocumentDirectoryPath + '/assets/Imgs/profileDefault.png'
+  const absolutePath = RNFS.MainBundlePath + '/profileDefault.png'
+  // console.log(RNFS.MainBundlePath)
+  console.log(absolutePath)
+  // const imagePath = '/Users/neoself/Desktop/NeoX/Proj/pawith/assets/Imgs/profileDefault.png'
 
   const uploadDefaultImage = async () => {
     const url = 'https://dev.pawith.com/user'
     const defaultData = new FormData()
     defaultData.append('profileImage', {
-      uri: 'file://' + imagePath,
+      uri: 'file://' + absolutePath,
       name: 'profileDefault.png',
       type: 'image/png',
     })
-    console.log(defaultData)
-
+    console.log(defaultData._parts)
     try {
       const response = await axios.post(url, defaultData, {
         headers: {
@@ -31,7 +29,9 @@ export const ProfileImageModal = (props) => {
           Authorization: ACCESSTOKEN,
         },
       })
-      console.log(response.data.imageUrl)
+      console.log(response.status)
+      // console.log(response.data.imageUrl)
+      // console.log(response.data)
       props.setProfileUrl('https://pawith.s3.ap-northeast-2.amazonaws.com/base-image/profileDefault.png')
     } catch (error) {
       console.error(error)
@@ -45,7 +45,7 @@ export const ProfileImageModal = (props) => {
           <ProfileImage source={{ uri: `${props.profileUrl}` }} />
         </ImageContainer>
         <BoxContainer>
-          <DefaultBox onPress={uploadDefaultImage}>
+          <DefaultBox onPress={() => uploadDefaultImage()}>
             <BodySm_Text color={colors.red_350}>기본 프로필로 선택</BodySm_Text>
           </DefaultBox>
           <ImagePickerComponent setImageUrl={props.setProfileUrl} accessToken={ACCESSTOKEN} />
