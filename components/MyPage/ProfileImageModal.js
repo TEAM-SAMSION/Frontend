@@ -9,9 +9,6 @@ export const ProfileImageModal = (props) => {
   const ACCESSTOKEN = props.accessToken
 
   const absolutePath = RNFS.MainBundlePath + '/profileDefault.png'
-  // console.log(RNFS.MainBundlePath)
-  console.log(absolutePath)
-  // const imagePath = '/Users/neoself/Desktop/NeoX/Proj/pawith/assets/Imgs/profileDefault.png'
 
   const uploadDefaultImage = async () => {
     const url = 'https://dev.pawith.com/user'
@@ -21,7 +18,6 @@ export const ProfileImageModal = (props) => {
       name: 'profileDefault.png',
       type: 'image/png',
     })
-    console.log(defaultData._parts)
     try {
       const response = await axios.post(url, defaultData, {
         headers: {
@@ -29,9 +25,6 @@ export const ProfileImageModal = (props) => {
           Authorization: ACCESSTOKEN,
         },
       })
-      console.log(response.status)
-      // console.log(response.data.imageUrl)
-      // console.log(response.data)
       props.setProfileUrl('https://pawith.s3.ap-northeast-2.amazonaws.com/base-image/profileDefault.png')
     } catch (error) {
       console.error(error)

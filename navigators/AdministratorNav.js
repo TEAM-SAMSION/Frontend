@@ -65,7 +65,7 @@ export default function AdministratorNav() {
       <Stack.Screen name="ManagePetNav" options={{ headerShown: false }}>
         {() => <ManagePetNav />}
       </Stack.Screen>
-      <Stack.Screen name="ManageTodo" component={ManageTodo} />
+      <Stack.Screen name="ManageTodo" component={ManageTodo} options={{ headerShown: false }} />
     </Stack.Navigator>
   )
 }
