@@ -14,7 +14,6 @@ import { TodoBox } from '../../components/Home/TodoBox'
 import { useRecoilValue, useSetRecoilState } from 'recoil'
 import { accessTokenState } from '../../recoil/AuthAtom'
 import { getMyTodoList, getTeamList, getTodoProgress, getUserInfo } from '../../components/Home/Apis'
-import { AccessTokenRequest } from 'expo-auth-session'
 import { useIsFocused } from '@react-navigation/native'
 import { BodySm_Text, DetailSm_Text } from '../../components/Fonts'
 import { TabBarAtom } from '../../recoil/TabAtom'
@@ -53,10 +52,15 @@ export default function Home({ navigation }) {
       setPamilyList(result)
       console.log(result)
       if (result.length !== 0) {
-        setPamilyNum(1)
-        setTopTeamId(pamilyList[0].teamId)
+        setTeamId()
+        fetchProgress()
       }
     })
+  }
+
+  const setTeamId = () => {
+    setPamilyNum(1)
+    setTopTeamId(pamilyList[0].teamId)
   }
 
   const fetchProgress = () => {

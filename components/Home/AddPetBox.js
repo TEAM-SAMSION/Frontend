@@ -3,9 +3,9 @@ import { BodyBold_Text, Detail_Text } from '../Fonts'
 import EditIcon from '../../assets/Svgs/Edit.svg'
 import { colors } from '../../colors'
 
-export const AddPetBox = ({ pet }) => {
+export const AddPetBox = ({ pet, grey }) => {
   return (
-    <PetBox>
+    <PetBox style={{ backgroundColor: grey ? colors.grey_150 : colors.grey_100, padding: grey ? 12 : 16 }}>
       <ProfileImage />
       <InfoBox>
         <InfoTop>
@@ -19,10 +19,10 @@ export const AddPetBox = ({ pet }) => {
         </InfoTop>
         <Detail_Text>{pet.description}</Detail_Text>
         <InfoBottom>
-          <CategroyBox>
+          <CategroyBox style={{ backgroundColor: grey ? colors.grey_100 : colors.grey_150 }}>
             <Detail_Text>{pet.genus}</Detail_Text>
           </CategroyBox>
-          <CategroyBox>
+          <CategroyBox style={{ backgroundColor: grey ? colors.grey_100 : colors.grey_150 }}>
             <Detail_Text>{pet.species}</Detail_Text>
           </CategroyBox>
         </InfoBottom>
@@ -32,10 +32,8 @@ export const AddPetBox = ({ pet }) => {
 }
 
 const PetBox = styled.View`
-  background-color: ${colors.grey_150};
   border-radius: 8px;
   flex-direction: row;
-  padding: 12px;
   gap: 12px;
 `
 const ProfileImage = styled.Image`

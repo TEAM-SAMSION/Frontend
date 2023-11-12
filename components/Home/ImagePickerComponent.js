@@ -26,40 +26,40 @@ export const ImagePickerComponent = () => {
       return null
     }
     console.log(result)
-    //   props.setImageUrl(result.assets[0].uri)
+    props.setImageUrl(result.assets[0].uri)
 
-    //   const url = 'https://dev.pawith.com/user'
-    //   const localUri = result.assets[0].uri
-    //   console.log(localUri)
+    const url = 'https://dev.pawith.com/user'
+    const localUri = result.assets[0].uri
+    console.log(localUri)
 
-    //   const compressedImageUri = await ImageManipulator.manipulateAsync(localUri, [{ resize: { width: 100 } }], {
-    //     compress: 1,
-    //     format: ImageManipulator.SaveFormat.JPEG,
-    //   })
+    const compressedImageUri = await ImageManipulator.manipulateAsync(localUri, [{ resize: { width: 100 } }], {
+      compress: 1,
+      format: ImageManipulator.SaveFormat.JPEG,
+    })
 
-    //   const routeData = new FormData()
-    //   routeData.append('profileImage', {
-    //     uri: compressedImageUri.uri,
-    //     name: 'photo.jpeg',
-    //     type: 'image/jpeg',
-    //   })
-    //   console.log(routeData)
+    const routeData = new FormData()
+    routeData.append('profileImage', {
+      uri: compressedImageUri.uri,
+      name: 'photo.jpeg',
+      type: 'image/jpeg',
+    })
+    console.log(routeData)
 
-    //   try {
-    //     const response = await axios.post(url, routeData, {
-    //       headers: {
-    //         'Content-Type': `multipart/form-data`,
-    //         Authorization: `Bearer ${ACCESSTOKEN}`,
-    //       },
-    //     })
-    //     console.log(response.data.imageUrl)
-    //   } catch (error) {
-    //     console.error(error)
-    //   }
+    try {
+      const response = await axios.post(url, routeData, {
+        headers: {
+          'Content-Type': `multipart/form-data`,
+          Authorization: `Bearer ${ACCESSTOKEN}`,
+        },
+      })
+      console.log(response.data.imageUrl)
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   return (
-    <LibraryBox onPress={uploadImage}>
+    <LibraryBox onPress={() => uploadImage()}>
       <BodySm_Text color={colors.red_350}>라이브러리에서 선택</BodySm_Text>
     </LibraryBox>
   )

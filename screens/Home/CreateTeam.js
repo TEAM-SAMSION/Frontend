@@ -172,7 +172,9 @@ export default function CreateTeam({ route, navigation }) {
                 <Detail_Text>펫 프로필</Detail_Text>
                 <PlusIcon width={16} height={16} />
               </Block>
-              {savedPets.length < 0 ? '' : savedPets.map((pet, index) => <AddPetBox key={index} pet={pet} />)}
+              {savedPets.length < 0
+                ? ''
+                : savedPets.map((pet, index) => <AddPetBox key={index} pet={pet} grey={true} />)}
             </Container>
           </>
         </TouchableWithoutFeedback>
