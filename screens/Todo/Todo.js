@@ -6,7 +6,7 @@ import { TodoHeader } from '../../components/Todo/TodoHeader'
 import { BodyBold_Text } from '../../components/Fonts'
 import { ActivityIndicator, Keyboard, NativeModules, Platform, Pressable, ScrollView } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage' //캐시 지우기 때문에 임시로
-import { useRecoilValue } from 'recoil'
+import { useRecoilValue, useSetRecoilState } from 'recoil'
 import { userInfoState } from '../../recoil/AuthAtom'
 import { TodoItem } from '../../components/Todo/TodoItem'
 import { NoItem } from '../../components/Todo/NoToDoItem'
@@ -16,8 +16,16 @@ import { TodoCreateBottomSheet, TodoEditBottomSheet } from '../../components/Tod
 import { MyCalendarStrip } from '../../components/Todo/CalendarStrip'
 import { getCategoryList, getTeamUser, getTodoTeamList, getTodos } from '../../components/Todo/Apis'
 import { CategoryIndicator } from '../../components/Todo/CategoryIndicator'
+import { useIsFocused } from '@react-navigation/native'
+import { TabBarAtom } from '../../recoil/TabAtom'
 
 export default Todo = ({ navigation }) => {
+  const isFocused = useIsFocused()
+  const setIsTabVisible = useSetRecoilState(TabBarAtom)
+  useEffect(() => {
+    isFocused && setIsTabVisible(true)
+  }, [isFocused])
+
   const { StatusBarManager } = NativeModules
   const { accessToken } = useRecoilValue(userInfoState)
   // const today = new Date().toISOString().substring(0, 10)

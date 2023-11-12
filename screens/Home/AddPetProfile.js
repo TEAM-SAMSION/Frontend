@@ -33,11 +33,9 @@ export default function AddPetProfile({ route, navigation }) {
       headerRight: () => (
         <TouchableOpacity
           disabled={!enabled}
-          onPress={async () => {
-            await completeAddingPet().then((result) => {
-              console.log(result)
-              navigation.navigate('CreateTeam', { result })
-            })
+          onPress={() => {
+            const result = completeAddingPet(petName, petAge, petIntro, petCategory, petDetail)
+            navigation.navigate('CreateTeam', { result })
           }}
           style={{ marginRight: 16 }}
         >
@@ -68,24 +66,13 @@ export default function AddPetProfile({ route, navigation }) {
     [],
   )
 
-  // // array 부분 다시 수정
-  // const [petArray, setPetArray] = useState([
-  //   {
-  //     name: '',
-  //     age: '',
-  //     description: '',
-  //     genus: '',
-  //     species: '',
-  //   },
-  // ])
-
-  const completeAddingPet = async () => {
+  const completeAddingPet = (name, age, intro, category, detail) => {
     const newPetArray = {
-      name: petName,
-      age: petAge,
-      description: petIntro,
-      genus: petCategory,
-      species: petDetail,
+      name: name,
+      age: age,
+      description: intro,
+      genus: category,
+      species: detail,
     }
     return newPetArray
   }

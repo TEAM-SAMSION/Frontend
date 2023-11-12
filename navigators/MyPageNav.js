@@ -93,7 +93,13 @@ export default function MyPageNav() {
           headerBackTitleVisible: false,
         }}
       />
-      <Stack.Screen name="AdministratorNav" options={{ headerShown: false }}>
+      <Stack.Screen
+        name="AdministratorNav"
+        options={{
+          headerShown: false,
+          headerBackTitleVisible: false,
+        }}
+      >
         {() => AdministratorNav()}
       </Stack.Screen>
     </Stack.Navigator>

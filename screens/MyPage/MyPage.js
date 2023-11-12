@@ -11,13 +11,24 @@ import { ProfileImageModal } from '../../components/MyPage/ProfileImageModal'
 import { AccessTokenRequest, resolveDiscoveryAsync } from 'expo-auth-session'
 import 'react-native-gesture-handler'
 import { BottomSheetBackdrop, BottomSheetModal, BottomSheetModalProvider } from '@gorhom/bottom-sheet'
-import { useRecoilValue } from 'recoil'
+import { useRecoilValue, useSetRecoilState } from 'recoil'
 import { accessTokenState } from '../../recoil/AuthAtom'
 import { ModalPopUp } from '../../components/Shared'
 import { colors } from '../../colors'
 import { getTeamList, getUserInfo } from '../../components/MyPage/Apis'
+import { BodyBoldSm_Text, BodySm_Text, Detail_Text } from '../../components/Fonts'
+import { TabBarAtom } from '../../recoil/TabAtom'
+import { useIsFocused } from '@react-navigation/native'
 
 export default function MyPage({ navigation }) {
+  const isFocused = useIsFocused()
+  const ACCESSTOKEN = useRecoilValue(accessTokenState)
+  const setIsTabVisible = useSetRecoilState(TabBarAtom)
+
+  useEffect(() => {
+    isFocused && setIsTabVisible(true)
+  }, [isFocused])
+
   const [name, setName] = useState('포잇')
   const [email, setEmail] = useState('pawith@gmail.com')
   const [profileUrl, setProfileUrl] = useState(
@@ -25,7 +36,6 @@ export default function MyPage({ navigation }) {
   )
 
   const swipeableRefs = useRef([])
-  const ACCESSTOKEN = useRecoilValue(accessTokenState)
 
   const fetchUserInfo = () => {
     getUserInfo(ACCESSTOKEN).then((result) => {
@@ -126,29 +136,49 @@ export default function MyPage({ navigation }) {
           </UserContainer>
           <GroupContainer>
             <Title>내가 속한 Pamily</Title>
-            <Groups>
-              <FlatList
-                data={groupInfo}
-                renderItem={({ item }) => {
-                  return (
-                    <GroupBox
-                      data={item}
-                      handleDelete={() => {
-                        setDeleteTeamId(item.teamId)
-                        setVisible(true)
-                      }}
-                      gotoAdminNav={() => navigation.navigate('AdministratorNav')}
-                      swipeableRef={(ref) => (swipeableRefs.current[item.teamId] = ref)}
-                    />
-                  )
-                }}
-              />
-            </Groups>
+            {groupInfo.length == 0 ? (
+              <NoneGroupBox>
+                <DogIcon source={require(`../../assets/Imgs/DogDefault.png`)} />
+                <BodyBoldSm_Text color={colors.grey_400}>소속된 Pamily가 없습니다.</BodyBoldSm_Text>
+                <ButtonContainer>
+                  <ButtonBox onPress={() => navigation.navigate('HomeNav', { screen: 'JoinTeam' })}>
+                    <BodySm_Text color={colors.red_350}>참여하기</BodySm_Text>
+                  </ButtonBox>
+                  <ButtonBox onPress={() => navigation.navigate('HomeNav', { screen: 'CreateTeam' })}>
+                    <BodySm_Text color={colors.red_350}>생성하기</BodySm_Text>
+                  </ButtonBox>
+                </ButtonContainer>
+              </NoneGroupBox>
+            ) : (
+              <Groups>
+                <FlatList
+                  data={groupInfo}
+                  renderItem={({ item }) => {
+                    return (
+                      <GroupBox
+                        data={item}
+                        handleDelete={() => {
+                          setDeleteTeamId(item.teamId)
+                          setVisible(true)
+                        }}
+                        gotoAdminNav={() => navigation.navigate('AdministratorNav')}
+                        swipeableRef={(ref) => (swipeableRefs.current[item.teamId] = ref)}
+                      />
+                    )
+                  }}
+                />
+              </Groups>
+            )}
           </GroupContainer>
           <FooterContainer>
-            <FooterText>포잇에 대해 더 알아볼까요?{'\n'}좀 더 똑똑하게 포잇을 사용하고 싶다면?</FooterText>
+            <Detail_Text color={'A09999'}>
+              포잇에 대해 더 알아볼까요?{'\n'}좀 더 똑똑하게 포잇을 사용하고 싶다면?
+            </Detail_Text>
             <Guide>포잇가이드</Guide>
           </FooterContainer>
+          <TouchableOpacity onPress={() => navigation.navigate('AdministratorNav')}>
+            <Text style={{ color: colors.grey_800 }}>관리자페이지이동</Text>
+          </TouchableOpacity>
         </ScrollView>
         {/* 팝업 */}
         <ModalPopUp visible={visible} petIcon={false} height={290}>
@@ -247,22 +277,14 @@ const FooterContainer = styled.View`
   flex-direction: row;
   justify-content: space-between;
   align-items: flex-end;
-  background-color: #f2f2f2;
-  padding-top: 24px;
-  padding-left: 20px;
-  padding-right: 20px;
-  padding-bottom: 500px;
-`
-const FooterText = styled.Text`
-  font-family: 'Spoqa-Medium';
-  font-size: 12px;
-  line-height: 15px;
+  padding: 24px 20px;
 `
 const Guide = styled.Text`
   font-family: 'Spoqa-Bold';
   font-size: 14px;
   line-height: 19px;
   text-decoration-line: underline;
+  color: ${colors.grey_500};
 `
 /////////////
 const PopContent = styled.View`
@@ -321,4 +343,37 @@ const DateText = styled.Text`
   color: ${colors.secondary};
   font-size: 22px;
   line-height: 30px;
+`
+const NoneGroupBox = styled.View`
+  display: flex;
+  margin: 0px 16px;
+  border-radius: 16px;
+  padding: 125px 0px 8px 0px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  background-color: ${colors.grey_150};
+`
+const ButtonContainer = styled.View`
+  flex-direction: row;
+  margin: 0px 12px;
+  gap: 8px;
+`
+const ButtonBox = styled.TouchableOpacity`
+  display: flex;
+  height: 44px;
+  padding: 12px 16px;
+  justify-content: center;
+  align-items: center;
+  flex: 1 0 0;
+  background-color: ${colors.grey_100};
+  border-radius: 8px;
+`
+const DogIcon = styled.Image`
+  position: absolute;
+  width: 160px;
+  height: 160px;
+  top: 0;
+  z-index: -1;
 `
