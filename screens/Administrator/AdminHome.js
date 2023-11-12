@@ -1,12 +1,13 @@
 import styled from 'styled-components/native'
 import { colors } from '../../colors'
-import { ScreenLayout } from '../../components/Shared'
+import { ModalPopUp, ScreenLayout } from '../../components/Shared'
 import { BodyBoldSm_Text, BodyBold_Text, Body_Text, Detail_Text, SubHead_Text } from '../../components/Fonts'
 import { TouchableOpacity } from 'react-native'
 import { useState } from 'react'
 import EditIcon from '../../assets/Svgs/Edit.svg'
 import QuestionMark from '../../assets/Svgs/Question_mark.svg'
 import Right from '../../assets/Svgs/chevron_right.svg'
+import Close from '../../assets/Svgs/Close.svg'
 
 export default function AdminHome({ navigation }) {
   const [name, setName] = useState('포잇')
@@ -16,6 +17,7 @@ export default function AdminHome({ navigation }) {
   )
   const [memberNum, setMemberNum] = useState(9)
   const [petNum, setPetNum] = useState(3)
+  const [isVisible, setIsVisible] = useState(false)
 
   return (
     <ScreenLayout>
@@ -74,7 +76,7 @@ export default function AdminHome({ navigation }) {
           </ContentBox>
           <Right width={24} height={24} color={colors.primary_outline} />
         </FunctionBox>
-        <FunctionBox>
+        <FunctionBox onPress={() => setIsVisible(true)}>
           <ContentBox>
             <FunctionIcon source={require('../../assets/Imgs/set_noti.png')} />
             <BodyBoldSm_Text>공지 등록</BodyBoldSm_Text>
@@ -82,10 +84,38 @@ export default function AdminHome({ navigation }) {
           <Right width={24} height={24} color={colors.primary_outline} />
         </FunctionBox>
       </GroupContainer>
+      <ModalPopUp petIcon={false} visible={isVisible} height={160}>
+        <ModalHeader>
+          <CloseButton onPress={() => setIsVisible(false)}>
+            <Close width={24} height={24} />
+          </CloseButton>
+        </ModalHeader>
+        <PopContent>
+          <Body_Text color={colors.grey_700}>현재 공지 등록 기능은</Body_Text>
+          <TextBase>
+            <BodyBold_Text color={colors.red_300}>준비중</BodyBold_Text>
+            <Body_Text color={colors.grey_700}>에 있습니다!</Body_Text>
+          </TextBase>
+        </PopContent>
+      </ModalPopUp>
     </ScreenLayout>
   )
 }
-
+const ModalHeader = styled.View`
+  width: '100%';
+  align-items: flex-end;
+  justify-content: center;
+  margin-bottom: 24px;
+`
+const TextBase = styled.View`
+  flex-direction: row;
+`
+const PopContent = styled.View`
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 40px;
+`
+const CloseButton = styled.TouchableOpacity``
 const UserContainer = styled.View`
   padding: 12px 16px;
   flex-direction: row;
