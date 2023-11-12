@@ -13,7 +13,7 @@ import { createRef, useEffect, useRef, useState } from 'react'
 import { ActivityIndicator, Keyboard, Modal, NativeModules, Platform, TextInput } from 'react-native'
 import { useRecoilValue } from 'recoil'
 import { userInfoState } from '../../recoil/AuthAtom'
-import { getCategoryList } from '../../components/Todo/Apis'
+import { getCategoryListAdmin } from '../../components/Todo/Apis'
 import {
   CreateCategory,
   DeleteCategory,
@@ -84,6 +84,7 @@ export default function ManageTodo({ navigation, teamId = 1 }) {
     })
     setIsEditable(isEditable.map((item) => (item = false)))
   }
+
   const deleteCategory = (categoryId) => {
     DeleteCategory(categoryId, accessToken).then((status) => {
       if (status == 200) {
@@ -100,7 +101,7 @@ export default function ManageTodo({ navigation, teamId = 1 }) {
     setIsVisible(true)
   }
   const refreshData = () => {
-    getCategoryList(teamId, accessToken).then((categories) => {
+    getCategoryListAdmin(teamId, accessToken).then((categories) => {
       if (categories.length > 0) {
         inputRefs.current = Array.from({ length: categories.length }, () => createRef()) //useRef의 ref값은 .current를 통해 mount 이후에도 변경이 가능하다.
         setIsEditable(Array.from({ length: categories.length }, () => false))

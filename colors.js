@@ -17,6 +17,7 @@ export const colors = {
 
   red_200: '#FFE2E0',
   red_250: '#FFCCC8',
+  red_300: '#FD8D81',
   red_350: '#FB6A58',
 
   primary: '#F84D35',

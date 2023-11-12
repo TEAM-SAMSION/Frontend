@@ -14,7 +14,7 @@ import { BottomSheetBackdrop, BottomSheetModal } from '@gorhom/bottom-sheet'
 import { TodoCreateBottomSheet, TodoEditBottomSheet } from '../../components/Todo/TodoBottomSheets'
 
 import { MyCalendarStrip } from '../../components/Todo/CalendarStrip'
-import { getCategoryList, getTeamUser, getTodoTeamList, getTodos } from '../../components/Todo/Apis'
+import { checkTokenValid, getCategoryList, getTeamUser, getTodoTeamList, getTodos } from '../../components/Todo/Apis'
 import { CategoryIndicator } from '../../components/Todo/CategoryIndicator'
 import { useIsFocused } from '@react-navigation/native'
 import { TabBarAtom } from '../../recoil/TabAtom'
@@ -208,7 +208,8 @@ export default Todo = ({ navigation }) => {
           <TodayButton
             style={{ marginTop: 32 }}
             onPress={() => {
-              AsyncStorage.clear()
+              // AsyncStorage.clear()
+              checkTokenValid()
             }}
           >
             <BodyBold_Text color={colors.grey_400}>캐시 지우기</BodyBold_Text>

@@ -19,7 +19,6 @@ export const ProfileImageModal = (props) => {
       name: 'profileDefault.png',
       type: 'image/png',
     })
-    console.log(defaultData._parts)
     try {
       const response = await axios.post(url, defaultData, {
         headers: {
@@ -27,9 +26,6 @@ export const ProfileImageModal = (props) => {
           Authorization: ACCESSTOKEN,
         },
       })
-      console.log(response.status)
-      // console.log(response.data.imageUrl)
-      // console.log(response.data)
       props.setProfileUrl('https://pawith.s3.ap-northeast-2.amazonaws.com/base-image/profileDefault.png')
     } catch (error) {
       console.error(error)

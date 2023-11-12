@@ -1,6 +1,25 @@
 import axios from 'axios'
 import { url } from '../Shared'
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
+import { accessTokenState, refreshTokenState, userInfoState } from '../../recoil/AuthAtom'
 
+// const setToken = useSetRecoilState(accessTokenState)
+
+export const checkTokenValid = async () => {
+  const { refreshToken } = useRecoilValue(userInfoState)
+  // if (response.errorCode==1004) {
+  const response = await axios.post(
+    url + '/reissue',
+    {},
+    {
+      headers: {
+        RefreshToken: refreshToken,
+      },
+    },
+  )
+  console.log(response)
+}
+// }
 export const createRandomCode = async (accessToken) => {
   let API = `/todo/team/code`
   const response = await axios.get(url + API, {
@@ -21,6 +40,15 @@ export const getTodoTeamList = async (accessToken, page, size) => {
   })
   //response: [{"teamId": 1, "teamName": "test"}, {"teamId": 3, "teamName": "test"}, {"teamId": 6, "teamName": "test"}, {"teamId": 7, "teamName": "test"}]
   return response.data
+}
+export const getCategoryListAdmin = async (teamId, accessToken) => {
+  let API = `/teams/${teamId}/category/manage`
+  const response = await axios.get(url + API, {
+    headers: {
+      Authorization: accessToken,
+    },
+  })
+  return response.data.content
 }
 export const getCategoryList = async (teamId, accessToken) => {
   let API = `/teams/${teamId}/category`

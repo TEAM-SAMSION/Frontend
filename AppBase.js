@@ -23,6 +23,7 @@ export default function AppBase() {
   const setToken = useSetRecoilState(accessTokenState)
   const setOnboarded = useSetRecoilState(onboardedState)
 
+  //토큰 재발급 시에, 디바이스토큰값 api로 호출하는 순서로 ㄱㄱ
   const checkFCMToken = async () => {
     const fcmToken = await messaging().getToken()
     if (fcmToken) {
