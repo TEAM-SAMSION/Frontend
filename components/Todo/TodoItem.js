@@ -4,29 +4,28 @@ import { colors } from '../../colors'
 import Complete from '../../assets/Imgs/Complete.png'
 import InComplete from '../../assets/Imgs/InComplete.png'
 import styled from 'styled-components/native'
-import { completeTodo } from './Apis'
+import { checkComplete, completeTodo } from './Apis'
 
-export const TodoItem = ({ editTodo, categoryId, accessToken, todo, todoLocalId }) => {
-  const [isComplete, setIsComplete] = useState(todo.completionStatus == 'COMPLETE')
-  const [isFinished, setIsFinished] = useState(false)
+export const TodoItem = ({ editTodo, categoryId, accessToken, todo, todoLocalId, getInitDatas }) => {
+  console.log(todo)
   const handlePress = () => {
     //backend쪽으로 isPressed 변경된 값 보내는 구문 "assignNames":[{"assigneeId":1,"assigneeName":"test"},
-    console.log(accessToken)
-    completeTodo(todo.todoId, accessToken)
-    setIsComplete(!isComplete)
+    completeTodo(todo.todoId, accessToken).then((res) => getInitDatas())
   }
-
+  let Done = todo.completionStatus == 'COMPLETE'
+  let Finished = todo.assignNames[0].completionStatus == 'COMPLETE'
   return (
     <TodoContainer
+      disabled={Done}
       style={
-        isFinished
-          ? { backgroundColor: colors.grey_150 }
+        Done
+          ? { backgroundColor: colors.grey_150, borderColor: colors.grey_250, borderWidth: 1 }
           : { backgroundColor: colors.grey_100, borderColor: colors.outline, borderWidth: 1 }
       }
       onPress={() => editTodo(categoryId, todoLocalId)}
     >
       <LeftContainer>
-        <Label_Text style={{ padding: 4 }} color={isFinished ? colors.grey_400 : colors.grey_800}>
+        <Label_Text style={{ padding: 4 }} color={Done ? colors.grey_400 : colors.grey_800}>
           {todo.task}
         </Label_Text>
         <MateContainer>
@@ -34,11 +33,7 @@ export const TodoItem = ({ editTodo, categoryId, accessToken, todo, todoLocalId 
             return (
               <MateItem
                 key={id}
-                style={
-                  isFinished
-                    ? { backgroundColor: id == 0 ? colors.grey_250 : colors.grey_100 }
-                    : { backgroundColor: id == 0 ? colors.grey_250 : colors.grey_150 }
-                }
+                style={{ backgroundColor: assignee.completionStatus == 'COMPLETE' ? colors.grey_250 : colors.grey_150 }}
               >
                 <Detail_Text color={colors.grey_600}>{assignee.assigneeName}</Detail_Text>
               </MateItem>
@@ -46,9 +41,12 @@ export const TodoItem = ({ editTodo, categoryId, accessToken, todo, todoLocalId 
           })}
         </MateContainer>
       </LeftContainer>
-      <CheckBox onPress={() => handlePress()}>
-        {/* {todo.completionStatus == 'COMPLETE' ? <CheckIcon source={Complete} /> : <CheckIcon source={InComplete} />} */}
-        {isComplete ? <CheckIcon source={Complete} /> : <CheckIcon source={InComplete} />}
+      <CheckBox disabled={Done} onPress={() => handlePress()}>
+        {Finished ? (
+          <CheckIcon style={{ opacity: Done ? 0.4 : 1 }} source={Complete} />
+        ) : (
+          <CheckIcon source={InComplete} />
+        )}
       </CheckBox>
     </TodoContainer>
   )

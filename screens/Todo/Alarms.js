@@ -2,11 +2,11 @@ import React, { useState } from 'react'
 import { ScrollView, Text, View } from 'react-native'
 import styled from 'styled-components/native'
 import { colors } from '../../colors'
-import { ScreenLayout } from '../../components/Shared'
-import Back from '../../assets/Svgs/chevron_back'
+import { HeaderWithBack, ScreenLayout } from '../../components/Shared'
+
 import Alarm from '../../assets/Svgs/Alarm'
 import NoAlarm from '../../assets/Imgs/NoAlarm.png'
-import { BodyBold_Text, BodySm_Text, DetailSm_Text, Detail_Text, SubHead_Text } from '../../components/Fonts'
+import { BodySm_Text, DetailSm_Text, Detail_Text, SubHead_Text } from '../../components/Fonts'
 
 export const Alarms = ({ navigation }) => {
   let items = ['전체', 'TODO', '공지사항']
@@ -21,12 +21,7 @@ export const Alarms = ({ navigation }) => {
   return (
     //** ScrollView는 직접 Height 조정 불가능하기에, 바깥 부모를 통해 조정해야한다. */
     <ScreenLayout color={colors.grey_100}>
-      <HeaderContainer>
-        <Button style={{ left: 16 }} onPress={() => navigation.goBack()}>
-          <Back width={24} height={24} />
-        </Button>
-        <BodyBold_Text>알림</BodyBold_Text>
-      </HeaderContainer>
+      <HeaderWithBack navigation={navigation} title="알림" />
       <FilterBase>
         <ScrollView horizontal contentContainerStyle={{ marginLeft: 24 }}>
           {items.map((item, id) => {
@@ -76,13 +71,6 @@ export const Alarms = ({ navigation }) => {
     </ScreenLayout>
   )
 }
-const Button = styled.TouchableOpacity`
-  position: absolute;
-  justify-content: center;
-  align-items: center;
-  height: 40px;
-  width: 40px;
-`
 
 const MateItem = styled.TouchableOpacity`
   margin-right: 4px;

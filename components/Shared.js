@@ -82,6 +82,34 @@ export const ScreenKeyboardLayout = ({ children, onPress = null, verticalOffset,
   )
 }
 
+//****************** HeaderWithBack  *******************************************************/
+
+import Back from '../assets/Svgs/chevron_back'
+import { BodyBold_Text } from './Fonts'
+
+export const HeaderWithBack = ({ title, navigation }) => {
+  return (
+    <HeaderContainer>
+      <Button style={{ left: 16 }} onPress={() => navigation.goBack()}>
+        <Back width={24} height={24} />
+      </Button>
+      <BodyBold_Text>{title}</BodyBold_Text>
+    </HeaderContainer>
+  )
+}
+const Button = styled.TouchableOpacity`
+  position: absolute;
+  justify-content: center;
+  align-items: center;
+  height: 40px;
+  width: 40px;
+`
+const HeaderContainer = styled.View`
+  width: 100%;
+  height: 52px;
+  align-items: center;
+  justify-content: center;
+`
 //****************** NumberInput  *******************************************************/
 
 const NumberContainer = styled.TouchableOpacity`
@@ -99,7 +127,6 @@ const NumberText = styled.Text`
   font-size: 16px;
   font-family: Pretendard-Regular;
 `
-
 export const NumberInput = ({ onPress, value, placeholder, active, isDark }) => {
   return (
     <NumberContainer

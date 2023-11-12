@@ -23,14 +23,13 @@ export const getTodoTeamList = async (accessToken, page, size) => {
   return response.data
 }
 export const getCategoryList = async (teamId, accessToken) => {
-  // console.log(teamId)
   let API = `/teams/${teamId}/category`
   const response = await axios.get(url + API, {
     headers: {
       Authorization: accessToken,
     },
   })
-  return response.data.categories
+  return response.data.content
 }
 
 export const getTeamUsers = async (data) => {
@@ -50,7 +49,8 @@ export const getTeamUser = async (teamId, accessToken) => {
       Authorization: accessToken,
     },
   })
-  return response.data
+  console.log('getTeamUser: 52', response.data.content)
+  return response.data.content
 }
 
 export const getTodos = async (categoryId, accessToken, date) => {
@@ -63,22 +63,21 @@ export const getTodos = async (categoryId, accessToken, date) => {
       Authorization: accessToken,
     },
   })
-  // console.log('response.data.todos:', response.data.todos)//{"assignNames": [[Object], [Object]], "completionStatus": "INCOMPLETE", "task": "test1", "todoId": 6182},
-  return response.data.todos
+  // console.log('response.data.todos:', response.data.content) //{"assignNames": [[Object], [Object]], "completionStatus": "INCOMPLETE", "task": "test1", "todoId": 6182},
+  return response.data.content
 }
 
-//미완성
 export const completeTodo = async (todoId, accessToken) => {
   console.log(todoId, accessToken)
-  // let API = `/teams/todos/${todoId}/assign/complete`
-  // let data = { todoId: todoId }
-  // const response = await axios.put(url + API, null, {
-  //   headers: {
-  //     Authorization: accessToken,
-  //   },
-  // })
+  let API = `/teams/todos/${todoId}/assign/complete`
+  let data = { todoId: todoId }
+  const response = await axios.put(url + API, data, {
+    headers: {
+      Authorization: accessToken,
+    },
+  })
   // console.log(response)
-  // checkComplete(todoId, accessToken)
+  checkComplete(todoId, accessToken)
 }
 
 export const checkComplete = async (todoId, accessToken) => {
