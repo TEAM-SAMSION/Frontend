@@ -11,7 +11,7 @@ export const getUserInfo = async (accessToken) => {
 }
 
 export const getTodoProgress = async (accessToken, teamId) => {
-  let API = `/teams/${teamId}/todo/progress`
+  let API = `/teams/${teamId}/todos/progress`
   const response = await axios.get(url + API, {
     headers: { Authorization: accessToken },
   })

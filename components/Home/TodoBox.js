@@ -11,6 +11,8 @@ const SCREEN_WIDTH = Dimensions.get('window').width
 export const TodoBox = (props) => {
   const todo = props.data
   const index = props.index
+  const todoId = todo.todoId
+  const accessToken = props.accessToken
   const [isChecked, setIsChecked] = useState(todo.completionStatus)
 
   return (
@@ -26,7 +28,7 @@ export const TodoBox = (props) => {
       <CheckBox
         onPress={() => {
           setIsChecked(!isChecked)
-          completeTodo()
+          completeTodo(accessToken, todoId)
         }}
       >
         {isChecked ? <CheckOn width={24} height={24} /> : <CheckOff width={24} height={24} />}
