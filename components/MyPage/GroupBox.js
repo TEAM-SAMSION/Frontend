@@ -9,7 +9,7 @@ import { BodyBoldSm_Text, BodySm_Text } from '../Fonts'
 const SCREEN_WIDTH = Dimensions.get('window').width
 
 const GroupBox = (props) => {
-  const RightSwipe = (progress) => {
+  const RightSwipe = () => {
     return (
       <TouchableOpacity
         onPress={() => {

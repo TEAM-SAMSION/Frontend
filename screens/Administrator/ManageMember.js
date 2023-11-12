@@ -64,7 +64,11 @@ export default function ManageMember({ navigation }) {
             <SearchIcon width={16} height={16} />
           </IconBox>
         </Block>
-        <MemberSearchBox data={searchedData[0]} />
+        <MemberBox>
+          {searchedData.map((data, index) => (
+            <MemberSearchBox key={index} data={data} />
+          ))}
+        </MemberBox>
       </Container>
     </ScreenLayout>
   )
@@ -111,3 +115,4 @@ const Block = styled.View`
   background-color: ${colors.grey_150};
 `
 const IconBox = styled.TouchableOpacity``
+const MemberBox = styled.View``

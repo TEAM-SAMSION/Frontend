@@ -24,7 +24,7 @@ export default function AdministratorNav() {
         headerShadowVisible: false,
       }}
     >
-      <Stack.Screen name="AdminHome" component={AdminHome} />
+      <Stack.Screen name="AdminHome" component={AdminHome} options={{ headerShown: false }} />
       <Stack.Screen
         name="ManageMember"
         component={ManageMember}
@@ -44,7 +44,9 @@ export default function AdministratorNav() {
           ),
         })}
       />
-      <Stack.Screen name="ManagePetNav">{() => <ManagePetNav />}</Stack.Screen>
+      <Stack.Screen name="ManagePetNav" options={{ headerShown: false }}>
+        {() => <ManagePetNav />}
+      </Stack.Screen>
       <Stack.Screen name="ManageTodo" component={ManageTodo} />
     </Stack.Navigator>
   )

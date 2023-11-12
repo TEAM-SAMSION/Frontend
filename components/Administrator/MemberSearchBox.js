@@ -5,9 +5,15 @@ import { BodyBoldSm_Text, BodyBold_Text, BodySm_Text, Detail_Text, SubHeadSm_Tex
 import { ModalPopUp } from '../Shared'
 import MoreIcon from '../../assets/Svgs/More.svg'
 import CrownIcon from '../../assets/Svgs/Crown.svg'
+import { MemberPopUp } from './MemberPopUp'
 
 export const MemberSearchBox = (props) => {
   const [visible, setVisible] = useState(false)
+  const [changeVisible, setChangeVisible] = useState(false)
+  const [changing, setChanging] = useState('')
+  const [changingToPresident, setChangingToPresident] = useState(false)
+  const [changingToExecutive, setChangingToExecutive] = useState(false)
+  const [changingToMember, setChangingToMember] = useState(false)
 
   const data = props.data
   const registerId = data.registerId
@@ -22,18 +28,18 @@ export const MemberSearchBox = (props) => {
           <TeamImage source={require('../../assets/Imgs/sample_5.png')} />
           <TeamInfoBox>
             <TeamInfoDetailBox>
-              <Box>
-                {authority == 'PRESIDENT' ? (
-                  <>
-                    <CrownIcon width={16} height={16} />
-                    <Detail_Text color={colors.secondary}>관리자</Detail_Text>
-                  </>
-                ) : authority == 'MEMBER' ? (
-                  ''
-                ) : (
+              {authority == 'PRESIDENT' ? (
+                <Box>
+                  <CrownIcon width={16} height={16} />
+                  <Detail_Text color={colors.secondary}>관리자</Detail_Text>
+                </Box>
+              ) : authority == 'MEMBER' ? (
+                ''
+              ) : (
+                <Box>
                   <Detail_Text color={colors.primary_outline}>운영진</Detail_Text>
-                )}
-              </Box>
+                </Box>
+              )}
             </TeamInfoDetailBox>
             <BodyBold_Text color={colors.grey_700}>{registerName}</BodyBold_Text>
             <BodySm_Text color={colors.grey_350}>{registerEmail}</BodySm_Text>
@@ -43,22 +49,69 @@ export const MemberSearchBox = (props) => {
           <MoreIcon width={24} height={24} />
         </MoreButton>
       </Card>
-      <ModalPopUp visible={visible} petIcon={false} height={217}>
+      <MemberPopUp
+        visible={visible}
+        setVisible={setVisible}
+        setChangeVisible={setChangeVisible}
+        authority={authority}
+      />
+      <ModalPopUp visible={changeVisible} petIcon={false} height={258}>
+        <PopContent>
+          <BodyBold_Text>권한 변경</BodyBold_Text>
+        </PopContent>
+        <AuthorityContent>
+          <AuthorityBox
+            onPress={() => {
+              setChangingToPresident(!changingToPresident)
+              setChangingToExecutive(false)
+              setChangingToMember(false)
+              setChanging('PRESIDENT')
+            }}
+            style={{
+              backgroundColor: changingToPresident ? colors.grey_150 : colors.grey_100,
+            }}
+          >
+            <CrownIcon width={16} height={16} />
+            <Detail_Text color={colors.secondary}>관리자</Detail_Text>
+          </AuthorityBox>
+          <AuthorityBox
+            onPress={() => {
+              setChangingToExecutive(!changingToExecutive)
+              setChangingToPresident(false)
+              setChangingToMember(false)
+              setChanging('EXECUTIVE')
+            }}
+            style={{
+              backgroundColor: changingToExecutive ? colors.grey_150 : colors.grey_100,
+            }}
+          >
+            <Detail_Text color={colors.primary_outline}>운영진</Detail_Text>
+          </AuthorityBox>
+          <AuthorityBox
+            onPress={() => {
+              setChangingToMember(!changingToMember)
+              setChangingToPresident(false)
+              setChangingToExecutive(false)
+              setChanging('MEMBER')
+            }}
+            style={{
+              backgroundColor: changingToMember ? colors.grey_150 : colors.grey_100,
+            }}
+          >
+            <Detail_Text>일반 멤버</Detail_Text>
+          </AuthorityBox>
+        </AuthorityContent>
         <PopButtonContainer>
           <PopButton
             onPress={() => {
-              setVisible(false)
+              setChangeVisible(false)
             }}
             style={{ backgroundColor: colors.grey_100, borderColor: colors.grey_150, borderWidth: 2 }}
           >
-            <BodySm_Text color={colors.red_350}>권한 변경</BodySm_Text>
+            <PopButtonText>취소</PopButtonText>
           </PopButton>
-          <PopButton
-            onPress={() => {
-              setVisible(false)
-            }}
-          >
-            <BodySm_Text color={colors.red_350}>내보내기</BodySm_Text>
+          <PopButton onPress={() => setChangeVisible(false)}>
+            <PopButtonText>완료</PopButtonText>
           </PopButton>
         </PopButtonContainer>
       </ModalPopUp>
@@ -70,12 +123,11 @@ const Card = styled.View`
   flex-direction: row;
   border-radius: 12px;
   background-color: ${colors.grey_100};
-  padding: 16px 0px;
+  padding: 10px 0px;
   gap: 16px;
   justify-content: space-between;
   align-items: center;
 `
-const TeamCodeBox = styled.View``
 const TeamContentBox = styled.View`
   flex-direction: row;
   align-items: center;
@@ -104,10 +156,11 @@ const Box = styled.View`
   gap: 8px;
 `
 const MoreButton = styled.TouchableOpacity``
+////////
 const PopContent = styled.View`
-  justify-content: center;
   align-items: center;
-  margin-bottom: 40px;
+  margin-top: 8px;
+  margin-bottom: 46px;
 `
 const PopButtonContainer = styled.View`
   flex-direction: row;
@@ -124,4 +177,24 @@ const PopButton = styled.TouchableOpacity`
   align-items: center;
   border-radius: 8px;
   background-color: ${colors.red_200};
+`
+const PopButtonText = styled.Text`
+  font-family: 'Spoqa-Medium';
+  font-size: 14px;
+  line-height: 19px;
+  color: ${colors.red_350};
+`
+const AuthorityContent = styled.View`
+  flex-direction: row;
+  margin: 0px 20px;
+  gap: 10px;
+  margin-bottom: 48px;
+`
+const AuthorityBox = styled.TouchableOpacity`
+  align-items: center;
+  justify-content: center;
+  height: 58px;
+  flex: 1 0 0;
+  border-radius: 8px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
 `
