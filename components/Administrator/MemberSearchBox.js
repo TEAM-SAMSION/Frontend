@@ -98,7 +98,7 @@ export const MemberSearchBox = (props) => {
               backgroundColor: changingToMember ? colors.grey_150 : colors.grey_100,
             }}
           >
-            <Detail_Text>일반 멤버</Detail_Text>
+            <Detail_Text color={colors.grey_600}>일반 멤버</Detail_Text>
           </AuthorityBox>
         </AuthorityContent>
         <PopButtonContainer>
@@ -191,6 +191,8 @@ const AuthorityContent = styled.View`
   margin-bottom: 48px;
 `
 const AuthorityBox = styled.TouchableOpacity`
+  flex-direction: row;
+  gap: 4px;
   align-items: center;
   justify-content: center;
   height: 58px;

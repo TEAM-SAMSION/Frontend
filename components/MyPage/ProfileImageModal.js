@@ -9,6 +9,7 @@ export const ProfileImageModal = (props) => {
   const ACCESSTOKEN = props.accessToken
 
   const absolutePath = RNFS.MainBundlePath + '/profileDefault.png'
+  console.log(absolutePath)
 
   const uploadDefaultImage = async () => {
     const url = 'https://dev.pawith.com/user'

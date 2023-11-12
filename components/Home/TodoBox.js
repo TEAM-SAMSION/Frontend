@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Dimensions, TouchableOpacity, View } from 'react-native'
 import { styled } from 'styled-components/native'
 import { colors } from '../../colors'
@@ -11,8 +11,12 @@ const SCREEN_WIDTH = Dimensions.get('window').width
 export const TodoBox = (props) => {
   const todo = props.data
   const index = props.index
-  const [isChecked, setIsChecked] = useState(todo.completionStatus)
+  const accessToken = props.accessToken
+  const [isChecked, setIsChecked] = useState(false)
 
+  useEffect(() => {
+    todo.completionStatus == 'COMPLETE' && setIsChecked(true)
+  }, [])
   return (
     <TodoBoxContainer index={index}>
       <TodoContent>
@@ -25,8 +29,8 @@ export const TodoBox = (props) => {
       </TodoContent>
       <CheckBox
         onPress={() => {
-          setIsChecked(!isChecked)
-          completeTodo()
+          setIsChecked(true)
+          completeTodo(accessToken, todo.todoId)
         }}
       >
         {isChecked ? <CheckOn width={24} height={24} /> : <CheckOff width={24} height={24} />}

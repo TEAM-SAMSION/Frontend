@@ -6,9 +6,12 @@ import { ModalPopUp } from '../Shared'
 import { postJoiningTeam } from './Apis'
 import Close from '../../assets/Svgs/Close.svg'
 import { useNavigation } from '@react-navigation/native'
+import { useRecoilValue } from 'recoil'
+import { accessTokenState } from '../../recoil/AuthAtom'
 
 export const TeamSearchBox = (props) => {
   const [visible, setVisible] = useState(false)
+  const ACCESSTOKEN = useRecoilValue(accessTokenState)
 
   const data = props.data
   const teamCode = data.code
@@ -89,7 +92,7 @@ export const TeamSearchBox = (props) => {
           <PopButton
             onPress={() => {
               console.log(teamCode)
-              postJoiningTeam(teamCode)
+              postJoiningTeam(ACCESSTOKEN, teamCode)
               setVisible(false)
               navigation.navigate('ToDoNav')
             }}

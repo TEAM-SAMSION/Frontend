@@ -31,14 +31,9 @@ export const ImagePickerComponent = (props) => {
       return null
     }
     props.setImageUrl(result.assets[0].uri)
-    //이미지 변경 API 적용 후 SET?!
 
     const url = 'https://dev.pawith.com/user'
     const localUri = result.assets[0].uri
-
-    // const filename = localUri.split("/").pop();
-    // const match = /\.(\w+)$/.exec(filename ?? "");
-    // const type = match ? `image/${match[1]}` : `image/jpeg`;
 
     const compressedImageUri = await ImageManipulator.manipulateAsync(localUri, [{ resize: { width: 100 } }], {
       compress: 1,
@@ -51,18 +46,6 @@ export const ImagePickerComponent = (props) => {
       type: 'image/jpeg',
     })
     console.log(routeData._parts)
-
-    // try {
-    //   const response = await axios.post(url, routeData, {
-    //     headers: {
-    //       'Content-Type': `multipart/form-data`,
-    //       Authorization: ACCESSTOKEN,
-    //     },
-    //   })
-
-    // } catch (error) {
-    //   console.error(error)
-    // }
   }
 
   return (

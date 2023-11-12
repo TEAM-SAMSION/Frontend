@@ -15,8 +15,8 @@ import { useRecoilValue, useSetRecoilState } from 'recoil'
 import { accessTokenState } from '../../recoil/AuthAtom'
 import { ModalPopUp } from '../../components/Shared'
 import { colors } from '../../colors'
-import { getTeamList, getUserInfo } from '../../components/MyPage/Apis'
-import { BodyBoldSm_Text, BodySm_Text, Detail_Text } from '../../components/Fonts'
+import { deleteTeam, getTeamList, getUserInfo } from '../../components/MyPage/Apis'
+import { BodyBoldSm_Text, BodySm_Text, Detail_Text, SubHead_Text } from '../../components/Fonts'
 import { TabBarAtom } from '../../recoil/TabAtom'
 import { useIsFocused } from '@react-navigation/native'
 
@@ -74,29 +74,15 @@ export default function MyPage({ navigation }) {
 
   useEffect(() => {
     fetchTeamList()
-  }, [])
+  }, [isFocused])
 
   const [visible, setVisible] = useState(false)
   const [deleteTeamId, setDeleteTeamId] = useState('')
-
-  const deleteTeam = async (teamId) => {
-    const url = `https://dev.pawith.com/register/${teamId}`
-    try {
-      const response = await axios.delete(url, {
-        params: { todoTeamId: teamId },
-        headers: {
-          Authorization: `${ACCESSTOKEN}`,
-        },
-      })
-      console.log(`${teamId} 삭제`)
-    } catch (error) {
-      console.error(error.message)
-    }
-  }
+  const [deleteTeamName, setDeleteTeamName] = useState('')
 
   const deleteItem = async () => {
     console.log(deleteTeamId)
-    await deleteTeam(deleteTeamId)
+    await deleteTeam(ACCESSTOKEN, deleteTeamId)
     swipeableRefs.current[deleteTeamId]?.close()
     fetchTeamList()
   }
@@ -117,22 +103,22 @@ export default function MyPage({ navigation }) {
         <TopHeader navigation={navigation} />
         <ScrollView>
           <UserContainer>
-            <TouchableOpacity onPress={handlePresentModal}>
-              <ProfileImage
-                source={{
-                  uri: `${profileUrl}`,
-                }}
-              />
-            </TouchableOpacity>
             <UserDetailContainer>
-              <UserNameBox>
-                <Username>{name}</Username>
-                <EditIcon width={24} height={24} color={'#4D4D4D'} />
-              </UserNameBox>
-              <EmailBox>
-                <EmailText>{email}</EmailText>
-              </EmailBox>
+              <TouchableOpacity onPress={handlePresentModal}>
+                <ProfileImage
+                  source={{
+                    uri: `${profileUrl}`,
+                  }}
+                />
+              </TouchableOpacity>
+              <UserBox>
+                <SubHead_Text>{name}</SubHead_Text>
+                <Detail_Text color={colors.grey_600}>{email}</Detail_Text>
+              </UserBox>
             </UserDetailContainer>
+            <EditBox>
+              <EditIcon width={16} height={16} color={'#4D4D4D'} />
+            </EditBox>
           </UserContainer>
           <GroupContainer>
             <Title>내가 속한 Pamily</Title>
@@ -159,6 +145,7 @@ export default function MyPage({ navigation }) {
                         data={item}
                         handleDelete={() => {
                           setDeleteTeamId(item.teamId)
+                          setDeleteTeamName(item.teamName)
                           setVisible(true)
                         }}
                         gotoAdminNav={() => navigation.navigate('AdministratorNav')}
@@ -185,8 +172,8 @@ export default function MyPage({ navigation }) {
           <PopContent>
             <PopSubTitle>정말 Pamily를 나가시겠습니까?</PopSubTitle>
             <PopTitleBox>
-              <PopTitle style={{ color: colors.primary_outline }}>패밀리</PopTitle>
-              <PopTitle>와 함께한 {name} 님의 시간</PopTitle>
+              <PopTitle style={{ color: colors.primary_outline }}>{deleteTeamName}</PopTitle>
+              <PopTitle>와 함께한 {name}님의 시간</PopTitle>
             </PopTitleBox>
           </PopContent>
           <DateContent
@@ -203,7 +190,8 @@ export default function MyPage({ navigation }) {
             <PopButton
               onPress={() => {
                 setVisible(false)
-                navigation.navigate('DeletePamily')
+                deleteItem()
+                //navigation.navigate('DeletePamily', { deleteTeamId })
               }}
               style={{ backgroundColor: colors.grey_100, borderColor: colors.grey_150, borderWidth: 2 }}
             >
@@ -231,9 +219,10 @@ export default function MyPage({ navigation }) {
 }
 
 const UserContainer = styled.View`
-  padding: 12px 20px;
+  padding: 12px 16px;
   flex-direction: row;
-  gap: 16px;
+  justify-content: space-between;
+  align-items: center;
 `
 const ProfileImage = styled.Image`
   width: 78px;
@@ -241,23 +230,22 @@ const ProfileImage = styled.Image`
   border-radius: 24px;
 `
 const UserDetailContainer = styled.View`
-  justify-content: center;
-`
-const UserNameBox = styled.View`
   flex-direction: row;
+  gap: 16px;
   align-items: center;
-  gap: 8px;
+  justify-content: space-between;
 `
-const Username = styled.Text`
-  font-family: 'Spoqa-Bold';
-  font-size: 20px;
-  line-height: 28px;
+const UserBox = styled.View`
+  justify-content: center;
+  gap: 4px;
 `
-const EmailBox = styled.View``
-const EmailText = styled.Text`
-  font-family: 'Spoqa-Medium';
-  font-size: 14px;
-  line-height: 19px;
+const EditBox = styled.View`
+  width: 24px;
+  height: 24px;
+  background-color: ${colors.grey_150};
+  border-radius: 99px;
+  justify-content: center;
+  align-items: center;
 `
 const GroupContainer = styled.View`
   padding: 12px 0px;

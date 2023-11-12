@@ -55,6 +55,10 @@ export default function Home({ navigation }) {
         setTeamId()
         fetchProgress()
       }
+      if (result.length == 0) {
+        setPamilyNum(0)
+        setMyTodo([])
+      }
     })
   }
 
@@ -213,7 +217,7 @@ export default function Home({ navigation }) {
                 <FlatList
                   data={myTodo}
                   renderItem={({ item, index }) => {
-                    return <TodoBox data={item} index={index} />
+                    return <TodoBox data={item} index={index} accessToken={ACCESSTOKEN} />
                   }}
                   showsHorizontalScrollIndicator={false}
                   numColumns={2}

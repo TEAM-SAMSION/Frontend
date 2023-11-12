@@ -19,3 +19,14 @@ export const getTeamList = async (accessToken) => {
   })
   return response.data.content
 }
+
+/////// 탈퇴 //////
+export const deleteTeam = async (accessToken, teamId) => {
+  let API = `/teams/${teamId}/registers`
+  const response = await axios.delete(url + API, {
+    headers: {
+      Authorization: accessToken,
+    },
+  })
+  console.log(`${teamId} 삭제`)
+}
