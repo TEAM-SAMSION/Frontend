@@ -3,6 +3,7 @@ import styled from 'styled-components/native'
 import { colors } from '../../colors'
 import Add from '../../assets/Svgs/add.svg'
 import { TextInput } from 'react-native'
+import { Circle } from './CategoryIndicator'
 
 export const CategoryCreate = ({ createCategory }) => {
   return (
@@ -11,7 +12,7 @@ export const CategoryCreate = ({ createCategory }) => {
       <TextInput
         style={{ fontFamily: 'Spoqa-Medium', minWidth: 80, width: this.state?.inputWidth }}
         placeholderTextColor={colors.grey_600}
-        onSubmitEditing={(input) => createCategory(input.nativeEvent.text)}
+        // onSubmitEditing={(input) => createCategory(input.nativeEvent.text)}
         placeholder="카테고리를 입력해주세요"
         returnKeyType="done"
         inputMode="text"
@@ -31,9 +32,4 @@ const CategoryCreateContainer = styled.View`
   border: 1px solid ${colors.grey_200};
   margin: 16px 0px;
   gap: 8px;
-`
-const Circle = styled.View`
-  width: 12px;
-  height: 12px;
-  border-radius: 6px;
 `
