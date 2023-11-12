@@ -190,8 +190,8 @@ export default function MyPage({ navigation }) {
             <PopButton
               onPress={() => {
                 setVisible(false)
-                deleteItem()
-                //navigation.navigate('DeletePamily', { deleteTeamId })
+                //deleteItem()
+                navigation.navigate('DeletePamily', { deleteTeamId })
               }}
               style={{ backgroundColor: colors.grey_100, borderColor: colors.grey_150, borderWidth: 2 }}
             >
