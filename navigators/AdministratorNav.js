@@ -24,7 +24,25 @@ export default function AdministratorNav() {
         headerShadowVisible: false,
       }}
     >
-      <Stack.Screen name="AdminHome" component={AdminHome} options={{ headerShown: false }} />
+      <Stack.Screen
+        name="AdminHome"
+        component={AdminHome}
+        options={({ navigation }) => ({
+          headerTitle: '관리자 설정',
+          headerLeft: () => (
+            <TouchableOpacity
+              onPress={() => navigation.goBack()}
+              style={{
+                justifyContent: 'center',
+                alignItems: 'center',
+                marginLeft: 16,
+              }}
+            >
+              <BackButton width={24} height={24} />
+            </TouchableOpacity>
+          ),
+        })}
+      />
       <Stack.Screen
         name="ManageMember"
         component={ManageMember}
