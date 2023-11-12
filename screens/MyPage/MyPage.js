@@ -74,7 +74,7 @@ export default function MyPage({ navigation }) {
 
   useEffect(() => {
     fetchTeamList()
-  }, [])
+  }, [isFocused])
 
   const [visible, setVisible] = useState(false)
   const [deleteTeamId, setDeleteTeamId] = useState('')
@@ -82,7 +82,7 @@ export default function MyPage({ navigation }) {
 
   const deleteItem = async () => {
     console.log(deleteTeamId)
-    await deleteTeam(deleteTeamId)
+    await deleteTeam(ACCESSTOKEN, deleteTeamId)
     swipeableRefs.current[deleteTeamId]?.close()
     fetchTeamList()
   }
@@ -190,7 +190,8 @@ export default function MyPage({ navigation }) {
             <PopButton
               onPress={() => {
                 setVisible(false)
-                navigation.navigate('DeletePamily', { deleteTeamId })
+                deleteItem()
+                //navigation.navigate('DeletePamily', { deleteTeamId })
               }}
               style={{ backgroundColor: colors.grey_100, borderColor: colors.grey_150, borderWidth: 2 }}
             >
