@@ -5,6 +5,7 @@ import { BodyBoldSm_Text, BodySm_Text, Detail_Text, SubHeadSm_Text, SubHead_Text
 import { ModalPopUp } from '../Shared'
 import { postJoiningTeam } from './Apis'
 import Close from '../../assets/Svgs/Close.svg'
+import { useNavigation } from '@react-navigation/native'
 
 export const TeamSearchBox = (props) => {
   const [visible, setVisible] = useState(false)
@@ -16,6 +17,8 @@ export const TeamSearchBox = (props) => {
   const teamNumber = data.registerCount
   const teamIntro = data.description
   const teamImageUrl = data.teamImageUrl
+
+  const navigation = useNavigation()
 
   return (
     <>
@@ -88,6 +91,7 @@ export const TeamSearchBox = (props) => {
               console.log(teamCode)
               postJoiningTeam(teamCode)
               setVisible(false)
+              navigation.navigate('ToDoNav')
             }}
           >
             <BodySm_Text color={colors.red_350}>예</BodySm_Text>
