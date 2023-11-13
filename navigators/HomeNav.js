@@ -32,18 +32,6 @@ export default function HomeNav() {
         component={CreateTeam}
         options={({ navigation }) => ({
           headerTitle: 'Pamily 생성',
-          headerLeft: () => (
-            <TouchableOpacity
-              onPress={() => navigation.goBack()}
-              style={{
-                justifyContent: 'center',
-                alignItems: 'center',
-                marginLeft: 16,
-              }}
-            >
-              <BackButton width={24} height={24} />
-            </TouchableOpacity>
-          ),
         })}
       />
       <Stack.Screen

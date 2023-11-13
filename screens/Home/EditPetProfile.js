@@ -53,7 +53,7 @@ export default function EditPetProfile({ route, navigation }) {
         </TouchableOpacity>
       ),
     })
-  }, [petName, petAge, petCategory, petDetail, petIntro, petImageUrl, petFile])
+  }, [enabled, petName, petAge, petCategory, petDetail, petIntro, petImageUrl, petFile])
 
   const bottomSheetModalRef = useRef(null)
   const snapPoints = ['40%']

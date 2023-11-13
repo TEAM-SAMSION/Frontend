@@ -1,14 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-  Keyboard,
-  FlatList,
-  Animated,
-  ScrollView,
-} from 'react-native'
+import { Text, TouchableOpacity, TouchableWithoutFeedback, Keyboard, ScrollView } from 'react-native'
 import { colors } from '../../colors'
 import { ModalPopUp, ScreenLayout } from '../../components/Shared'
 import styled from 'styled-components/native'
@@ -17,9 +8,15 @@ import { BottomSheetBackdrop, BottomSheetModal, BottomSheetModalProvider } from 
 import { ProfileImageModal } from '../../components/Home/ProfileImageModal'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import { accessTokenState } from '../../recoil/AuthAtom'
-import SlideItem from '../../components/Home/SlideItem'
-import { profileSample, profileSample2 } from '../../datas/Home/data'
-import { BodyBold_Text, BodySm_Text, Body_Text, Detail_Text } from '../../components/Fonts'
+import BackButton from '../../assets/Svgs/chevron_back.svg'
+import {
+  BodyBold_Text,
+  BodySm_Text,
+  Body_Text,
+  Detail_Text,
+  HeadLineSm_Text,
+  SubHead_Text,
+} from '../../components/Fonts'
 import { getTeamCode, postTeamInfo } from '../../components/Home/Apis'
 import { TabBarAtom } from '../../recoil/TabAtom'
 import { useIsFocused } from '@react-navigation/native'
@@ -27,6 +24,7 @@ import EditIcon from '../../assets/Svgs/Edit.svg'
 import Clipboard from '@react-native-clipboard/clipboard'
 import { AddPetBox } from '../../components/Home/AddPetBox'
 import RNFS from 'react-native-fs'
+import Close from '../../assets/Svgs/Close.svg'
 
 export default function CreateTeam({ route, navigation }) {
   const isFocused = useIsFocused()
@@ -43,9 +41,16 @@ export default function CreateTeam({ route, navigation }) {
   const [pamilyFile, setPamilyFile] = useState('file://' + RNFS.MainBundlePath + '/default_pamily.png')
   const ACCESSTOKEN = useRecoilValue(accessTokenState)
 
+  // 펫 삭제 팝업
   const [deleteVisible, setDeleteVisible] = useState(false)
   const swipeableRefs = useRef([])
   const [deletePetInfo, setDeletePetInfo] = useState('')
+
+  // 뒤로가기 팝업
+  const [backVisible, setBackVisible] = useState(false)
+
+  // 패밀리 생성 팝업
+  const [createVisible, setCreateVisible] = useState(false)
 
   useEffect(() => {
     isFocused && setIsTabVisible(false)
@@ -69,12 +74,23 @@ export default function CreateTeam({ route, navigation }) {
 
   useEffect(() => {
     navigation.setOptions({
+      headerLeft: () => (
+        <TouchableOpacity
+          onPress={() => setBackVisible(true)}
+          style={{
+            justifyContent: 'center',
+            alignItems: 'center',
+            marginLeft: 16,
+          }}
+        >
+          <BackButton width={24} height={24} />
+        </TouchableOpacity>
+      ),
       headerRight: () => (
         <TouchableOpacity
           disabled={!enabled}
           onPress={() => {
-            navigation.navigate('Home')
-            createPamily()
+            setCreateVisible(true)
           }}
           style={{ marginRight: 16 }}
         >
@@ -272,6 +288,63 @@ export default function CreateTeam({ route, navigation }) {
               </PopButton>
             </PopButtonContainer>
           </ModalPopUp>
+          <ModalPopUp visible={backVisible} petIcon={false} height={204}>
+            <PopContent style={{ flexDirection: 'column', marginTop: 54, marginBottom: 46 }}>
+              <BodyBold_Text color={colors.grey_600}>취소하시겠습니까?</BodyBold_Text>
+              <BodyBold_Text color={colors.grey_600}>입력하신 정보는 저장되지 않습니다.</BodyBold_Text>
+            </PopContent>
+            <PopButtonContainer>
+              <PopButton
+                onPress={() => {
+                  setBackVisible(false)
+                }}
+                style={{ backgroundColor: colors.grey_100, borderColor: colors.grey_150, borderWidth: 2 }}
+              >
+                <BodySm_Text color={colors.red_350}>아니오</BodySm_Text>
+              </PopButton>
+              <PopButton
+                onPress={() => {
+                  navigation.goBack()
+                }}
+              >
+                <BodySm_Text color={colors.red_350}>예</BodySm_Text>
+              </PopButton>
+            </PopButtonContainer>
+          </ModalPopUp>
+          <ModalPopUp visible={createVisible} petIcon={false} height={217}>
+            <ModalHeader>
+              <CloseButton
+                onPress={() => {
+                  setCreateVisible(false)
+                }}
+              >
+                <Close width={24} height={24} />
+              </CloseButton>
+            </ModalHeader>
+            <PopContent style={{ flexDirection: 'column', marginTop: 0, marginBottom: 39 }}>
+              <SubHead_Text color={colors.grey_700}>{pamilyName}</SubHead_Text>
+              <HeadLineSm_Text color={colors.grey_500}>Pamily를 생성하시겠습니까?</HeadLineSm_Text>
+            </PopContent>
+            <PopButtonContainer>
+              <PopButton
+                onPress={() => {
+                  setCreateVisible(false)
+                }}
+                style={{ backgroundColor: colors.grey_100, borderColor: colors.grey_150, borderWidth: 2 }}
+              >
+                <BodySm_Text color={colors.red_350}>아니오</BodySm_Text>
+              </PopButton>
+              <PopButton
+                onPress={() => {
+                  setCreateVisible(false)
+                  createPamily()
+                  navigation.navigate('Home')
+                }}
+              >
+                <BodySm_Text color={colors.red_350}>예</BodySm_Text>
+              </PopButton>
+            </PopButtonContainer>
+          </ModalPopUp>
           <BottomSheetModal
             ref={bottomSheetModalRef}
             index={0}
@@ -398,4 +471,11 @@ const PopButton = styled.TouchableOpacity`
   align-items: center;
   border-radius: 8px;
   background-color: ${colors.red_200};
+`
+const CloseButton = styled.TouchableOpacity``
+const ModalHeader = styled.View`
+  width: '100%';
+  align-items: flex-end;
+  justify-content: center;
+  margin-bottom: 24px;
 `
