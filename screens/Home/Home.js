@@ -89,26 +89,6 @@ export default function Home({ navigation }) {
       setMyTodo(result)
     })
   }
-  // const fetchMyTodo = async () => {
-  //   const allTodos = []
-  //   for (const team of pamilyList) {
-  //     const teamId = team.teamId
-  //     try {
-  //       const todos = await getMyTodoList(ACCESSTOKEN, todoPage, teamId)
-  //       allTodos.push(
-  //         ...todos.map((todo) => ({
-  //           categoryName: team.categoryName,
-  //           todoId: todo.todoId,
-  //           task: todo.task,
-  //           completionStatus: todo.completionStatus,
-  //         })),
-  //       )
-  //     } catch (error) {
-  //       console.error('Error fetching todo list')
-  //     }
-  //   }
-  //   setMyTodo(allTodos)
-  // }
 
   useEffect(() => {
     fetchMyTodo()
@@ -237,7 +217,7 @@ export default function Home({ navigation }) {
 const BannerContainer = styled.View`
   height: 398px;
   padding: 24px 16px;
-  background-color: #ffe2e0;
+  background-color: ${colors.primary_container};
 `
 const NicknameContainer = styled.View`
   flex-direction: row;
@@ -249,7 +229,7 @@ const NickText = styled.Text`
   font-family: 'Spoqa-Bold';
   font-size: 22px;
   line-height: 30px;
-  color: #fd8d81;
+  color: ${colors.primary_outline};
 `
 const NickSubText = styled.Text`
   font-family: 'Spoqa-Bold';
@@ -288,11 +268,10 @@ const NoneText = styled.Text`
 `
 const TeamContainer = styled.View`
   flex-direction: row;
-  background-color: ${colors.grey_150};
   justify-content: space-between;
-  padding: 16px;
+  padding: 24px 16px 16px 16px;
   padding-bottom: 200px;
-  gap: 8px;
+  gap: 12px;
 `
 const StartTeamContainer = styled.TouchableOpacity`
   //width: 170px;

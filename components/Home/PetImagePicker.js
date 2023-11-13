@@ -2,16 +2,10 @@ import React from 'react'
 import * as ImagePicker from 'expo-image-picker'
 import styled from 'styled-components/native'
 import { colors } from '../../colors'
-import axios from 'axios'
-//import ImageResizer from "react-native-image-resizer";
 import * as ImageManipulator from 'expo-image-manipulator'
-import { useRecoilValue } from 'recoil'
-import { accessTokenState } from '../../recoil/AuthAtom'
 import { BodySm_Text } from '../Fonts'
-import { changeProfileImage } from './Apis'
 
-export const ImagePickerComponent = (props) => {
-  const ACCESSTOKEN = props.accessToken
+export const PetImagePicker = (props) => {
   const [status, requestPermission] = ImagePicker.useMediaLibraryPermissions()
 
   const uploadImage = async () => {
@@ -30,7 +24,6 @@ export const ImagePickerComponent = (props) => {
     if (result.canceled) {
       return null
     }
-    props.setImageUrl(result.assets[0].uri)
 
     const localUri = result.assets[0].uri
 
@@ -39,14 +32,8 @@ export const ImagePickerComponent = (props) => {
       format: ImageManipulator.SaveFormat.PNG,
     })
 
-    const routeData = new FormData()
-    routeData.append('profileImage', {
-      uri: compressedImageUri.uri,
-      name: 'photo.png',
-      type: 'image/png',
-    })
-
-    changeProfileImage(ACCESSTOKEN, routeData)
+    props.setImageUrl(localUri)
+    props.setPetFile(compressedImageUri.uri)
   }
 
   return (
@@ -56,7 +43,7 @@ export const ImagePickerComponent = (props) => {
   )
 }
 
-export default ImagePickerComponent
+export default PetImagePicker
 
 const LibraryBox = styled.TouchableOpacity`
   width: 156px;

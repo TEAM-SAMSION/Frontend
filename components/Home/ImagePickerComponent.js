@@ -6,7 +6,7 @@ import axios from 'axios'
 import * as ImageManipulator from 'expo-image-manipulator'
 import { BodySm_Text } from '../Fonts'
 
-export const ImagePickerComponent = () => {
+export const ImagePickerComponent = (props) => {
   const [status, requestPermission] = ImagePicker.useMediaLibraryPermissions()
 
   const uploadImage = async () => {
@@ -25,52 +25,31 @@ export const ImagePickerComponent = () => {
     if (result.canceled) {
       return null
     }
-    console.log(result)
-    props.setImageUrl(result.assets[0].uri)
 
-    const url = 'https://dev.pawith.com/user'
     const localUri = result.assets[0].uri
-    console.log(localUri)
-
     const compressedImageUri = await ImageManipulator.manipulateAsync(localUri, [{ resize: { width: 100 } }], {
       compress: 1,
-      format: ImageManipulator.SaveFormat.JPEG,
+      format: ImageManipulator.SaveFormat.PNG,
     })
-
-    const routeData = new FormData()
-    routeData.append('profileImage', {
-      uri: compressedImageUri.uri,
-      name: 'photo.jpeg',
-      type: 'image/jpeg',
-    })
-    console.log(routeData)
-
-    try {
-      const response = await axios.post(url, routeData, {
-        headers: {
-          'Content-Type': `multipart/form-data`,
-          Authorization: `Bearer ${ACCESSTOKEN}`,
-        },
-      })
-      console.log(response.data.imageUrl)
-    } catch (error) {
-      console.error(error)
-    }
+    props.setBottomProfileUrl(localUri)
+    props.setImageFile(compressedImageUri.uri)
   }
 
   return (
-    <LibraryBox onPress={() => uploadImage()}>
-      <BodySm_Text color={colors.red_350}>라이브러리에서 선택</BodySm_Text>
-    </LibraryBox>
+    <SampleImageContainer onPress={() => uploadImage()}>
+      <SampleImage source={require('../../assets/Imgs/sample_library.png')} />
+    </SampleImageContainer>
   )
 }
 
-const LibraryBox = styled.TouchableOpacity`
-  width: 156px;
-  height: 44px;
-  border-radius: 8px;
-  padding: 12px 16px;
-  align-items: center;
-  justify-content: center;
-  background-color: ${colors.red_200};
+const SampleImage = styled.Image`
+  width: 59px;
+  height: 59px;
+  border-radius: 16px;
+  border-width: 1px;
+  border-color: ${colors.grey_200};
+`
+const SampleImageContainer = styled.TouchableOpacity`
+  width: 59px;
+  height: 59px;
 `

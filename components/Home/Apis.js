@@ -69,3 +69,10 @@ export const getTeamCode = async (accessToken) => {
   })
   return response.data.randomCode
 }
+
+export const postTeamInfo = async (accessToken, data) => {
+  let API = `/teams`
+  const response = await axios.post(url + API, data, {
+    headers: { Authorization: accessToken },
+  })
+}

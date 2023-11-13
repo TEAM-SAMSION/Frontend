@@ -20,6 +20,16 @@ export const getTeamList = async (accessToken) => {
   return response.data.content
 }
 
+export const changeProfileImage = async (accessToken, routeData) => {
+  let API = '/user'
+  const response = await axios.post(url + API, routeData, {
+    headers: {
+      'Content-Type': `multipart/form-data`,
+      Authorization: accessToken,
+    },
+  })
+}
+
 /////// 탈퇴 //////
 export const deleteTeam = async (accessToken, teamId) => {
   let API = `/teams/${teamId}/registers`
