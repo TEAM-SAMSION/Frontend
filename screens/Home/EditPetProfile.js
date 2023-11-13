@@ -11,24 +11,23 @@ import {
 } from '@gorhom/bottom-sheet'
 import { useRecoilValue } from 'recoil'
 import { accessTokenState } from '../../recoil/AuthAtom'
+import { ProfileImageModal } from '../../components/Home/ProfileImageModal'
 import { ScreenLayout, ScreenWidth } from '../../components/Shared'
 import EditIcon from '../../assets/Svgs/Edit.svg'
-import RNFS from 'react-native-fs'
 import { PetImageModal } from '../../components/Home/PetImageModal'
 
-export default function AddPetProfile({ route, navigation }) {
+export default function EditPetProfile({ route, navigation }) {
   const ACCESSTOKEN = useRecoilValue(accessTokenState)
 
+  const petInfo = route.params.petInfo
   const [enabled, setEnabled] = useState(false)
-  const [petImageUrl, setPetImageUrl] = useState(
-    'https://pawith.s3.ap-northeast-2.amazonaws.com/base-image/profileDefault.png',
-  )
-  const [petName, setPetName] = useState('')
-  const [petAge, setPetAge] = useState()
-  const [petCategory, setPetCategroy] = useState('')
-  const [petDetail, setPetDetail] = useState('')
-  const [petIntro, setPetIntro] = useState('')
-  const [petFile, setPetFile] = useState('file://' + RNFS.MainBundlePath + '/default_pet.png')
+  const [petImageUrl, setPetImageUrl] = useState(petInfo.profileUrl)
+  const [petName, setPetName] = useState(petInfo.name)
+  const [petAge, setPetAge] = useState(petInfo.age)
+  const [petCategory, setPetCategroy] = useState(petInfo.genus)
+  const [petDetail, setPetDetail] = useState(petInfo.species)
+  const [petIntro, setPetIntro] = useState(petInfo.description)
+  const [petFile, setPetFile] = useState(petInfo.file)
 
   useEffect(() => {
     const isEmpty = petName === '' || petAge === '' || petCategory === '' || petDetail === '' || petIntro === ''
@@ -54,7 +53,7 @@ export default function AddPetProfile({ route, navigation }) {
         </TouchableOpacity>
       ),
     })
-  }, [petName, petAge, petCategory, petDetail, petIntro, petFile, petImageUrl])
+  }, [petName, petAge, petCategory, petDetail, petIntro, petImageUrl, petFile])
 
   const bottomSheetModalRef = useRef(null)
   const snapPoints = ['40%']
@@ -107,8 +106,8 @@ export default function AddPetProfile({ route, navigation }) {
                   <InputBlock
                     editable
                     onChangeText={(text) => setPetName(text)}
-                    placeholder="이름을 입력해주세요."
-                    placeholderTextColor={colors.grey_400}
+                    placeholder={petName}
+                    placeholderTextColor={colors.grey_600}
                     returnKeyType="done"
                   />
                 </InputBox>
@@ -117,8 +116,8 @@ export default function AddPetProfile({ route, navigation }) {
                   <InputBlock
                     editable
                     onChangeText={(text) => setPetAge(text)}
-                    placeholder="나이를 입력해주세요."
-                    placeholderTextColor={colors.grey_400}
+                    placeholder={petAge}
+                    placeholderTextColor={colors.grey_600}
                     keyboardType="number"
                     returnKeyType="done"
                   />
@@ -133,8 +132,8 @@ export default function AddPetProfile({ route, navigation }) {
                     <InputBlock
                       editable
                       onChangeText={(text) => setPetCategroy(text)}
-                      placeholder="ex_강아지"
-                      placeholderTextColor={colors.grey_400}
+                      placeholder={petCategory}
+                      placeholderTextColor={colors.grey_600}
                       style={{
                         flexGrow: 1,
                         borderTopRightRadius: 0,
@@ -152,8 +151,8 @@ export default function AddPetProfile({ route, navigation }) {
                     <InputBlock
                       editable
                       onChangeText={(text) => setPetDetail(text)}
-                      placeholder="ex_웰시코기"
-                      placeholderTextColor={colors.grey_400}
+                      placeholder={petDetail}
+                      placeholderTextColor={colors.grey_600}
                       style={{
                         flexGrow: 1,
                         borderBottomLeftRadius: 0,
@@ -167,12 +166,9 @@ export default function AddPetProfile({ route, navigation }) {
                   <Detail_Text color={colors.grey_800}>한줄소개</Detail_Text>
                   <InputBlock
                     editable
-                    onChangeText={(text) => {
-                      setPetIntro(text)
-                      console.log(petIntro)
-                    }}
-                    placeholder="한줄소개를 입력해주세요.(20자이내)"
-                    placeholderTextColor={colors.grey_400}
+                    onChangeText={(text) => setPetIntro(text)}
+                    placeholder={petIntro}
+                    placeholderTextColor={colors.grey_600}
                     returnKeyType="done"
                   />
                 </InputBox>
@@ -189,7 +185,7 @@ export default function AddPetProfile({ route, navigation }) {
             }}
           >
             <BottomTitle>
-              <BottomTitleText>펫 프로필 사진 설정</BottomTitleText>
+              <BottomTitleText>펫 프로필 수정</BottomTitleText>
             </BottomTitle>
             <PetImageModal profileUrl={petImageUrl} setProfileUrl={setPetImageUrl} setPetFile={setPetFile} />
           </BottomSheetModal>

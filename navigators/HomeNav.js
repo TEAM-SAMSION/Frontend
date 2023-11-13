@@ -8,6 +8,7 @@ import JoinTeam from '../screens/Home/JoinTeam'
 import { TouchableOpacity } from 'react-native'
 import BackButton from '../assets/Svgs/chevron_back.svg'
 import AddPetProfile from '../screens/Home/AddPetProfile'
+import EditPetProfile from '../screens/Home/EditPetProfile'
 
 const Stack = createStackNavigator()
 
@@ -69,6 +70,25 @@ export default function HomeNav() {
         component={AddPetProfile}
         options={({ navigation }) => ({
           headerTitle: '펫 등록',
+          headerLeft: () => (
+            <TouchableOpacity
+              onPress={() => navigation.goBack()}
+              style={{
+                justifyContent: 'center',
+                alignItems: 'center',
+                marginLeft: 16,
+              }}
+            >
+              <BackButton width={24} height={24} />
+            </TouchableOpacity>
+          ),
+        })}
+      />
+      <Stack.Screen
+        name="EditPetProfile"
+        component={EditPetProfile}
+        options={({ navigation }) => ({
+          headerTitle: '펫 정보 수정',
           headerLeft: () => (
             <TouchableOpacity
               onPress={() => navigation.goBack()}

@@ -1,33 +1,70 @@
 import styled from 'styled-components/native'
-import { BodyBold_Text, Detail_Text } from '../Fonts'
+import { BodyBold_Text, BodySm_Text, Detail_Text } from '../Fonts'
 import EditIcon from '../../assets/Svgs/Edit.svg'
+import DeleteIcon from '../../assets/Svgs/delete.svg'
 import { colors } from '../../colors'
+import { TouchableOpacity } from 'react-native'
+import { Swipeable } from 'react-native-gesture-handler'
 
-export const AddPetBox = ({ pet, grey }) => {
+export const AddPetBox = ({ pet, grey, navigation, handleDelete, handleEdit, swipeableRef }) => {
+  const petInfo = {
+    name: pet.name,
+    age: pet.age,
+    description: pet.description,
+    genus: pet.genus,
+    species: pet.species,
+    profileUrl: pet.profileUrl,
+    file: pet.file,
+  }
+
+  const RightSwipe = () => {
+    return (
+      <TouchableOpacity
+        onPress={() => {
+          handleDelete()
+        }}
+        activeOpacity={0.6}
+      >
+        <DeleteBox>
+          <DeleteIcon width={24} height={24} color={colors.grey_100} />
+          <BodySm_Text color={colors.grey_100}>삭제</BodySm_Text>
+        </DeleteBox>
+      </TouchableOpacity>
+    )
+  }
   return (
-    <PetBox style={{ backgroundColor: grey ? colors.grey_150 : colors.grey_100, padding: grey ? 12 : 16 }}>
-      <ProfileImage />
-      <InfoBox>
-        <InfoTop>
-          <TitleBox>
-            <BodyBold_Text>{pet.name}</BodyBold_Text>
-            <AgeBox>
-              <Detail_Text color={colors.on_primary_container}>{pet.age}살</Detail_Text>
-            </AgeBox>
-          </TitleBox>
-          <EditIcon width={22} height={22} color={colors.grey_350} />
-        </InfoTop>
-        <Detail_Text>{pet.description}</Detail_Text>
-        <InfoBottom>
-          <CategroyBox style={{ backgroundColor: grey ? colors.grey_100 : colors.grey_150 }}>
-            <Detail_Text>{pet.genus}</Detail_Text>
-          </CategroyBox>
-          <CategroyBox style={{ backgroundColor: grey ? colors.grey_100 : colors.grey_150 }}>
-            <Detail_Text>{pet.species}</Detail_Text>
-          </CategroyBox>
-        </InfoBottom>
-      </InfoBox>
-    </PetBox>
+    <Swipeable ref={swipeableRef} renderRightActions={RightSwipe}>
+      <PetBox style={{ backgroundColor: grey ? colors.grey_150 : colors.grey_100, padding: grey ? 12 : 16 }}>
+        <ProfileImage source={{ uri: pet.profileUrl }} />
+        <InfoBox>
+          <InfoTop>
+            <TitleBox>
+              <BodyBold_Text>{pet.name}</BodyBold_Text>
+              <AgeBox>
+                <Detail_Text color={colors.on_primary_container}>{pet.age}살</Detail_Text>
+              </AgeBox>
+            </TitleBox>
+            <TouchableOpacity
+              onPress={() => {
+                handleEdit()
+                navigation.navigate('EditPetProfile', { petInfo })
+              }}
+            >
+              <EditIcon width={22} height={22} color={colors.grey_350} />
+            </TouchableOpacity>
+          </InfoTop>
+          <Detail_Text>{pet.description}</Detail_Text>
+          <InfoBottom>
+            <CategroyBox style={{ backgroundColor: grey ? colors.grey_100 : colors.grey_150 }}>
+              <Detail_Text>{pet.genus}</Detail_Text>
+            </CategroyBox>
+            <CategroyBox style={{ backgroundColor: grey ? colors.grey_100 : colors.grey_150 }}>
+              <Detail_Text>{pet.species}</Detail_Text>
+            </CategroyBox>
+          </InfoBottom>
+        </InfoBox>
+      </PetBox>
+    </Swipeable>
   )
 }
 
@@ -72,4 +109,13 @@ const CategroyBox = styled.View`
   border-radius: 4px;
   justify-content: center;
   align-items: center;
+`
+const DeleteBox = styled.View`
+  height: 100%;
+  padding: 8px 20px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-radius: 8px;
+  background-color: ${colors.primary};
 `

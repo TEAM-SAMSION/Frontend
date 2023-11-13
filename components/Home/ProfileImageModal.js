@@ -3,86 +3,125 @@ import { BodySm_Text } from '../Fonts'
 import { ImagePickerComponent } from './ImagePickerComponent'
 import styled from 'styled-components/native'
 import { colors } from '../../colors'
+import { profileSample, profileSample2 } from '../../datas/Home/data'
+import RNFS from 'react-native-fs'
 
 export const ProfileImageModal = (props) => {
-  const ACCESSTOKEN = props.accessToken
-  const [imageUrl, setImageUrl] = useState(
-    'https://pawith.s3.ap-northeast-2.amazonaws.com/base-image/profileDefault.png',
-  )
+  const [bottomProfileUrl, setBottomProfileUrl] = useState(props.profileUrl)
+  const [imageFile, setImageFile] = useState('file://' + RNFS.MainBundlePath + '/default_pamily.png')
 
-  useEffect(() => {
-    setImageUrl(props.profileUrl)
-  }, [])
-
-  // const uploadDefaultImage = async () => {
-  //   const url = 'https://dev.pawith.com/user'
-  //   const defaultData = new FormData()
-  //   defaultData.append('profileImage', {
-  //     uri: 'https://pawith.s3.ap-northeast-2.amazonaws.com/44b0a657-e8fc-4bb3-883d-baf67a9c5d67.png',
-  //     name: 'photo.jpeg',
-  //     type: 'image/jpeg',
-  //   })
-  //   console.log(defaultData)
-
-  //   try {
-  //     const response = await axios.post(url, defaultData, {
-  //       headers: {
-  //         'Content-Type': `multipart/form-data`,
-  //         Authorization: `Bearer ${ACCESSTOKEN}`,
-  //       },
-  //     })
-  //     console.log(response.data.imageUrl)
-  //     props.setProfileUrl('https://pawith.s3.ap-northeast-2.amazonaws.com/44b0a657-e8fc-4bb3-883d-baf67a9c5d67.png')
-  //   } catch (error) {
-  //     console.error(error)
-  //   }
-  // }
+  const changeSampleImage = async (file) => {
+    setBottomProfileUrl(`https://pawith.s3.ap-northeast-2.amazonaws.com/base-image${file}`)
+    setImageFile('file://' + RNFS.MainBundlePath + file)
+  }
 
   return (
     <>
-      <ModalContainer>
-        <ImageContainer>
-          <ProfileImage source={{ uri: imageUrl }} />
-        </ImageContainer>
-        <BoxContainer>
-          <DefaultBox>
-            <BodySm_Text color={colors.red_350}>기본 프로필로 선택</BodySm_Text>
-          </DefaultBox>
-          <ImagePickerComponent setImageUrl={props.setProfileUrl} accessToken={ACCESSTOKEN} />
-        </BoxContainer>
-      </ModalContainer>
+      <BottomTitle>
+        <BottomTitleText>Pamily 프로필 사진 설정</BottomTitleText>
+      </BottomTitle>
+      <ImageContainer>
+        <ProfileImageBox
+          source={{
+            uri: `${bottomProfileUrl}`,
+          }}
+        />
+        <ImageSampleContainer>
+          <ImagePickerComponent setBottomProfileUrl={setBottomProfileUrl} setImageFile={setImageFile} />
+          {profileSample.map((item) => (
+            <SampleImageContainer onPress={() => changeSampleImage(item.file)}>
+              <SampleImage key={item.id} source={item.image} />
+            </SampleImageContainer>
+          ))}
+        </ImageSampleContainer>
+        <ImageSampleContainer>
+          {profileSample2.map((item) => (
+            <SampleImageContainer onPress={() => changeSampleImage(item.file)}>
+              <SampleImage key={item.id} source={item.image} />
+            </SampleImageContainer>
+          ))}
+        </ImageSampleContainer>
+      </ImageContainer>
+      <ButtonContainer>
+        <CancelButton onPress={() => props.bottomRef.current?.dismiss()}>
+          <BodySm_Text color={colors.red_350}>취소</BodySm_Text>
+        </CancelButton>
+        <OkButton
+          onPress={() => {
+            props.bottomRef.current?.dismiss()
+            props.setProfileUrl(bottomProfileUrl)
+            props.setImageFile(imageFile)
+          }}
+        >
+          <BodySm_Text color={colors.red_350}>확인</BodySm_Text>
+        </OkButton>
+      </ButtonContainer>
     </>
   )
 }
 
-const ModalContainer = styled.View`
-  padding: 0px;
+const BottomTitle = styled.View`
+  align-items: center;
+  padding-top: 6px;
+  padding-bottom: 24px;
+`
+const BottomTitleText = styled.Text`
+  font-family: 'Spoqa-Medium';
+  font-size: 16px;
+  line-height: 22px;
+  color: ${colors.grey_800};
 `
 const ImageContainer = styled.View`
+  justify-content: center;
   align-items: center;
-  margin-top: 14px;
-  margin-bottom: 24px;
+  //margin-top: 16px;
 `
-const ProfileImage = styled.Image`
+const ProfileImageBox = styled.Image`
   width: 110px;
   height: 110px;
   border-radius: 20px;
+  margin-bottom: 19px;
 `
-const BoxContainer = styled.View`
-  width: 100%;
+const ImageSampleContainer = styled.View`
+  margin: 5px 24px;
   flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  gap: 16px;
-  padding: 0px 24px;
+  gap: 8px;
 `
-const DefaultBox = styled.TouchableOpacity`
+const SampleImage = styled.Image`
+  width: 59px;
+  height: 59px;
+  border-radius: 16px;
+  border-width: 1px;
+  border-color: ${colors.grey_200};
+`
+const SampleImageContainer = styled.TouchableOpacity`
+  width: 59px;
+  height: 59px;
+`
+const ButtonContainer = styled.View`
+  flex-direction: row;
+  margin: 19px 16px 0px 16px;
+  gap: 8px;
+`
+const CancelButton = styled.TouchableOpacity`
   border: 2px solid;
   border-color: ${colors.grey_150};
-  width: 156px;
+  background-color: ${colors.grey_100};
+  display: flex;
   height: 44px;
-  border-radius: 8px;
   padding: 12px 16px;
-  align-items: center;
   justify-content: center;
+  align-items: center;
+  flex: 1 0 0;
+  border-radius: 8px;
+`
+const OkButton = styled.TouchableOpacity`
+  background-color: ${colors.red_200};
+  display: flex;
+  height: 44px;
+  padding: 12px 16px;
+  justify-content: center;
+  align-items: center;
+  flex: 1 0 0;
+  border-radius: 8px;
 `

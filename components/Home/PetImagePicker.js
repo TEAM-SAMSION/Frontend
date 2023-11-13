@@ -2,11 +2,10 @@ import React from 'react'
 import * as ImagePicker from 'expo-image-picker'
 import styled from 'styled-components/native'
 import { colors } from '../../colors'
-import axios from 'axios'
 import * as ImageManipulator from 'expo-image-manipulator'
 import { BodySm_Text } from '../Fonts'
 
-export const ImagePickerComponent = (props) => {
+export const PetImagePicker = (props) => {
   const [status, requestPermission] = ImagePicker.useMediaLibraryPermissions()
 
   const uploadImage = async () => {
@@ -27,29 +26,31 @@ export const ImagePickerComponent = (props) => {
     }
 
     const localUri = result.assets[0].uri
+
     const compressedImageUri = await ImageManipulator.manipulateAsync(localUri, [{ resize: { width: 100 } }], {
       compress: 1,
       format: ImageManipulator.SaveFormat.PNG,
     })
-    props.setBottomProfileUrl(localUri)
-    props.setImageFile(compressedImageUri.uri)
+
+    props.setImageUrl(localUri)
+    props.setPetFile(compressedImageUri.uri)
   }
 
   return (
-    <SampleImageContainer onPress={() => uploadImage()}>
-      <SampleImage source={require('../../assets/Imgs/sample_library.png')} />
-    </SampleImageContainer>
+    <LibraryBox onPress={() => uploadImage()}>
+      <BodySm_Text color={colors.red_350}>라이브러리에서 선택</BodySm_Text>
+    </LibraryBox>
   )
 }
 
-const SampleImage = styled.Image`
-  width: 59px;
-  height: 59px;
-  border-radius: 16px;
-  border-width: 1px;
-  border-color: ${colors.grey_200};
-`
-const SampleImageContainer = styled.TouchableOpacity`
-  width: 59px;
-  height: 59px;
+export default PetImagePicker
+
+const LibraryBox = styled.TouchableOpacity`
+  width: 156px;
+  height: 44px;
+  border-radius: 8px;
+  padding: 12px 16px;
+  align-items: center;
+  justify-content: center;
+  background-color: ${colors.red_200};
 `
