@@ -8,11 +8,11 @@ import * as ImageManipulator from 'expo-image-manipulator'
 import { useRecoilValue } from 'recoil'
 import { accessTokenState } from '../../recoil/AuthAtom'
 import { BodySm_Text } from '../Fonts'
+import { changeProfileImage } from './Apis'
 
 export const ImagePickerComponent = (props) => {
   const ACCESSTOKEN = props.accessToken
   const [status, requestPermission] = ImagePicker.useMediaLibraryPermissions()
-  // const {status_roll} = await Permissions.askAsync(Permissions.CAMERA_ROLL);
 
   const uploadImage = async () => {
     if (!status?.granted) {
@@ -32,20 +32,21 @@ export const ImagePickerComponent = (props) => {
     }
     props.setImageUrl(result.assets[0].uri)
 
-    const url = 'https://dev.pawith.com/user'
     const localUri = result.assets[0].uri
 
     const compressedImageUri = await ImageManipulator.manipulateAsync(localUri, [{ resize: { width: 100 } }], {
       compress: 1,
-      format: ImageManipulator.SaveFormat.JPEG,
+      format: ImageManipulator.SaveFormat.PNG,
     })
+
     const routeData = new FormData()
     routeData.append('profileImage', {
       uri: compressedImageUri.uri,
-      name: 'photo.jpeg',
-      type: 'image/jpeg',
+      name: 'photo.png',
+      type: 'image/png',
     })
-    console.log(routeData._parts)
+
+    changeProfileImage(ACCESSTOKEN, routeData)
   }
 
   return (

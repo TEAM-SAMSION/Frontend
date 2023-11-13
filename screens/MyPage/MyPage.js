@@ -32,7 +32,7 @@ export default function MyPage({ navigation }) {
   const [name, setName] = useState('포잇')
   const [email, setEmail] = useState('pawith@gmail.com')
   const [profileUrl, setProfileUrl] = useState(
-    'https://pawith.s3.ap-northeast-2.amazonaws.com/base-image/profileDefault.png',
+    'https://pawith.s3.ap-northeast-2.amazonaws.com/base-image/default_user.png',
   )
 
   const swipeableRefs = useRef([])
@@ -197,7 +197,12 @@ export default function MyPage({ navigation }) {
             >
               <PopButtonText>예</PopButtonText>
             </PopButton>
-            <PopButton onPress={() => setVisible(false)}>
+            <PopButton
+              onPress={() => {
+                setVisible(false)
+                swipeableRefs.current[deleteTeamId]?.close()
+              }}
+            >
               <PopButtonText>아니오</PopButtonText>
             </PopButton>
           </PopButtonContainer>

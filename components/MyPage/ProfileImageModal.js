@@ -4,32 +4,23 @@ import ImagePickerComponent from './ImagePickerComponent'
 import axios from 'axios'
 import { BodySm_Text } from '../Fonts'
 import RNFS from 'react-native-fs'
+import { changeProfileImage } from './Apis'
 
 export const ProfileImageModal = (props) => {
   const ACCESSTOKEN = props.accessToken
 
-  const absolutePath = RNFS.MainBundlePath + '/profileDefault.png'
+  const absolutePath = RNFS.MainBundlePath + '/default_user.png'
   console.log(absolutePath)
 
   const uploadDefaultImage = async () => {
-    const url = 'https://dev.pawith.com/user'
     const defaultData = new FormData()
     defaultData.append('profileImage', {
       uri: 'file://' + absolutePath,
-      name: 'profileDefault.png',
+      name: 'default_user.png',
       type: 'image/png',
     })
-    try {
-      const response = await axios.post(url, defaultData, {
-        headers: {
-          'Content-Type': `multipart/form-data`,
-          Authorization: ACCESSTOKEN,
-        },
-      })
-      props.setProfileUrl('https://pawith.s3.ap-northeast-2.amazonaws.com/base-image/profileDefault.png')
-    } catch (error) {
-      console.error(error)
-    }
+    changeProfileImage(ACCESSTOKEN, defaultData)
+    props.setProfileUrl('https://pawith.s3.ap-northeast-2.amazonaws.com/base-image/default_user.png')
   }
 
   return (
