@@ -7,20 +7,9 @@ import RNFS from 'react-native-fs'
 import { changeProfileImage } from './Apis'
 
 export const ProfileImageModal = (props) => {
-  const ACCESSTOKEN = props.accessToken
-
-  const absolutePath = RNFS.MainBundlePath + '/default_user.png'
-  console.log(absolutePath)
-
   const uploadDefaultImage = async () => {
-    const defaultData = new FormData()
-    defaultData.append('profileImage', {
-      uri: 'file://' + absolutePath,
-      name: 'default_user.png',
-      type: 'image/png',
-    })
-    changeProfileImage(ACCESSTOKEN, defaultData)
     props.setProfileUrl('https://pawith.s3.ap-northeast-2.amazonaws.com/base-image/default_user.png')
+    props.setProfileFile('file://' + RNFS.MainBundlePath + '/default_user.png')
   }
 
   return (
@@ -33,7 +22,7 @@ export const ProfileImageModal = (props) => {
           <DefaultBox onPress={() => uploadDefaultImage()}>
             <BodySm_Text color={colors.red_350}>기본 프로필로 선택</BodySm_Text>
           </DefaultBox>
-          <ImagePickerComponent setImageUrl={props.setProfileUrl} accessToken={ACCESSTOKEN} />
+          <ImagePickerComponent setImageUrl={props.setProfileUrl} setImageFile={props.setProfileFile} />
         </BoxContainer>
       </ModalContainer>
     </>

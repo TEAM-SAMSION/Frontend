@@ -20,11 +20,22 @@ export const getTeamList = async (accessToken) => {
   return response.data.content
 }
 
+/////// 정보 수정 //////
 export const changeProfileImage = async (accessToken, routeData) => {
   let API = '/user'
   const response = await axios.post(url + API, routeData, {
     headers: {
       'Content-Type': `multipart/form-data`,
+      Authorization: accessToken,
+    },
+  })
+}
+
+export const changeNickname = async (accessToken, nickName) => {
+  let API = '/user/name'
+  let data = { nickname: nickName }
+  const response = await axios.put(url + API, data, {
+    headers: {
       Authorization: accessToken,
     },
   })
