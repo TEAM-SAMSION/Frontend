@@ -15,9 +15,8 @@ import { ProfileImageModal } from '../../components/Home/ProfileImageModal'
 import { ScreenLayout, ScreenWidth } from '../../components/Shared'
 import EditIcon from '../../assets/Svgs/Edit.svg'
 import { PetImageModal } from '../../components/Home/PetImageModal'
-import BackButton from '../../assets/Svgs/chevron_back.svg'
 
-export default function EditPetProfile({ route, navigation }) {
+export default function EditPet({ route, navigation }) {
   const ACCESSTOKEN = useRecoilValue(accessTokenState)
 
   const petInfo = route.params.petInfo
@@ -35,35 +34,12 @@ export default function EditPetProfile({ route, navigation }) {
     setEnabled(!isEmpty)
 
     navigation.setOptions({
-      headerLeft: () => (
-        <TouchableOpacity
-          onPress={() => {
-            const result = completeAddingPet(
-              petInfo.name,
-              petInfo.age,
-              petInfo.description,
-              petInfo.genus,
-              petInfo.species,
-              petInfo.profileUrl,
-              petInfo.file,
-            )
-            navigation.navigate('CreateTeam', { result })
-          }}
-          style={{
-            justifyContent: 'center',
-            alignItems: 'center',
-            marginLeft: 16,
-          }}
-        >
-          <BackButton width={24} height={24} />
-        </TouchableOpacity>
-      ),
       headerRight: () => (
         <TouchableOpacity
           disabled={!enabled}
           onPress={() => {
             const result = completeAddingPet(petName, petAge, petIntro, petCategory, petDetail, petImageUrl, petFile)
-            navigation.navigate('CreateTeam', { result })
+            navigation.navigate('ManagePet', { result })
           }}
           style={{ marginRight: 16 }}
         >

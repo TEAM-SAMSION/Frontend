@@ -40,7 +40,9 @@ const GroupBox = (props) => {
             가입한지 <BodyBoldSm_Text color={colors.primary_outline}>{props.data.registerPeriod}</BodyBoldSm_Text>일째
           </BodySm_Text>
         </GroupInfoBox>
-        {props.data.authority == 'PRESIDENT' ? (
+        {props.data.authority == 'MEMBER' ? (
+          <View width={34} height={34} />
+        ) : (
           <CrownButton
             onPress={() => {
               props.gotoAdminNav()
@@ -48,8 +50,6 @@ const GroupBox = (props) => {
           >
             <CrownIcon width={34} height={34} />
           </CrownButton>
-        ) : (
-          <View width={34} height={34} />
         )}
       </GroupBoxContainer>
     </Swipeable>

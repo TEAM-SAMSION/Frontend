@@ -11,7 +11,6 @@ import { BodySm_Text } from '../Fonts'
 import { changeProfileImage } from './Apis'
 
 export const ImagePickerComponent = (props) => {
-  const ACCESSTOKEN = props.accessToken
   const [status, requestPermission] = ImagePicker.useMediaLibraryPermissions()
 
   const uploadImage = async () => {
@@ -30,23 +29,15 @@ export const ImagePickerComponent = (props) => {
     if (result.canceled) {
       return null
     }
-    props.setImageUrl(result.assets[0].uri)
 
     const localUri = result.assets[0].uri
-
     const compressedImageUri = await ImageManipulator.manipulateAsync(localUri, [{ resize: { width: 100 } }], {
       compress: 1,
       format: ImageManipulator.SaveFormat.PNG,
     })
 
-    const routeData = new FormData()
-    routeData.append('profileImage', {
-      uri: compressedImageUri.uri,
-      name: 'photo.png',
-      type: 'image/png',
-    })
-
-    changeProfileImage(ACCESSTOKEN, routeData)
+    props.setImageUrl(localUri)
+    props.setImageFile(compressedImageUri.uri)
   }
 
   return (

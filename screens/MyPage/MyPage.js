@@ -29,8 +29,8 @@ export default function MyPage({ navigation }) {
     isFocused && setIsTabVisible(true)
   }, [isFocused])
 
-  const [name, setName] = useState('포잇')
-  const [email, setEmail] = useState('pawith@gmail.com')
+  const [name, setName] = useState('')
+  const [email, setEmail] = useState('')
   const [profileUrl, setProfileUrl] = useState(
     'https://pawith.s3.ap-northeast-2.amazonaws.com/base-image/default_user.png',
   )
@@ -47,7 +47,10 @@ export default function MyPage({ navigation }) {
 
   useEffect(() => {
     fetchUserInfo()
-  }, [])
+  })
+  useEffect(() => {
+    fetchUserInfo()
+  }, [isFocused])
 
   const [groupInfo, setGroupInfo] = useState([
     {
@@ -87,16 +90,6 @@ export default function MyPage({ navigation }) {
     fetchTeamList()
   }
 
-  const bottomSheetModalRef = useRef(null)
-  const snapPoints = ['30%']
-  const handlePresentModal = useCallback(() => {
-    bottomSheetModalRef.current?.present()
-  }, [])
-  const renderBackdrop = useCallback(
-    (props) => <BottomSheetBackdrop {...props} disappearsOnIndex={-1} appearsOnIndex={0} pressBehavior="close" />,
-    [],
-  )
-
   return (
     <BottomSheetModalProvider>
       <ScreenLayout>
@@ -104,19 +97,17 @@ export default function MyPage({ navigation }) {
         <ScrollView>
           <UserContainer>
             <UserDetailContainer>
-              <TouchableOpacity onPress={handlePresentModal}>
-                <ProfileImage
-                  source={{
-                    uri: `${profileUrl}`,
-                  }}
-                />
-              </TouchableOpacity>
+              <ProfileImage
+                source={{
+                  uri: `${profileUrl}`,
+                }}
+              />
               <UserBox>
                 <SubHead_Text>{name}</SubHead_Text>
                 <Detail_Text color={colors.grey_600}>{email}</Detail_Text>
               </UserBox>
             </UserDetailContainer>
-            <EditBox>
+            <EditBox onPress={() => navigation.navigate('EditUserInfo', { profileUrl, name, email })}>
               <EditIcon width={16} height={16} color={'#4D4D4D'} />
             </EditBox>
           </UserContainer>
@@ -148,7 +139,7 @@ export default function MyPage({ navigation }) {
                           setDeleteTeamName(item.teamName)
                           setVisible(true)
                         }}
-                        gotoAdminNav={() => navigation.navigate('AdministratorNav')}
+                        gotoAdminNav={() => navigation.navigate('AdministratorNav', { item })}
                         swipeableRef={(ref) => (swipeableRefs.current[item.teamId] = ref)}
                       />
                     )
@@ -158,7 +149,7 @@ export default function MyPage({ navigation }) {
             )}
           </GroupContainer>
           <FooterContainer>
-            <Detail_Text color={'A09999'}>
+            <Detail_Text color={'#A09999'}>
               포잇에 대해 더 알아볼까요?{'\n'}좀 더 똑똑하게 포잇을 사용하고 싶다면?
             </Detail_Text>
             <Guide>포잇가이드</Guide>
@@ -207,17 +198,6 @@ export default function MyPage({ navigation }) {
             </PopButton>
           </PopButtonContainer>
         </ModalPopUp>
-        <BottomSheetModal
-          ref={bottomSheetModalRef}
-          index={0}
-          snapPoints={snapPoints}
-          backdropComponent={renderBackdrop}
-          backgroundStyle={{
-            borderRadius: 24,
-          }}
-        >
-          <ProfileImageModal profileUrl={profileUrl} setProfileUrl={setProfileUrl} accessToken={ACCESSTOKEN} />
-        </BottomSheetModal>
       </ScreenLayout>
     </BottomSheetModalProvider>
   )
@@ -244,7 +224,7 @@ const UserBox = styled.View`
   justify-content: center;
   gap: 4px;
 `
-const EditBox = styled.View`
+const EditBox = styled.TouchableOpacity`
   width: 24px;
   height: 24px;
   background-color: ${colors.grey_150};

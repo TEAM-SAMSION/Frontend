@@ -25,7 +25,7 @@ export const AddPetBox = ({ pet, grey, navigation, handleDelete, handleEdit, swi
         }}
         activeOpacity={0.6}
       >
-        <DeleteBox>
+        <DeleteBox style={{ marginRight: grey ? 0 : 16 }}>
           <DeleteIcon width={24} height={24} color={colors.grey_100} />
           <BodySm_Text color={colors.grey_100}>삭제</BodySm_Text>
         </DeleteBox>
@@ -33,7 +33,7 @@ export const AddPetBox = ({ pet, grey, navigation, handleDelete, handleEdit, swi
     )
   }
   return (
-    <Swipeable ref={swipeableRef} renderRightActions={RightSwipe}>
+    <Swipeable ref={swipeableRef} renderRightActions={RightSwipe} hitSlop={{ left: -100 }}>
       <PetBox style={{ backgroundColor: grey ? colors.grey_150 : colors.grey_100, padding: grey ? 12 : 16 }}>
         <ProfileImage source={{ uri: pet.profileUrl }} />
         <InfoBox>
@@ -47,7 +47,7 @@ export const AddPetBox = ({ pet, grey, navigation, handleDelete, handleEdit, swi
             <TouchableOpacity
               onPress={() => {
                 handleEdit()
-                navigation.navigate('EditPetProfile', { petInfo })
+                grey ? navigation.navigate('EditPetProfile', { petInfo }) : navigation.navigate('EditPet', { petInfo })
               }}
             >
               <EditIcon width={22} height={22} color={colors.grey_350} />

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import styled from 'styled-components/native'
 import { colors } from '../../colors'
 import { BodyBoldSm_Text, BodyBold_Text, BodySm_Text, Detail_Text, SubHeadSm_Text, SubHead_Text } from '../Fonts'
@@ -6,8 +6,12 @@ import { ModalPopUp } from '../Shared'
 import MoreIcon from '../../assets/Svgs/More.svg'
 import CrownIcon from '../../assets/Svgs/Crown.svg'
 import { MemberPopUp } from './MemberPopUp'
+import { changeAuthority } from './Apis'
 
 export const MemberSearchBox = (props) => {
+  const ACCESSTOKEN = props.accessToken
+  const teamId = 1
+
   const [visible, setVisible] = useState(false)
   const [changeVisible, setChangeVisible] = useState(false)
   const [changing, setChanging] = useState('')
@@ -20,12 +24,19 @@ export const MemberSearchBox = (props) => {
   const authority = data.authority
   const registerName = data.registerName
   const registerEmail = data.registerEmail
+  const profileImage = data.profileImage
+
+  const setAuthority = () => {
+    console.log(changing)
+    changeAuthority(ACCESSTOKEN, teamId, registerId, changing)
+    // api 에러 !
+  }
 
   return (
     <>
       <Card>
         <TeamContentBox>
-          <TeamImage source={require('../../assets/Imgs/sample_5.png')} />
+          <TeamImage source={{ uri: profileImage }} />
           <TeamInfoBox>
             <TeamInfoDetailBox>
               {authority == 'PRESIDENT' ? (
@@ -110,7 +121,12 @@ export const MemberSearchBox = (props) => {
           >
             <PopButtonText>취소</PopButtonText>
           </PopButton>
-          <PopButton onPress={() => setChangeVisible(false)}>
+          <PopButton
+            onPress={() => {
+              setAuthority()
+              setChangeVisible(false)
+            }}
+          >
             <PopButtonText>완료</PopButtonText>
           </PopButton>
         </PopButtonContainer>

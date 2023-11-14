@@ -4,32 +4,45 @@ import { ScreenLayout } from '../../components/Shared'
 import { BodySm_Text, Detail_Text } from '../../components/Fonts'
 import SearchIcon from '../../assets/Svgs/Search.svg'
 import Clipboard from '@react-native-clipboard/clipboard'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { MemberSearchBox } from '../../components/Administrator/MemberSearchBox'
+import { useRecoilValue } from 'recoil'
+import { accessTokenState } from '../../recoil/AuthAtom'
+import { getMember, searchMember } from '../../components/Administrator/Apis'
 
 export default function ManageMember({ navigation }) {
+  const ACCESSTOKEN = useRecoilValue(accessTokenState)
+  const teamId = 1
   const pamilyCode = 'dododo'
   const [searchedName, setSearchedName] = useState('')
-  const [searchedData, setSearchedData] = useState([
+  const [allMember, setAllMember] = useState([])
+  const [memberData, setMemberData] = useState([
     {
       registerId: -9223372036854775808,
       authority: 'PRESIDENT',
       registerName: '신민선',
       registerEmail: 'tlsalstjs@gmail.com',
     },
-    {
-      registerId: -7852,
-      authority: 'EXECUTIVE',
-      registerName: '황주희',
-      registerEmail: 'ghkdwngml@gmail.com',
-    },
-    {
-      registerId: -933,
-      authority: 'MEMBER',
-      registerName: '회원1',
-      registerEmail: 'vptahfl@gmail.com',
-    },
   ])
+
+  useEffect(() => {
+    getMember(ACCESSTOKEN, teamId).then((result) => {
+      setMemberData(result)
+      setAllMember(result)
+      console.log(result)
+    })
+  }, [])
+
+  useEffect(() => {
+    if (searchedName == '') {
+      setMemberData(allMember)
+    }
+    searchMember(ACCESSTOKEN, teamId, searchedName).then((result) => {
+      if (result.length > 0) {
+        setMemberData(result)
+      }
+    })
+  }, [searchedName])
 
   const copyTeamCode = () => {
     Clipboard.setString(pamilyCode)
@@ -65,8 +78,8 @@ export default function ManageMember({ navigation }) {
           </IconBox>
         </Block>
         <MemberBox>
-          {searchedData.map((data, index) => (
-            <MemberSearchBox key={index} data={data} />
+          {memberData.map((data, index) => (
+            <MemberSearchBox key={index} data={data} accessToken={ACCESSTOKEN} />
           ))}
         </MemberBox>
       </Container>

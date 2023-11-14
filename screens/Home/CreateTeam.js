@@ -126,8 +126,9 @@ export default function CreateTeam({ route, navigation }) {
     })
   }
 
+  const copyText = `초대코드: ${pamilyCode}${'\n'}참여방법: 포잇 > Pamily 참여하기 > 코드 입력`
   const copyTeamCode = () => {
-    Clipboard.setString(pamilyCode)
+    Clipboard.setString(copyText)
   }
 
   const deletePet = (deletePetInfo) => {

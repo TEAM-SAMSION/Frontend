@@ -33,7 +33,7 @@ export default function AdminHome({ navigation }) {
             <Detail_Text color={colors.grey_600}>{intro}</Detail_Text>
           </UserBox>
         </UserDetailContainer>
-        <EditBox>
+        <EditBox onPress={() => navigation.navigate('EditPamily', { name, intro, profileUrl })}>
           <EditIcon width={16} height={16} color={'#4D4D4D'} />
         </EditBox>
       </UserContainer>
@@ -137,7 +137,7 @@ const UserBox = styled.View`
   justify-content: center;
   gap: 4px;
 `
-const EditBox = styled.View`
+const EditBox = styled.TouchableOpacity`
   width: 24px;
   height: 24px;
   background-color: ${colors.grey_150};

@@ -10,6 +10,7 @@ import DeletePamily from '../screens/MyPage/DeletePamily'
 import DeletePamily2 from '../screens/MyPage/DeletePamily2'
 import HomeNav from './HomeNav'
 import AdministratorNav from './AdministratorNav'
+import EditUserInfo from '../screens/MyPage/EditUserInfo'
 
 const Stack = createStackNavigator()
 
@@ -51,6 +52,25 @@ export default function MyPageNav() {
         component={Account}
         options={({ navigation }) => ({
           headerTitle: '계정',
+          headerLeft: () => (
+            <TouchableOpacity
+              onPress={() => navigation.goBack()}
+              style={{
+                justifyContent: 'center',
+                alignItems: 'center',
+                marginLeft: 16,
+              }}
+            >
+              <BackButton width={24} height={24} />
+            </TouchableOpacity>
+          ),
+        })}
+      />
+      <Stack.Screen
+        name="EditUserInfo"
+        component={EditUserInfo}
+        options={({ navigation }) => ({
+          headerTitle: '회원 정보 수정',
           headerLeft: () => (
             <TouchableOpacity
               onPress={() => navigation.goBack()}
