@@ -77,18 +77,6 @@ export default function HomeNav() {
         component={EditPetProfile}
         options={({ navigation }) => ({
           headerTitle: '펫 정보 수정',
-          headerLeft: () => (
-            <TouchableOpacity
-              onPress={() => navigation.goBack()}
-              style={{
-                justifyContent: 'center',
-                alignItems: 'center',
-                marginLeft: 16,
-              }}
-            >
-              <BackButton width={24} height={24} />
-            </TouchableOpacity>
-          ),
         })}
       />
       <Stack.Screen
