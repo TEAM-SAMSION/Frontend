@@ -7,6 +7,7 @@ import ManagePetNav from './ManagePetNav'
 import { colors } from '../colors'
 import { TouchableOpacity } from 'react-native'
 import BackButton from '../assets/Svgs/chevron_back.svg'
+import EditPamily from '../screens/Administrator/EditPamily'
 
 const Stack = createStackNavigator()
 
@@ -29,6 +30,25 @@ export default function AdministratorNav() {
         component={AdminHome}
         options={({ navigation }) => ({
           headerTitle: '관리자 설정',
+          headerLeft: () => (
+            <TouchableOpacity
+              onPress={() => navigation.goBack()}
+              style={{
+                justifyContent: 'center',
+                alignItems: 'center',
+                marginLeft: 16,
+              }}
+            >
+              <BackButton width={24} height={24} />
+            </TouchableOpacity>
+          ),
+        })}
+      />
+      <Stack.Screen
+        name="EditPamily"
+        component={EditPamily}
+        options={({ navigation }) => ({
+          headerTitle: 'Pamily 정보 수정',
           headerLeft: () => (
             <TouchableOpacity
               onPress={() => navigation.goBack()}
