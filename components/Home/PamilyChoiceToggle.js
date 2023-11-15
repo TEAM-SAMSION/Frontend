@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import DownIcon from '../../assets/Svgs/arrow_down.svg'
 import UpIcon from '../../assets/Svgs/arrow_up.svg'
 import styled from 'styled-components/native'
@@ -10,19 +10,28 @@ import { BodySm_Text, Detail_Text, SubHead_Text } from '../Fonts'
 
 export const PamilyChoiceToggle = (props) => {
   const pamilyList = props.pamilyList
-  const options = pamilyList.length > 0 ? pamilyList.map((item) => item.teamName) : []
+  const topTeamId = props.topTeamId
+  const topTeamName = props.topTeamName
+  const options = pamilyList.length > 0 ? pamilyList.map((item) => item) : []
   // 패밀리 선택 toggle isOpen
   const [isOpen, setIsOpen] = useState(false)
-  const [selectedValue, setSelectedValue] = useState('')
+  const [selectedValue, setSelectedValue] = useState(props.topTeamName)
   const [visible, setVisible] = useState(false)
   const navigation = useNavigation()
+
+  useEffect(() => {
+    setSelectedValue(topTeamName)
+  }, [])
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen)
   }
 
   const handleOptionSelect = (value) => {
-    setSelectedValue(value)
+    console.log(value)
+    setSelectedValue(value.teamName)
+    props.setTopTeamId(value.teamId)
+    props.setTopTeamName(value.teamName)
     setIsOpen(false)
   }
 
@@ -40,8 +49,8 @@ export const PamilyChoiceToggle = (props) => {
       {isOpen && (
         <>
           {options.map((option) => (
-            <DropdownBox key={option} onPress={() => handleOptionSelect(option)}>
-              <Detail_Text color={colors.grey_600}>{option}</Detail_Text>
+            <DropdownBox key={option.teamId} onPress={() => handleOptionSelect(option)}>
+              <Detail_Text color={colors.grey_600}>{option.teamName}</Detail_Text>
             </DropdownBox>
           ))}
           <DropdownBox
