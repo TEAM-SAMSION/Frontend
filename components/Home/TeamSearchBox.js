@@ -8,6 +8,7 @@ import Close from '../../assets/Svgs/Close.svg'
 import { StackActions, useNavigation } from '@react-navigation/native'
 import { useRecoilValue } from 'recoil'
 import { accessTokenState } from '../../recoil/AuthAtom'
+import ToDoNav from '../../navigators/ToDoNav'
 
 export const TeamSearchBox = (props) => {
   const [visible, setVisible] = useState(false)
@@ -94,7 +95,7 @@ export const TeamSearchBox = (props) => {
               console.log(teamCode)
               postJoiningTeam(ACCESSTOKEN, teamCode)
               setVisible(false)
-              navigation.dispatch(StackActions.replace('ToDoNav'))
+              navigation.navigate('ToDoNav')
             }}
           >
             <BodySm_Text color={colors.red_350}>예</BodySm_Text>
