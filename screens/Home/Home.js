@@ -46,13 +46,18 @@ export default function Home({ navigation }) {
 
   useEffect(() => {
     getUserNickname()
-    console.log(pamilyNum)
     getTeamList(ACCESSTOKEN).then((result) => {
       setPamilyList(result)
-      console.log(result)
       if (result.length !== 0) {
-        setTeamId()
-        fetchProgress()
+        setPamilyNum(1)
+        setTopTeamId(pamilyList[0].teamId)
+        setTopTeamName(pamilyList[0].teamName)
+        getMyTodoList(ACCESSTOKEN, 0, topTeamId).then((result) => {
+          setMyTodo(result)
+        })
+        getTodoProgress(ACCESSTOKEN, topTeamId).then((result) => {
+          setProgress(result)
+        })
       }
       if (result.length == 0) {
         setPamilyNum(0)
@@ -78,12 +83,14 @@ export default function Home({ navigation }) {
   const setTeamId = () => {
     setPamilyNum(1)
     setTopTeamId(pamilyList[0].teamId)
+    console.log(topTeamId)
     setTopTeamName(pamilyList[0].teamName)
   }
 
   const fetchProgress = () => {
     getTodoProgress(ACCESSTOKEN, topTeamId).then((result) => {
       setProgress(result)
+      console.log(progress)
     })
   }
 

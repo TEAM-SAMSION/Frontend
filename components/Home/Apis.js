@@ -50,6 +50,7 @@ export const getSearchedTeam = async (accessToken, teamCode) => {
   const response = await axios.get(url + API, {
     headers: { Authorization: accessToken },
   })
+  console.log(response.data)
   return response.data
 }
 
@@ -73,6 +74,10 @@ export const getTeamCode = async (accessToken) => {
 export const postTeamInfo = async (accessToken, data) => {
   let API = `/teams`
   const response = await axios.post(url + API, data, {
-    headers: { Authorization: accessToken },
+    headers: {
+      'Content-Type': 'multipart/form-data',
+      //Accept: 'application/json',
+      Authorization: accessToken,
+    },
   })
 }

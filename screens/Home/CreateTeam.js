@@ -136,32 +136,30 @@ export default function CreateTeam({ route, navigation }) {
     setSavedPets(updatedPet)
   }
 
-  const pamilyData = new FormData()
-
   const createPamily = () => {
+    const pamilyData = new FormData()
     pamilyData.append('teamImageFile', {
       uri: pamilyFile,
-      name: `teamImageFile`,
+      name: `teamImageFile.png`,
       type: 'image/png',
     })
-    savedPets.map((item, index) => {
+    savedPets.forEach((item) => {
       pamilyData.append(`petimageFiles`, {
         uri: item.file,
-        name: `petimageFiles`,
+        name: `petimageFiles.png`,
         type: 'image/png',
       })
     })
-    const petInfo = savedPets.map(({ profileUrl, file, ...rest }) => rest)
     const teamInfo = {
       teamName: pamilyName,
-      description: pamilyIntro,
       randomCode: pamilyCode,
-      petRegisters: petInfo,
+      description: pamilyIntro,
+      petRegisters: savedPets.map(({ profileUrl, file, ...rest }) => rest),
     }
+
     const json = JSON.stringify(teamInfo)
-    const blob = new Blob([json], { type: 'application/json' })
-    pamilyData.append('todoTeamCreateInfo', blob)
-    console.log(pamilyData._parts)
+    pamilyData.append('todoTeamCreateInfo', { string: json, type: 'application/json' })
+
     postTeamInfo(ACCESSTOKEN, pamilyData)
   }
 
