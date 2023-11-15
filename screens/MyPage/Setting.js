@@ -1,11 +1,24 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Text, View } from 'react-native'
 import { ScreenLayout } from '../../components/Shared'
 import { styled } from 'styled-components/native'
 import ContentIcon from '../../assets/Svgs/chevron_right.svg'
 import { colors } from '../../colors'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import { useRecoilState } from 'recoil'
+import { loggedInState } from '../../recoil/AuthAtom'
+import { useIsFocused } from '@react-navigation/native'
+import { TabBarAtom } from '../../recoil/TabAtom'
 
 export default function Setting({ navigation }) {
+  const isFocused = useIsFocused()
+  const [isTabVisible, setIsTabVisible] = useRecoilState(TabBarAtom)
+  const [loggedIn, setLoggedIn] = useRecoilState(loggedInState)
+
+  useEffect(() => {
+    isFocused && setIsTabVisible(false)
+  }, [isFocused, isTabVisible])
+
   return (
     <ScreenLayout>
       <ContentContainer onPress={() => navigation.navigate('Account')}>
@@ -30,7 +43,12 @@ export default function Setting({ navigation }) {
         <ContentText>앱 정보</ContentText>
         <ContentText2>ver 1.0.0</ContentText2>
       </ContentContainer>
-      <ContentContainer>
+      <ContentContainer
+        onPress={() => {
+          AsyncStorage.clear()
+          setLoggedIn(false)
+        }}
+      >
         <ContentText>로그아웃</ContentText>
       </ContentContainer>
       <ContentContainer>
