@@ -10,8 +10,11 @@ import { BodySm_Text, Detail_Text, SubHead_Text } from '../Fonts'
 
 export const PamilyChoiceToggle = (props) => {
   const pamilyList = props.pamilyList
-  const topTeamId = props.topTeamId
-  const topTeamName = props.topTeamName
+  // const topTeamId = props.topTeamId
+  // const topTeamName = props.topTeamName
+  //console.log('hi')
+  console.log(props.topTeamId)
+  //console.log('hi')
   const options = pamilyList.length > 0 ? pamilyList.map((item) => item) : []
   // 패밀리 선택 toggle isOpen
   const [isOpen, setIsOpen] = useState(false)
@@ -19,9 +22,9 @@ export const PamilyChoiceToggle = (props) => {
   const [visible, setVisible] = useState(false)
   const navigation = useNavigation()
 
-  useEffect(() => {
-    setSelectedValue(topTeamName)
-  }, [])
+  // useEffect(() => {
+  //   setSelectedValue(topTeamName)
+  // }, [])
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen)
@@ -29,7 +32,6 @@ export const PamilyChoiceToggle = (props) => {
 
   const handleOptionSelect = (value) => {
     console.log(value)
-    setSelectedValue(value.teamName)
     props.setTopTeamId(value.teamId)
     props.setTopTeamName(value.teamName)
     setIsOpen(false)
@@ -38,7 +40,7 @@ export const PamilyChoiceToggle = (props) => {
   return (
     <>
       <DropdownContainer isOpen={isOpen} onPress={toggleDropdown}>
-        <Detail_Text color={colors.grey_600}>{selectedValue || '패밀리 선택 '}</Detail_Text>
+        <Detail_Text color={colors.grey_600}>{props.topTeamName || '패밀리 선택 '}</Detail_Text>
         {isOpen ? (
           <UpIcon width={16} height={16} style={{ position: 'absolute', right: 10 }} />
         ) : (

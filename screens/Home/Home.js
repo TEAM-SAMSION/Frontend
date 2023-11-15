@@ -48,14 +48,16 @@ export default function Home({ navigation }) {
     getUserNickname()
     getTeamList(ACCESSTOKEN).then((result) => {
       setPamilyList(result)
+      console.log(result)
       if (result.length !== 0) {
         setPamilyNum(1)
         setTopTeamId(pamilyList[0].teamId)
+        console.log(topTeamId)
         setTopTeamName(pamilyList[0].teamName)
-        getMyTodoList(ACCESSTOKEN, 0, topTeamId).then((result) => {
+        getMyTodoList(ACCESSTOKEN, pamilyList[0].teamId).then((result) => {
           setMyTodo(result)
         })
-        getTodoProgress(ACCESSTOKEN, topTeamId).then((result) => {
+        getTodoProgress(ACCESSTOKEN, pamilyList[0].teamId).then((result) => {
           setProgress(result)
         })
       }
@@ -99,13 +101,13 @@ export default function Home({ navigation }) {
     {
       pamilyNum !== 0 && fetchMyTodo()
     }
-  }, [isFocused, updated])
+  }, [isFocused, updated, topTeamId, pamilyNum])
 
   const [myTodo, setMyTodo] = useState([])
   const [todoPage, setTodoPage] = useState(0)
 
   const fetchMyTodo = () => {
-    getMyTodoList(ACCESSTOKEN, todoPage, topTeamId).then((result) => {
+    getMyTodoList(ACCESSTOKEN, topTeamId).then((result) => {
       setMyTodo(result)
     })
   }
