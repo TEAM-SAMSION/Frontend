@@ -1,14 +1,29 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { FlatList } from 'react-native'
 import styled from 'styled-components/native'
 import { colors } from '../../colors'
 import Update from '../../assets/Svgs/updateIcon.svg'
+import { profileSample } from '../../datas/Home/data'
+import { deleteTeam, getAllTodoList, getTodoNum } from '../../components/MyPage/Apis'
+import { useRecoilState, useRecoilValue } from 'recoil'
+import { accessTokenState } from '../../recoil/AuthAtom'
+import { useIsFocused } from '@react-navigation/native'
+import { TabBarAtom } from '../../recoil/TabAtom'
+import { ScrollView } from 'react-native-gesture-handler'
+import { BodyBoldSm_Text, DetailSm_Text } from '../../components/Fonts'
 
-export default function DeletePamily({ navigation }) {
-  const teamName = useState('포잇')
-  const userNickname = useState('펫모리')
-  const todoNum = useState(200)
-  const todoList = [
+export default function DeletePamily({ route, navigation }) {
+  const ACCESSTOKEN = useRecoilValue(accessTokenState)
+  const isFocused = useIsFocused()
+  const [isTabVisible, setIsTabVisible] = useRecoilState(TabBarAtom)
+
+  const deleteItem = route.params
+  const userNickname = deleteItem.name
+  const team = deleteItem.deleteTeam
+  const teamName = team.teamName
+  const teamPeriod = team.registerPeriod + 1
+  const [todoNum, setTodoNum] = useState(0)
+  const [todoList, setTodoList] = useState([
     {
       id: 1,
       image: '',
@@ -21,11 +36,31 @@ export default function DeletePamily({ navigation }) {
       category: '포잇',
       todoContent: '강아지 산책',
     },
-  ]
+  ])
+  const [deleteTeamId, setDeleteTeamId] = useState()
+
+  useEffect(() => {
+    isFocused && setIsTabVisible(false)
+  }, [isFocused, isTabVisible])
+
+  useEffect(() => {
+    const teamId = team.teamId
+    getAllTodoList(ACCESSTOKEN, teamId).then((result) => {
+      setTodoList(result)
+    })
+    getTodoNum(ACCESSTOKEN, teamId).then((result) => {
+      setTodoNum(result)
+    })
+    setDeleteTeamId(teamId)
+  }, [])
+
+  const deletePamily = () => {
+    console.log(deleteTeamId)
+    deleteTeam(ACCESSTOKEN, deleteTeamId)
+  }
 
   const renderItem = ({ item }) => (
     <TodoContainer
-      id={item.id}
       style={{
         shadowColor: 'rgb(0,0,0)',
         shadowRadius: 2,
@@ -33,51 +68,59 @@ export default function DeletePamily({ navigation }) {
         shadowOffset: [0, 0],
       }}
     >
-      <TeamImage />
+      <TeamColor />
       <ContentContainer>
-        <Category>{item.category}</Category>
-        <TodoText>{item.todoContent}</TodoText>
+        <DetailSm_Text>{item.categoryName}</DetailSm_Text>
+        <BodyBoldSm_Text>{item.task}</BodyBoldSm_Text>
       </ContentContainer>
     </TodoContainer>
   )
 
   return (
-    <Container>
-      <TimeBox>
-        <Title>
-          <TeamNameText>{teamName}</TeamNameText>과 함께한 {userNickname}님의 시간
-        </Title>
-        <DateContent
-          style={{
-            shadowColor: 'rgb(0,0,0)',
-            shadowRadius: 2,
-            shadowOpacity: 0.2,
-            shadowOffset: [0, 0],
+    <ScrollView style={{ backgroundColor: colors.grey_100 }}>
+      <Container>
+        <TimeBox>
+          <Title>
+            <TeamNameText>{teamName}</TeamNameText>과 함께한 {userNickname}님의 시간
+          </Title>
+          <DateContent
+            style={{
+              shadowColor: 'rgb(0,0,0)',
+              shadowRadius: 2,
+              shadowOpacity: 0.2,
+              shadowOffset: [0, 0],
+            }}
+          >
+            <DateText>{teamPeriod}일</DateText>
+          </DateContent>
+        </TimeBox>
+        <TodoBox>
+          <TitleBox>
+            <Title>
+              <TeamNameText>{teamName}</TeamNameText>과 함께한 {userNickname}님의 Todo,
+              {todoNum}개
+            </Title>
+            <Update width={32} height={32} />
+          </TitleBox>
+          <FlatList data={todoList} renderItem={renderItem} />
+        </TodoBox>
+        <DeleteButton
+          onPress={() => {
+            deletePamily()
+            navigation.navigate('DeletePamily2')
           }}
         >
-          <DateText>24일</DateText>
-        </DateContent>
-      </TimeBox>
-      <TodoBox>
-        <TitleBox>
-          <Title>
-            <TeamNameText>{teamName}</TeamNameText>과 함께한 {userNickname}님의 Todo,
-            {todoNum}개
-          </Title>
-          <Update width={32} height={32} />
-        </TitleBox>
-        <FlatList data={todoList} renderItem={renderItem} keyExtractor={(item) => item.id} />
-      </TodoBox>
-      <DeleteButton onPress={() => navigation.navigate('DeletePamily2')}>
-        <ButtonText>모임 탈퇴하기</ButtonText>
-      </DeleteButton>
-    </Container>
+          <ButtonText>모임 탈퇴하기</ButtonText>
+        </DeleteButton>
+      </Container>
+    </ScrollView>
   )
 }
 
 const Container = styled.View`
   flex: 1;
   padding: 0px 16px;
+  margin-bottom: 22px;
   background-color: ${colors.grey_100};
 `
 const TimeBox = styled.View`
@@ -111,6 +154,7 @@ const DateText = styled.Text`
 `
 const TodoBox = styled.View`
   gap: 16px;
+  margin-bottom: 70px;
 `
 const TitleBox = styled.View`
   flex-direction: row;
@@ -125,28 +169,17 @@ const TodoContainer = styled.View`
   border-radius: 16px;
   margin: 2px 2px 16px 2px;
   background-color: ${colors.grey_100};
-  gap: 10px;
+  gap: 12px;
 `
-const TeamImage = styled.Image`
-  width: 45px;
-  height: 45px;
-  border-radius: 8px;
-  background-color: pink;
+const TeamColor = styled.View`
+  width: 16px;
+  height: 16px;
+  border-radius: 99px;
+  background-color: ${colors.primary};
 `
 const ContentContainer = styled.View`
   gap: 4px;
   justify-content: center;
-`
-const Category = styled.Text`
-  font-family: 'Spoqa-Medium';
-  font-size: 12px;
-  font-weight: 400;
-  line-height: 15px;
-`
-const TodoText = styled.Text`
-  font-family: 'Spoqa-Bold';
-  font-size: 14px;
-  line-height: 19px;
 `
 const DeleteButton = styled.TouchableOpacity`
   position: absolute;

@@ -169,7 +169,6 @@ export default function AddPet({ route, navigation }) {
                     editable
                     onChangeText={(text) => {
                       setPetIntro(text)
-                      console.log(petIntro)
                     }}
                     placeholder="한줄소개를 입력해주세요.(20자이내)"
                     placeholderTextColor={colors.grey_400}

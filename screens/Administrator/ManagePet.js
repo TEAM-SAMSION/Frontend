@@ -5,6 +5,7 @@ import { BodyBoldSm_Text, BodySm_Text } from '../../components/Fonts'
 import { AddPetBox } from '../../components/Home/AddPetBox'
 import PlusIcon from '../../assets/Svgs/miniPlus.svg'
 import { useRef } from 'react'
+import { ScrollView } from 'react-native'
 
 export default function ManagePet({ navigation }) {
   const swipeableRefs = useRef([])
@@ -39,32 +40,34 @@ export default function ManagePet({ navigation }) {
   ]
   return (
     <ScreenLayout>
-      <PetAddContainer>
-        {savedPets.length < 0
-          ? ''
-          : savedPets.map((pet, index) => (
-              <AddPetBox
-                key={index}
-                pet={pet}
-                grey={false}
-                navigation={navigation}
-                handleDelete={() => {
-                  console.log('api 나오면')
-                  //setDeletePetInfo(pet)
-                  //setDeleteVisible(true)
-                }}
-                handleEdit={() => {
-                  console.log('api 나오면')
-                  //deletePet(pet)
-                }}
-                swipeableRef={(ref) => (swipeableRefs.current[pet] = ref)}
-              />
-            ))}
-      </PetAddContainer>
-      <AddPetButton onPress={() => navigation.navigate('AddPet')}>
-        <PlusIcon width={20} height={20} />
-        <BodySm_Text color={colors.grey_700}>새로운 펫 등록</BodySm_Text>
-      </AddPetButton>
+      <ScrollView>
+        <PetAddContainer>
+          {savedPets.length < 0
+            ? ''
+            : savedPets.map((pet, index) => (
+                <AddPetBox
+                  key={index}
+                  pet={pet}
+                  grey={false}
+                  navigation={navigation}
+                  handleDelete={() => {
+                    console.log('api 나오면')
+                    //setDeletePetInfo(pet)
+                    //setDeleteVisible(true)
+                  }}
+                  handleEdit={() => {
+                    console.log('api 나오면')
+                    //deletePet(pet)
+                  }}
+                  swipeableRef={(ref) => (swipeableRefs.current[pet] = ref)}
+                />
+              ))}
+        </PetAddContainer>
+        <AddPetButton onPress={() => navigation.navigate('AddPet')}>
+          <PlusIcon width={20} height={20} />
+          <BodySm_Text color={colors.grey_700}>새로운 펫 등록</BodySm_Text>
+        </AddPetButton>
+      </ScrollView>
     </ScreenLayout>
   )
 }

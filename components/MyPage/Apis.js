@@ -51,3 +51,27 @@ export const deleteTeam = async (accessToken, teamId) => {
   })
   console.log(`${teamId} 삭제`)
 }
+
+export const getAllTodoList = async (accessToken, teamId) => {
+  let API = `/teams/${teamId}/todos/withdraw`
+  const response = await axios.get(url + API, {
+    params: {
+      page: 0,
+      size: 10000,
+    },
+    headers: {
+      Authorization: accessToken,
+    },
+  })
+  return response.data.content
+}
+
+export const getTodoNum = async (accessToken, teamId) => {
+  let API = `/teams/${teamId}/todos/withdraw/count`
+  const response = await axios.get(url + API, {
+    headers: {
+      Authorization: accessToken,
+    },
+  })
+  return response.data.todoCount
+}

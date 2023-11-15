@@ -5,6 +5,7 @@ import { colors } from '../../colors'
 import CheckOn from '../../assets/Svgs/Check-box.svg'
 import CheckOff from '../../assets/Svgs/Check-box_off.svg'
 import { completeTodo } from './Apis'
+import { ScreenWidth } from '../Shared'
 
 const SCREEN_WIDTH = Dimensions.get('window').width
 
@@ -12,11 +13,13 @@ export const TodoBox = (props) => {
   const todo = props.data
   const index = props.index
   const accessToken = props.accessToken
+
   const [isChecked, setIsChecked] = useState(false)
 
   useEffect(() => {
     todo.completionStatus == 'COMPLETE' && setIsChecked(true)
   }, [])
+
   return (
     <TodoBoxContainer index={index}>
       <TodoContent>
@@ -29,8 +32,9 @@ export const TodoBox = (props) => {
       </TodoContent>
       <CheckBox
         onPress={() => {
-          setIsChecked(true)
           completeTodo(accessToken, todo.todoId)
+          setIsChecked(!isChecked)
+          props.setUpdated(!props.updated)
         }}
       >
         {isChecked ? <CheckOn width={24} height={24} /> : <CheckOff width={24} height={24} />}
@@ -42,7 +46,7 @@ export const TodoBox = (props) => {
 const TodoBoxContainer = styled.View`
   flex-direction: row;
   align-items: center;
-  width: 167px;
+  width: ${(ScreenWidth - 40) / 2}px;
   padding: 16px;
   justify-content: space-between;
   gap: 4px;

@@ -1,24 +1,25 @@
 import styled from 'styled-components/native'
 import { colors } from '../../colors'
 import { ScreenLayout } from '../../components/Shared'
+import { StackActions } from '@react-navigation/native'
+import { StatusBar } from 'react-native'
 
 export default function DeletePamily2({ navigation }) {
   return (
-    <ScreenLayout color={colors.red_200}>
-      <Container>
-        <MessageBox>
-          <MessageText>패밀리 나가기가 완료되었습니다{'\n'}그동안 함께 해주셔서 감사합니다.</MessageText>
-        </MessageBox>
-        <MessageIcon />
-        <ImageContainer>
-          <PetLeft source={require('../../assets/Imgs/Dog50.png')} />
-          <PetRight source={require('../../assets/Imgs/Cat50.png')} />
-        </ImageContainer>
-        <DeleteButton onPress={() => navigation.navigate('HomeNav')}>
-          <ButtonText>메인 홈으로 돌아가기</ButtonText>
-        </DeleteButton>
-      </Container>
-    </ScreenLayout>
+    <Container>
+      <StatusBar color={colors.red_200} />
+      <MessageBox>
+        <MessageText>패밀리 나가기가 완료되었습니다{'\n'}그동안 함께 해주셔서 감사합니다.</MessageText>
+      </MessageBox>
+      <MessageIcon />
+      <ImageContainer>
+        <PetLeft source={require('../../assets/Imgs/Dog50.png')} />
+        <PetRight source={require('../../assets/Imgs/Cat50.png')} />
+      </ImageContainer>
+      <DeleteButton onPress={() => navigation.dispatch(StackActions.replace('HomeNav'))}>
+        <ButtonText>메인 홈으로 돌아가기</ButtonText>
+      </DeleteButton>
+    </Container>
   )
 }
 
@@ -71,6 +72,7 @@ const DeleteButton = styled.TouchableOpacity`
   justify-content: center;
   align-items: center;
   border-radius: 8px;
+  margin-bottom: 20px;
 `
 const ButtonText = styled.Text`
   color: ${colors.primary};

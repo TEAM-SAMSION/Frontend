@@ -5,7 +5,7 @@ import { BodyBoldSm_Text, BodySm_Text, Detail_Text, SubHeadSm_Text, SubHead_Text
 import { ModalPopUp } from '../Shared'
 import { postJoiningTeam } from './Apis'
 import Close from '../../assets/Svgs/Close.svg'
-import { useNavigation } from '@react-navigation/native'
+import { StackActions, useNavigation } from '@react-navigation/native'
 import { useRecoilValue } from 'recoil'
 import { accessTokenState } from '../../recoil/AuthAtom'
 
@@ -94,7 +94,7 @@ export const TeamSearchBox = (props) => {
               console.log(teamCode)
               postJoiningTeam(ACCESSTOKEN, teamCode)
               setVisible(false)
-              navigation.navigate('ToDoNav')
+              navigation.dispatch(StackActions.replace('ToDoNav'))
             }}
           >
             <BodySm_Text color={colors.red_350}>예</BodySm_Text>
