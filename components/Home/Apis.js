@@ -26,10 +26,9 @@ export const getTeamList = async (accessToken) => {
   return response.data.content
 }
 
-export const getMyTodoList = async (accessToken, page, teamId) => {
-  let API = `/teams/${teamId}/todos?page=${page}&size=4`
+export const getMyTodoList = async (accessToken, teamId) => {
+  let API = `/teams/${teamId}/todos`
   const response = await axios.get(url + API, {
-    params: { page: page, size: 4 },
     headers: { Authorization: accessToken },
   })
   return response.data.content

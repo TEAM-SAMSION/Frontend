@@ -21,7 +21,7 @@ export default function AdminHome({ route, navigation }) {
   const myAuthority = data.item.authority
   console.log(data)
   const [name, setName] = useState('')
-  const [intro, setIntro] = useState('안녕하세요. description 값 추가 필요')
+  const [intro, setIntro] = useState('애견인들의 모임')
   const [profileUrl, setProfileUrl] = useState('')
   const [memberNum, setMemberNum] = useState(9)
   const [petNum, setPetNum] = useState(3)
