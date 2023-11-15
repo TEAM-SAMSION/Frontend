@@ -134,7 +134,9 @@ export default function MyPage({ navigation }) {
                           setDeleteTeamPeriod(item.registerPeriod + 1)
                           setVisible(true)
                         }}
-                        gotoAdminNav={() => navigation.navigate('AdministratorNav', { item })}
+                        gotoAdminNav={() =>
+                          navigation.navigate('AdministratorNav', { screen: 'AdminHome', params: { item } })
+                        }
                         swipeableRef={(ref) => (swipeableRefs.current[item.teamId] = ref)}
                       />
                     )
@@ -149,11 +151,7 @@ export default function MyPage({ navigation }) {
             </Detail_Text>
             <Guide>포잇가이드</Guide>
           </FooterContainer>
-          <TouchableOpacity onPress={() => navigation.navigate('AdministratorNav')}>
-            <Text style={{ color: colors.grey_800 }}>관리자페이지이동</Text>
-          </TouchableOpacity>
         </ScrollView>
-        {/* 팝업 */}
         <ModalPopUp visible={visible} petIcon={false} height={290}>
           <PopContent>
             <PopSubTitle>정말 Pamily를 나가시겠습니까?</PopSubTitle>
@@ -176,7 +174,6 @@ export default function MyPage({ navigation }) {
             <PopButton
               onPress={() => {
                 setVisible(false)
-                //deleteItem()
                 navigation.navigate('DeletePamily', { deleteTeam, name })
               }}
               style={{ backgroundColor: colors.grey_100, borderColor: colors.grey_150, borderWidth: 2 }}
@@ -207,7 +204,7 @@ const UserContainer = styled.View`
 const ProfileImage = styled.Image`
   width: 78px;
   height: 78px;
-  border-radius: 24px;
+  border-radius: 16px;
 `
 const UserDetailContainer = styled.View`
   flex-direction: row;

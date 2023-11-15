@@ -11,9 +11,10 @@ import { accessTokenState } from '../../recoil/AuthAtom'
 import { getMember, searchMember } from '../../components/Administrator/Apis'
 import { ScrollView } from 'react-native'
 
-export default function ManageMember({ navigation }) {
+export default function ManageMember({ route, navigation }) {
   const ACCESSTOKEN = useRecoilValue(accessTokenState)
-  const teamId = 1
+  const data = route.params
+  const teamId = data.teamId
   const pamilyCode = 'dododo'
   const [searchedName, setSearchedName] = useState('')
   const [allMember, setAllMember] = useState([])
@@ -79,8 +80,14 @@ export default function ManageMember({ navigation }) {
         </Block>
         <ScrollView>
           <MemberBox>
-            {memberData.map((data, index) => (
-              <MemberSearchBox key={index} data={data} accessToken={ACCESSTOKEN} />
+            {memberData.map((item, index) => (
+              <MemberSearchBox
+                key={index}
+                data={item}
+                accessToken={ACCESSTOKEN}
+                teamId={teamId}
+                myAuthority={data.myAuthority}
+              />
             ))}
           </MemberBox>
         </ScrollView>
