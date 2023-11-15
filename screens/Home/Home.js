@@ -14,7 +14,7 @@ import { TodoBox } from '../../components/Home/TodoBox'
 import { useRecoilValue, useSetRecoilState } from 'recoil'
 import { accessTokenState } from '../../recoil/AuthAtom'
 import { getMyTodoList, getTeamList, getTodoProgress, getUserInfo } from '../../components/Home/Apis'
-import { useIsFocused } from '@react-navigation/native'
+import { StackActions, useIsFocused } from '@react-navigation/native'
 import { BodySm_Text, DetailSm_Text } from '../../components/Fonts'
 import { TabBarAtom } from '../../recoil/TabAtom'
 
@@ -35,6 +35,8 @@ export default function Home({ navigation }) {
   const [progress, setProgress] = useState(0)
   const [pamilyNum, setPamilyNum] = useState(0)
   const [topTeamId, setTopTeamId] = useState(0)
+  const [topTeamName, setTopTeamName] = useState('')
+  const [updated, setUpdated] = useState(false)
 
   const getUserNickname = () => {
     getUserInfo(ACCESSTOKEN).then((result) => {
@@ -45,9 +47,6 @@ export default function Home({ navigation }) {
   useEffect(() => {
     getUserNickname()
     console.log(pamilyNum)
-  }, [])
-
-  const fetchTeamList = () => {
     getTeamList(ACCESSTOKEN).then((result) => {
       setPamilyList(result)
       console.log(result)
@@ -60,15 +59,29 @@ export default function Home({ navigation }) {
         setMyTodo([])
       }
     })
+  }, [])
+
+  const fetchTeamList = () => {
+    getTeamList(ACCESSTOKEN).then((result) => {
+      setPamilyList(result)
+      console.log(result)
+      if (result.length !== 0) {
+        fetchProgress()
+      }
+      if (result.length == 0) {
+        setPamilyNum(0)
+        setMyTodo([])
+      }
+    })
   }
 
   const setTeamId = () => {
     setPamilyNum(1)
     setTopTeamId(pamilyList[0].teamId)
+    setTopTeamName(pamilyList[0].teamName)
   }
 
   const fetchProgress = () => {
-    const topTeamId = pamilyList[0].teamId
     getTodoProgress(ACCESSTOKEN, topTeamId).then((result) => {
       setProgress(result)
     })
@@ -79,7 +92,7 @@ export default function Home({ navigation }) {
     {
       pamilyNum !== 0 && fetchMyTodo()
     }
-  }, [isFocused])
+  }, [isFocused, updated])
 
   const [myTodo, setMyTodo] = useState([])
   const [todoPage, setTodoPage] = useState(0)
@@ -133,7 +146,13 @@ export default function Home({ navigation }) {
             <SubText>오늘도 포잇과 함께 마이펫을 관리해볼까요?</SubText>
           </NickBox>
           <PamilyContainer>
-            <PamilyChoiceToggle pamilyList={pamilyList} />
+            <PamilyChoiceToggle
+              pamilyList={pamilyList}
+              topTeamName={topTeamName}
+              setTopTeamName={setTopTeamName}
+              topTeamId={topTeamId}
+              setTopTeamId={setTopTeamId}
+            />
             <MainImage progress={progress} pamilyNum={pamilyNum} />
             <PamilyStatContainer>
               {pamilyNum == 0 ? <NoneText>소속된 Pamily가 없습니다.</NoneText> : <MainStat progress={progress} />}
@@ -197,14 +216,22 @@ export default function Home({ navigation }) {
                 <FlatList
                   data={myTodo}
                   renderItem={({ item, index }) => {
-                    return <TodoBox data={item} index={index} accessToken={ACCESSTOKEN} />
+                    return (
+                      <TodoBox
+                        data={item}
+                        index={index}
+                        accessToken={ACCESSTOKEN}
+                        updated={updated}
+                        setUpdated={setUpdated}
+                      />
+                    )
                   }}
                   showsHorizontalScrollIndicator={false}
                   numColumns={2}
                 />
               )}
             </TodoContainer>
-            <AllTodoButton onPress={() => navigation.navigate('ToDoNav')}>
+            <AllTodoButton onPress={() => navigation.dispatch(StackActions.replace('ToDoNav'))}>
               <ButtonText>전체 TODO 확인하기</ButtonText>
             </AllTodoButton>
           </>
@@ -309,7 +336,9 @@ const TitleText = styled.Text`
 const TodoContainer = styled.View`
   padding: 16px;
   justify-content: center;
-  align-items: center;
+  align-self: stretch;
+  flex-wrap: wrap;
+  //align-items: center;
 `
 const AllTodoButton = styled.TouchableOpacity`
   height: 44px;
