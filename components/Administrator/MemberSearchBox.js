@@ -10,7 +10,8 @@ import { changeAuthority } from './Apis'
 
 export const MemberSearchBox = (props) => {
   const ACCESSTOKEN = props.accessToken
-  const teamId = 1
+  const teamId = props.teamId
+  const myAuthority = props.myAuthority
 
   const [visible, setVisible] = useState(false)
   const [changeVisible, setChangeVisible] = useState(false)
@@ -28,6 +29,8 @@ export const MemberSearchBox = (props) => {
 
   const setAuthority = () => {
     console.log(changing)
+    console.log(registerId)
+    console.log(teamId)
     changeAuthority(ACCESSTOKEN, teamId, registerId, changing)
     // api 에러 !
   }
@@ -71,20 +74,24 @@ export const MemberSearchBox = (props) => {
           <BodyBold_Text>권한 변경</BodyBold_Text>
         </PopContent>
         <AuthorityContent>
-          <AuthorityBox
-            onPress={() => {
-              setChangingToPresident(!changingToPresident)
-              setChangingToExecutive(false)
-              setChangingToMember(false)
-              setChanging('PRESIDENT')
-            }}
-            style={{
-              backgroundColor: changingToPresident ? colors.grey_150 : colors.grey_100,
-            }}
-          >
-            <CrownIcon width={16} height={16} />
-            <Detail_Text color={colors.secondary}>관리자</Detail_Text>
-          </AuthorityBox>
+          {myAuthority === 'PRESIDENT' ? (
+            <AuthorityBox
+              onPress={() => {
+                setChangingToPresident(!changingToPresident)
+                setChangingToExecutive(false)
+                setChangingToMember(false)
+                setChanging('PRESIDENT')
+              }}
+              style={{
+                backgroundColor: changingToPresident ? colors.grey_150 : colors.grey_100,
+              }}
+            >
+              <CrownIcon width={16} height={16} />
+              <Detail_Text color={colors.secondary}>관리자</Detail_Text>
+            </AuthorityBox>
+          ) : (
+            ''
+          )}
           <AuthorityBox
             onPress={() => {
               setChangingToExecutive(!changingToExecutive)

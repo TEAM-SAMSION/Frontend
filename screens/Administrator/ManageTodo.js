@@ -21,7 +21,7 @@ import {
   ToggleCategory,
 } from '../../components/Admin/ManageTodo/Apis'
 
-export default function ManageTodo({ navigation, teamId = 1 }) {
+export default function ManageTodo({ navigation, teamId }) {
   const { accessToken } = useRecoilValue(userInfoState)
   const [categoryList, setCategoryList] = useState(null)
   const inputRefs = useRef([])

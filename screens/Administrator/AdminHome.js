@@ -12,15 +12,17 @@ import { useIsFocused } from '@react-navigation/native'
 import { useRecoilState } from 'recoil'
 import { TabBarAtom } from '../../recoil/TabAtom'
 
-export default function AdminHome({ navigation }) {
+export default function AdminHome({ route, navigation }) {
   const isFocused = useIsFocused()
   const [isTabVisible, setIsTabVisible] = useRecoilState(TabBarAtom)
 
-  const [name, setName] = useState('포잇')
-  const [intro, setIntro] = useState('한줄소개')
-  const [profileUrl, setProfileUrl] = useState(
-    'https://pawith.s3.ap-northeast-2.amazonaws.com/base-image/profileDefault.png',
-  )
+  const data = route.params
+  const teamId = data.item.teamId
+  const myAuthority = data.item.authority
+  console.log(data)
+  const [name, setName] = useState('')
+  const [intro, setIntro] = useState('안녕하세요. description 값 추가 필요')
+  const [profileUrl, setProfileUrl] = useState('')
   const [memberNum, setMemberNum] = useState(9)
   const [petNum, setPetNum] = useState(3)
   const [isVisible, setIsVisible] = useState(false)
@@ -28,6 +30,12 @@ export default function AdminHome({ navigation }) {
   useEffect(() => {
     isFocused && setIsTabVisible(false)
   }, [isFocused, isTabVisible])
+
+  useEffect(() => {
+    setName(data.item.teamName)
+    //setIntro(data.item.description)
+    setProfileUrl(data.item.teamProfileImageUrl)
+  }, [])
 
   return (
     <ScreenLayout>
@@ -65,21 +73,21 @@ export default function AdminHome({ navigation }) {
             <QuestionMark width={28} height={28} />
           </TouchableOpacity>
         </TitleBox>
-        <FunctionBox onPress={() => navigation.navigate('ManageMember')}>
+        <FunctionBox onPress={() => navigation.navigate('ManageMember', { teamId, myAuthority })}>
           <ContentBox>
             <FunctionIcon source={require('../../assets/Imgs/set_member.png')} />
             <BodyBoldSm_Text>회원 관리</BodyBoldSm_Text>
           </ContentBox>
           <Right width={24} height={24} color={colors.primary_outline} />
         </FunctionBox>
-        <FunctionBox onPress={() => navigation.navigate('ManagePetNav')}>
+        <FunctionBox onPress={() => navigation.navigate('ManagePetNav', { teamId })}>
           <ContentBox>
             <FunctionIcon source={require('../../assets/Imgs/set_pet.png')} />
             <BodyBoldSm_Text>펫 관리</BodyBoldSm_Text>
           </ContentBox>
           <Right width={24} height={24} color={colors.primary_outline} />
         </FunctionBox>
-        <FunctionBox onPress={() => navigation.navigate('ManageTodo')}>
+        <FunctionBox onPress={() => navigation.navigate('ManageTodo', { teamId })}>
           <ContentBox>
             <FunctionIcon source={require('../../assets/Imgs/set_category.png')} />
             <BodyBoldSm_Text>카테고리 관리</BodyBoldSm_Text>
@@ -135,7 +143,7 @@ const UserContainer = styled.View`
 const ProfileImage = styled.Image`
   width: 78px;
   height: 78px;
-  border-radius: 24px;
+  border-radius: 16px;
 `
 const UserDetailContainer = styled.View`
   flex-direction: row;

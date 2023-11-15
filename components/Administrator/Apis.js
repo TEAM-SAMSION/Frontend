@@ -20,7 +20,6 @@ export const changeAuthority = async (accessToken, teamId, registerId, authority
       Authorization: accessToken,
     },
   })
-  console.log(response.status)
 }
 
 export const searchMember = async (accessToken, teamId, nickname) => {
