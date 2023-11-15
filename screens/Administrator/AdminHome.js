@@ -3,13 +3,19 @@ import { colors } from '../../colors'
 import { ModalPopUp, ScreenLayout } from '../../components/Shared'
 import { BodyBoldSm_Text, BodyBold_Text, Body_Text, Detail_Text, SubHead_Text } from '../../components/Fonts'
 import { TouchableOpacity } from 'react-native'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import EditIcon from '../../assets/Svgs/Edit.svg'
 import QuestionMark from '../../assets/Svgs/Question_mark.svg'
 import Right from '../../assets/Svgs/chevron_right.svg'
 import Close from '../../assets/Svgs/Close.svg'
+import { useIsFocused } from '@react-navigation/native'
+import { useRecoilState } from 'recoil'
+import { TabBarAtom } from '../../recoil/TabAtom'
 
 export default function AdminHome({ navigation }) {
+  const isFocused = useIsFocused()
+  const [isTabVisible, setIsTabVisible] = useRecoilState(TabBarAtom)
+
   const [name, setName] = useState('포잇')
   const [intro, setIntro] = useState('한줄소개')
   const [profileUrl, setProfileUrl] = useState(
@@ -18,6 +24,10 @@ export default function AdminHome({ navigation }) {
   const [memberNum, setMemberNum] = useState(9)
   const [petNum, setPetNum] = useState(3)
   const [isVisible, setIsVisible] = useState(false)
+
+  useEffect(() => {
+    isFocused && setIsTabVisible(false)
+  }, [isFocused, isTabVisible])
 
   return (
     <ScreenLayout>
