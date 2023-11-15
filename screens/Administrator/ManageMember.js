@@ -9,6 +9,7 @@ import { MemberSearchBox } from '../../components/Administrator/MemberSearchBox'
 import { useRecoilValue } from 'recoil'
 import { accessTokenState } from '../../recoil/AuthAtom'
 import { getMember, searchMember } from '../../components/Administrator/Apis'
+import { ScrollView } from 'react-native'
 
 export default function ManageMember({ navigation }) {
   const ACCESSTOKEN = useRecoilValue(accessTokenState)
@@ -71,17 +72,18 @@ export default function ManageMember({ navigation }) {
               borderTopRightRadius: 0,
             }}
             returnKeyType="done"
-            // onSubmitEditing={() => searchTeam(pamilyCode)}
           />
           <IconBox>
             <SearchIcon width={16} height={16} />
           </IconBox>
         </Block>
-        <MemberBox>
-          {memberData.map((data, index) => (
-            <MemberSearchBox key={index} data={data} accessToken={ACCESSTOKEN} />
-          ))}
-        </MemberBox>
+        <ScrollView>
+          <MemberBox>
+            {memberData.map((data, index) => (
+              <MemberSearchBox key={index} data={data} accessToken={ACCESSTOKEN} />
+            ))}
+          </MemberBox>
+        </ScrollView>
       </Container>
     </ScreenLayout>
   )
