@@ -15,7 +15,7 @@ import { useRecoilValue, useSetRecoilState } from 'recoil'
 import { accessTokenState } from '../../recoil/AuthAtom'
 import { ModalPopUp } from '../../components/Shared'
 import { colors } from '../../colors'
-import { deleteTeam, getTeamList, getUserInfo } from '../../components/MyPage/Apis'
+import { deleteTeam, getPeriod, getTeamList, getUserInfo } from '../../components/MyPage/Apis'
 import { BodyBoldSm_Text, BodySm_Text, Detail_Text, SubHead_Text } from '../../components/Fonts'
 import { TabBarAtom } from '../../recoil/TabAtom'
 import { useIsFocused } from '@react-navigation/native'
@@ -80,15 +80,9 @@ export default function MyPage({ navigation }) {
   }, [isFocused])
 
   const [visible, setVisible] = useState(false)
-  const [deleteTeamId, setDeleteTeamId] = useState('')
+  const [deleteTeam, setDeleteTeam] = useState('')
   const [deleteTeamName, setDeleteTeamName] = useState('')
-
-  const deleteItem = async () => {
-    console.log(deleteTeamId)
-    await deleteTeam(ACCESSTOKEN, deleteTeamId)
-    swipeableRefs.current[deleteTeamId]?.close()
-    fetchTeamList()
-  }
+  const [deleteTeamPeriod, setDeleteTeamPeriod] = useState()
 
   return (
     <BottomSheetModalProvider>
@@ -135,8 +129,9 @@ export default function MyPage({ navigation }) {
                       <GroupBox
                         data={item}
                         handleDelete={() => {
-                          setDeleteTeamId(item.teamId)
+                          setDeleteTeam(item)
                           setDeleteTeamName(item.teamName)
+                          setDeleteTeamPeriod(item.registerPeriod + 1)
                           setVisible(true)
                         }}
                         gotoAdminNav={() => navigation.navigate('AdministratorNav', { item })}
@@ -175,14 +170,14 @@ export default function MyPage({ navigation }) {
               shadowOffset: [0, 0],
             }}
           >
-            <DateText>24일</DateText>
+            <DateText>{deleteTeamPeriod}일</DateText>
           </DateContent>
           <PopButtonContainer>
             <PopButton
               onPress={() => {
                 setVisible(false)
                 //deleteItem()
-                navigation.navigate('DeletePamily', { deleteTeamId })
+                navigation.navigate('DeletePamily', { deleteTeam, name })
               }}
               style={{ backgroundColor: colors.grey_100, borderColor: colors.grey_150, borderWidth: 2 }}
             >
@@ -191,7 +186,7 @@ export default function MyPage({ navigation }) {
             <PopButton
               onPress={() => {
                 setVisible(false)
-                swipeableRefs.current[deleteTeamId]?.close()
+                swipeableRefs.current[deleteTeam.teamId]?.close()
               }}
             >
               <PopButtonText>아니오</PopButtonText>

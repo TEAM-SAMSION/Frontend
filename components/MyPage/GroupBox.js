@@ -37,7 +37,8 @@ const GroupBox = (props) => {
         <GroupInfoBox>
           <BodyBoldSm_Text color={colors.grey_800}>{props.data.teamName}</BodyBoldSm_Text>
           <BodySm_Text color={colors.grey_450}>
-            가입한지 <BodyBoldSm_Text color={colors.primary_outline}>{props.data.registerPeriod}</BodyBoldSm_Text>일째
+            가입한지 <BodyBoldSm_Text color={colors.primary_outline}>{props.data.registerPeriod + 1}</BodyBoldSm_Text>
+            일째
           </BodySm_Text>
         </GroupInfoBox>
         {props.data.authority == 'MEMBER' ? (

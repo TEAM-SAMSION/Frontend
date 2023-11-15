@@ -104,7 +104,26 @@ export default function MyPageNav() {
           ),
         })}
       />
-      <Stack.Screen name="DeletePamily2" component={DeletePamily2} options={{ headerShown: false }} />
+      <Stack.Screen
+        name="DeletePamily2"
+        component={DeletePamily2}
+        options={({ navigation }) => ({
+          headerTitle: '패밀리 나가기',
+          headerTintColor: colors.red_200,
+          headerLeft: () => (
+            <TouchableOpacity
+              onPress={() => navigation.goBack()}
+              style={{
+                justifyContent: 'center',
+                alignItems: 'center',
+                marginLeft: 16,
+              }}
+            >
+              <BackButton width={24} height={24} />
+            </TouchableOpacity>
+          ),
+        })}
+      />
       <Stack.Screen
         name="HomeNav"
         component={HomeNav}
