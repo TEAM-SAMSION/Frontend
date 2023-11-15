@@ -240,7 +240,7 @@ export default function Home({ navigation }) {
                 />
               )}
             </TodoContainer>
-            <AllTodoButton onPress={() => navigation.dispatch(StackActions.replace('ToDoNav'))}>
+            <AllTodoButton onPress={() => navigation.navigate('ToDoNav')}>
               <ButtonText>전체 TODO 확인하기</ButtonText>
             </AllTodoButton>
           </>
