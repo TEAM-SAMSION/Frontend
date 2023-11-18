@@ -2,42 +2,31 @@ import styled from 'styled-components/native'
 import { colors } from '../../colors'
 import { ScreenLayout } from '../../components/Shared'
 import { BodyBoldSm_Text, BodySm_Text } from '../../components/Fonts'
-import { AddPetBox } from '../../components/Home/AddPetBox'
+import { AddPetBox } from '../../components/Administrator/AddPetBox'
 import PlusIcon from '../../assets/Svgs/miniPlus.svg'
-import { useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { ScrollView } from 'react-native'
+import { deletePet, getPet } from '../../components/Administrator/Apis'
+import { useRecoilValue } from 'recoil'
+import { accessTokenState } from '../../recoil/AuthAtom'
+import { useIsFocused } from '@react-navigation/native'
 
-export default function ManagePet({ navigation }) {
+export default function ManagePet({ route, navigation }) {
+  const ACCESSTOKEN = useRecoilValue(accessTokenState)
+  const isFocused = useIsFocused()
+
+  const data = route.params
+  const teamId = data.teamId
   const swipeableRefs = useRef([])
-  const savedPets = [
-    {
-      name: '포포',
-      age: '4',
-      description: '귀여운 포포',
-      genus: '강아지',
-      species: '포메라니안',
-      profileUrl: `https://pawith.s3.ap-northeast-2.amazonaws.com/base-image/profileDefault.png`,
-      file: '',
-    },
-    {
-      name: '몽이',
-      age: '7',
-      description: '까만 푸들',
-      genus: '강아지',
-      species: '푸들',
-      profileUrl: `https://pawith.s3.ap-northeast-2.amazonaws.com/base-image/sample_3.png`,
-      file: '',
-    },
-    {
-      name: '야옹이',
-      age: '1',
-      description: '안녕',
-      genus: '고양이',
-      species: '스핑크스',
-      profileUrl: `https://pawith.s3.ap-northeast-2.amazonaws.com/base-image/sample_6.png`,
-      file: '',
-    },
-  ]
+  const [isDeletePet, setIsDeletePet] = useState(false)
+  const [savedPets, setSavedPets] = useState([])
+
+  useEffect(() => {
+    getPet(ACCESSTOKEN, teamId).then((result) => {
+      setSavedPets(result)
+    })
+  }, [isFocused, isDeletePet])
+
   return (
     <ScreenLayout>
       <ScrollView>
@@ -48,22 +37,18 @@ export default function ManagePet({ navigation }) {
                 <AddPetBox
                   key={index}
                   pet={pet}
+                  teamId={teamId}
                   grey={false}
                   navigation={navigation}
                   handleDelete={() => {
-                    console.log('api 나오면')
-                    //setDeletePetInfo(pet)
-                    //setDeleteVisible(true)
-                  }}
-                  handleEdit={() => {
-                    console.log('api 나오면')
-                    //deletePet(pet)
+                    deletePet(ACCESSTOKEN, pet.petId)
+                    setIsDeletePet(!isDeletePet)
                   }}
                   swipeableRef={(ref) => (swipeableRefs.current[pet] = ref)}
                 />
               ))}
         </PetAddContainer>
-        <AddPetButton onPress={() => navigation.navigate('AddPet')}>
+        <AddPetButton onPress={() => navigation.navigate('AddPet', { teamId })}>
           <PlusIcon width={20} height={20} />
           <BodySm_Text color={colors.grey_700}>새로운 펫 등록</BodySm_Text>
         </AddPetButton>

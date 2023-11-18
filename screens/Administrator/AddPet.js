@@ -15,6 +15,7 @@ import { ScreenLayout, ScreenWidth } from '../../components/Shared'
 import EditIcon from '../../assets/Svgs/Edit.svg'
 import RNFS from 'react-native-fs'
 import { PetImageModal } from '../../components/Home/PetImageModal'
+import { addPet } from '../../components/Administrator/Apis'
 
 export default function AddPet({ route, navigation }) {
   const ACCESSTOKEN = useRecoilValue(accessTokenState)
@@ -23,6 +24,10 @@ export default function AddPet({ route, navigation }) {
   const [petImageUrl, setPetImageUrl] = useState(
     'https://pawith.s3.ap-northeast-2.amazonaws.com/base-image/profileDefault.png',
   )
+
+  const data = route.params
+  const teamId = data.teamId
+
   const [petName, setPetName] = useState('')
   const [petAge, setPetAge] = useState()
   const [petCategory, setPetCategroy] = useState('')
@@ -39,8 +44,8 @@ export default function AddPet({ route, navigation }) {
         <TouchableOpacity
           disabled={!enabled}
           onPress={() => {
-            // Api 연결
-            navigation.navigate('ManagePet')
+            createPet()
+            navigation.navigate('ManagePet', { teamId })
           }}
           style={{ marginRight: 16 }}
         >
@@ -66,17 +71,24 @@ export default function AddPet({ route, navigation }) {
     [],
   )
 
-  const completeAddingPet = (name, age, intro, category, detail, petImageUrl, petFile) => {
-    const newPetArray = {
-      name: name,
-      age: age,
-      description: intro,
-      genus: category,
-      species: detail,
-      profileUrl: petImageUrl,
-      file: petFile,
+  const createPet = () => {
+    const petData = new FormData()
+    petData.append('petImageFile', {
+      uri: petFile,
+      name: `teamImageFile.png`,
+      type: 'image/png',
+    })
+    const petInfo = {
+      name: petName,
+      age: petAge,
+      petGenus: petCategory,
+      petSpecies: petDetail,
+      description: petIntro,
     }
-    return newPetArray
+    const json = JSON.stringify(petInfo)
+    petData.append('petCreateInfo', { string: json, type: 'application/json' })
+
+    addPet(ACCESSTOKEN, teamId, petData)
   }
 
   return (

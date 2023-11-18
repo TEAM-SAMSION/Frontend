@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { TouchableOpacity, View } from 'react-native'
 import styled from 'styled-components/native'
 import { colors } from '../../colors'
-import { BodySm_Text, Body_Text, Detail_Text } from '../../components/Fonts'
+import { BodyBold_Text, BodySm_Text, Body_Text, Detail_Text } from '../../components/Fonts'
 import {
   BottomSheetBackdrop,
   BottomSheetModal,
@@ -11,15 +11,18 @@ import {
 } from '@gorhom/bottom-sheet'
 import { useRecoilValue } from 'recoil'
 import { accessTokenState } from '../../recoil/AuthAtom'
-import { ProfileImageModal } from '../../components/Home/ProfileImageModal'
-import { ScreenLayout, ScreenWidth } from '../../components/Shared'
+import { ModalPopUp, ScreenLayout, ScreenWidth } from '../../components/Shared'
 import EditIcon from '../../assets/Svgs/Edit.svg'
 import { PetImageModal } from '../../components/Home/PetImageModal'
+import BackButton from '../../assets/Svgs/chevron_back.svg'
+import { changePetInfo } from '../../components/Administrator/Apis'
 
 export default function EditPet({ route, navigation }) {
   const ACCESSTOKEN = useRecoilValue(accessTokenState)
 
-  const petInfo = route.params.petInfo
+  const data = route.params
+  const petInfo = data.petInfo
+  const teamId = data.teamId
   const [enabled, setEnabled] = useState(false)
   const [petImageUrl, setPetImageUrl] = useState(petInfo.profileUrl)
   const [petName, setPetName] = useState(petInfo.name)
@@ -28,18 +31,34 @@ export default function EditPet({ route, navigation }) {
   const [petDetail, setPetDetail] = useState(petInfo.species)
   const [petIntro, setPetIntro] = useState(petInfo.description)
   const [petFile, setPetFile] = useState(petInfo.file)
+  const petId = petInfo.petId
+
+  // 뒤로가기 팝업
+  const [backVisible, setBackVisible] = useState(false)
 
   useEffect(() => {
     const isEmpty = petName === '' || petAge === '' || petCategory === '' || petDetail === '' || petIntro === ''
     setEnabled(!isEmpty)
 
     navigation.setOptions({
+      headerLeft: () => (
+        <TouchableOpacity
+          onPress={() => setBackVisible(true)}
+          style={{
+            justifyContent: 'center',
+            alignItems: 'center',
+            marginLeft: 16,
+          }}
+        >
+          <BackButton width={24} height={24} />
+        </TouchableOpacity>
+      ),
       headerRight: () => (
         <TouchableOpacity
           disabled={!enabled}
-          onPress={() => {
-            const result = completeAddingPet(petName, petAge, petIntro, petCategory, petDetail, petImageUrl, petFile)
-            navigation.navigate('ManagePet', { result })
+          onPress={async () => {
+            await editPet()
+            navigation.navigate('ManagePet', { teamId })
           }}
           style={{ marginRight: 16 }}
         >
@@ -65,17 +84,28 @@ export default function EditPet({ route, navigation }) {
     [],
   )
 
-  const completeAddingPet = (name, age, intro, category, detail, petImageUrl, petFile) => {
-    const newPetArray = {
-      name: name,
-      age: age,
-      description: intro,
-      genus: category,
-      species: detail,
-      profileUrl: petImageUrl,
-      file: petFile,
+  const editPet = () => {
+    const petData = new FormData()
+    if (petInfo.profileUrl !== petImageUrl) {
+      petData.append('petImageFile', {
+        uri: petFile,
+        name: `petImageFile.png`,
+        type: 'image/png',
+      })
+    } else {
+      petData.append('petImageFile', {})
     }
-    return newPetArray
+    const petDatas = {
+      name: petName,
+      age: petAge,
+      petGenus: petCategory,
+      petSpecies: petDetail,
+      description: petIntro,
+    }
+    console.log(petDatas)
+    const json = JSON.stringify(petDatas)
+    petData.append('petUpdateInfo', { string: json, type: 'application/json' })
+    changePetInfo(ACCESSTOKEN, petId, petData)
   }
 
   return (
@@ -116,7 +146,7 @@ export default function EditPet({ route, navigation }) {
                   <InputBlock
                     editable
                     onChangeText={(text) => setPetAge(text)}
-                    placeholder={petAge}
+                    placeholder={`${petAge}`}
                     placeholderTextColor={colors.grey_600}
                     keyboardType="number"
                     returnKeyType="done"
@@ -175,6 +205,29 @@ export default function EditPet({ route, navigation }) {
               </InfoContainer>
             </>
           </TouchableWithoutFeedback>
+          <ModalPopUp visible={backVisible} petIcon={false} height={204}>
+            <PopContent style={{ flexDirection: 'column', marginTop: 54, marginBottom: 46 }}>
+              <BodyBold_Text color={colors.grey_600}>취소하시겠습니까?</BodyBold_Text>
+              <BodyBold_Text color={colors.grey_600}>입력하신 정보는 저장되지 않습니다.</BodyBold_Text>
+            </PopContent>
+            <PopButtonContainer>
+              <PopButton
+                onPress={() => {
+                  setBackVisible(false)
+                }}
+                style={{ backgroundColor: colors.grey_100, borderColor: colors.grey_150, borderWidth: 2 }}
+              >
+                <BodySm_Text color={colors.red_350}>아니오</BodySm_Text>
+              </PopButton>
+              <PopButton
+                onPress={() => {
+                  navigation.goBack()
+                }}
+              >
+                <BodySm_Text color={colors.red_350}>예</BodySm_Text>
+              </PopButton>
+            </PopButtonContainer>
+          </ModalPopUp>
           <BottomSheetModal
             ref={bottomSheetModalRef}
             index={0}
@@ -251,4 +304,26 @@ const BottomTitleText = styled.Text`
   font-size: 16px;
   line-height: 22px;
   color: ${colors.grey_800};
+`
+const PopContent = styled.View`
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin: 76px 0px 59px 0px;
+`
+const PopButtonContainer = styled.View`
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+`
+const PopButton = styled.TouchableOpacity`
+  display: flex;
+  flex: 1 0 0;
+  height: 44px;
+  padding: 12px 16px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 8px;
+  background-color: ${colors.red_200};
 `
