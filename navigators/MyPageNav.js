@@ -11,6 +11,9 @@ import DeletePamily2 from '../screens/MyPage/DeletePamily2'
 import HomeNav from './HomeNav'
 import AdministratorNav from './AdministratorNav'
 import EditUserInfo from '../screens/MyPage/EditUserInfo'
+import DeleteAccount from '../screens/MyPage/DeleteAccount'
+import DeleteAccount2 from '../screens/MyPage/DeleteAccount2'
+import DeleteAccount3 from '../screens/MyPage/DeleteAccount3'
 
 const Stack = createStackNavigator()
 
@@ -90,6 +93,14 @@ export default function MyPageNav() {
         component={DeletePamily}
         options={({ navigation }) => ({
           headerTitle: '패밀리 나가기',
+        })}
+      />
+      <Stack.Screen
+        name="DeletePamily2"
+        component={DeletePamily2}
+        options={({ navigation }) => ({
+          headerTitle: '패밀리 나가기',
+          headerTintColor: colors.red_200,
           headerLeft: () => (
             <TouchableOpacity
               onPress={() => navigation.goBack()}
@@ -105,11 +116,48 @@ export default function MyPageNav() {
         })}
       />
       <Stack.Screen
-        name="DeletePamily2"
-        component={DeletePamily2}
+        name="DeleteAccount"
+        component={DeleteAccount}
         options={({ navigation }) => ({
-          headerTitle: '패밀리 나가기',
-          headerTintColor: colors.red_200,
+          headerTitle: '포잇 탈퇴하기',
+          headerLeft: () => (
+            <TouchableOpacity
+              onPress={() => navigation.goBack()}
+              style={{
+                justifyContent: 'center',
+                alignItems: 'center',
+                marginLeft: 16,
+              }}
+            >
+              <BackButton width={24} height={24} />
+            </TouchableOpacity>
+          ),
+        })}
+      />
+      <Stack.Screen
+        name="DeleteAccount2"
+        component={DeleteAccount2}
+        options={({ navigation }) => ({
+          headerTitle: '포잇 탈퇴하기',
+          headerLeft: () => (
+            <TouchableOpacity
+              onPress={() => navigation.goBack()}
+              style={{
+                justifyContent: 'center',
+                alignItems: 'center',
+                marginLeft: 16,
+              }}
+            >
+              <BackButton width={24} height={24} />
+            </TouchableOpacity>
+          ),
+        })}
+      />
+      <Stack.Screen
+        name="DeleteAccount3"
+        component={DeleteAccount3}
+        options={({ navigation }) => ({
+          headerTitle: '포잇 탈퇴하기',
           headerLeft: () => (
             <TouchableOpacity
               onPress={() => navigation.goBack()}

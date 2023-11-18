@@ -171,7 +171,7 @@ export default function MyPage({ navigation }) {
             <PopButton
               onPress={() => {
                 setVisible(false)
-                navigation.navigate('DeletePamily', { deleteTeam, name })
+                navigation.navigate('DeletePamily', { deleteTeam, name, swipeableRefs })
               }}
               style={{ backgroundColor: colors.grey_100, borderColor: colors.grey_150, borderWidth: 2 }}
             >

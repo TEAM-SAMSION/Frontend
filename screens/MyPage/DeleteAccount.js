@@ -1,9 +1,8 @@
 import { useEffect, useState } from 'react'
-import { FlatList, TouchableOpacity } from 'react-native'
+import { FlatList } from 'react-native'
 import styled from 'styled-components/native'
-import { categoryColors, colors } from '../../colors'
-import BackButton from '../../assets/Svgs/chevron_back.svg'
-import { deleteTeam, getAllTodoList, getTodoNum } from '../../components/MyPage/Apis'
+import { colors } from '../../colors'
+import { getAllTeams, getAllTodoNum, getAllTodos, getUserInfo } from '../../components/MyPage/Apis'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import { accessTokenState } from '../../recoil/AuthAtom'
 import { useIsFocused } from '@react-navigation/native'
@@ -11,70 +10,38 @@ import { TabBarAtom } from '../../recoil/TabAtom'
 import { ScrollView } from 'react-native-gesture-handler'
 import { BodyBoldSm_Text, DetailSm_Text } from '../../components/Fonts'
 
-export default function DeletePamily({ route, navigation }) {
+export default function DeleteAccount({ route, navigation }) {
   const ACCESSTOKEN = useRecoilValue(accessTokenState)
-  const isFocused = useIsFocused()
-  const [isTabVisible, setIsTabVisible] = useRecoilState(TabBarAtom)
 
-  const deleteItem = route.params
-  const userNickname = deleteItem.name
-  const team = deleteItem.deleteTeam
-  const teamName = team.teamName
-  const teamPeriod = team.registerPeriod + 1
+  const [userNickname, setUserNickname] = useState('')
+  const [userPeriod, setUserPeriod] = useState(10)
+  const [teamList, setTeamList] = useState([])
   const [todoNum, setTodoNum] = useState(0)
-  const [todoList, setTodoList] = useState([
-    {
-      id: 1,
-      image: '',
-      category: '펫모리(카테고리부분)',
-      todoContent: '펫모리 회의',
-    },
-    {
-      id: 2,
-      image: '',
-      category: '포잇',
-      todoContent: '강아지 산책',
-    },
-  ])
-  const [deleteTeamId, setDeleteTeamId] = useState()
+  const [todoList, setTodoList] = useState([])
+  const [todoPage, setTodoPage] = useState(0)
 
   useEffect(() => {
-    isFocused && setIsTabVisible(false)
-  }, [isFocused, isTabVisible])
-
-  useEffect(() => {
-    navigation.setOptions({
-      headerLeft: () => (
-        <TouchableOpacity
-          onPress={() => {
-            deleteItem.swipeableRefs.current[deleteItem.deleteTeam.teamId]?.close()
-            navigation.goBack()
-          }}
-          style={{
-            justifyContent: 'center',
-            alignItems: 'center',
-            marginLeft: 16,
-          }}
-        >
-          <BackButton width={24} height={24} />
-        </TouchableOpacity>
-      ),
+    getUserInfo(ACCESSTOKEN).then((result) => {
+      setUserNickname(result.nickname)
     })
-
-    const teamId = team.teamId
-    getAllTodoList(ACCESSTOKEN, teamId).then((result) => {
+    getAllTeams(ACCESSTOKEN).then((result) => {
+      setTeamList(result)
+    })
+    getAllTodos(ACCESSTOKEN, todoPage).then((result) => {
       setTodoList(result)
+      console.log(todoList)
     })
-    getTodoNum(ACCESSTOKEN, teamId).then((result) => {
+    getAllTodoNum(ACCESSTOKEN).then((result) => {
       setTodoNum(result)
     })
-    setDeleteTeamId(teamId)
   }, [])
 
-  const deletePamily = () => {
-    console.log(deleteTeamId)
-    deleteTeam(ACCESSTOKEN, deleteTeamId)
-  }
+  const renderTeamItem = ({ item }) => (
+    <TeamContainer>
+      <TeamImage source={{ uri: `${item.teamProfileImage}` }} />
+      <DetailSm_Text>{item.teamName}</DetailSm_Text>
+    </TeamContainer>
+  )
 
   const renderItem = ({ item }) => (
     <TodoContainer
@@ -85,7 +52,7 @@ export default function DeletePamily({ route, navigation }) {
         shadowOffset: [0, 0],
       }}
     >
-      <TeamColor style={{ backgroundColor: categoryColors[item.categoryId % 10] }} />
+      <TodoImage source={{ uri: `${item.teamProfileImage}` }} />
       <ContentContainer>
         <DetailSm_Text>{item.categoryName}</DetailSm_Text>
         <BodyBoldSm_Text>{item.task}</BodyBoldSm_Text>
@@ -98,7 +65,7 @@ export default function DeletePamily({ route, navigation }) {
       <Container>
         <TimeBox>
           <Title>
-            <TeamNameText>{teamName}</TeamNameText>과 함께한 {userNickname}님의 시간
+            <TeamNameText>포잇</TeamNameText>과 함께한 {userNickname}님의 시간
           </Title>
           <DateContent
             style={{
@@ -108,24 +75,31 @@ export default function DeletePamily({ route, navigation }) {
               shadowOffset: [0, 0],
             }}
           >
-            <DateText>{teamPeriod}일</DateText>
+            <DateText>{userPeriod}일</DateText>
           </DateContent>
         </TimeBox>
+        <TeamBox>
+          <TitleBox>
+            <Title>
+              <TeamNameText>포잇</TeamNameText>과 함께한 {userNickname}님의 Pamily
+            </Title>
+          </TitleBox>
+          <FlatList horizontal={true} data={teamList} renderItem={renderTeamItem} />
+        </TeamBox>
         <TodoBox>
           <TitleBox>
             <Title>
-              <TeamNameText>{teamName}</TeamNameText>과 함께한 {userNickname}님의 Todo, {todoNum}개
+              <TeamNameText>포잇</TeamNameText>과 함께한 {userNickname}님의 Todo, {todoNum}개
             </Title>
           </TitleBox>
           <FlatList data={todoList} renderItem={renderItem} />
         </TodoBox>
         <DeleteButton
           onPress={() => {
-            deletePamily()
-            navigation.navigate('DeletePamily2')
+            navigation.navigate('DeleteAccount2')
           }}
         >
-          <ButtonText>모임 탈퇴하기</ButtonText>
+          <ButtonText>다음</ButtonText>
         </DeleteButton>
       </Container>
     </ScrollView>
@@ -167,6 +141,10 @@ const DateText = styled.Text`
   font-size: 22px;
   line-height: 30px;
 `
+const TeamBox = styled.View`
+  gap: 16px;
+  margin-bottom: 24px;
+`
 const TodoBox = styled.View`
   gap: 16px;
   margin-bottom: 70px;
@@ -186,11 +164,23 @@ const TodoContainer = styled.View`
   background-color: ${colors.grey_100};
   gap: 12px;
 `
-const TeamColor = styled.View`
-  width: 16px;
-  height: 16px;
-  border-radius: 99px;
-  background-color: ${colors.primary};
+const TeamImage = styled.Image`
+  width: 70px;
+  height: 70px;
+  border-radius: 16px;
+  background-color: ${colors.grey_150};
+`
+const TodoImage = styled.Image`
+  width: 48px;
+  height: 48px;
+  border-radius: 8px;
+  background-color: ${colors.grey_150};
+`
+const TeamContainer = styled.View`
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
+  margin-right: 12px;
 `
 const ContentContainer = styled.View`
   gap: 4px;
