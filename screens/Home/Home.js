@@ -251,6 +251,7 @@ export default function Home({ navigation }) {
                     {todoList.map((page) => (
                       <FlatList
                         data={page}
+                        scrollEnabled={false}
                         renderItem={({ item, index }) => {
                           return (
                             <TodoBox
