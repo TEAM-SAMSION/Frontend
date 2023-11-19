@@ -20,23 +20,12 @@ export default function DeletePamily({ route, navigation }) {
   const userNickname = deleteItem.name
   const team = deleteItem.deleteTeam
   const teamName = team.teamName
+  const teamId = team.teamId
   const teamPeriod = team.registerPeriod + 1
   const [todoNum, setTodoNum] = useState(0)
-  const [todoList, setTodoList] = useState([
-    {
-      id: 1,
-      image: '',
-      category: '펫모리(카테고리부분)',
-      todoContent: '펫모리 회의',
-    },
-    {
-      id: 2,
-      image: '',
-      category: '포잇',
-      todoContent: '강아지 산책',
-    },
-  ])
+  const [todoList, setTodoList] = useState([])
   const [deleteTeamId, setDeleteTeamId] = useState()
+  const [todoPage, setTodoPage] = useState(0)
 
   useEffect(() => {
     isFocused && setIsTabVisible(false)
@@ -62,7 +51,7 @@ export default function DeletePamily({ route, navigation }) {
     })
 
     const teamId = team.teamId
-    getAllTodoList(ACCESSTOKEN, teamId).then((result) => {
+    getAllTodoList(ACCESSTOKEN, teamId, todoPage).then((result) => {
       setTodoList(result)
     })
     getTodoNum(ACCESSTOKEN, teamId).then((result) => {
@@ -70,6 +59,12 @@ export default function DeletePamily({ route, navigation }) {
     })
     setDeleteTeamId(teamId)
   }, [])
+
+  const loadMore = async () => {
+    const newTodoList = await getAllTodoList(ACCESSTOKEN, teamId, todoPage + 1)
+    setTodoList((prevTodoList) => [...prevTodoList, ...newTodoList])
+    setTodoPage((prevTodoPage) => prevTodoPage + 1)
+  }
 
   const deletePamily = () => {
     console.log(deleteTeamId)
@@ -94,7 +89,7 @@ export default function DeletePamily({ route, navigation }) {
   )
 
   return (
-    <ScrollView style={{ backgroundColor: colors.grey_100 }}>
+    <ScrollView style={{ backgroundColor: colors.grey_100 }} showsVerticalScrollIndicator={false}>
       <Container>
         <TimeBox>
           <Title>
@@ -117,7 +112,7 @@ export default function DeletePamily({ route, navigation }) {
               <TeamNameText>{teamName}</TeamNameText>과 함께한 {userNickname}님의 Todo, {todoNum}개
             </Title>
           </TitleBox>
-          <FlatList data={todoList} renderItem={renderItem} />
+          <FlatList data={todoList} renderItem={renderItem} onEndReached={loadMore} onEndReachedThreshold={1} />
         </TodoBox>
         <DeleteButton
           onPress={() => {

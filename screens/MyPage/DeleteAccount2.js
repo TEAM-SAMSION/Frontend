@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react'
 import { FlatList } from 'react-native'
 import styled from 'styled-components/native'
 import { colors } from '../../colors'
-import { getAllTeams, getAllTodoNum, getAllTodos, getUserInfo } from '../../components/MyPage/Apis'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import { accessTokenState } from '../../recoil/AuthAtom'
 import { useIsFocused } from '@react-navigation/native'
@@ -30,7 +29,7 @@ export default function DeleteAccount2({ route, navigation }) {
       </Container>
       <DeleteButton
         onPress={() => {
-          navigation.navigate('DeleteAccount3')
+          navigation.navigate('DeleteAccount3', { reason })
         }}
       >
         <ButtonText>다음</ButtonText>

@@ -1,12 +1,11 @@
-import React, { useEffect, useState } from 'react'
-import { FlatList, Image, ScrollView, Text, View } from 'react-native'
-import { ScreenLayout } from '../../components/Shared'
+import React, { useEffect, useRef, useState } from 'react'
+import { Dimensions, FlatList, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { ScreenLayout, ScreenWidth } from '../../components/Shared'
 import { TopHeader } from '../../components/Home/TopHeader'
 import styled from 'styled-components/native'
 import { colors } from '../../colors'
 import Plus from '../../assets/Svgs/plus.svg'
 import Go from '../../assets/Svgs/go.svg'
-import axios from 'axios'
 import { MainStat } from '../../components/Home/MainStat'
 import { PamilyChoiceToggle } from '../../components/Home/PamilyChoiceToggle'
 import { MainImage } from '../../components/Home/MainImage'
@@ -17,6 +16,7 @@ import { getMyTodoList, getTeamList, getTodoProgress, getUserInfo } from '../../
 import { StackActions, useIsFocused } from '@react-navigation/native'
 import { BodySm_Text, DetailSm_Text } from '../../components/Fonts'
 import { TabBarAtom } from '../../recoil/TabAtom'
+import Swiper from 'react-native-swiper'
 
 export default function Home({ navigation }) {
   const isFocused = useIsFocused()
@@ -37,6 +37,8 @@ export default function Home({ navigation }) {
   const [topTeamId, setTopTeamId] = useState(0)
   const [topTeamName, setTopTeamName] = useState('')
   const [updated, setUpdated] = useState(false)
+  const [todoList, setTodoList] = useState([])
+  const [isDog, setIsDog] = useState(true)
 
   const getUserNickname = () => {
     getUserInfo(ACCESSTOKEN).then((result) => {
@@ -45,33 +47,43 @@ export default function Home({ navigation }) {
   }
 
   useEffect(() => {
-    getUserNickname()
-    getTeamList(ACCESSTOKEN).then((result) => {
-      setPamilyList(result)
-      console.log(result)
-      if (result.length !== 0) {
-        setPamilyNum(1)
-        setTopTeamId(pamilyList[0].teamId)
-        console.log(topTeamId)
-        setTopTeamName(pamilyList[0].teamName)
-        getMyTodoList(ACCESSTOKEN, pamilyList[0].teamId).then((result) => {
-          setMyTodo(result)
-        })
-        getTodoProgress(ACCESSTOKEN, pamilyList[0].teamId).then((result) => {
-          setProgress(result)
-        })
+    const fetchData = async () => {
+      try {
+        // 닉네임 가져오기
+        await getUserNickname()
+
+        // 팀 목록 가져오기
+        const teamList = await getTeamList(ACCESSTOKEN)
+        setPamilyList(teamList)
+
+        if (teamList.length !== 0) {
+          setPamilyNum(1)
+          setTopTeamId(teamList[0].teamId)
+          setTopTeamName(teamList[0].teamName)
+
+          // Todo 데이터 가져오기
+          const todoList = await getMyTodoList(ACCESSTOKEN, teamList[0].teamId)
+          setResultArray(todoList)
+          setMyTodo(todoList)
+
+          // 진행 상황 가져오기
+          const progress = await getTodoProgress(ACCESSTOKEN, teamList[0].teamId)
+          setProgress(progress)
+        } else {
+          setPamilyNum(0)
+          setMyTodo([])
+        }
+      } catch (error) {
+        console.error('에러 발생:', error)
       }
-      if (result.length == 0) {
-        setPamilyNum(0)
-        setMyTodo([])
-      }
-    })
+    }
+
+    fetchData()
   }, [])
 
   const fetchTeamList = () => {
     getTeamList(ACCESSTOKEN).then((result) => {
       setPamilyList(result)
-      console.log(result)
       if (result.length !== 0) {
         fetchProgress()
       }
@@ -92,7 +104,7 @@ export default function Home({ navigation }) {
   const fetchProgress = () => {
     getTodoProgress(ACCESSTOKEN, topTeamId).then((result) => {
       setProgress(result)
-      console.log(progress)
+      //console.log(progress)
     })
   }
 
@@ -108,40 +120,25 @@ export default function Home({ navigation }) {
 
   const fetchMyTodo = () => {
     getMyTodoList(ACCESSTOKEN, topTeamId).then((result) => {
+      setResultArray(result)
       setMyTodo(result)
     })
+  }
+
+  const setResultArray = (result) => {
+    const chunkSize = 4
+    const resultArray = []
+    for (let i = 0; i < result.length; i += chunkSize) {
+      const chunk = result.slice(i, i + chunkSize)
+      resultArray.push(chunk)
+    }
+    setTodoList(resultArray)
   }
 
   useEffect(() => {
     fetchMyTodo()
   }, [pamilyList, todoPage])
 
-  const testTodo = [
-    {
-      categoryName: '펫모리',
-      todoId: 319,
-      task: 'tatpehb',
-      completionStatus: 'COMPLETE',
-    },
-    {
-      categoryName: '펫모리2',
-      todoId: 310,
-      task: 'tatpeh2023',
-      completionStatus: 'INCOMPLETE',
-    },
-    {
-      categoryName: '펫모리3',
-      todoId: 3111,
-      task: 'tatpeh2023',
-      completionStatus: 'INCOMPLETE',
-    },
-    {
-      categoryName: '펫모리4',
-      todoId: 3102,
-      task: 'tatpeh2023',
-      completionStatus: 'INCOMPLETE',
-    },
-  ]
   return (
     <ScreenLayout>
       <ScrollView>
@@ -162,9 +159,13 @@ export default function Home({ navigation }) {
               topTeamId={topTeamId}
               setTopTeamId={setTopTeamId}
             />
-            <MainImage progress={progress} pamilyNum={pamilyNum} />
+            <MainImage isDog={isDog} progress={progress} pamilyNum={pamilyNum} />
             <PamilyStatContainer>
-              {pamilyNum == 0 ? <NoneText>소속된 Pamily가 없습니다.</NoneText> : <MainStat progress={progress} />}
+              {pamilyNum == 0 ? (
+                <NoneText>소속된 Pamily가 없습니다.</NoneText>
+              ) : (
+                <MainStat isDog={isDog} setIsDog={setIsDog} progress={progress} />
+              )}
             </PamilyStatContainer>
           </PamilyContainer>
         </BannerContainer>
@@ -221,8 +222,9 @@ export default function Home({ navigation }) {
                   <BodySm_Text color={colors.grey_600}>아직 나에게 할당된 TODO가 없어요!</BodySm_Text>
                   <DetailSm_Text color={colors.grey_400}>관리자에게 TODO를 요청해보세요.</DetailSm_Text>
                 </NoneTodoContainer>
-              ) : (
+              ) : myTodo.length < 5 ? (
                 <FlatList
+                  style={{ marginBottom: 8 }}
                   data={myTodo}
                   renderItem={({ item, index }) => {
                     return (
@@ -238,9 +240,37 @@ export default function Home({ navigation }) {
                   showsHorizontalScrollIndicator={false}
                   numColumns={2}
                 />
+              ) : (
+                <View style={{ height: 200 }}>
+                  <Swiper
+                    loop={false}
+                    showsPagination={true}
+                    dot={<PaginationDot />}
+                    activeDot={<PaginationActiveDot />}
+                  >
+                    {todoList.map((page) => (
+                      <FlatList
+                        data={page}
+                        renderItem={({ item, index }) => {
+                          return (
+                            <TodoBox
+                              data={item}
+                              index={index}
+                              accessToken={ACCESSTOKEN}
+                              updated={updated}
+                              setUpdated={setUpdated}
+                            />
+                          )
+                        }}
+                        showsHorizontalScrollIndicator={false}
+                        numColumns={2}
+                      />
+                    ))}
+                  </Swiper>
+                </View>
               )}
             </TodoContainer>
-            <AllTodoButton onPress={() => navigation.navigate('ToDoNav')}>
+            <AllTodoButton onPress={() => navigation.navigate('ToDoNav', { screen: 'ToDo' })}>
               <ButtonText>전체 TODO 확인하기</ButtonText>
             </AllTodoButton>
           </>
@@ -344,10 +374,10 @@ const TitleText = styled.Text`
 `
 const TodoContainer = styled.View`
   padding: 16px;
+  padding-bottom: 0px;
   justify-content: center;
   align-self: stretch;
   flex-wrap: wrap;
-  //align-items: center;
 `
 const AllTodoButton = styled.TouchableOpacity`
   height: 44px;
@@ -373,4 +403,20 @@ const NoneTodoContainer = styled.View`
   gap: 4px;
   background-color: ${colors.grey_150};
   border-radius: 8px;
+  margin-bottom: 16px;
+`
+const PaginationDot = styled.View`
+  background-color: ${colors.primary_container};
+  width: 8px;
+  height: 8px;
+  border-radius: 4px;
+  margin: 0 4px;
+`
+
+const PaginationActiveDot = styled.View`
+  background-color: ${colors.primary};
+  width: 8px;
+  height: 8px;
+  border-radius: 4px;
+  margin: 0 4px;
 `

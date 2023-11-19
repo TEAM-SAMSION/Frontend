@@ -44,7 +44,8 @@ export const changeNickname = async (accessToken, nickName) => {
 /////// 팀 탈퇴 //////
 export const deleteTeam = async (accessToken, teamId) => {
   let API = `/teams/${teamId}/registers`
-  const response = await axios.delete(url + API, {
+  let data = {}
+  const response = await axios.delete(url + API, data, {
     headers: {
       Authorization: accessToken,
     },
@@ -52,12 +53,12 @@ export const deleteTeam = async (accessToken, teamId) => {
   console.log(`${teamId} 삭제`)
 }
 
-export const getAllTodoList = async (accessToken, teamId) => {
+export const getAllTodoList = async (accessToken, teamId, page) => {
   let API = `/teams/${teamId}/todos/withdraw`
   const response = await axios.get(url + API, {
     params: {
-      page: 0,
-      size: 10000,
+      page: page,
+      size: 10,
     },
     headers: {
       Authorization: accessToken,
@@ -119,4 +120,24 @@ export const deleteAccount = async (accessToken) => {
     },
   })
   console.log('탈퇴')
+}
+
+export const postReason = async (accessToken, data) => {
+  let API = '/user/withdraw'
+  let reason = { reason: data }
+  const response = await axios.post(url + API, reason, {
+    headers: {
+      Authorization: accessToken,
+    },
+  })
+}
+
+export const countDate = async (accessToken) => {
+  let API = '/user/term'
+  const response = await axios.get(url + API, {
+    headers: {
+      Authorization: accessToken,
+    },
+  })
+  return response.data.joinTerm
 }

@@ -7,24 +7,16 @@ import { ModalPopUp } from '../Shared'
 import Close from '../../assets/Svgs/Close.svg'
 import { useNavigation } from '@react-navigation/native'
 import { BodySm_Text, Detail_Text, SubHead_Text } from '../Fonts'
+import { ScrollView } from 'react-native'
 
 export const PamilyChoiceToggle = (props) => {
   const pamilyList = props.pamilyList
-  // const topTeamId = props.topTeamId
-  // const topTeamName = props.topTeamName
-  //console.log('hi')
-  console.log(props.topTeamId)
-  //console.log('hi')
+
   const options = pamilyList.length > 0 ? pamilyList.map((item) => item) : []
   // 패밀리 선택 toggle isOpen
   const [isOpen, setIsOpen] = useState(false)
-  const [selectedValue, setSelectedValue] = useState(props.topTeamName)
   const [visible, setVisible] = useState(false)
   const navigation = useNavigation()
-
-  // useEffect(() => {
-  //   setSelectedValue(props.topTeamName)
-  // }, [])
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen)
@@ -40,7 +32,9 @@ export const PamilyChoiceToggle = (props) => {
   return (
     <>
       <DropdownContainer isOpen={isOpen} onPress={toggleDropdown}>
-        <Detail_Text color={colors.grey_600}>{selectedValue || '패밀리 선택 '}</Detail_Text>
+        <Detail_Text color={colors.grey_600} style={{ width: 67 }}>
+          {props.topTeamName || '패밀리 선택 '}
+        </Detail_Text>
         {isOpen ? (
           <UpIcon width={16} height={16} style={{ position: 'absolute', right: 10 }} />
         ) : (
@@ -48,21 +42,42 @@ export const PamilyChoiceToggle = (props) => {
         )}
       </DropdownContainer>
 
-      {isOpen && (
-        <>
-          {options.map((option) => (
-            <DropdownBox key={option.teamId} onPress={() => handleOptionSelect(option)}>
-              <Detail_Text color={colors.grey_600}>{option.teamName}</Detail_Text>
+      {isOpen &&
+        (pamilyList.length > 4 ? (
+          <LongDropdown>
+            <ScrollView showsVerticalScrollIndicator={false}>
+              {options.map((option) => (
+                <DropdownBox
+                  style={{ paddingLeft: 4, width: 90 }}
+                  key={option.teamId}
+                  onPress={() => handleOptionSelect(option)}
+                >
+                  <Detail_Text color={colors.grey_600}>{option.teamName}</Detail_Text>
+                </DropdownBox>
+              ))}
+              <DropdownBox
+                style={{ borderBottomLeftRadius: 8, borderBottomRightRadius: 8, paddingLeft: 4, width: 90 }}
+                onPress={() => setVisible(true)}
+              >
+                <Detail_Text color={colors.grey_600}>+</Detail_Text>
+              </DropdownBox>
+            </ScrollView>
+          </LongDropdown>
+        ) : (
+          <>
+            {options.map((option) => (
+              <DropdownBox key={option.teamId} onPress={() => handleOptionSelect(option)}>
+                <Detail_Text color={colors.grey_600}>{option.teamName}</Detail_Text>
+              </DropdownBox>
+            ))}
+            <DropdownBox
+              style={{ borderBottomLeftRadius: 8, borderBottomRightRadius: 8 }}
+              onPress={() => setVisible(true)}
+            >
+              <Detail_Text color={colors.grey_600}>+</Detail_Text>
             </DropdownBox>
-          ))}
-          <DropdownBox
-            style={{ borderBottomLeftRadius: 8, borderBottomRightRadius: 8 }}
-            onPress={() => setVisible(true)}
-          >
-            <Detail_Text color={colors.grey_600}>+</Detail_Text>
-          </DropdownBox>
-        </>
-      )}
+          </>
+        ))}
       <ModalPopUp visible={visible} petIcon={true} height={211}>
         <ModalHeader>
           <CloseButton
@@ -108,7 +123,7 @@ const DropdownContainer = styled.Pressable`
   height: 32px;
   padding: 8px 10px 8px 16px;
   margin: 12px 0px 0px 12px;
-  z-index: 1;
+  z-index: 999;
   border-radius: ${({ isOpen }) => (isOpen ? '8px 8px 0px 0px' : '8px')};
   border-bottom-width: ${({ isOpen }) => (isOpen ? '1px' : '0px')};
   border-bottom-color: rgba(0, 0, 0, 0.12);
@@ -153,4 +168,13 @@ const ModalHeader = styled.View`
   align-items: flex-end;
   justify-content: center;
   margin-bottom: 24px;
+`
+const LongDropdown = styled.View`
+  width: 109px;
+  height: 128px;
+  background-color: ${colors.grey_100};
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+  margin-left: 12px;
+  z-index: 1;
 `

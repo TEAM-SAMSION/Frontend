@@ -95,7 +95,7 @@ export const TeamSearchBox = (props) => {
               console.log(teamCode)
               postJoiningTeam(ACCESSTOKEN, teamCode)
               setVisible(false)
-              navigation.navigate('ToDoNav')
+              navigation.navigate('ToDoNav', { screen: 'Todo' })
             }}
           >
             <BodySm_Text color={colors.red_350}>예</BodySm_Text>

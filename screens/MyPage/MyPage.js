@@ -49,22 +49,7 @@ export default function MyPage({ navigation }) {
     fetchUserInfo()
   }, [isFocused])
 
-  const [groupInfo, setGroupInfo] = useState([
-    {
-      teamId: 74,
-      teamProfileImageUrl: '../../assets/Svgs/ProfileDefault.svg',
-      teamName: 'dummy1',
-      authority: 'PRESIDENT',
-      registerPeriod: 500,
-    },
-    {
-      teamId: 75,
-      teamProfileImageUrl: '../../assets/Svgs/ProfileDefault.svg',
-      teamName: 'dummy2',
-      authority: 'EXECUTIVE',
-      registerPeriod: 700,
-    },
-  ])
+  const [groupInfo, setGroupInfo] = useState([])
 
   const fetchTeamList = async () => {
     getTeamList(ACCESSTOKEN).then((result) => {
@@ -222,7 +207,7 @@ const EditBox = styled.TouchableOpacity`
   align-items: center;
 `
 const GroupContainer = styled.View`
-  padding: 12px 0px;
+  padding: 12px 0px 0px 0px;
   gap: 12px;
 `
 const Title = styled.Text`
@@ -239,7 +224,7 @@ const FooterContainer = styled.View`
   flex-direction: row;
   justify-content: space-between;
   align-items: flex-end;
-  padding: 24px 20px;
+  padding: 12px 24px;
 `
 const Guide = styled.Text`
   font-family: 'Spoqa-Bold';

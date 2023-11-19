@@ -337,7 +337,7 @@ export default function CreateTeam({ route, navigation }) {
                 onPress={() => {
                   setCreateVisible(false)
                   createPamily()
-                  navigation.navigate('Home')
+                  navigation.navigate('toDoNav', { screen: 'todo' })
                 }}
               >
                 <BodySm_Text color={colors.red_350}>예</BodySm_Text>

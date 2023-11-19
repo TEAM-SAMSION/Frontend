@@ -1,15 +1,19 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Image } from 'react-native'
 import styled from 'styled-components/native'
 
 export const MainImage = (props) => {
   const progress = props.progress
-  const petCategory = 'Dog'
+  const [isDog, setIsDog] = useState(true)
+
+  useEffect(() => {
+    setIsDog(props.isDog)
+  }, [props.isDog])
 
   const getImageSource = () => {
     if (props.pamilyNum == 0) {
       return require(`../../assets/Imgs/DogDefault.png`)
-    } else if (petCategory === 'Dog') {
+    } else if (isDog) {
       if (progress === 0) return require(`../../assets/Imgs/Dog0.png`)
       if (progress <= 25) return require(`../../assets/Imgs/Dog25.png`)
       if (progress <= 50) return require(`../../assets/Imgs/Dog50.png`)

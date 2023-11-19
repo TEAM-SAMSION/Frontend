@@ -1,7 +1,14 @@
 import styled from 'styled-components/native'
 import { colors } from '../../colors'
 import { ModalPopUp, ScreenLayout } from '../../components/Shared'
-import { BodyBoldSm_Text, BodyBold_Text, Body_Text, Detail_Text, SubHead_Text } from '../../components/Fonts'
+import {
+  BodyBoldSm_Text,
+  BodyBold_Text,
+  Body_Text,
+  Detail_Text,
+  Label_Text,
+  SubHead_Text,
+} from '../../components/Fonts'
 import { TouchableOpacity } from 'react-native'
 import { useEffect, useState } from 'react'
 import EditIcon from '../../assets/Svgs/Edit.svg'
@@ -13,6 +20,7 @@ import { useRecoilState, useRecoilValue } from 'recoil'
 import { TabBarAtom } from '../../recoil/TabAtom'
 import { getTeamInfo } from '../../components/Administrator/Apis'
 import { accessTokenState } from '../../recoil/AuthAtom'
+import CrownIcon from '../../assets/Svgs/Crown.svg'
 
 export default function AdminHome({ route, navigation }) {
   const ACCESSTOKEN = useRecoilValue(accessTokenState)
@@ -31,6 +39,7 @@ export default function AdminHome({ route, navigation }) {
   const [petNum, setPetNum] = useState()
   const [teamCode, setTeamCode] = useState('')
   const [isVisible, setIsVisible] = useState(false)
+  const [isInfoVisible, setIsInfoVisible] = useState(false)
 
   useEffect(() => {
     isFocused && setIsTabVisible(false)
@@ -61,13 +70,17 @@ export default function AdminHome({ route, navigation }) {
             <Detail_Text color={colors.grey_600}>{intro}</Detail_Text>
           </UserBox>
         </UserDetailContainer>
-        <EditBox
-          onPress={() =>
-            navigation.navigate('EditPamily', { name, intro, profileUrl, teamCode, teamId, myAuthority, period })
-          }
-        >
-          <EditIcon width={16} height={16} color={'#4D4D4D'} />
-        </EditBox>
+        {myAuthority == 'PRESIDENT' ? (
+          <EditBox
+            onPress={() =>
+              navigation.navigate('EditPamily', { name, intro, profileUrl, teamCode, teamId, myAuthority, period })
+            }
+          >
+            <EditIcon width={16} height={16} color={'#4D4D4D'} />
+          </EditBox>
+        ) : (
+          ''
+        )}
       </UserContainer>
       <GroupInfoContainer>
         <GroupInfoBox>
@@ -83,11 +96,15 @@ export default function AdminHome({ route, navigation }) {
       <GroupContainer>
         <TitleBox>
           <BodyBold_Text>관리자 권한 기능</BodyBold_Text>
-          <TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              setIsInfoVisible(true)
+            }}
+          >
             <QuestionMark width={28} height={28} />
           </TouchableOpacity>
         </TitleBox>
-        <FunctionBox onPress={() => navigation.navigate('ManageMember', { teamId, myAuthority })}>
+        <FunctionBox onPress={() => navigation.navigate('ManageMember', { teamId, teamCode, myAuthority })}>
           <ContentBox>
             <FunctionIcon source={require('../../assets/Imgs/set_member.png')} />
             <BodyBoldSm_Text>회원 관리</BodyBoldSm_Text>
@@ -128,6 +145,59 @@ export default function AdminHome({ route, navigation }) {
             <BodyBold_Text color={colors.red_300}>준비중</BodyBold_Text>
             <Body_Text color={colors.grey_700}>에 있습니다!</Body_Text>
           </TextBase>
+        </PopContent>
+      </ModalPopUp>
+      <ModalPopUp petIcon={false} visible={isInfoVisible} height={160}>
+        <ModalHeader style={{ marginBottom: 0 }}>
+          <CloseButton onPress={() => setIsInfoVisible(false)}>
+            <Close width={24} height={24} />
+          </CloseButton>
+        </ModalHeader>
+        <PopContent style={{ alignItems: 'flex-start', marginBottom: 20 }}>
+          <TopBox>
+            <CrownTitle>
+              <CrownIcon width={34} height={34} />
+              <BodyBold_Text>관리자 권한</BodyBold_Text>
+            </CrownTitle>
+            <Detail_Text color={colors.secondary}>관리자는 어쩌구 저쩌구</Detail_Text>
+          </TopBox>
+          <InfoBox>
+            <NumBox>
+              <Detail_Text color={colors.grey_100}>1</Detail_Text>
+            </NumBox>
+            <Contents>
+              <Label_Text>회원 관리</Label_Text>
+              <Detail_Text color={colors.grey_500}>관리자는 회원의 탈퇴 여부를 결정지을 수 있습니다.</Detail_Text>
+            </Contents>
+          </InfoBox>
+
+          <InfoBox>
+            <NumBox>
+              <Detail_Text color={colors.grey_100}>2</Detail_Text>
+            </NumBox>
+            <Contents>
+              <Label_Text>펫 관리</Label_Text>
+              <Detail_Text color={colors.grey_500}>관리자는 펫의 등록 및 삭제가 가능합니다.</Detail_Text>
+            </Contents>
+          </InfoBox>
+          <InfoBox>
+            <NumBox>
+              <Detail_Text color={colors.grey_100}>3</Detail_Text>
+            </NumBox>
+            <Contents>
+              <Label_Text>카테고리 관리</Label_Text>
+              <Detail_Text color={colors.grey_500}>관리자는 TODO의 카테고리를 설정할 수 있습니다.</Detail_Text>
+            </Contents>
+          </InfoBox>
+          <InfoBox>
+            <NumBox>
+              <Detail_Text color={colors.grey_100}>4</Detail_Text>
+            </NumBox>
+            <Contents>
+              <Label_Text>공지 등록</Label_Text>
+              <Detail_Text color={colors.grey_500}>관리자는 모임의 전체 공지를 등록/관리할 수 있습니다.</Detail_Text>
+            </Contents>
+          </InfoBox>
         </PopContent>
       </ModalPopUp>
     </ScreenLayout>
@@ -222,4 +292,28 @@ const ContentBox = styled.View`
   flex-direction: row;
   align-items: center;
   gap: 8px;
+`
+const TopBox = styled.View`
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 4px;
+  gap: 8px;
+`
+const InfoBox = styled.View`
+  margin: 16px 5px 0px 5px;
+  flex-direction: row;
+  gap: 10px;
+`
+const NumBox = styled.View`
+  background-color: ${colors.grey_800};
+  width: 20px;
+  height: 20px;
+  border-radius: 10px;
+  justify-content: center;
+  align-items: center;
+`
+const Contents = styled.View``
+const CrownTitle = styled.View`
+  align-items: center;
 `

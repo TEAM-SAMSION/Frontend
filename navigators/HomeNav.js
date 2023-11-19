@@ -2,7 +2,6 @@ import React from 'react'
 import { createStackNavigator } from '@react-navigation/stack'
 import Home from '../screens/Home/Home'
 import { colors } from '../colors'
-import ToDoNav from './ToDoNav'
 import CreateTeam from '../screens/Home/CreateTeam'
 import JoinTeam from '../screens/Home/JoinTeam'
 import { TouchableOpacity } from 'react-native'
@@ -78,14 +77,6 @@ export default function HomeNav() {
         options={({ navigation }) => ({
           headerTitle: '펫 정보 수정',
         })}
-      />
-      <Stack.Screen
-        name="ToDoNav"
-        component={ToDoNav}
-        options={{
-          headerShown: false,
-          headerBackTitleVisible: false,
-        }}
       />
     </Stack.Navigator>
   )

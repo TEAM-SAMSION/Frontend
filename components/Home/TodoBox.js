@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { Dimensions, TouchableOpacity, View } from 'react-native'
 import { styled } from 'styled-components/native'
-import { colors } from '../../colors'
+import { categoryColors, colors } from '../../colors'
 import CheckOn from '../../assets/Svgs/Check-box.svg'
 import CheckOff from '../../assets/Svgs/Check-box_off.svg'
 import { completeTodo } from './Apis'
@@ -24,10 +24,18 @@ export const TodoBox = (props) => {
     <TodoBoxContainer index={index}>
       <TodoContent>
         <TodoTeam>
-          <TeamText>{todo.categoryName}</TeamText>
+          <TeamText
+            numberOfLines={1}
+            ellipsizeMode="tail"
+            style={{ backgroundColor: categoryColors[todo.categoryId % 10] }}
+          >
+            {todo.categoryName}
+          </TeamText>
         </TodoTeam>
         <TodoItem>
-          <ItemText>{todo.task}</ItemText>
+          <ItemText numberOfLines={1} ellipsizeMode="tail">
+            {todo.task}
+          </ItemText>
         </TodoItem>
       </TodoContent>
       <CheckBox
@@ -38,9 +46,9 @@ export const TodoBox = (props) => {
         }}
       >
         {isChecked ? (
-          <CheckOn width={24} height={24} color={colors.primary_container} />
+          <CheckOn width={24} height={24} color={categoryColors[todo.categoryId % 10]} />
         ) : (
-          <CheckOff width={24} height={24} color={colors.primary_container} />
+          <CheckOff width={24} height={24} color={categoryColors[todo.categoryId % 10]} />
         )}
       </CheckBox>
     </TodoBoxContainer>
@@ -59,15 +67,21 @@ const TodoBoxContainer = styled.View`
   margin-bottom: 8px;
   margin-right: ${(props) => (props.index % 2 == 0 ? 8 : 0)}px;
 `
-const TodoTeam = styled.View``
+const TodoTeam = styled.View`
+  width: ${(ScreenWidth - 40) / 2 - 60}px;
+  overflow: hidden;
+`
 const TeamText = styled.Text`
   font-family: 'Spoqa-Medium';
   font-size: 14px;
   line-height: 19px;
   align-self: flex-start;
-  background-color: ${colors.red_250};
+  overflow: hidden;
 `
-const TodoItem = styled.View``
+const TodoItem = styled.View`
+  width: ${(ScreenWidth - 40) / 2 - 60}px;
+  overflow: hidden;
+`
 const ItemText = styled.Text`
   font-family: 'Spoqa-Medium';
   font-size: 14px;

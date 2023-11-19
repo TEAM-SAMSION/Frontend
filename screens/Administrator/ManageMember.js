@@ -15,23 +15,16 @@ export default function ManageMember({ route, navigation }) {
   const ACCESSTOKEN = useRecoilValue(accessTokenState)
   const data = route.params
   const teamId = data.teamId
-  const pamilyCode = 'dododo'
+  const pamilyCode = data.teamCode
   const [searchedName, setSearchedName] = useState('')
   const [allMember, setAllMember] = useState([])
-  const [memberData, setMemberData] = useState([
-    {
-      registerId: -9223372036854775808,
-      authority: 'PRESIDENT',
-      registerName: '신민선',
-      registerEmail: 'tlsalstjs@gmail.com',
-    },
-  ])
+  const [memberData, setMemberData] = useState([])
 
   useEffect(() => {
     getMember(ACCESSTOKEN, teamId).then((result) => {
       setMemberData(result)
       setAllMember(result)
-      console.log(result)
+      //console.log(result)
     })
   }, [])
 
@@ -78,7 +71,21 @@ export default function ManageMember({ route, navigation }) {
             <SearchIcon width={16} height={16} />
           </IconBox>
         </Block>
-        <ScrollView>
+        {memberData.length > 5 ? (
+          <ScrollView>
+            <MemberBox>
+              {memberData.map((item, index) => (
+                <MemberSearchBox
+                  key={index}
+                  data={item}
+                  accessToken={ACCESSTOKEN}
+                  teamId={teamId}
+                  myAuthority={data.myAuthority}
+                />
+              ))}
+            </MemberBox>
+          </ScrollView>
+        ) : (
           <MemberBox>
             {memberData.map((item, index) => (
               <MemberSearchBox
@@ -90,7 +97,7 @@ export default function ManageMember({ route, navigation }) {
               />
             ))}
           </MemberBox>
-        </ScrollView>
+        )}
       </Container>
     </ScreenLayout>
   )

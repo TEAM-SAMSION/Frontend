@@ -7,6 +7,7 @@ import MoreIcon from '../../assets/Svgs/More.svg'
 import CrownIcon from '../../assets/Svgs/Crown.svg'
 import { MemberPopUp } from './MemberPopUp'
 import { changeAuthority } from './Apis'
+import ErrorIcon from '../../assets/Svgs/error.svg'
 
 export const MemberSearchBox = (props) => {
   const ACCESSTOKEN = props.accessToken
@@ -20,6 +21,9 @@ export const MemberSearchBox = (props) => {
   const [changingToExecutive, setChangingToExecutive] = useState(false)
   const [changingToMember, setChangingToMember] = useState(false)
 
+  const [isAlertVisible, setIsAlertVisible] = useState(false)
+  const [isRejectVisible, setIsRejectVisible] = useState(false)
+
   const data = props.data
   const registerId = data.registerId
   const authority = data.authority
@@ -31,8 +35,22 @@ export const MemberSearchBox = (props) => {
     console.log(changing)
     console.log(registerId)
     console.log(teamId)
-    changeAuthority(ACCESSTOKEN, teamId, registerId, changing)
-    // api 에러 !
+    if (myAuthority == 'PRESIDENT' && authority == 'PRESIDENT') {
+      setIsRejectVisible(true)
+      setChangingToPresident(false)
+      setChangingToExecutive(false)
+      setChangingToMember(false)
+    } else if (myAuthority == 'PRESIDENT' && changing == 'PRESIDENT') {
+      setIsAlertVisible(true)
+      setChangingToPresident(false)
+      setChangingToExecutive(false)
+      setChangingToMember(false)
+    } else {
+      changeAuthority(ACCESSTOKEN, teamId, registerId, changing)
+      setChangingToPresident(false)
+      setChangingToExecutive(false)
+      setChangingToMember(false)
+    }
   }
 
   return (
@@ -138,6 +156,69 @@ export const MemberSearchBox = (props) => {
           </PopButton>
         </PopButtonContainer>
       </ModalPopUp>
+      <ModalPopUp visible={isRejectVisible} petIcon={false} height={258}>
+        <PopUpContainer>
+          <ErrorBox>
+            <ErrorIcon width={48} height={48} />
+          </ErrorBox>
+          <MessageBox>
+            <BodyBold_Text>관리자 위임 후 권한 변경이 가능합니다!</BodyBold_Text>
+            <BodySm_Text color={colors.grey_450}>다른 멤버에게 위임 후 다시 시도해주세요.</BodySm_Text>
+          </MessageBox>
+        </PopUpContainer>
+        <PopButtonContainer>
+          <PopButton
+            onPress={() => {
+              setIsRejectVisible(false)
+            }}
+            style={{ backgroundColor: colors.grey_100, borderColor: colors.grey_150, borderWidth: 2 }}
+          >
+            <PopButtonText>취소</PopButtonText>
+          </PopButton>
+          <PopButton
+            onPress={() => {
+              setIsRejectVisible(false)
+            }}
+          >
+            <PopButtonText>완료</PopButtonText>
+          </PopButton>
+        </PopButtonContainer>
+      </ModalPopUp>
+      <ModalPopUp visible={isAlertVisible} petIcon={false} height={258}>
+        <PopUpContainer style={{ marginTop: 18, marginBottom: 33 }}>
+          <ErrorBox>
+            <ErrorIcon width={48} height={48} />
+          </ErrorBox>
+          <MessageBox>
+            <TextBox>
+              <BodyBold_Text>00님은 위임 후,</BodyBold_Text>
+              <BodyBold_Text>일반 멤버로 자동 권한 변경됩니다.</BodyBold_Text>
+            </TextBox>
+            <BodySm_Text color={colors.grey_450}>권한 위임을 계속하시겠습니까?</BodySm_Text>
+          </MessageBox>
+        </PopUpContainer>
+        <PopButtonContainer>
+          <PopButton
+            onPress={() => {
+              setIsAlertVisible(false)
+            }}
+            style={{ backgroundColor: colors.grey_100, borderColor: colors.grey_150, borderWidth: 2 }}
+          >
+            <PopButtonText>취소</PopButtonText>
+          </PopButton>
+          <PopButton
+            onPress={() => {
+              changeAuthority(ACCESSTOKEN, teamId, registerId, changing)
+              setIsAlertVisible(false)
+              setChangingToPresident(false)
+              setChangingToExecutive(false)
+              setChangingToMember(false)
+            }}
+          >
+            <PopButtonText>완료</PopButtonText>
+          </PopButton>
+        </PopButtonContainer>
+      </ModalPopUp>
     </>
   )
 }
@@ -222,4 +303,27 @@ const AuthorityBox = styled.TouchableOpacity`
   flex: 1 0 0;
   border-radius: 8px;
   border: 1px solid rgba(0, 0, 0, 0.12);
+`
+/////
+const ErrorBox = styled.View`
+  width: 48px;
+  height: 48px;
+  border-radius: 24px;
+  background-color: ${colors.primary_outline};
+  margin-bottom: 16px;
+  align-items: center;
+  justify-content: center;
+`
+const MessageBox = styled.View`
+  gap: 4px;
+  align-items: center;
+  justify-content: center;
+`
+const PopUpContainer = styled.View`
+  justify-content: center;
+  align-items: center;
+  margin: 28px 0px 44px 0px;
+`
+const TextBox = styled.View`
+  align-items: center;
 `

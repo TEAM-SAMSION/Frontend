@@ -16,7 +16,7 @@ export default function DeletePamily2({ navigation }) {
         <PetLeft source={require('../../assets/Imgs/Dog50.png')} />
         <PetRight source={require('../../assets/Imgs/Cat50.png')} />
       </ImageContainer>
-      <DeleteButton onPress={() => navigation.dispatch(StackActions.replace('HomeNav'))}>
+      <DeleteButton onPress={() => navigation.navigate('HomeNav', { screen: 'Home' })}>
         <ButtonText>메인 홈으로 돌아가기</ButtonText>
       </DeleteButton>
     </Container>

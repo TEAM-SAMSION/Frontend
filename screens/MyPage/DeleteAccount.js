@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { FlatList } from 'react-native'
 import styled from 'styled-components/native'
 import { colors } from '../../colors'
-import { getAllTeams, getAllTodoNum, getAllTodos, getUserInfo } from '../../components/MyPage/Apis'
+import { countDate, getAllTeams, getAllTodoNum, getAllTodos, getUserInfo } from '../../components/MyPage/Apis'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import { accessTokenState } from '../../recoil/AuthAtom'
 import { useIsFocused } from '@react-navigation/native'
@@ -14,7 +14,7 @@ export default function DeleteAccount({ route, navigation }) {
   const ACCESSTOKEN = useRecoilValue(accessTokenState)
 
   const [userNickname, setUserNickname] = useState('')
-  const [userPeriod, setUserPeriod] = useState(10)
+  const [userPeriod, setUserPeriod] = useState()
   const [teamList, setTeamList] = useState([])
   const [todoNum, setTodoNum] = useState(0)
   const [todoList, setTodoList] = useState([])
@@ -33,6 +33,9 @@ export default function DeleteAccount({ route, navigation }) {
     })
     getAllTodoNum(ACCESSTOKEN).then((result) => {
       setTodoNum(result)
+    })
+    countDate(ACCESSTOKEN).then((result) => {
+      setUserPeriod(result)
     })
   }, [])
 
@@ -61,7 +64,7 @@ export default function DeleteAccount({ route, navigation }) {
   )
 
   return (
-    <ScrollView style={{ backgroundColor: colors.grey_100 }}>
+    <ScrollView style={{ backgroundColor: colors.grey_100 }} showsVerticalScrollIndicator={false}>
       <Container>
         <TimeBox>
           <Title>
@@ -84,7 +87,12 @@ export default function DeleteAccount({ route, navigation }) {
               <TeamNameText>포잇</TeamNameText>과 함께한 {userNickname}님의 Pamily
             </Title>
           </TitleBox>
-          <FlatList horizontal={true} data={teamList} renderItem={renderTeamItem} />
+          <FlatList
+            showsHorizontalScrollIndicator={false}
+            horizontal={true}
+            data={teamList}
+            renderItem={renderTeamItem}
+          />
         </TeamBox>
         <TodoBox>
           <TitleBox>

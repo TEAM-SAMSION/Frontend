@@ -15,14 +15,17 @@ import {
   SubHead_Text,
 } from '../../components/Fonts'
 import { ScreenLayout } from '../../components/Shared'
-import { deleteAccount } from '../../components/MyPage/Apis'
+import { deleteAccount, postReason } from '../../components/MyPage/Apis'
 
 export default function DeleteAccount3({ route, navigation }) {
   const ACCESSTOKEN = useRecoilValue(accessTokenState)
+  const data = route.params
+  const reason = data.reason
   const [isChecked, setIsChecked] = useState(false)
   const [loggedIn, setLoggedIn] = useRecoilState(loggedInState)
 
   const withDraw = () => {
+    postReason(ACCESSTOKEN, reason)
     deleteAccount(ACCESSTOKEN)
   }
 
