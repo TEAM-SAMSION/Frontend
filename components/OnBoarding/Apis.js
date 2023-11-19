@@ -40,3 +40,19 @@ export const registerRoute = async (accessToken, path) => {
   )
   return response.status
 }
+
+export const postDeviceToken = async (accessToken, deviceToken) => {
+  console.log(accessToken, deviceToken)
+  let API = `/alarms/token`
+  const response = await axios.post(
+    url + API,
+    { deviceToken: deviceToken },
+    {
+      headers: {
+        Authorization: accessToken,
+        'Content-Type': `application/json; charset=UTF-8`,
+      },
+    },
+  )
+  return response
+}

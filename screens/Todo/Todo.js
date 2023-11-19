@@ -108,6 +108,7 @@ export default Todo = ({ navigation }) => {
       return acc
     }, [])
     if (Object.entries(todosByCategory).length > 0) {
+      console.log(Object.entries(todosByCategory)[0][1][2])
       setTodosByCategory(Object.entries(todosByCategory))
     } else {
       setTodosByCategory(null)
@@ -195,14 +196,7 @@ export default Todo = ({ navigation }) => {
           todoTeamList={todoTeamList}
           navigation={navigation}
         />
-        <TodayButton
-          onPress={
-            () => AsyncStorage.clear()
-            // checkTokenValid(refreshToken)
-          }
-        >
-          <BodyBold_Text color={colors.grey_400}>캐시 지우기</BodyBold_Text>
-        </TodayButton>
+        {/*
         <TodayButton
           onPress={() =>
             // AsyncStorage.clear()
@@ -210,45 +204,45 @@ export default Todo = ({ navigation }) => {
           }
         >
           <BodyBold_Text color={colors.grey_400}>토큰재발급</BodyBold_Text>
-        </TodayButton>
-        <ScrollView style={{ zIndex: -1 }} showsVerticalScrollIndicator={false}>
-          <MyCalendarStrip handleDateSelect={handleDateSelect} />
-          {!todosByCategory && <NoItem />}
-          {/* <CategoryCreate createCategory={createCategory} /> */}
-          {/*** todosByCategory[0][1][0] = categoryId, todosByCategory[0][1][1] = categoryName,todosByCategory[0][1][2] = todos*/}
-          {isLoading ? (
-            <LoadingContainer>
-              <ActivityIndicator />
-            </LoadingContainer>
-          ) : (
-            todosByCategory?.map((todos, id) => {
-              return (
-                <>
-                  <CategoryIndicator
-                    key={id}
-                    startCreateTodo={startCreateTodo}
-                    todos={todos[1]}
-                    categoryId={todos[1][0]}
-                  />
-                  {todos[1][2].map((todo, index) => (
-                    <TodoItem
-                      setIsVisible={setIsVisible}
-                      getInitDatas={getInitDatas}
-                      selectedDate={selectedDate}
-                      key={index}
-                      todo={todo}
-                      todoLocalId={index}
-                      categoryId={id}
-                      //여기서 categoryID는 배열로 불러왔을때, 임의 순서를 나타낸 것이며, 서버 내에서 식별용으로 사용되는 ID값은 아님
-                      accessToken={accessToken}
-                      editTodo={startEditTodo}
+        </TodayButton> */}
+        <ScrollViewContainer>
+          <ScrollView showsVerticalScrollIndicator={false}>
+            <MyCalendarStrip handleDateSelect={handleDateSelect} />
+            {!todosByCategory && <NoItem />}
+            {isLoading ? (
+              <LoadingContainer>
+                <ActivityIndicator />
+              </LoadingContainer>
+            ) : (
+              todosByCategory?.map((todos, id) => {
+                return (
+                  <>
+                    <CategoryIndicator
+                      key={id}
+                      startCreateTodo={startCreateTodo}
+                      todos={todos[1]}
+                      categoryId={todos[1][0]}
                     />
-                  ))}
-                </>
-              )
-            })
-          )}
-        </ScrollView>
+                    {todos[1][2].map((todo, index) => (
+                      <TodoItem
+                        setIsVisible={setIsVisible}
+                        getInitDatas={getInitDatas}
+                        selectedDate={selectedDate}
+                        key={index}
+                        todo={todo}
+                        todoLocalId={index}
+                        categoryId={id}
+                        //여기서 categoryID는 배열로 불러왔을때, 임의 순서를 나타낸 것이며, 서버 내에서 식별용으로 사용되는 ID값은 아님
+                        accessToken={accessToken}
+                        editTodo={startEditTodo}
+                      />
+                    ))}
+                  </>
+                )
+              })
+            )}
+          </ScrollView>
+        </ScrollViewContainer>
       </ContentLayout>
       <BottomSheetModal
         ref={bottomModal}
@@ -301,6 +295,10 @@ export default Todo = ({ navigation }) => {
     </ScreenLayout>
   )
 }
+const ScrollViewContainer = styled.View`
+  flex: 1;
+  z-index: -1;
+`
 
 const PopContent = styled.View`
   flex-direction: column;
@@ -332,4 +330,6 @@ const LoadingContainer = styled.View`
 `
 const ContentLayout = styled.View`
   padding: 0px 16px;
+  flex-direction: column;
+  flex: 1;
 `
