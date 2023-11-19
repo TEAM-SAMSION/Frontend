@@ -33,7 +33,6 @@ export default function AppBase() {
     })
   }, [])
   const setLoggedIn = useSetRecoilState(loggedInState)
-  const setToken = useSetRecoilState(accessTokenState)
   const setOnboarded = useSetRecoilState(onboardedState)
 
   const checkFCMToken = async (accessToken) => {
@@ -59,10 +58,7 @@ export default function AppBase() {
           if (accessToken) {
             //RecoilState로 로그인여부 저장
             setLoggedIn(true)
-            //RecoilState로 액서스토큰 저장
-            setToken(accessToken)
             checkFCMToken(accessToken)
-            console.log('자동으로 로그인되고, Recoil변수로 액서스토큰 저장됨')
           }
         })
 

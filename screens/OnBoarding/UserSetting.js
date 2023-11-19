@@ -10,13 +10,15 @@ import { routeList } from '../../datas/OnBoarding/data'
 import { TermsBottomSheet } from '../../components/OnBoarding/TermsBottomSheet'
 import { Detail_Text, SubHead_Text } from '../../components/Fonts'
 
-export const UserSetting = ({ navigation }) => {
+export const UserSetting = ({ navigation, route }) => {
   const { StatusBarManager } = NativeModules
   const [statusBarHeight, setStatusBarHeight] = useState(0)
   const [selectedRoute, setSelectedRoute] = useState(null)
   const [detailRoute, setDetailRoute] = useState('')
   const [nickname, setNickname] = useState('')
 
+  let refreshToken = route.params?.refreshToken
+  let accessToken = route.params?.accessToken
   Platform.OS == 'ios'
     ? StatusBarManager.getHeight((statusBarFrameData) => {
         setStatusBarHeight(statusBarFrameData.height)
@@ -118,7 +120,13 @@ export const UserSetting = ({ navigation }) => {
         enableDismissOnClose
         handleIndicatorStyle={{ backgroundColor: colors.grey_300, width: 72, height: 6 }}
       >
-        <TermsBottomSheet nickname={nickname} selectedRoute={selectedRoute} detailRoute={detailRoute} />
+        <TermsBottomSheet
+          refreshToken={refreshToken}
+          accessToken={accessToken}
+          nickname={nickname}
+          selectedRoute={selectedRoute}
+          detailRoute={detailRoute}
+        />
       </BottomSheet>
     </ScreenKeyboardLayout>
   )
