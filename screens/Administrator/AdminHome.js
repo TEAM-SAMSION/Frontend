@@ -9,22 +9,27 @@ import QuestionMark from '../../assets/Svgs/Question_mark.svg'
 import Right from '../../assets/Svgs/chevron_right.svg'
 import Close from '../../assets/Svgs/Close.svg'
 import { useIsFocused } from '@react-navigation/native'
-import { useRecoilState } from 'recoil'
+import { useRecoilState, useRecoilValue } from 'recoil'
 import { TabBarAtom } from '../../recoil/TabAtom'
+import { getTeamInfo } from '../../components/Administrator/Apis'
+import { accessTokenState } from '../../recoil/AuthAtom'
 
 export default function AdminHome({ route, navigation }) {
+  const ACCESSTOKEN = useRecoilValue(accessTokenState)
   const isFocused = useIsFocused()
   const [isTabVisible, setIsTabVisible] = useRecoilState(TabBarAtom)
 
   const data = route.params
   const teamId = data.item.teamId
   const myAuthority = data.item.authority
-  console.log(data)
+  const period = data.item.registerPeriod
+  //console.log(data)
   const [name, setName] = useState('')
-  const [intro, setIntro] = useState('애견인들의 모임')
+  const [intro, setIntro] = useState('')
   const [profileUrl, setProfileUrl] = useState('')
-  const [memberNum, setMemberNum] = useState(9)
-  const [petNum, setPetNum] = useState(3)
+  const [memberNum, setMemberNum] = useState()
+  const [petNum, setPetNum] = useState()
+  const [teamCode, setTeamCode] = useState('')
   const [isVisible, setIsVisible] = useState(false)
 
   useEffect(() => {
@@ -32,10 +37,15 @@ export default function AdminHome({ route, navigation }) {
   }, [isFocused, isTabVisible])
 
   useEffect(() => {
+    getTeamInfo(ACCESSTOKEN, teamId).then((result) => {
+      setIntro(result.teamDescription)
+      setPetNum(result.teamPetCount)
+      setMemberNum(result.teamMemberCount)
+      setTeamCode(result.todoTeamCode)
+    })
     setName(data.item.teamName)
-    //setIntro(data.item.description)
     setProfileUrl(data.item.teamProfileImageUrl)
-  }, [])
+  }, [isFocused])
 
   return (
     <ScreenLayout>
@@ -51,7 +61,11 @@ export default function AdminHome({ route, navigation }) {
             <Detail_Text color={colors.grey_600}>{intro}</Detail_Text>
           </UserBox>
         </UserDetailContainer>
-        <EditBox onPress={() => navigation.navigate('EditPamily', { name, intro, profileUrl })}>
+        <EditBox
+          onPress={() =>
+            navigation.navigate('EditPamily', { name, intro, profileUrl, teamCode, teamId, myAuthority, period })
+          }
+        >
           <EditIcon width={16} height={16} color={'#4D4D4D'} />
         </EditBox>
       </UserContainer>
@@ -80,7 +94,7 @@ export default function AdminHome({ route, navigation }) {
           </ContentBox>
           <Right width={24} height={24} color={colors.primary_outline} />
         </FunctionBox>
-        <FunctionBox onPress={() => navigation.navigate('ManagePetNav', { teamId })}>
+        <FunctionBox onPress={() => navigation.navigate('ManagePet', { teamId })}>
           <ContentBox>
             <FunctionIcon source={require('../../assets/Imgs/set_pet.png')} />
             <BodyBoldSm_Text>펫 관리</BodyBoldSm_Text>

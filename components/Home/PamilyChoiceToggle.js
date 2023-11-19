@@ -23,7 +23,7 @@ export const PamilyChoiceToggle = (props) => {
   const navigation = useNavigation()
 
   // useEffect(() => {
-  //   setSelectedValue(topTeamName)
+  //   setSelectedValue(props.topTeamName)
   // }, [])
 
   const toggleDropdown = () => {
@@ -40,7 +40,7 @@ export const PamilyChoiceToggle = (props) => {
   return (
     <>
       <DropdownContainer isOpen={isOpen} onPress={toggleDropdown}>
-        <Detail_Text color={colors.grey_600}>{props.topTeamName || '패밀리 선택 '}</Detail_Text>
+        <Detail_Text color={colors.grey_600}>{selectedValue || '패밀리 선택 '}</Detail_Text>
         {isOpen ? (
           <UpIcon width={16} height={16} style={{ position: 'absolute', right: 10 }} />
         ) : (

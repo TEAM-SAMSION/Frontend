@@ -18,6 +18,7 @@ import { useIsFocused } from '@react-navigation/native'
 import { TabBarAtom } from '../../recoil/TabAtom'
 import { ProfileImageModal } from '../../components/Home/ProfileImageModal'
 import Clipboard from '@react-native-clipboard/clipboard'
+import { postTeamInfo } from '../../components/Administrator/Apis'
 
 export default function EditPamily({ route, navigation }) {
   const isFocused = useIsFocused()
@@ -26,13 +27,14 @@ export default function EditPamily({ route, navigation }) {
   const ACCESSTOKEN = useRecoilValue(accessTokenState)
 
   const data = route.params
+  const teamId = data.teamId
+  const code = data.teamCode
   const [enabled, setEnabled] = useState(false)
   const [profileUrl, setProfileUrl] = useState(
     'https://pawith.s3.ap-northeast-2.amazonaws.com/base-image/default_user.png',
   )
   const [name, setName] = useState('')
   const [intro, setIntro] = useState('')
-  const [code, setCode] = useState('ddddd')
   const [pamilyFile, setPamilyFile] = useState('file://' + RNFS.MainBundlePath + '/default_pet.png')
 
   useEffect(() => {
@@ -43,20 +45,33 @@ export default function EditPamily({ route, navigation }) {
     setIntro(data.intro)
     setName(data.name)
     setProfileUrl(data.profileUrl)
-    // code도 얻어오기
   }, [isFocused])
 
   useEffect(() => {
-    const isEmpty = name === '' || intro === ''
-    setEnabled(!isEmpty)
+    if (name === '' || intro === '') {
+      setEnabled(false)
+      console.log(enabled)
+    } else {
+      setEnabled(true)
+    }
+  }, [name, intro, profileUrl, pamilyFile])
 
+  useEffect(() => {
     navigation.setOptions({
       headerRight: () => (
         <TouchableOpacity
           disabled={!enabled}
           onPress={() => {
             EditTeamInfo()
-            navigation.navigate('AdminHome')
+            navigation.navigate('AdminHome', {
+              item: {
+                teamId: teamId,
+                teamProfileImageUrl: profileUrl,
+                teamName: name,
+                authority: data.myAuthority,
+                registerPeriod: data.period,
+              },
+            })
           }}
           style={{ marginRight: 16 }}
         >
@@ -70,7 +85,7 @@ export default function EditPamily({ route, navigation }) {
         </TouchableOpacity>
       ),
     })
-  }, [name, profileUrl, pamilyFile])
+  }, [enabled, name, intro, profileUrl, pamilyFile])
 
   const bottomSheetModalRef = useRef(null)
   const snapPoints = ['60%']
@@ -83,15 +98,25 @@ export default function EditPamily({ route, navigation }) {
   )
 
   const EditTeamInfo = async () => {
+    const TeamData = new FormData()
     if (data.profileUrl !== profileUrl) {
-      const defaultData = new FormData()
-      defaultData.append('profileImage', {
+      TeamData.append('teamImageFile', {
         uri: pamilyFile,
-        name: 'default_user.png',
+        name: 'teamImageFile.png',
         type: 'image/png',
       })
-      console.log('api 나오면')
+    } else {
+      TeamData.append('teamImageFile', {})
     }
+    const teamInfo = {
+      teamName: name,
+      description: intro,
+    }
+    const json = JSON.stringify(teamInfo)
+    TeamData.append('todoTeamUpdateInfo', { string: json, type: 'application/json' })
+    console.log(TeamData)
+    console.log(TeamData._parts)
+    postTeamInfo(ACCESSTOKEN, teamId, TeamData)
   }
 
   const copyText = `초대코드: ${code}${'\n'}참여방법: 포잇 > Pamily 참여하기 > 코드 입력`

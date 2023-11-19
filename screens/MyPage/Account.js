@@ -4,7 +4,7 @@ import { ScreenLayout } from '../../components/Shared'
 import styled from 'styled-components/native'
 import { colors } from '../../colors'
 
-export default function Account() {
+export default function Account({ navigation }) {
   const SocialAccount = '카카오톡'
 
   return (
@@ -13,7 +13,7 @@ export default function Account() {
         <ContentText>연결된 계정</ContentText>
         <AccountText>{SocialAccount}</AccountText>
       </ContentContainer>
-      <ContentContainer>
+      <ContentContainer onPress={() => navigation.navigate('DeleteAccount')}>
         <ContentText>계정 탈퇴</ContentText>
       </ContentContainer>
     </ScreenLayout>

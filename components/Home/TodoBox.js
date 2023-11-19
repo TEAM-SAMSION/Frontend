@@ -37,7 +37,11 @@ export const TodoBox = (props) => {
           props.setUpdated(!props.updated)
         }}
       >
-        {isChecked ? <CheckOn width={24} height={24} /> : <CheckOff width={24} height={24} />}
+        {isChecked ? (
+          <CheckOn width={24} height={24} color={colors.primary_container} />
+        ) : (
+          <CheckOff width={24} height={24} color={colors.primary_container} />
+        )}
       </CheckBox>
     </TodoBoxContainer>
   )
