@@ -6,30 +6,17 @@ import { useState } from 'react'
 import { Button_PinkBg } from '../Buttons'
 import { useRecoilValue, useSetRecoilState } from 'recoil'
 import { loggedInState, userInfoState } from '../../recoil/AuthAtom'
-import { BodyBold_Text } from '../Fonts'
+import { BodyBoldSm_Text, BodyBold_Text, Detail_Text } from '../Fonts'
 import axios from 'axios'
 import { url } from '../Shared'
+import { registerNickname } from './Apis'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
-export const TermsBottomSheet = ({ nickname }) => {
+export const TermsBottomSheet = ({ nickname, selectedRoute, detailRoute }) => {
   const [termState, setTermState] = useState({ 0: false, 1: false, 2: false })
   const [isLoading, setIsLoading] = useState(false)
   const setLoggedIn = useSetRecoilState(loggedInState)
   const { accessToken } = useRecoilValue(userInfoState)
-
-  const registerNickname = async (nickname) => {
-    let API = `/user/name`
-    const response = await axios.put(
-      url + API,
-      { nickname: nickname },
-      {
-        headers: {
-          Authorization: accessToken,
-          'Content-Type': `application/json; charset=UTF-8`,
-        },
-      },
-    )
-    return response.status
-  }
 
   const handleTermPress = (id) => {
     let tempTermState = JSON.parse(JSON.stringify(termState))
@@ -45,9 +32,13 @@ export const TermsBottomSheet = ({ nickname }) => {
   }
   const handleSubmit = () => {
     setIsLoading(true)
-    registerNickname(nickname).then((result) => {
+    let paths = ['인스타', '지인추천', '반려동물 커뮤니티', '검색']
+    let path = selectedRoute == 5 ? detailRoute : paths[selectedRoute - 1]
+
+    registerNickname(accessToken, nickname).then((result) => {
       if (result == 200) {
-        console.log('닉네임등록 및 회원가입 완료')
+        registerRoute(accessToken, path).then((res) => console.log('경로저장:', res))
+        AsyncStorage.setItem('accessToken', accessToken)
         setLoggedIn(true)
       } else {
         console.log('닉네임등록이 잘 안되었는뎁쇼')
@@ -58,16 +49,25 @@ export const TermsBottomSheet = ({ nickname }) => {
 
   const TermItem = ({ mandatory, title, subtitle, id }) => {
     return (
-      <TermItemBase>
-        <CheckboxContainer onPress={() => handleTermPress(id)}>
-          {termState[id] ? <MyCheckBox /> : <Checkbox_off width={24} height={24} />}
+      <TermItemBase onPress={() => handleTermPress(id)}>
+        <CheckboxContainer>
+          {termState[id] ? (
+            <Checkbox color={colors.grey_600} width={24} height={24} />
+          ) : (
+            <Checkbox_off width={24} height={24} />
+          )}
         </CheckboxContainer>
-        <TextContainer>
-          <TermItemTitle>
-            [{mandatory ? '필수' : '선택'}] {title}
-          </TermItemTitle>
-          <TermItemSubtitle>{subtitle}</TermItemSubtitle>
-        </TextContainer>
+        <ColumnBase>
+          <RowBase>
+            <BodyBoldSm_Text color={id == 0 ? colors.red_350 : colors.grey_600}>
+              [{mandatory ? '필수' : '선택'}]
+            </BodyBoldSm_Text>
+            <BodyBoldSm_Text color={colors.grey_600}>{title}</BodyBoldSm_Text>
+          </RowBase>
+          <Detail_Text color={colors.grey_400} style={{ marginTop: 4 }}>
+            {subtitle}
+          </Detail_Text>
+        </ColumnBase>
       </TermItemBase>
     )
   }
@@ -84,11 +84,15 @@ export const TermsBottomSheet = ({ nickname }) => {
 일부서비스 제한될 수 있습니다.`}</TermSubTitle>
       </BottomSheetHeader>
       <BottomContainer>
-        <TermItemBase>
-          <CheckboxContainer onPress={() => handleTermAllPress()}>
-            {termState[0] && termState[1] && termState[2] ? <MyCheckBox /> : <Checkbox_off width={24} height={24} />}
+        <TermItemBase onPress={() => handleTermAllPress()}>
+          <CheckboxContainer>
+            {termState[0] && termState[1] && termState[2] ? (
+              <Checkbox color={colors.red_350} width={24} height={24} />
+            ) : (
+              <Checkbox_off color={colors.grey_600} width={24} height={24} />
+            )}
           </CheckboxContainer>
-          <TermItemTitle style={{ alignSelf: 'center', fontSize: 16 }}>전체 동의</TermItemTitle>
+          <BodyBold_Text color={colors.red_350}>전체 동의</BodyBold_Text>
         </TermItemBase>
         <Divider />
         <TermContainer>
@@ -102,9 +106,9 @@ export const TermsBottomSheet = ({ nickname }) => {
   )
 }
 
-const MyCheckBox = () => {
-  return <Checkbox color={colors.grey_600} width={24} height={24} />
-}
+// const MyCheckBox = () => {
+//   return
+// }
 
 const Divider = styled.View`
   width: 100%;
@@ -135,7 +139,7 @@ const BottomSheetHeader = styled.View`
   height: 56px;
   margin-bottom: 32px;
 `
-const TermItemBase = styled.View`
+const TermItemBase = styled.TouchableOpacity`
   width: 100%;
   flex-direction: row;
   margin-bottom: 16px;
@@ -144,21 +148,13 @@ const TermContainer = styled.View`
   flex-direction: column;
   margin-bottom: 24px;
 `
-const TermItemTitle = styled.Text`
-  font-family: Spoqa-Bold;
-  color: ${colors.grey_600};
-  font-size: 14px;
-`
-const TermItemSubtitle = styled.Text`
-  font-family: Spoqa-Medium;
-  margin-top: 4px;
-  color: ${colors.grey_400};
-  font-size: 12px;
-`
-const TextContainer = styled.View`
+const ColumnBase = styled.View`
   flex-direction: column;
 `
-const CheckboxContainer = styled.TouchableOpacity`
+const RowBase = styled.View`
+  flex-direction: row;
+`
+const CheckboxContainer = styled.View`
   height: 24px;
   width: 24px;
   margin-right: 8px;

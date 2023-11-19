@@ -16,7 +16,7 @@ import Alarm from '../../assets/Svgs/Alarm.svg'
 import Back from '../../assets/Svgs/chevron_back.svg'
 import Edit from '../../assets/Svgs/Todo_edit.svg'
 import DatePicker from 'react-native-date-picker'
-import { editTodoDate, editTodoName } from './Apis'
+import { deleteTodo, editTodoDate, editTodoName } from './Apis'
 
 export const TodoEditBottomSheet = ({
   handleBottomSheetHeight,
@@ -48,7 +48,16 @@ export const TodoEditBottomSheet = ({
     <NavigationContainer independent={true}>
       <Stack.Navigator screenOptions={screenOptions}>
         <Stack.Screen name="TodoEditHome" options={screenAOptions}>
-          {(props) => <TodoEditHome {...props} selectedTodo={selectedTodo} accessToken={accessToken} />}
+          {(props) => (
+            <TodoEditHome
+              {...props}
+              selectedDate={selectedDate}
+              getInitDatas={getInitDatas}
+              selectedTodo={selectedTodo}
+              accessToken={accessToken}
+              handleBottomSheetHeight={handleBottomSheetHeight}
+            />
+          )}
         </Stack.Screen>
         <Stack.Screen name="TimeSetting" options={screenBOptions} component={TimeSetting} />
         <Stack.Screen name="TodoDataEditing" options={screenBOptions}>
@@ -57,6 +66,7 @@ export const TodoEditBottomSheet = ({
               {...props}
               selectedTodo={selectedTodo}
               accessToken={accessToken}
+              selectedDate={selectedDate}
               setSelectedTodo={setSelectedTodo}
               handleBottomSheetHeight={handleBottomSheetHeight}
               getInitDatas={getInitDatas}
@@ -78,7 +88,7 @@ export const TodoEditBottomSheet = ({
     </NavigationContainer>
   )
 }
-const TodoEditHome = ({ navigation, selectedTodo, accessToken }) => {
+const TodoEditHome = ({ navigation, selectedTodo, selectedDate, accessToken, getInitDatas }) => {
   return (
     <BottomSheetBase
       style={{
@@ -95,7 +105,14 @@ const TodoEditHome = ({ navigation, selectedTodo, accessToken }) => {
             <Edit width={24} height={24} />
             <Detail_Text>수정하기</Detail_Text>
           </SmallBox>
-          <SmallBox>
+          <SmallBox
+            onPress={() =>
+              deleteTodo(selectedTodo.todoId, accessToken).then(() => {
+                getInitDatas(selectedDate)
+                handleBottomSheetHeight(3)
+              })
+            }
+          >
             <Delete width={24} height={24} />
             <Detail_Text>삭제하기</Detail_Text>
           </SmallBox>
@@ -118,6 +135,7 @@ const TodoDataEditing = ({
   handleBottomSheetHeight,
   accessToken,
   getInitDatas,
+  selectedDate,
   setSelectedTodo,
 }) => {
   const [name, setName] = useState(selectedTodo.task)
@@ -167,7 +185,7 @@ const TodoDataEditing = ({
     setIsLoading(true)
     popKeyboard()
     editTodoName(selectedTodo.todoId, name, accessToken).then((res) => {
-      getInitDatas() //BackGround에서의 정보갱신
+      getInitDatas(selectedDate) //BackGround에서의 정보갱신
       updateSelectedTodo(name) //BottomSheet 내부에서의 정보 갱신
       setIsLoading(false)
       navigation.goBack()
@@ -318,9 +336,8 @@ export const TodoCreateBottomSheet = ({
   accessToken,
   handleBottomSheetHeight,
   teamUserList,
-  today,
+  selectedDate,
   getInitDatas,
-  // updateTodos,
 }) => {
   const [users, setUsers] = useState(teamUserList?.map((users) => ({ ...users, selected: false })))
   const [name, setName] = useState()
@@ -352,7 +369,7 @@ export const TodoCreateBottomSheet = ({
     let data = {
       categoryId: selectedCategoryID,
       description: name,
-      scheduledDate: today,
+      scheduledDate: selectedDate,
       registerIds: selectedUser,
     }
     try {
@@ -372,7 +389,7 @@ export const TodoCreateBottomSheet = ({
       //임시방편으로 initData함수를 가져왔으나, 나중에 실질적으로 필요로 하는 함수를 추려봐야할 것.
       setIsLoading(false)
       handleBottomSheetHeight(0)
-      getInitDatas()
+      getInitDatas(selectedDate)
     })
   }
   return (

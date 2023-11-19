@@ -2,13 +2,15 @@
 
 # dependencies
 node_modules/
-
 # Expo
 .expo/
 dist/
 web-build/
 
+npm-debug.*
+
 # Native
+web-build/
 *.orig.*
 *.jks
 *.p8
@@ -30,12 +32,12 @@ yarn-error.*
 
 # local env files
 .env*.local
-
 # typescript
 *.tsbuildinfo
 android/app/google-services.json
 .idea/modules.xml
 .idea/pawith.iml
 .idea/vcs.xml
-ios/pawith/GoogleService-Info.plist
-GoogleService-Info.plist
+
+# ios/pawith/GoogleService-Info.plist
+# GoogleService-Info.plist

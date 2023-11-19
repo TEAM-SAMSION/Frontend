@@ -28,6 +28,7 @@ export default function Auth({ navigation }) {
 
   const finishLogin = (accessToken, refreshToken) => {
     //토큰 저장
+    console.log('refreshToken:', refreshToken)
     console.log('토큰 값들 recoil에 갱신됨')
     setAccessToken(accessToken)
     setRefreshToken(refreshToken)

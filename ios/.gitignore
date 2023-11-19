@@ -5,6 +5,7 @@
 # Xcode
 #
 build/
+
 *.pbxuser
 !default.pbxuser
 *.mode1v3
@@ -20,11 +21,17 @@ DerivedData
 *.hmap
 *.ipa
 *.xcuserstate
+
 project.xcworkspace
 .xcode.env.local
+
 
 # Bundle artifacts
 *.jsbundle
 
 # CocoaPods
 /Pods/
+pawith/
+
+#build files
+*.mdb

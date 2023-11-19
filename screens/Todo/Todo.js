@@ -1,13 +1,15 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { ScreenLayout } from '../../components/Shared'
+import { ModalPopUp, ScreenLayout } from '../../components/Shared'
 import { colors } from '../../colors'
 import styled from 'styled-components/native'
 import { TodoHeader } from '../../components/Todo/TodoHeader'
-import { BodyBold_Text } from '../../components/Fonts'
+import { BodyBold_Text, Body_Text } from '../../components/Fonts'
 import { ActivityIndicator, Keyboard, NativeModules, Platform, Pressable, ScrollView, View } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage' //캐시 지우기 때문에 임시로
+import Caution from '../../assets/Svgs/Caution.svg'
 import { useRecoilValue, useSetRecoilState } from 'recoil'
-import { userInfoState } from '../../recoil/AuthAtom'
+import Close from '../../assets/Svgs/Close.svg'
+import { accessTokenState, refreshTokenState, userInfoState } from '../../recoil/AuthAtom'
 import { TodoItem } from '../../components/Todo/TodoItem'
 import { NoItem } from '../../components/Todo/NoToDoItem'
 import { BottomSheetBackdrop, BottomSheetModal } from '@gorhom/bottom-sheet'
@@ -27,7 +29,9 @@ export default Todo = ({ navigation }) => {
   }, [isFocused])
 
   const { StatusBarManager } = NativeModules
-  const { accessToken } = useRecoilValue(userInfoState)
+  const { accessToken, refreshToken } = useRecoilValue(userInfoState)
+  const setRefreshToken = useSetRecoilState(refreshTokenState)
+  const setAccessToken = useSetRecoilState(accessTokenState)
   // const today = new Date().toISOString().substring(0, 10)
   const tempDate = new Date()
   //** new Date()를 새벽에 호출하면 ISOString으로 가져올때 하루 전으로 반환하는 문제가 있다. getDate()를 직접 호출하여 정확한 날짜정보를 가져와야함 */
@@ -40,16 +44,37 @@ export default Todo = ({ navigation }) => {
   const [todoTeamList, setTodoTeamList] = useState([])
   const [teamUserList, setTeamUserList] = useState([])
   const [snappoints, setSnappoints] = useState([])
+  const [isVisible, setIsVisible] = useState(false)
 
   const [selectedTeam, setSelectedTeam] = useState(null)
   const [selectedCategoryID, setSelectedCategoryID] = useState(null)
   const [selectedTodo, setSelectedTodo] = useState(null)
-  const [selectedDate, setSelectedDate] = useState(null)
+  const [selectedDate, setSelectedDate] = useState(today)
 
   const [isCreateMode, setIsCreateMode] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
 
   const bottomModal = useRef()
+
+  const updateToken = async (res) => {
+    if (res.errorCode == 1004) {
+      console.log('토큰유효기간 넘겨서 재발급')
+      let API = `/reissue`
+      let body = {}
+      const response = await axios.post(url + API, body, {
+        headers: {
+          RefreshToken: refreshToken,
+        },
+      })
+      console.log('토큰재발급 Response:', response.data)
+      setRefreshToken(response.data.refreshToken)
+      setAccessToken(response.data.accessToken)
+
+      return response.data.accessToken
+    } else {
+      console.log('토큰 유효하므로 재발급절차 스킾')
+    }
+  }
 
   //prettier-ignore
   Platform.OS == 'ios'? StatusBarManager.getHeight((statusBarFrameData) => {setStatusBarHeight(statusBarFrameData.height)}): null //KeyboardAwareView가 정상 작동하기 위해서 StatusBar의 높이값을 초기에 구해야함.
@@ -92,7 +117,7 @@ export default Todo = ({ navigation }) => {
     setIsLoading(true)
     console.log('todaydate:', date)
     //TodoTeam과 Default TodoTeam에 한해 User들을 일시적으로 반환(나중에 Team 변경하면 해당 변수 대체됨)
-    getTodoTeamList(accessToken, 0, 10)
+    getTodoTeamList(accessToken, 0, 10, updateToken)
       .then((res) => {
         //1. TeamList를 저장
         let tempTeamList = []
@@ -106,9 +131,9 @@ export default Todo = ({ navigation }) => {
         return tempTeamList[tempTeamList.length - 1]?.id
       })
       .then((selectedID_temp) => {
-        // console.log('selectedID_temp: 103', selectedID_temp)
+        // console.log('selectedID_temp: 133', selectedID_temp)
         getCategoryList(selectedID_temp, accessToken).then((categories) => {
-          console.log('categories: 103', categories)
+          // console.log('categories: 135', categories)
           getTodosByCategory(categories, date).then(setIsLoading(false))
         })
         return selectedID_temp
@@ -126,14 +151,13 @@ export default Todo = ({ navigation }) => {
     //date = 2023-10-15 //날짜를 선택 시, 해당 날짜에서의 Todo 조회 및 todosByCategory 갱신
     setIsLoading(true)
     setSelectedDate(date)
-    console.log('finalSelectedDate:', date)
     getCategoryList(selectedTeam.id, accessToken).then((categories) => {
       getTodosByCategory(categories, date).then(setIsLoading(false))
     })
   }
 
   useEffect(() => {
-    getInitDatas()
+    getInitDatas(selectedDate)
   }, [])
 
   const handleBottomSheetHeight = (status) => {
@@ -170,6 +194,22 @@ export default Todo = ({ navigation }) => {
           todoTeamList={todoTeamList}
           navigation={navigation}
         />
+        <TodayButton
+          onPress={
+            () => AsyncStorage.clear()
+            // checkTokenValid(refreshToken)
+          }
+        >
+          <BodyBold_Text color={colors.grey_400}>캐시 지우기</BodyBold_Text>
+        </TodayButton>
+        <TodayButton
+          onPress={() =>
+            // AsyncStorage.clear()
+            checkTokenValid(refreshToken)
+          }
+        >
+          <BodyBold_Text color={colors.grey_400}>토큰재발급</BodyBold_Text>
+        </TodayButton>
         <ScrollView style={{ zIndex: -1 }} showsVerticalScrollIndicator={false}>
           <MyCalendarStrip handleDateSelect={handleDateSelect} />
           {!todosByCategory && <NoItem />}
@@ -191,7 +231,9 @@ export default Todo = ({ navigation }) => {
                   />
                   {todos[1][2].map((todo, index) => (
                     <TodoItem
+                      setIsVisible={setIsVisible}
                       getInitDatas={getInitDatas}
+                      selectedDate={selectedDate}
                       key={index}
                       todo={todo}
                       todoLocalId={index}
@@ -205,15 +247,6 @@ export default Todo = ({ navigation }) => {
               )
             })
           )}
-          <TodayButton
-            style={{ marginTop: 32 }}
-            onPress={() => {
-              // AsyncStorage.clear()
-              checkTokenValid()
-            }}
-          >
-            <BodyBold_Text color={colors.grey_400}>캐시 지우기</BodyBold_Text>
-          </TodayButton>
         </ScrollView>
       </ContentLayout>
       <BottomSheetModal
@@ -234,7 +267,7 @@ export default Todo = ({ navigation }) => {
             handleBottomSheetHeight={handleBottomSheetHeight}
             teamUserList={teamUserList}
             accessToken={accessToken}
-            today={today}
+            selectedDate={selectedDate}
             getInitDatas={getInitDatas}
           />
         ) : (
@@ -249,9 +282,39 @@ export default Todo = ({ navigation }) => {
           />
         )}
       </BottomSheetModal>
+      <ModalPopUp visible={isVisible} petIcon={false} height={204}>
+        <ModalHeader>
+          <CloseButton
+            onPress={() => {
+              setIsVisible(false)
+            }}
+          >
+            <Close width={24} height={24} />
+          </CloseButton>
+        </ModalHeader>
+        <PopContent>
+          <Caution width={48} height={48} />
+          <Body_Text color={colors.grey_700}>나에게 할당된 TODO가 아닙니다.</Body_Text>
+        </PopContent>
+      </ModalPopUp>
     </ScreenLayout>
   )
 }
+
+const PopContent = styled.View`
+  flex-direction: column;
+  padding-bottom: 40px;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+`
+const ModalHeader = styled.View`
+  width: '100%';
+  align-items: flex-end;
+  justify-content: center;
+  margin-bottom: 24px;
+`
+const CloseButton = styled.TouchableOpacity``
 const TodayButton = styled.TouchableOpacity`
   flex-direction: row;
   border: 1px solid ${colors.grey_250};

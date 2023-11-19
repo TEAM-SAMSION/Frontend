@@ -44,7 +44,7 @@ export const TodoHeader = ({ navigation, changeTodoTeam, todoTeamList, setSelect
         )}
       </DropDownListContainer>
       <RightIcon>
-        <IconContainer onPress={() => navigation.navigate('ManageTodo')}>
+        <IconContainer onPress={() => navigation.navigate('ManageTodo', { teamId: selectedTeam.id })}>
           <Setting width={24} height={24} />
         </IconContainer>
         <IconContainer

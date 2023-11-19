@@ -1,28 +1,8 @@
 import axios from 'axios'
 import { url } from '../Shared'
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
-import { accessTokenState, refreshTokenState, userInfoState } from '../../recoil/AuthAtom'
-
-// const setToken = useSetRecoilState(accessTokenState)
-
-export const checkTokenValid = async () => {
-  const { refreshToken } = useRecoilValue(userInfoState)
-  // if (response.errorCode==1004) {
-  const response = await axios.post(
-    url + '/reissue',
-    {},
-    {
-      headers: {
-        RefreshToken: refreshToken,
-      },
-    },
-  )
-  console.log(response)
-}
-// }
-export const createRandomCode = async (accessToken) => {
-  let API = `/todo/team/code`
-  const response = await axios.get(url + API, {
+export const deleteTodo = async (todoId, accessToken) => {
+  let API = `/teams/todos/${todoId}`
+  const response = await axios.delete(url + API, {
     headers: {
       Authorization: accessToken,
       'Content-Type': 'application/json;charset=UTF-8',
@@ -30,16 +10,28 @@ export const createRandomCode = async (accessToken) => {
   })
 }
 //정상작동됨
-export const getTodoTeamList = async (accessToken, page, size) => {
-  // let API = `/teams/name`
-  let API = `/teams?page=${page}&size=${size}` //500
-  const response = await axios.get(url + API, {
-    headers: {
-      Authorization: accessToken,
-    },
-  })
+export const getTodoTeamList = async (accessToken, page, size, updateToken) => {
+  try {
+    let API = `/teams?page=${page}&size=${size}` //500
+    const response = await axios.get(url + API, {
+      headers: {
+        Authorization: accessToken,
+      },
+    })
+    console.log('getTodoTeamList Res:', response.data)
+    return response.data
+  } catch (e) {
+    const newAccessToken = updateToken(e.response)
+    const response = await axios.get(url + API, {
+      headers: {
+        Authorization: newAccessToken,
+      },
+    })
+    console.log('getTodoTeamList Res after tokenUpdate:', response.data)
+    return response.data
+  }
+
   //response: [{"teamId": 1, "teamName": "test"}, {"teamId": 3, "teamName": "test"}, {"teamId": 6, "teamName": "test"}, {"teamId": 7, "teamName": "test"}]
-  return response.data
 }
 export const getCategoryListAdmin = async (teamId, accessToken) => {
   let API = `/teams/${teamId}/category/manage`
@@ -69,7 +61,6 @@ export const getTeamUsers = async (data) => {
   await Promise.all(promises)
 }
 
-//완성
 export const getTeamUser = async (teamId, accessToken) => {
   let API = `/teams/${teamId}/registers`
   const response = await axios.get(url + API, {
@@ -95,17 +86,18 @@ export const getTodos = async (categoryId, accessToken, date) => {
   return response.data.content
 }
 
-export const completeTodo = async (todoId, accessToken) => {
-  console.log(todoId, accessToken)
-  let API = `/teams/todos/${todoId}/assign/complete`
-  let data = { todoId: todoId }
-  const response = await axios.put(url + API, data, {
-    headers: {
-      Authorization: accessToken,
-    },
-  })
-  // console.log(response)
-  checkComplete(todoId, accessToken)
+export const completeTodo = async (todo, accessToken) => {
+  console.log(todo.todoId, accessToken)
+  let API = `/teams/todos/${todo.todoId}/assign/complete`
+  let data = { todoId: todo.todoId }
+  try {
+    const response = await axios.put(url + API, data, {
+      headers: {
+        Authorization: accessToken,
+      },
+    })
+    return response
+  } catch (e) {}
 }
 
 export const checkComplete = async (todoId, accessToken) => {
@@ -144,6 +136,20 @@ export const editTodoDate = async (todoId, scheduledDate, accessToken) => {
 
 export const getAssignedTodos = async (teamId, accessToken, page = 0, size = 20) => {
   let API = `/teams/${teamId}/todos`
+  const response = await axios.get(url + API, {
+    params: {
+      page,
+      size,
+    },
+    headers: {
+      Authorization: accessToken,
+    },
+  })
+  return response.data.content
+}
+
+export const getAlarms = async (accessToken, page = 0, size = 20) => {
+  let API = `/alarms?page=${page}&size=${size}`
   const response = await axios.get(url + API, {
     params: {
       page,

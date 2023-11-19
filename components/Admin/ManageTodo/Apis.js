@@ -2,7 +2,6 @@ import axios from 'axios'
 import { url } from '../../Shared'
 
 export const ToggleCategory = async (categoryId, accessToken) => {
-  console.log(categoryId)
   let API = `/teams/category/${categoryId}`
   let data = {}
   const response = await axios.put(url + API, data, {
@@ -10,7 +9,7 @@ export const ToggleCategory = async (categoryId, accessToken) => {
       Authorization: accessToken,
     },
   })
-  console.log(response.status)
+  return response.status
 }
 
 export const EditCategoryName = async (categoryId, accessToken, categoryName) => {

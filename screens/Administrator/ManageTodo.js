@@ -21,11 +21,10 @@ import {
   ToggleCategory,
 } from '../../components/Admin/ManageTodo/Apis'
 
-export default function ManageTodo({ navigation, teamId }) {
+export default function ManageTodo({ navigation, route }) {
   const { accessToken } = useRecoilValue(userInfoState)
   const [categoryList, setCategoryList] = useState(null)
   const inputRefs = useRef([])
-
   const { StatusBarManager } = NativeModules
   const [statusBarHeight, setStatusBarHeight] = useState(0)
   Platform.OS == 'ios'
@@ -40,6 +39,7 @@ export default function ManageTodo({ navigation, teamId }) {
   const [isVisible, setIsVisible] = useState(false)
   const [selectedCategory, setSelectedCategory] = useState(null)
 
+  const teamId = route.params.teamId
   const setEnv = async (index) => {
     const isEditable_temp = JSON.parse(JSON.stringify(isEditable))
     isEditable_temp[index] = true
@@ -61,13 +61,17 @@ export default function ManageTodo({ navigation, teamId }) {
       }
     })
   }
-  const toggleActive = (index) => {
-    setIsLoading(false)
+  const toggleStatus = (index) => {
+    setIsLoading(true)
     ToggleCategory(categoryList[index].categoryId, accessToken).then((status) => {
       if (status == 200) {
         setIsLoading(false)
         let tempArr = JSON.parse(JSON.stringify(categoryList))
-        tempArr[index].isActive = !tempArr[index].isActive
+        if (tempArr[index].categoryStatus == 'OFF') {
+          tempArr[index].categoryStatus = 'ON'
+        } else {
+          tempArr[index].categoryStatus = 'OFF'
+        }
         setCategoryList(tempArr)
       }
     })
@@ -88,8 +92,9 @@ export default function ManageTodo({ navigation, teamId }) {
   const deleteCategory = (categoryId) => {
     DeleteCategory(categoryId, accessToken).then((status) => {
       if (status == 200) {
-        refreshData()
         setIsLoading(false)
+        refreshData()
+        console.log('Hello')
       } else {
         console.log(status)
       }
@@ -105,7 +110,7 @@ export default function ManageTodo({ navigation, teamId }) {
       if (categories.length > 0) {
         inputRefs.current = Array.from({ length: categories.length }, () => createRef()) //useRef의 ref값은 .current를 통해 mount 이후에도 변경이 가능하다.
         setIsEditable(Array.from({ length: categories.length }, () => false))
-        setCategoryList(categories.map((category) => ({ ...category, isActive: true })))
+        setCategoryList(categories)
       }
     })
   }
@@ -113,8 +118,15 @@ export default function ManageTodo({ navigation, teamId }) {
     refreshData()
   }, [])
   return (
-    <ScreenKeyboardLayout verticalOffset={statusBarHeight + 44} onPress={() => setIsVisible(false)} behavior="padding">
-      <HeaderWithBack navigation={navigation} title="TODO 관리" />
+    <ScreenKeyboardLayout
+      verticalOffset={statusBarHeight + 44}
+      onPress={() => {
+        setIsVisible(false)
+        Keyboard.dismiss()
+      }}
+      behavior="padding"
+    >
+      <HeaderWithBack navigation={navigation} title="카테고리 관리" />
       <ContentLayout>
         <TopBase>
           <SubHead_Text color={colors.grey_600}>카테고리</SubHead_Text>
@@ -143,8 +155,8 @@ export default function ManageTodo({ navigation, teamId }) {
                         editable={isEditable[index]}
                       />
                     </CategoryBox>
-                    <ButtonBase onPress={() => toggleActive(index)}>
-                      {categoryList[index].isActive ? (
+                    <ButtonBase onPress={() => toggleStatus(index)}>
+                      {categoryList[index].categoryStatus == 'ON' ? ( //***/
                         <Switch_true width={38} height={22} />
                       ) : (
                         <Switch_false width={38} height={22} />
@@ -170,13 +182,12 @@ export default function ManageTodo({ navigation, teamId }) {
             <CategoryBox>
               <Circle style={{ backgroundColor: categoryColors[0] }} />
               <TextInput
-                autoFocus
-                clearTextOnFocus
                 onEndEditing={() => setIsCreate(false)}
-                style={{ fontFamily: 'Spoqa-Medium', width: this.state?.inputWidth }}
-                placeholderTextColor={colors.grey_600}
+                style={{ width: this.state?.inputWidth }}
+                placeholderTextColor={colors.grey_900}
                 onSubmitEditing={(data) => createCategory(data.nativeEvent.text)}
                 placeholder="카테고리명을 입력해주세요."
+                selectTextOnFocus={false}
                 returnKeyType="done"
                 inputMode="text"
               />

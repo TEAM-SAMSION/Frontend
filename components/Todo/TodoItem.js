@@ -4,13 +4,28 @@ import { colors } from '../../colors'
 import Complete from '../../assets/Imgs/Complete.png'
 import InComplete from '../../assets/Imgs/InComplete.png'
 import styled from 'styled-components/native'
-import { checkComplete, completeTodo } from './Apis'
+import { completeTodo } from './Apis'
 
-export const TodoItem = ({ editTodo, categoryId, accessToken, todo, todoLocalId, getInitDatas }) => {
-  console.log(todo)
+export const TodoItem = ({
+  editTodo,
+  categoryId,
+  accessToken,
+  todo,
+  todoLocalId,
+  getInitDatas,
+  selectedDate,
+  setIsVisible,
+}) => {
   const handlePress = () => {
     //backend쪽으로 isPressed 변경된 값 보내는 구문 "assignNames":[{"assigneeId":1,"assigneeName":"test"},
-    completeTodo(todo.todoId, accessToken).then((res) => getInitDatas())
+    completeTodo(todo, accessToken).then((res) => {
+      // console.log('completeTodo res:', res)
+      if (res) {
+        getInitDatas(selectedDate)
+      } else {
+        setIsVisible(true)
+      }
+    })
   }
   let Done = todo.completionStatus == 'COMPLETE'
   let Finished = todo.assignNames[0].completionStatus == 'COMPLETE'
@@ -30,15 +45,24 @@ export const TodoItem = ({ editTodo, categoryId, accessToken, todo, todoLocalId,
         </Label_Text>
         <MateContainer>
           {todo?.assignNames?.map((assignee, id) => {
-            return (
-              <MateItem
-                key={id}
-                style={{ backgroundColor: assignee.completionStatus == 'COMPLETE' ? colors.grey_250 : colors.grey_150 }}
-              >
-                <Detail_Text color={colors.grey_600}>{assignee.assigneeName}</Detail_Text>
-              </MateItem>
-            )
+            if (id <= 2) {
+              return (
+                <MateItem
+                  key={id}
+                  style={{
+                    backgroundColor: assignee.completionStatus == 'COMPLETE' ? colors.grey_250 : colors.grey_150,
+                  }}
+                >
+                  <Detail_Text color={colors.grey_600}>{assignee.assigneeName}</Detail_Text>
+                </MateItem>
+              )
+            }
           })}
+          {todo?.assignNames.length > 3 && (
+            <MateItem style={{ backgroundColor: colors.grey_150 }}>
+              <Detail_Text color={colors.secondary}>+{todo?.assignNames.length - 3}</Detail_Text>
+            </MateItem>
+          )}
         </MateContainer>
       </LeftContainer>
       <CheckBox disabled={Done} onPress={() => handlePress()}>
@@ -67,14 +91,6 @@ const CheckIcon = styled.Image`
   margin-right: 12px;
 `
 const CheckBox = styled.TouchableOpacity``
-const CheckBoxNon = styled.Image`
-  display: flex;
-  flex-direction: row;
-  padding: 16px 12px;
-  border-radius: 8px;
-  background-color: ${colors.grey_150};
-  margin-bottom: 8px;
-`
 const MateContainer = styled.View`
   display: flex;
   margin-top: 8px;
@@ -87,6 +103,7 @@ const MateItem = styled.View`
 `
 const LeftContainer = styled.View`
   display: flex;
+  flex: 1;
   flex-direction: column;
   align-items: start;
   width: 20%;

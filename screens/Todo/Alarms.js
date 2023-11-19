@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { ScrollView, Text, View } from 'react-native'
 import styled from 'styled-components/native'
 import { colors } from '../../colors'
@@ -7,22 +7,34 @@ import { HeaderWithBack, ScreenLayout } from '../../components/Shared'
 import Alarm from '../../assets/Svgs/Alarm'
 import NoAlarm from '../../assets/Imgs/NoAlarm.png'
 import { BodySm_Text, DetailSm_Text, Detail_Text, SubHead_Text } from '../../components/Fonts'
+import { getAlarms } from '../../components/Todo/Apis'
+import { useRecoilValue } from 'recoil'
+import { userInfoState } from '../../recoil/AuthAtom'
 
 export const Alarms = ({ navigation }) => {
+  const { accessToken, refreshToken } = useRecoilValue(userInfoState)
   let items = ['전체', 'TODO', '공지사항']
   const [selectedId, setSelectedId] = useState(0)
-  //   const [alarmList, setAlarmList] = useState(null)
-  let alarmList = [
-    { name: '오늘 할당된 000을 아직 완료하지 않았군요!', time: '1시간전', type: 'TODO' },
-    { name: '오늘 할당된 000을 아직 완료하지 않았군요!', time: '2시간전', type: '공지사항' },
-    { name: '오늘 할당된 000을 아직 완료하지 않았군요!', time: '3시간전', type: '공지사항' },
-    { name: '오늘 할당된 000을 아직 완료하지 않았군요!', time: '6시간전', type: 'TODO' },
-  ]
+  const [alarmList, setAlarmList] = useState(null)
+
+  const getAlarmList = async () => {
+    getAlarms(accessToken).then((data) => {
+      console.log('getAlarmList:', data)
+      if (data.length > 0) {
+        setAlarmList(data)
+      } else {
+        setAlarmList(null)
+      }
+    })
+  }
+  useEffect(() => {
+    getAlarmList()
+  }, [])
   return (
     //** ScrollView는 직접 Height 조정 불가능하기에, 바깥 부모를 통해 조정해야한다. */
     <ScreenLayout color={colors.grey_100}>
       <HeaderWithBack navigation={navigation} title="알림" />
-      <FilterBase>
+      {/* <FilterBase>
         <ScrollView horizontal contentContainerStyle={{ marginLeft: 24 }}>
           {items.map((item, id) => {
             return (
@@ -36,7 +48,7 @@ export const Alarms = ({ navigation }) => {
             )
           })}
         </ScrollView>
-      </FilterBase>
+      </FilterBase> */}
       <ContentBase>
         {alarmList ? (
           <ScrollView>
@@ -62,7 +74,7 @@ export const Alarms = ({ navigation }) => {
           <>
             <NoAlarmImg source={NoAlarm} />
             <SubHead_Text color={colors.grey_400}>알림이 없습니다</SubHead_Text>
-            <RefreshButton onPress={() => console.log('Pressed')}>
+            <RefreshButton onPress={() => getAlarmList()}>
               <BodySm_Text color={colors.primary_outline}>새로고침</BodySm_Text>
             </RefreshButton>
           </>
