@@ -35,10 +35,10 @@ export default function AppBase() {
   const setLoggedIn = useSetRecoilState(loggedInState)
   const setOnboarded = useSetRecoilState(onboardedState)
 
-  const checkFCMToken = async (accessToken) => {
+  const checkFCMToken = async () => {
     const fcmToken = await messaging().getToken()
     if (fcmToken) {
-      postDeviceToken(accessToken, fcmToken)
+      postDeviceToken(fcmToken)
     }
   }
 
@@ -58,7 +58,7 @@ export default function AppBase() {
           if (accessToken) {
             //RecoilState로 로그인여부 저장
             setLoggedIn(true)
-            checkFCMToken(accessToken)
+            checkFCMToken()
           }
         })
 

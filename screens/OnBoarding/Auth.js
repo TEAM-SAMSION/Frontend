@@ -9,7 +9,7 @@ import { appleAuth, AppleButton } from '@invertase/react-native-apple-authentica
 import LoginButton from '../../components/OnBoarding/LoginButton'
 import { colors } from '../../colors'
 import { useSetRecoilState } from 'recoil'
-import { accessTokenState, loggedInState, platformState, refreshTokenState } from '../../recoil/AuthAtom'
+import { loggedInState, platformState } from '../../recoil/AuthAtom'
 import { url } from '../../components/Shared'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
@@ -23,8 +23,6 @@ export default function Auth({ navigation }) {
     webClientId: '317985927887-jk1lb4tj27lvvb750v2pfs6ud7k1doaa.apps.googleusercontent.com',
   })
   const setLoggedIn = useSetRecoilState(loggedInState)
-  const setRefreshToken = useSetRecoilState(refreshTokenState)
-  const setAccessToken = useSetRecoilState(accessTokenState)
   const setPlatform = useSetRecoilState(platformState)
   const finishLogin = (accessToken, refreshToken, provider) => {
     //토큰 저장
@@ -35,11 +33,11 @@ export default function Auth({ navigation }) {
     checkAuthority(accessToken).then(async (res) => {
       if (res.authority == 'USER') {
         //향후 앱을 껐다가 켜도 유효한 사용자가 앱을 접속하는 것이기 때문에, 캐시에 토큰 저장
-        console.log('권한 User라서 홈화면으로 넘어감 , AsyncStorage에 토큰 저장')
         await AsyncStorage.setItem('accessToken', accessToken)
         await AsyncStorage.setItem('refreshToken', refreshToken)
-        console.log('로그인 수단 Recoil에 저장하였음:', provider)
+        console.log('권한 User라서 홈화면으로 넘어감 , AsyncStorage에 토큰 저장')
         setPlatform(provider)
+        console.log('로그인 수단 Recoil에 저장하였음:', provider)
         setLoggedIn(true)
       } else if (res.authority == 'GUEST') {
         //닉네임 설정전까지는 앱 내부로 들여오게 해서는 안되기 때문에, 캐시에 저장아직 안함

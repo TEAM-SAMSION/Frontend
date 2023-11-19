@@ -32,9 +32,9 @@ export const TermsBottomSheet = ({ nickname, selectedRoute, detailRoute, accessT
     let paths = ['인스타', '지인추천', '반려동물 커뮤니티', '검색']
     let path = selectedRoute == 5 ? detailRoute : paths[selectedRoute - 1]
 
-    registerNickname(accessToken, nickname).then((result) => {
+    registerNickname(nickname).then((result) => {
       if (result == 200) {
-        registerRoute(accessToken, path).then((res) => {
+        registerRoute(path).then((res) => {
           console.log('registerRoute api 반환값:,', res)
         })
         console.log('회원가입완료하였으므로, AsyncStorage에 토큰 저장하고 Login')

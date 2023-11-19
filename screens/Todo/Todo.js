@@ -83,7 +83,7 @@ export default Todo = ({ navigation }) => {
       return acc
     }, [])
     if (Object.entries(todosByCategory).length > 0) {
-      console.log(Object.entries(todosByCategory)[0][1][2])
+      console.log('hello:', Object.entries(todosByCategory)[0][1][2])
       setTodosByCategory(Object.entries(todosByCategory))
     } else {
       setTodosByCategory(null)

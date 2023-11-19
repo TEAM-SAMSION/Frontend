@@ -335,7 +335,7 @@ export const TodoCreateBottomSheet = ({
   getInitDatas,
 }) => {
   const [users, setUsers] = useState(teamUserList?.map((users) => ({ ...users, selected: false })))
-  const [name, setName] = useState()
+  const [name, setName] = useState(null)
   console.log(name)
   const [isLoading, setIsLoading] = useState(false)
   const selectedUser = users.reduce((acc, user) => {

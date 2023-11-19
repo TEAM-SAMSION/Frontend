@@ -1,58 +1,24 @@
-import axios from 'axios'
 import { url } from '../Shared'
+import axiosInstance from '../../utils/customAxios'
 
-export const registerNickname = async (accessToken, nickname) => {
-  // try {
+export const registerNickname = async (nickname) => {
   let API = `/user/name`
-  const response = await axios.put(
-    url + API,
-    { nickname: nickname },
-    {
-      headers: {
-        Authorization: accessToken,
-        'Content-Type': `application/json; charset=UTF-8`,
-      },
-    },
-  )
+  const response = await axiosInstance.put(url + API, { nickname: nickname })
   return response.status
-  // } catch (e) {
-  //   const newAccessToken = updateToken(e.response)
-  //   const response = await axios.get(url + API, {
-  //     headers: {
-  //       Authorization: newAccessToken,
-  //     },
-  //   })
-  //   console.log('getTodoTeamList Res after tokenUpdate:', response.data)
-  //   return response.data
-  // }
 }
-export const registerRoute = async (accessToken, path) => {
+export const registerRoute = async (path) => {
   let API = `/user/path`
-  const response = await axios.post(
-    url + API,
-    { path: path },
-    {
-      headers: {
-        Authorization: accessToken,
-        'Content-Type': `application/json; charset=UTF-8`,
-      },
-    },
-  )
+  const response = await axiosInstance.post(url + API, { path: path })
   return response.status
 }
 
-export const postDeviceToken = async (accessToken, deviceToken) => {
-  console.log(accessToken, deviceToken)
+export const postDeviceToken = async (deviceToken) => {
+  console.log(deviceToken)
   let API = `/alarms/token`
-  const response = await axios.post(
-    url + API,
-    { deviceToken: deviceToken },
-    {
-      headers: {
-        Authorization: accessToken,
-        'Content-Type': `application/json; charset=UTF-8`,
-      },
-    },
-  )
-  return response
+  try {
+    const response = await axiosInstance.post(url + API, { deviceToken: deviceToken })
+    return response
+  } catch (e) {
+    console.log('deviceToken 저장 api 에러:', e)
+  }
 }

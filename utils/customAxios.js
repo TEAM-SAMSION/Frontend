@@ -37,6 +37,7 @@ axiosInstance.interceptors.request.use(
 axiosInstance.interceptors.response.use(
   (response) => response, // 응답이 성공적인 경우 아무것도 하지 않음
   async (error) => {
+    console.log('helloasdfasdfasdf')
     // 액세스 토큰이 만료됐다면
     if (error.response.errorCode === 1001) {
       const refreshToken = AsyncStorage.getItem('accessToken')

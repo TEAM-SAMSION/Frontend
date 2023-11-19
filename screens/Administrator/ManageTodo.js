@@ -149,7 +149,8 @@ export default function ManageTodo({ navigation, route }) {
                         style={{ fontFamily: 'Spoqa-Medium', color: colors.grey_450, width: this.state?.inputWidth }}
                         placeholderTextColor={colors.grey_600}
                         onSubmitEditing={(data) => finishCategoryEdit(data.nativeEvent.text, category.categoryId)}
-                        placeholder={category.categoryName}
+                        // placeholder={category.categoryName}
+                        value={category.categoryName}
                         returnKeyType="done"
                         inputMode="text"
                         editable={isEditable[index]}
