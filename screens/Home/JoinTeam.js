@@ -20,6 +20,9 @@ export default function JoinTeam({ navigation }) {
   const [pamilyCode, setPamilyCode] = useState('')
   const [searchedData, setSearchedData] = useState([])
 
+  // onFocus
+  const [onName, setOnName] = useState(false)
+
   useEffect(() => {
     isFocused && setIsTabVisible(false)
   }, [isFocused, isTabVisible])
@@ -43,7 +46,7 @@ export default function JoinTeam({ navigation }) {
         }}
       >
         <Container>
-          <Block>
+          <Block style={{ borderWidth: onName ? 1 : 0, borderColor: onName ? 'rgba(0, 0, 0, 0.12)' : '' }}>
             <InputBlock
               editable
               onChangeText={(text) => setPamilyCode(text)}
@@ -55,6 +58,8 @@ export default function JoinTeam({ navigation }) {
               }}
               returnKeyType="done"
               onSubmitEditing={() => searchTeam(pamilyCode)}
+              onFocus={() => setOnName(true)}
+              onBlur={() => setOnName(false)}
             />
             <IconBox onPress={() => searchTeam(pamilyCode)}>
               <SearchIcon width={16} height={16} />
@@ -74,7 +79,7 @@ const InputBlock = styled.TextInput`
   font-family: 'Spoqa-Medium';
   background-color: ${colors.grey_150};
   color: ${colors.grey_600};
-  height: 44px;
+  height: 42px;
   font-size: 14px;
   line-height: 19px;
 `

@@ -41,6 +41,10 @@ export default function CreateTeam({ route, navigation }) {
   const [pamilyFile, setPamilyFile] = useState('file://' + RNFS.MainBundlePath + '/default_pamily.png')
   const ACCESSTOKEN = useRecoilValue(accessTokenState)
 
+  // onFocus
+  const [onName, setOnName] = useState(false)
+  const [onIntro, setOnIntro] = useState(false)
+
   // 펫 삭제 팝업
   const [deleteVisible, setDeleteVisible] = useState(false)
   const swipeableRefs = useRef([])
@@ -202,7 +206,7 @@ export default function CreateTeam({ route, navigation }) {
                     </CodeBox>
                   )}
                 </InputBox>
-                <InputBox>
+                <InputBox style={{ borderWidth: onName ? 1 : 0, borderColor: onName ? 'rgba(0, 0, 0, 0.12)' : '' }}>
                   <Detail_Text color={colors.grey_800}> Pamily 이름</Detail_Text>
                   <InputBlock
                     editable
@@ -210,9 +214,11 @@ export default function CreateTeam({ route, navigation }) {
                     placeholder="이름을 입력해주세요."
                     placeholderTextColor={colors.grey_400}
                     returnKeyType="done"
+                    onFocus={() => setOnName(true)}
+                    onBlur={() => setOnName(false)}
                   />
                 </InputBox>
-                <InputBox>
+                <InputBox style={{ borderWidth: onIntro ? 1 : 0, borderColor: onIntro ? 'rgba(0, 0, 0, 0.12)' : '' }}>
                   <Detail_Text color={colors.grey_800}>한줄소개</Detail_Text>
                   <InputBlock
                     editable
@@ -221,6 +227,8 @@ export default function CreateTeam({ route, navigation }) {
                     placeholderTextColor={colors.grey_400}
                     keyboardType="number"
                     returnKeyType="done"
+                    onFocus={() => setOnIntro(true)}
+                    onBlur={() => setOnIntro(false)}
                   />
                 </InputBox>
                 <Block
