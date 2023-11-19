@@ -34,3 +34,7 @@ project.xcworkspace
 pawith/
 
 #build files
+# ios/pawith/ModuleCache.noindex/modules.timestamp
+# ios/pawith/ModuleCache.noindex/os-1P3K9UO0H8VTD.swiftmodule
+# ios/pawith/ModuleCache.noindex/simd-2YSEJU74EQ59E.swiftmodule
+# ios/pawith/SDKStatCaches.noindex/iphonesimulator17.0-21A326-9f995cea1212cde75317d7d3cd2045e2.sdkstatcache

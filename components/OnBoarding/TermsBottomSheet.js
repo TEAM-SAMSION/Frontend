@@ -4,19 +4,19 @@ import Checkbox_off from '../../assets/Svgs/Checkbox_off.svg'
 import { colors } from '../../colors'
 import { useState } from 'react'
 import { Button_PinkBg } from '../Buttons'
-import { useRecoilValue, useSetRecoilState } from 'recoil'
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
 import { loggedInState, userInfoState } from '../../recoil/AuthAtom'
 import { BodyBoldSm_Text, BodyBold_Text, Detail_Text } from '../Fonts'
-import axios from 'axios'
-import { url } from '../Shared'
 import { registerNickname } from './Apis'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import { RouteAtom } from '../../recoil/RouteAtom'
 
 export const TermsBottomSheet = ({ nickname, selectedRoute, detailRoute }) => {
   const [termState, setTermState] = useState({ 0: false, 1: false, 2: false })
   const [isLoading, setIsLoading] = useState(false)
   const setLoggedIn = useSetRecoilState(loggedInState)
   const { accessToken } = useRecoilValue(userInfoState)
+  const [route, setRoute] = useRecoilState(RouteAtom)
 
   const handleTermPress = (id) => {
     let tempTermState = JSON.parse(JSON.stringify(termState))
@@ -37,7 +37,10 @@ export const TermsBottomSheet = ({ nickname, selectedRoute, detailRoute }) => {
 
     registerNickname(accessToken, nickname).then((result) => {
       if (result == 200) {
-        registerRoute(accessToken, path).then((res) => console.log('경로저장:', res))
+        registerRoute(accessToken, path).then((res) => {
+          console.log('경로저장 res:,', res)
+          setRoute(path)
+        })
         AsyncStorage.setItem('accessToken', accessToken)
         setLoggedIn(true)
       } else {
