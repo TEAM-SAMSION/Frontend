@@ -7,11 +7,19 @@ import { colors } from '../../colors'
 export const TopHeader = ({ navigation }) => {
   return (
     <CustomHeader>
-      <IconContainer>
+      <IconContainer
+        onPress={() => {
+          navigation.navigate('HomeNav', { screen: 'Home' })
+        }}
+      >
         <LogoIcon width={110} height={26} />
       </IconContainer>
       <RightIcon>
-        <IconContainer>
+        <IconContainer
+          onPress={() => {
+            navigation.navigate('ToDoNav', { screen: 'Alarms' })
+          }}
+        >
           <Alarm width={24} height={24} color={colors.grey_350} />
         </IconContainer>
         <IconContainer

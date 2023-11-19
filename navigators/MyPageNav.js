@@ -8,7 +8,6 @@ import BackButton from '../assets/Svgs/chevron_back.svg'
 import { colors } from '../colors'
 import DeletePamily from '../screens/MyPage/DeletePamily'
 import DeletePamily2 from '../screens/MyPage/DeletePamily2'
-import HomeNav from './HomeNav'
 import AdministratorNav from './AdministratorNav'
 import EditUserInfo from '../screens/MyPage/EditUserInfo'
 import DeleteAccount from '../screens/MyPage/DeleteAccount'
@@ -100,7 +99,9 @@ export default function MyPageNav() {
         component={DeletePamily2}
         options={({ navigation }) => ({
           headerTitle: '패밀리 나가기',
-          headerTintColor: colors.red_200,
+          headerStyle: {
+            backgroundColor: colors.red_200,
+          },
           headerLeft: () => (
             <TouchableOpacity
               onPress={() => navigation.goBack()}
@@ -171,14 +172,6 @@ export default function MyPageNav() {
             </TouchableOpacity>
           ),
         })}
-      />
-      <Stack.Screen
-        name="HomeNav"
-        component={HomeNav}
-        options={{
-          headerShown: false,
-          headerBackTitleVisible: false,
-        }}
       />
       <Stack.Screen
         name="AdministratorNav"
