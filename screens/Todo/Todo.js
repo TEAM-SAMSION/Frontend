@@ -7,9 +7,8 @@ import { BodyBold_Text, Body_Text } from '../../components/Fonts'
 import { ActivityIndicator, Keyboard, NativeModules, Platform, Pressable, ScrollView, View } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage' //캐시 지우기 때문에 임시로
 import Caution from '../../assets/Svgs/Caution.svg'
-import { useRecoilValue, useSetRecoilState } from 'recoil'
+import { useSetRecoilState } from 'recoil'
 import Close from '../../assets/Svgs/Close.svg'
-import { accessTokenState, refreshTokenState, userInfoState } from '../../recoil/AuthAtom'
 import { TodoItem } from '../../components/Todo/TodoItem'
 import { NoItem } from '../../components/Todo/NoToDoItem'
 import { BottomSheetBackdrop, BottomSheetModal } from '@gorhom/bottom-sheet'
@@ -29,10 +28,6 @@ export default Todo = ({ navigation }) => {
   }, [isFocused])
 
   const { StatusBarManager } = NativeModules
-  const { accessToken, refreshToken } = useRecoilValue(userInfoState)
-
-  const setRefreshToken = useSetRecoilState(refreshTokenState)
-  const setAccessToken = useSetRecoilState(accessTokenState)
   // const today = new Date().toISOString().substring(0, 10)
   const tempDate = new Date()
   //** new Date()를 새벽에 호출하면 ISOString으로 가져올때 하루 전으로 반환하는 문제가 있다. getDate()를 직접 호출하여 정확한 날짜정보를 가져와야함 */
@@ -57,26 +52,6 @@ export default Todo = ({ navigation }) => {
 
   const bottomModal = useRef()
 
-  const updateToken = async (res) => {
-    if (res.errorCode == 1004) {
-      console.log('토큰유효기간 넘겨서 재발급')
-      let API = `/reissue`
-      let body = {}
-      const response = await axios.post(url + API, body, {
-        headers: {
-          RefreshToken: refreshToken,
-        },
-      })
-      console.log('토큰재발급 Response:', response.data)
-      setRefreshToken(response.data.refreshToken)
-      setAccessToken(response.data.accessToken)
-
-      return response.data.accessToken
-    } else {
-      console.log('토큰 유효하므로 재발급절차 스킾')
-    }
-  }
-
   //prettier-ignore
   Platform.OS == 'ios'? StatusBarManager.getHeight((statusBarFrameData) => {setStatusBarHeight(statusBarFrameData.height)}): null //KeyboardAwareView가 정상 작동하기 위해서 StatusBar의 높이값을 초기에 구해야함.
 
@@ -85,10 +60,10 @@ export default Todo = ({ navigation }) => {
 
   const changeTodoTeam = (todoTeamId) => {
     //상단 메뉴를 통해 TodoTeam을 변경할때 사용하는 Function
-    getCategoryList(todoTeamId, accessToken).then((categories) => {
+    getCategoryList(todoTeamId).then((categories) => {
       getTodosByCategory(categories, selectedDate)
     })
-    getTeamUser(todoTeamId, accessToken).then((res) => {
+    getTeamUser(todoTeamId).then((res) => {
       let tempTeamUserList = []
       res.registers?.map((user) => tempTeamUserList.push({ id: user.registerId, name: user.registerName }))
       setTeamUserList(tempTeamUserList)
@@ -98,7 +73,7 @@ export default Todo = ({ navigation }) => {
   const getTodosByCategory = async (categories, date) => {
     // 각 categoryId에 대해 getTodo 함수를 병렬로 호출
     const todoPromises = categories.map(
-      (category) => getTodos(category.categoryId, accessToken, date), //[{"assignNames": [[Object], [Object], [Object], [Object]], "status": "INCOMPLETE", "task": "test", "todoId": 6149}, {"assignNames": [[Object], [Object], [Object], [Object]], "status": "INCOMPLETE", "task": "test", "todoId": 6150},
+      (category) => getTodos(category.categoryId, date), //[{"assignNames": [[Object], [Object], [Object], [Object]], "status": "INCOMPLETE", "task": "test", "todoId": 6149}, {"assignNames": [[Object], [Object], [Object], [Object]], "status": "INCOMPLETE", "task": "test", "todoId": 6150},
     )
     // Promise.all()를 사용하여 모든 비동기 작업 완료를 기다림
     const todosArr = await Promise.all(todoPromises) //todosArr = {"0":[1,"test",{"todoId":6161,"task":"test","status":"INCOMPLETE","assignNames":[{"assigneeId":1,"assigneeName":"test"},{"assigneeId":5,"assigneeName":"김형석"},{"assigneeId":6,"assigneeName":null},{"assigneeId":7,"assigneeName":"neon"}]}],
@@ -119,7 +94,7 @@ export default Todo = ({ navigation }) => {
     setIsLoading(true)
     console.log('todaydate:', date)
     //TodoTeam과 Default TodoTeam에 한해 User들을 일시적으로 반환(나중에 Team 변경하면 해당 변수 대체됨)
-    getTodoTeamList(accessToken, 0, 10, updateToken)
+    getTodoTeamList(0, 10)
       .then((res) => {
         //1. TeamList를 저장
         let tempTeamList = []
@@ -134,14 +109,14 @@ export default Todo = ({ navigation }) => {
       })
       .then((selectedID_temp) => {
         // console.log('selectedID_temp: 133', selectedID_temp)
-        getCategoryList(selectedID_temp, accessToken).then((categories) => {
+        getCategoryList(selectedID_temp).then((categories) => {
           // console.log('categories: 135', categories)
           getTodosByCategory(categories, date).then(setIsLoading(false))
         })
         return selectedID_temp
       })
       .then((selectedID_temp) =>
-        getTeamUser(selectedID_temp, accessToken).then((res) => {
+        getTeamUser(selectedID_temp).then((res) => {
           //4. TeamUser를 저장/ teamList의 가장 마지막 요소가 가장 처음에 만들어진 Team이라서 length-1번째 teamId를 인자로 넣었음
           let tempTeamUserList = []
           res.map((user) => tempTeamUserList.push({ id: user.registerId, name: user.registerName }))
@@ -153,7 +128,7 @@ export default Todo = ({ navigation }) => {
     //date = 2023-10-15 //날짜를 선택 시, 해당 날짜에서의 Todo 조회 및 todosByCategory 갱신
     setIsLoading(true)
     setSelectedDate(date)
-    getCategoryList(selectedTeam.id, accessToken).then((categories) => {
+    getCategoryList(selectedTeam.id).then((categories) => {
       getTodosByCategory(categories, date).then(setIsLoading(false))
     })
   }
@@ -233,7 +208,6 @@ export default Todo = ({ navigation }) => {
                         todoLocalId={index}
                         categoryId={id}
                         //여기서 categoryID는 배열로 불러왔을때, 임의 순서를 나타낸 것이며, 서버 내에서 식별용으로 사용되는 ID값은 아님
-                        accessToken={accessToken}
                         editTodo={startEditTodo}
                       />
                     ))}
@@ -261,7 +235,6 @@ export default Todo = ({ navigation }) => {
             selectedCategoryID={selectedCategoryID}
             handleBottomSheetHeight={handleBottomSheetHeight}
             teamUserList={teamUserList}
-            accessToken={accessToken}
             selectedDate={selectedDate}
             getInitDatas={getInitDatas}
           />
@@ -270,7 +243,6 @@ export default Todo = ({ navigation }) => {
             handleBottomSheetHeight={handleBottomSheetHeight}
             teamUserList={teamUserList}
             selectedTodo={selectedTodo}
-            accessToken={accessToken}
             selectedDate={selectedDate}
             setSelectedTodo={setSelectedTodo}
             getInitDatas={getInitDatas}

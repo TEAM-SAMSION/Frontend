@@ -17,11 +17,11 @@ import Back from '../../assets/Svgs/chevron_back.svg'
 import Edit from '../../assets/Svgs/Todo_edit.svg'
 import DatePicker from 'react-native-date-picker'
 import { deleteTodo, editTodoDate, editTodoName } from './Apis'
+import axiosInstance from '../../utils/customAxios'
 
 export const TodoEditBottomSheet = ({
   handleBottomSheetHeight,
   selectedTodo,
-  accessToken,
   getInitDatas,
   setSelectedTodo,
   selectedDate,
@@ -54,7 +54,6 @@ export const TodoEditBottomSheet = ({
               selectedDate={selectedDate}
               getInitDatas={getInitDatas}
               selectedTodo={selectedTodo}
-              accessToken={accessToken}
               handleBottomSheetHeight={handleBottomSheetHeight}
             />
           )}
@@ -65,7 +64,6 @@ export const TodoEditBottomSheet = ({
             <TodoDataEditing
               {...props}
               selectedTodo={selectedTodo}
-              accessToken={accessToken}
               selectedDate={selectedDate}
               setSelectedTodo={setSelectedTodo}
               handleBottomSheetHeight={handleBottomSheetHeight}
@@ -80,7 +78,6 @@ export const TodoEditBottomSheet = ({
               getInitDatas={getInitDatas}
               selectedDate={selectedDate}
               selectedTodo={selectedTodo}
-              accessToken={accessToken}
             />
           )}
         </Stack.Screen>
@@ -88,7 +85,7 @@ export const TodoEditBottomSheet = ({
     </NavigationContainer>
   )
 }
-const TodoEditHome = ({ navigation, selectedTodo, selectedDate, accessToken, getInitDatas }) => {
+const TodoEditHome = ({ navigation, selectedTodo, selectedDate, getInitDatas }) => {
   return (
     <BottomSheetBase
       style={{
@@ -107,7 +104,7 @@ const TodoEditHome = ({ navigation, selectedTodo, selectedDate, accessToken, get
           </SmallBox>
           <SmallBox
             onPress={() =>
-              deleteTodo(selectedTodo.todoId, accessToken).then(() => {
+              deleteTodo(selectedTodo.todoId).then(() => {
                 getInitDatas(selectedDate)
                 handleBottomSheetHeight(3)
               })
@@ -133,7 +130,6 @@ const TodoDataEditing = ({
   navigation,
   selectedTodo,
   handleBottomSheetHeight,
-  accessToken,
   getInitDatas,
   selectedDate,
   setSelectedTodo,
@@ -184,7 +180,7 @@ const TodoDataEditing = ({
   const handleSubmit = () => {
     setIsLoading(true)
     popKeyboard()
-    editTodoName(selectedTodo.todoId, name, accessToken).then((res) => {
+    editTodoName(selectedTodo.todoId, name).then((res) => {
       getInitDatas(selectedDate) //BackGround에서의 정보갱신
       updateSelectedTodo(name) //BottomSheet 내부에서의 정보 갱신
       setIsLoading(false)
@@ -255,7 +251,7 @@ const TodoDataEditing = ({
     </BottomSheetBase>
   )
 }
-const DateSetting = ({ navigation, selectedTodo, accessToken, selectedDate, getInitDatas }) => {
+const DateSetting = ({ navigation, selectedTodo, selectedDate, getInitDatas }) => {
   const [isLoading, setIsLoading] = useState(false)
   const initDay = new Date()
   initDay.setDate(initDay.getDate() + 1)
@@ -263,7 +259,7 @@ const DateSetting = ({ navigation, selectedTodo, accessToken, selectedDate, getI
   const handleSubmit = () => {
     setIsLoading(true)
     date.setDate(date.getDate() + 1) //이거 왜 date 하루 전으로 최종결정되는거죠? 이거 에러 나중에 탐구해봐야할듯 **
-    editTodoDate(selectedTodo.todoId, date.toISOString().substring(0, 10), accessToken).then((res) => {
+    editTodoDate(selectedTodo.todoId, date.toISOString().substring(0, 10)).then((res) => {
       setIsLoading(false)
       getInitDatas(selectedDate)
       navigation.goBack()
@@ -333,7 +329,6 @@ const TimeSetting = ({ navigation }) => {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 export const TodoCreateBottomSheet = ({
   selectedCategoryID,
-  accessToken,
   handleBottomSheetHeight,
   teamUserList,
   selectedDate,
@@ -374,9 +369,7 @@ export const TodoCreateBottomSheet = ({
     }
     try {
       let API = `/teams/todos`
-      const response = axios.post(url + API, data, {
-        headers: { Authorization: accessToken },
-      })
+      const response = axiosInstance.post(url + API, data)
       console.log('CreateTodoSuccessed!, response:', response)
     } catch (e) {
       console.log('CreateTodo Error:', e)

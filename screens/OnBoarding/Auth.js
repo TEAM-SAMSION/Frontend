@@ -30,21 +30,21 @@ export default function Auth({ navigation }) {
     //토큰 저장
     console.log('refreshToken:', refreshToken)
     console.log('토큰 값들 recoil에 갱신됨')
-    setAccessToken(accessToken)
-    setRefreshToken(refreshToken)
+
     //권한확인 API 통해서 닉네임 변경 거치는지 or 홈화면 바로 가는지
-    checkAuthority(accessToken).then((res) => {
+    checkAuthority(accessToken).then(async (res) => {
       if (res.authority == 'USER') {
         //향후 앱을 껐다가 켜도 유효한 사용자가 앱을 접속하는 것이기 때문에, 캐시에 토큰 저장
         console.log('권한 User라서 홈화면으로 넘어감 , AsyncStorage에 토큰 저장')
-        AsyncStorage.setItem('accessToken', accessToken)
+        await AsyncStorage.setItem('accessToken', accessToken)
+        await AsyncStorage.setItem('refreshToken', refreshToken)
         console.log('로그인 수단 Recoil에 저장하였음:', provider)
         setPlatform(provider)
         setLoggedIn(true)
       } else if (res.authority == 'GUEST') {
         //닉네임 설정전까지는 앱 내부로 들여오게 해서는 안되기 때문에, 캐시에 저장아직 안함
         console.log('권한 Guest라서 닉네임설정으로 넘어감')
-        navigation.navigate('UserSetting')
+        navigation.navigate('UserSetting', { accessToken, refreshToken })
       } else {
         console.log('유저 권한 확인단계에서 예외발생:', res)
       }

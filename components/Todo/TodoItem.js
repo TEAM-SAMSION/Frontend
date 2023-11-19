@@ -6,19 +6,10 @@ import InComplete from '../../assets/Imgs/InComplete.png'
 import styled from 'styled-components/native'
 import { completeTodo } from './Apis'
 
-export const TodoItem = ({
-  editTodo,
-  categoryId,
-  accessToken,
-  todo,
-  todoLocalId,
-  getInitDatas,
-  selectedDate,
-  setIsVisible,
-}) => {
+export const TodoItem = ({ editTodo, categoryId, todo, todoLocalId, getInitDatas, selectedDate, setIsVisible }) => {
   const handlePress = () => {
     //backend쪽으로 isPressed 변경된 값 보내는 구문 "assignNames":[{"assigneeId":1,"assigneeName":"test"},
-    completeTodo(todo, accessToken).then((res) => {
+    completeTodo(todo).then((res) => {
       // console.log('completeTodo res:', res)
       if (res) {
         getInitDatas(selectedDate)

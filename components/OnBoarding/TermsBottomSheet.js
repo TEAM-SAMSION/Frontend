@@ -10,11 +10,10 @@ import { BodyBoldSm_Text, BodyBold_Text, Detail_Text } from '../Fonts'
 import { registerNickname } from './Apis'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
-export const TermsBottomSheet = ({ nickname, selectedRoute, detailRoute }) => {
+export const TermsBottomSheet = ({ nickname, selectedRoute, detailRoute, accessToken, refreshToken }) => {
   const [termState, setTermState] = useState({ 0: false, 1: false, 2: false })
   const [isLoading, setIsLoading] = useState(false)
   const setLoggedIn = useSetRecoilState(loggedInState)
-  const { accessToken } = useRecoilValue(userInfoState)
 
   const handleTermPress = (id) => {
     let tempTermState = JSON.parse(JSON.stringify(termState))
@@ -40,6 +39,7 @@ export const TermsBottomSheet = ({ nickname, selectedRoute, detailRoute }) => {
         })
         console.log('회원가입완료하였으므로, AsyncStorage에 토큰 저장하고 Login')
         AsyncStorage.setItem('accessToken', accessToken)
+        AsyncStorage.setItem('refreshToken', refreshToken)
         setLoggedIn(true)
       } else {
         console.log('닉네임등록이 잘 안되었는뎁쇼')
