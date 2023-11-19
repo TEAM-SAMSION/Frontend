@@ -49,22 +49,7 @@ export default function MyPage({ navigation }) {
     fetchUserInfo()
   }, [isFocused])
 
-  const [groupInfo, setGroupInfo] = useState([
-    {
-      teamId: 74,
-      teamProfileImageUrl: '../../assets/Svgs/ProfileDefault.svg',
-      teamName: 'dummy1',
-      authority: 'PRESIDENT',
-      registerPeriod: 500,
-    },
-    {
-      teamId: 75,
-      teamProfileImageUrl: '../../assets/Svgs/ProfileDefault.svg',
-      teamName: 'dummy2',
-      authority: 'EXECUTIVE',
-      registerPeriod: 700,
-    },
-  ])
+  const [groupInfo, setGroupInfo] = useState([])
 
   const fetchTeamList = async () => {
     getTeamList(ACCESSTOKEN).then((result) => {
