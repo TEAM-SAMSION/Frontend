@@ -2,17 +2,18 @@ import styled from 'styled-components/native'
 import { colors } from '../../colors'
 import { useState } from 'react'
 import { Dimensions, TouchableOpacity } from 'react-native'
-import Report from '../../assets/Svgs/report.svg'
+import Change from '../../assets/Svgs/change.svg'
 import { Detail_Text } from '../Fonts'
 
 const screenWidth = Dimensions.get('window').width
 
 export const MainStat = (props) => {
   const percentage = props.progress
+
   return (
     <MainStatContainer>
-      <TouchableOpacity>
-        <Report width={24} height={24} color={'#FD8D81'} />
+      <TouchableOpacity onPress={() => props.setIsDog(!props.isDog)}>
+        <Change width={24} height={24} color={'#FD8D81'} />
       </TouchableOpacity>
       <BarContainer>
         <BackBar>
