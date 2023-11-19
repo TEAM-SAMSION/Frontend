@@ -4,10 +4,10 @@ import { ScreenLayout } from '../../components/Shared'
 import styled from 'styled-components/native'
 import { colors } from '../../colors'
 import { useRecoilValue } from 'recoil'
-import { RouteAtom } from '../../recoil/RouteAtom'
+import { platformState } from '../../recoil/AuthAtom'
 
 export default function Account({ navigation }) {
-  const SocialAccount = useRecoilValue(RouteAtom)
+  const SocialAccount = useRecoilValue(platformState)
   const [socialAccount, setSocialAccount] = useState('카카오톡')
   useEffect(() => {
     SocialAccount !== '' && setSocialAccount(SocialAccount)
