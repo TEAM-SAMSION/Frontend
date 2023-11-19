@@ -4,19 +4,17 @@ import Checkbox_off from '../../assets/Svgs/Checkbox_off.svg'
 import { colors } from '../../colors'
 import { useState } from 'react'
 import { Button_PinkBg } from '../Buttons'
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
+import { useRecoilValue, useSetRecoilState } from 'recoil'
 import { loggedInState, userInfoState } from '../../recoil/AuthAtom'
 import { BodyBoldSm_Text, BodyBold_Text, Detail_Text } from '../Fonts'
 import { registerNickname } from './Apis'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { RouteAtom } from '../../recoil/RouteAtom'
 
 export const TermsBottomSheet = ({ nickname, selectedRoute, detailRoute }) => {
   const [termState, setTermState] = useState({ 0: false, 1: false, 2: false })
   const [isLoading, setIsLoading] = useState(false)
   const setLoggedIn = useSetRecoilState(loggedInState)
   const { accessToken } = useRecoilValue(userInfoState)
-  const [route, setRoute] = useRecoilState(RouteAtom)
 
   const handleTermPress = (id) => {
     let tempTermState = JSON.parse(JSON.stringify(termState))
@@ -38,9 +36,9 @@ export const TermsBottomSheet = ({ nickname, selectedRoute, detailRoute }) => {
     registerNickname(accessToken, nickname).then((result) => {
       if (result == 200) {
         registerRoute(accessToken, path).then((res) => {
-          console.log('경로저장 res:,', res)
-          setRoute(path)
+          console.log('registerRoute api 반환값:,', res)
         })
+        console.log('회원가입완료하였으므로, AsyncStorage에 토큰 저장하고 Login')
         AsyncStorage.setItem('accessToken', accessToken)
         setLoggedIn(true)
       } else {

@@ -9,7 +9,7 @@ import { appleAuth, AppleButton } from '@invertase/react-native-apple-authentica
 import LoginButton from '../../components/OnBoarding/LoginButton'
 import { colors } from '../../colors'
 import { useSetRecoilState } from 'recoil'
-import { accessTokenState, loggedInState, refreshTokenState } from '../../recoil/AuthAtom'
+import { accessTokenState, loggedInState, platformState, refreshTokenState } from '../../recoil/AuthAtom'
 import { url } from '../../components/Shared'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
@@ -25,8 +25,8 @@ export default function Auth({ navigation }) {
   const setLoggedIn = useSetRecoilState(loggedInState)
   const setRefreshToken = useSetRecoilState(refreshTokenState)
   const setAccessToken = useSetRecoilState(accessTokenState)
-
-  const finishLogin = (accessToken, refreshToken) => {
+  const setPlatform = useSetRecoilState(platformState)
+  const finishLogin = (accessToken, refreshToken, provider) => {
     //토큰 저장
     console.log('refreshToken:', refreshToken)
     console.log('토큰 값들 recoil에 갱신됨')
@@ -36,15 +36,17 @@ export default function Auth({ navigation }) {
     checkAuthority(accessToken).then((res) => {
       if (res.authority == 'USER') {
         //향후 앱을 껐다가 켜도 유효한 사용자가 앱을 접속하는 것이기 때문에, 캐시에 토큰 저장
-        console.log('권한 User라서 홈화면으로 넘어감 , AsyncStorage에 토큰 저장됨')
+        console.log('권한 User라서 홈화면으로 넘어감 , AsyncStorage에 토큰 저장')
         AsyncStorage.setItem('accessToken', accessToken)
+        console.log('로그인 수단 Recoil에 저장하였음:', provider)
+        setPlatform(provider)
         setLoggedIn(true)
       } else if (res.authority == 'GUEST') {
         //닉네임 설정전까지는 앱 내부로 들여오게 해서는 안되기 때문에, 캐시에 저장아직 안함
         console.log('권한 Guest라서 닉네임설정으로 넘어감')
         navigation.navigate('UserSetting')
       } else {
-        console.log('유저 권한: ', res)
+        console.log('유저 권한 확인단계에서 예외발생:', res)
       }
     })
   }
@@ -119,7 +121,7 @@ export default function Auth({ navigation }) {
         'Content-Type': `application/json; charset=UTF-8`,
       },
     })
-    finishLogin(response.data.accessToken, response.data.refreshToken)
+    finishLogin(response.data.accessToken, response.data.refreshToken, provider)
   }
 
   useEffect(() => {

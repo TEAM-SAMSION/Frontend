@@ -30,6 +30,7 @@ export default Todo = ({ navigation }) => {
 
   const { StatusBarManager } = NativeModules
   const { accessToken, refreshToken } = useRecoilValue(userInfoState)
+
   const setRefreshToken = useSetRecoilState(refreshTokenState)
   const setAccessToken = useSetRecoilState(accessTokenState)
   // const today = new Date().toISOString().substring(0, 10)

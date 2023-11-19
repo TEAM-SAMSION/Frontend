@@ -1,5 +1,9 @@
 import { atom, DefaultValue, selector } from 'recoil'
 
+export const platformState = atom({
+  key: 'platform',
+  default: '네이버',
+})
 export const accessTokenState = atom({
   key: 'accessToken',
   default: '',
@@ -24,16 +28,19 @@ export const userInfoState = selector({
     const refreshToken = get(refreshTokenState)
     const loggedIn = get(loggedInState)
     const onboarded = get(onboardedState)
-    return { accessToken, refreshToken, loggedIn, onboarded }
+    const platform = get(platformState)
+    return { accessToken, refreshToken, loggedIn, onboarded, platform }
   },
   set: ({ set }, value) => {
     if (value instanceof DefaultValue) {
+      set(platformState, value)
       set(accessTokenState, value)
       set(refreshTokenState, value)
       set(loggedInState, value)
       set(onboardedState, value)
       return
     }
+    set(platformState, value.platform)
     set(accessTokenState, value.accessToken)
     set(refreshTokenState, value.refreshToken)
     set(loggedInState, value.loggedIn)
