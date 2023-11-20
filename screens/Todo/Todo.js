@@ -121,12 +121,12 @@ export default Todo = ({ navigation, route }) => {
       getAllData(selectedDate)
     }
   }
-  setInterval(refreshTime, 1000)
+  // setInterval(refreshTime, 1000)
   useFocusEffect(
     useCallback(() => {
-      if (route.params) {
-        setSelectedTeam(route.params)
-      }
+      // if (route.params) {
+      //   setSelectedTeam(route.params)
+      // }
       console.log(selectedDate, selectedTeam)
       getAllData(selectedDate)
       setIsTabVisible(true)
