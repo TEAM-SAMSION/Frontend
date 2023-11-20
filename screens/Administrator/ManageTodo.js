@@ -10,7 +10,7 @@ import Add from '../../assets/Svgs/add.svg'
 import Switch_false from '../../assets/Svgs/switch_false.svg'
 import Switch_true from '../../assets/Svgs/switch_true.svg'
 import { createRef, useEffect, useRef, useState } from 'react'
-import { ActivityIndicator, Keyboard, Modal, NativeModules, Platform, ScrollView, TextInput } from 'react-native'
+import { ActivityIndicator, NativeModules, Platform, ScrollView, TextInput } from 'react-native'
 import { getCategoryListAdmin } from '../../components/Todo/Apis'
 import {
   CreateCategory,
@@ -136,7 +136,11 @@ export default function ManageTodo({ navigation, route }) {
           <ContentLayout>
             <TopBase>
               <SubHead_Text color={colors.grey_600}>카테고리</SubHead_Text>
-              <ButtonBase onPress={() => setIsCreate(true)}>
+              <ButtonBase
+                onPress={() => {
+                  setIsCreate(true)
+                }}
+              >
                 <Plus width={24} height={24} color={colors.grey_800} />
               </ButtonBase>
             </TopBase>
@@ -145,6 +149,7 @@ export default function ManageTodo({ navigation, route }) {
                 <Circle style={{ backgroundColor: categoryColors[0] }} />
                 <TextInput
                   onEndEditing={() => setIsCreate(false)}
+                  autoFocus
                   style={{ width: this.state?.inputWidth }}
                   placeholderTextColor={colors.grey_900}
                   onSubmitEditing={(data) => createCategory(data.nativeEvent.text)}

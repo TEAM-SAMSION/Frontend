@@ -3,9 +3,8 @@ import { ModalPopUp, ScreenLayout } from '../../components/Shared'
 import { colors } from '../../colors'
 import styled from 'styled-components/native'
 import { TodoHeader } from '../../components/Todo/TodoHeader'
-import { BodyBold_Text, Body_Text } from '../../components/Fonts'
+import { Body_Text } from '../../components/Fonts'
 import { ActivityIndicator, Keyboard, NativeModules, Platform, Pressable, ScrollView, View } from 'react-native'
-import AsyncStorage from '@react-native-async-storage/async-storage' //캐시 지우기 때문에 임시로
 import Caution from '../../assets/Svgs/Caution.svg'
 import { useSetRecoilState } from 'recoil'
 import Close from '../../assets/Svgs/Close.svg'
@@ -15,9 +14,9 @@ import { BottomSheetBackdrop, BottomSheetModal } from '@gorhom/bottom-sheet'
 import { TodoCreateBottomSheet, TodoEditBottomSheet } from '../../components/Todo/TodoBottomSheets'
 
 import { MyCalendarStrip } from '../../components/Todo/CalendarStrip'
-import { checkTokenValid, getCategoryList, getTeamUser, getTodoTeamList, getTodos } from '../../components/Todo/Apis'
+import { getCategoryList, getTeamUser, getTodoTeamList, getTodos } from '../../components/Todo/Apis'
 import { CategoryIndicator } from '../../components/Todo/CategoryIndicator'
-import { useIsFocused } from '@react-navigation/native'
+import { useFocusEffect, useIsFocused } from '@react-navigation/native'
 import { TabBarAtom } from '../../recoil/TabAtom'
 
 export default Todo = ({ navigation }) => {
@@ -28,7 +27,6 @@ export default Todo = ({ navigation }) => {
   }, [isFocused])
 
   const { StatusBarManager } = NativeModules
-  // const today = new Date().toISOString().substring(0, 10)
   const tempDate = new Date()
   //** new Date()를 새벽에 호출하면 ISOString으로 가져올때 하루 전으로 반환하는 문제가 있다. getDate()를 직접 호출하여 정확한 날짜정보를 가져와야함 */
   const today = `${tempDate.getFullYear()}-${tempDate.getMonth() + 1}-${tempDate.getDate()}`
@@ -137,6 +135,12 @@ export default Todo = ({ navigation }) => {
     getInitDatas(selectedDate)
   }, [])
 
+  useFocusEffect(
+    useCallback(() => {
+      console.log(selectedDate)
+      getInitDatas(selectedDate)
+    }, []),
+  )
   const handleBottomSheetHeight = (status) => {
     if (status == 0) {
       bottomModal.current?.dismiss()
@@ -180,31 +184,33 @@ export default Todo = ({ navigation }) => {
                 <ActivityIndicator />
               </LoadingContainer>
             ) : (
-              todosByCategory?.map((todos, id) => {
-                return (
-                  <>
-                    <CategoryIndicator
-                      key={id}
-                      startCreateTodo={startCreateTodo}
-                      todos={todos[1]}
-                      categoryId={todos[1][0]}
-                    />
-                    {todos[1][2].map((todo, index) => (
-                      <TodoItem
-                        setIsVisible={setIsVisible}
-                        getInitDatas={getInitDatas}
-                        selectedDate={selectedDate}
-                        key={index}
-                        todo={todo}
-                        todoLocalId={index}
-                        categoryId={id}
-                        //여기서 categoryID는 배열로 불러왔을때, 임의 순서를 나타낸 것이며, 서버 내에서 식별용으로 사용되는 ID값은 아님
-                        editTodo={startEditTodo}
+              <TodoItemBase>
+                {todosByCategory?.map((todos, id) => {
+                  return (
+                    <>
+                      <CategoryIndicator
+                        key={id}
+                        startCreateTodo={startCreateTodo}
+                        todos={todos[1]}
+                        categoryId={todos[1][0]}
                       />
-                    ))}
-                  </>
-                )
-              })
+                      {todos[1][2].map((todo, index) => (
+                        <TodoItem
+                          setIsVisible={setIsVisible}
+                          getInitDatas={getInitDatas}
+                          selectedDate={selectedDate}
+                          key={index}
+                          todo={todo}
+                          todoLocalId={index}
+                          categoryId={id}
+                          //여기서 categoryID는 배열로 불러왔을때, 임의 순서를 나타낸 것이며, 서버 내에서 식별용으로 사용되는 ID값은 아님
+                          editTodo={startEditTodo}
+                        />
+                      ))}
+                    </>
+                  )
+                })}
+              </TodoItemBase>
             )}
           </ScrollView>
         </ScrollViewContainer>
@@ -277,6 +283,9 @@ const ModalHeader = styled.View`
   margin-bottom: 24px;
 `
 const CloseButton = styled.TouchableOpacity``
+const TodoItemBase = styled.View`
+  margin-bottom: 32px;
+`
 const TodayButton = styled.TouchableOpacity`
   flex-direction: row;
   border: 1px solid ${colors.grey_250};

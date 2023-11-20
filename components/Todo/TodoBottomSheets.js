@@ -256,12 +256,11 @@ const TodoDataEditing = ({
 const TodoDateSetting = ({ navigation, selectedTodo, selectedDate, getInitDatas }) => {
   const [isLoading, setIsLoading] = useState(false)
   const initDay = new Date()
-  initDay.setDate(initDay.getDate() + 1)
   const [date, setDate] = useState(new Date())
   const handleSubmit = () => {
     setIsLoading(true)
-    date.setDate(date.getDate() + 1) //이거 왜 date 하루 전으로 최종결정되는거죠? 이거 에러 나중에 탐구해봐야할듯 **
-    editTodoDate(selectedTodo.todoId, date.toISOString().substring(0, 10)).then((res) => {
+    let formattedDate = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
+    editTodoDate(selectedTodo.todoId, formattedDate).then((res) => {
       setIsLoading(false)
       getInitDatas(selectedDate)
       navigation.goBack()
