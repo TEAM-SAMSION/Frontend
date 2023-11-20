@@ -1,6 +1,6 @@
 import styled from 'styled-components/native'
 import { categoryColors, colors } from '../../colors'
-import { HeaderWithBack, ModalPopUp, ScreenKeyboardLayout, ScreenLayout } from '../../components/Shared'
+import { HeaderWithBack, ModalPopUp, ScreenKeyboardLayout } from '../../components/Shared'
 import { BodyBold_Text, BodySm_Text, Body_Text, Detail_Text, Label_Text, SubHead_Text } from '../../components/Fonts'
 import Plus from '../../assets/Svgs/miniPlus.svg'
 import { Circle } from '../../components/Todo/CategoryIndicator'
@@ -10,9 +10,7 @@ import Add from '../../assets/Svgs/add.svg'
 import Switch_false from '../../assets/Svgs/switch_false.svg'
 import Switch_true from '../../assets/Svgs/switch_true.svg'
 import { createRef, useEffect, useRef, useState } from 'react'
-import { ActivityIndicator, Keyboard, Modal, NativeModules, Platform, TextInput } from 'react-native'
-import { useRecoilValue } from 'recoil'
-import { userInfoState } from '../../recoil/AuthAtom'
+import { ActivityIndicator, Keyboard, Modal, NativeModules, Platform, ScrollView, TextInput } from 'react-native'
 import { getCategoryListAdmin } from '../../components/Todo/Apis'
 import {
   CreateCategory,
@@ -22,8 +20,6 @@ import {
 } from '../../components/Admin/ManageTodo/Apis'
 
 export default function ManageTodo({ navigation, route }) {
-  const { accessToken } = useRecoilValue(userInfoState)
-  const [categoryList, setCategoryList] = useState(null)
   const inputRefs = useRef([])
   const { StatusBarManager } = NativeModules
   const [statusBarHeight, setStatusBarHeight] = useState(0)
@@ -33,9 +29,12 @@ export default function ManageTodo({ navigation, route }) {
       })
     : null
 
+  const [categoryList, setCategoryList] = useState(null)
+  const [selectedLocalId, setSelectedLocalId] = useState(null)
   const [isEditable, setIsEditable] = useState(null)
   const [isLoading, setIsLoading] = useState(false)
   const [isCreate, setIsCreate] = useState(false)
+  const [name, setName] = useState(null)
   const [isVisible, setIsVisible] = useState(false)
   const [selectedCategory, setSelectedCategory] = useState(null)
 
@@ -44,7 +43,19 @@ export default function ManageTodo({ navigation, route }) {
     const isEditable_temp = JSON.parse(JSON.stringify(isEditable))
     isEditable_temp[index] = true
     setIsEditable(isEditable_temp)
+    setSelectedLocalId(index)
+    setName(categoryList[index].categoryName)
     //** useState의 비동기성을 확인할 수 있는 구문. editable 상태가 늦게 전달되어 focus되지 않았었음 이를 async 함수로 따로 빼어 해결 */
+  }
+  const refreshData = () => {
+    getCategoryListAdmin(teamId).then((categories) => {
+      console.log(categories)
+      if (categories.length > 0) {
+        inputRefs.current = Array.from({ length: categories.length }, () => createRef()) //useRef의 ref값은 .current를 통해 mount 이후에도 변경이 가능하다.
+        setIsEditable(Array.from({ length: categories.length }, () => false))
+        setCategoryList(categories)
+      }
+    })
   }
   const editCategoryName = (index) => {
     setEnv(index).then(() => {
@@ -53,7 +64,7 @@ export default function ManageTodo({ navigation, route }) {
   }
   const createCategory = (text) => {
     setIsLoading(true)
-    CreateCategory(text, teamId, accessToken).then((status) => {
+    CreateCategory(text, teamId).then((status) => {
       if (status == 200) {
         setIsLoading(false)
         setIsCreate(false)
@@ -63,7 +74,7 @@ export default function ManageTodo({ navigation, route }) {
   }
   const toggleStatus = (index) => {
     setIsLoading(true)
-    ToggleCategory(categoryList[index].categoryId, accessToken).then((status) => {
+    ToggleCategory(categoryList[index].categoryId).then((status) => {
       if (status == 200) {
         setIsLoading(false)
         let tempArr = JSON.parse(JSON.stringify(categoryList))
@@ -78,10 +89,11 @@ export default function ManageTodo({ navigation, route }) {
   }
   const finishCategoryEdit = (data, categoryId) => {
     setIsLoading(true)
-    EditCategoryName(categoryId, accessToken, data).then((status) => {
+    EditCategoryName(categoryId, data).then((status) => {
       if (status == 200) {
         refreshData()
         setIsLoading(false)
+        setSelectedLocalId(null)
       } else {
         console.log(status)
       }
@@ -90,7 +102,7 @@ export default function ManageTodo({ navigation, route }) {
   }
 
   const deleteCategory = (categoryId) => {
-    DeleteCategory(categoryId, accessToken).then((status) => {
+    DeleteCategory(categoryId).then((status) => {
       if (status == 200) {
         setIsLoading(false)
         refreshData()
@@ -100,57 +112,68 @@ export default function ManageTodo({ navigation, route }) {
       }
     })
   }
-
   const startDeleteCategory = (category) => {
     setSelectedCategory(category)
     setIsVisible(true)
   }
-  const refreshData = () => {
-    getCategoryListAdmin(teamId, accessToken).then((categories) => {
-      if (categories.length > 0) {
-        inputRefs.current = Array.from({ length: categories.length }, () => createRef()) //useRef의 ref값은 .current를 통해 mount 이후에도 변경이 가능하다.
-        setIsEditable(Array.from({ length: categories.length }, () => false))
-        setCategoryList(categories)
-      }
-    })
-  }
+
   useEffect(() => {
     refreshData()
   }, [])
   return (
     <ScreenKeyboardLayout
       verticalOffset={statusBarHeight + 44}
-      onPress={() => {
-        setIsVisible(false)
-        Keyboard.dismiss()
-      }}
+      disabled={true}
+      // onPress={() => {
+      //   setIsVisible(false)
+      //   Keyboard.dismiss()
+      // }}
       behavior="padding"
     >
       <HeaderWithBack navigation={navigation} title="카테고리 관리" />
-      <ContentLayout>
-        <TopBase>
-          <SubHead_Text color={colors.grey_600}>카테고리</SubHead_Text>
-          <ButtonBase onPress={() => setIsCreate(true)}>
-            <Plus width={24} height={24} color={colors.grey_800} />
-          </ButtonBase>
-        </TopBase>
-        <ListBase>
-          <CategoryItem>
+      <ScrollViewContainer>
+        <ScrollView showsVerticalScrollIndicator={false}>
+          <ContentLayout>
+            <TopBase>
+              <SubHead_Text color={colors.grey_600}>카테고리</SubHead_Text>
+              <ButtonBase onPress={() => setIsCreate(true)}>
+                <Plus width={24} height={24} color={colors.grey_800} />
+              </ButtonBase>
+            </TopBase>
+            {isCreate && (
+              <CategoryBox>
+                <Circle style={{ backgroundColor: categoryColors[0] }} />
+                <TextInput
+                  onEndEditing={() => setIsCreate(false)}
+                  style={{ width: this.state?.inputWidth }}
+                  placeholderTextColor={colors.grey_900}
+                  onSubmitEditing={(data) => createCategory(data.nativeEvent.text)}
+                  placeholder="카테고리명을 입력해주세요."
+                  selectTextOnFocus={false}
+                  returnKeyType="done"
+                  inputMode="text"
+                />
+              </CategoryBox>
+            )}
+
             {isLoading ? (
               <ActivityIndicator style={{ marginTop: 80 }} />
             ) : (
               categoryList?.map((category, index) => (
                 <ListBase style={{ paddingTop: 10, paddingBottom: 10, marginBottom: 10 }} key={index}>
                   <Base>
-                    <CategoryBox>
+                    <CategoryBox
+                      style={{ backgroundColor: index == selectedLocalId ? colors.grey_150 : colors.grey_100 }}
+                    >
                       <Circle style={{ backgroundColor: categoryColors[category.categoryId % 10] }} />
                       <TextInput
                         ref={inputRefs.current[index]}
-                        style={{ fontFamily: 'Spoqa-Medium', color: colors.grey_450, width: this.state?.inputWidth }}
+                        style={{ fontFamily: 'Spoqa-Medium', color: colors.grey_600, width: this.state?.inputWidth }}
                         placeholderTextColor={colors.grey_600}
                         onSubmitEditing={(data) => finishCategoryEdit(data.nativeEvent.text, category.categoryId)}
-                        // placeholder={category.categoryName}
-                        value={category.categoryName}
+                        placeholder={category.categoryName}
+                        value={index == selectedLocalId && name}
+                        onChange={(data) => setName(data.nativeEvent.text)}
                         returnKeyType="done"
                         inputMode="text"
                         editable={isEditable[index]}
@@ -178,24 +201,10 @@ export default function ManageTodo({ navigation, route }) {
                 </ListBase>
               ))
             )}
-          </CategoryItem>
-          {isCreate && (
-            <CategoryBox>
-              <Circle style={{ backgroundColor: categoryColors[0] }} />
-              <TextInput
-                onEndEditing={() => setIsCreate(false)}
-                style={{ width: this.state?.inputWidth }}
-                placeholderTextColor={colors.grey_900}
-                onSubmitEditing={(data) => createCategory(data.nativeEvent.text)}
-                placeholder="카테고리명을 입력해주세요."
-                selectTextOnFocus={false}
-                returnKeyType="done"
-                inputMode="text"
-              />
-            </CategoryBox>
-          )}
-        </ListBase>
-      </ContentLayout>
+          </ContentLayout>
+        </ScrollView>
+      </ScrollViewContainer>
+
       <ModalPopUp visible={isVisible} petIcon={false} height={204}>
         <PopContent>
           <BodyBold_Text color={colors.grey_700}>{selectedCategory?.categoryName}</BodyBold_Text>
@@ -247,9 +256,8 @@ const PopButton = styled.TouchableOpacity`
 `
 const ContentLayout = styled.View`
   padding: 16px;
-`
-const CategoryItem = styled.View`
   margin-bottom: 10px;
+  flex: 1;
 `
 const TopBase = styled.View`
   flex-direction: row;
@@ -261,6 +269,11 @@ const Base = styled.View`
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
+`
+const ScrollViewContainer = styled.View`
+  flex: 1;
+  width: 100%;
+  flex-direction: column;
 `
 const ListBase = styled.View``
 const ButtonBox = styled.TouchableOpacity`

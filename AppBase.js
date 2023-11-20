@@ -8,7 +8,7 @@ import { useSetRecoilState, useRecoilValue } from 'recoil'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import 'moment'
 import 'moment/locale/ko' // language must match config
-import { accessTokenState, loggedInState, onboardedState, userInfoState } from './recoil/AuthAtom'
+import { loggedInState, onboardedState, userInfoState } from './recoil/AuthAtom'
 import messaging from '@react-native-firebase/messaging'
 import PushNotificationIOS from '@react-native-community/push-notification-ios'
 import { postDeviceToken } from './components/OnBoarding/Apis'
