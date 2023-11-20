@@ -17,7 +17,7 @@ export const TopHeader = ({ navigation }) => {
       <RightIcon>
         <IconContainer
           onPress={() => {
-            navigation.navigate('ToDoNav', { screen: 'Alarms' })
+            navigation.navigate('AlarmNav')
           }}
         >
           <Alarm width={24} height={24} color={colors.grey_350} />

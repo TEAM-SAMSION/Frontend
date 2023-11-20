@@ -5,21 +5,34 @@ import Complete from '../../assets/Imgs/Complete.png'
 import InComplete from '../../assets/Imgs/InComplete.png'
 import styled from 'styled-components/native'
 import { completeTodo } from './Apis'
+import { ActivityIndicator, Alert } from 'react-native'
 
 export const TodoItem = ({ editTodo, categoryId, todo, todoLocalId, getInitDatas, selectedDate, setIsVisible }) => {
+  const [isLoading, setIsLoading] = useState(false)
+
+  //내가 포함되어있는 투두 아이템이며, 첫번째 담당자가 이것을 완수하였을때 -> 즉 내가 완수하였을때!
+  let finishedStatus = todo.isAssigned && todo.assignNames[0].completionStatus == 'COMPLETE'
+  const [finished, setFinished] = useState(finishedStatus)
   const handlePress = () => {
-    //backend쪽으로 isPressed 변경된 값 보내는 구문 "assignNames":[{"assigneeId":1,"assigneeName":"test"},
-    completeTodo(todo).then((res) => {
-      // console.log('completeTodo res:', res)
-      if (res) {
-        getInitDatas(selectedDate)
-      } else {
-        setIsVisible(true)
-      }
-    })
+    setIsLoading(true)
+    if (todo.isAssigned) {
+      setFinished(!finished)
+      completeTodo(todo)
+        .then((res) => {
+          if (res) {
+            getInitDatas(selectedDate)
+          } else {
+            Alert.alert('투두 Complete 오류')
+            setFinished(finishedStatus)
+          }
+        })
+        .then(setTimeout(() => setIsLoading(false), 500))
+    } else {
+      setIsVisible(true)
+    }
   }
+
   let Done = todo.completionStatus == 'COMPLETE'
-  let Finished = todo.assignNames[0].completionStatus == 'COMPLETE'
   return (
     <TodoContainer
       disabled={Done}
@@ -56,8 +69,8 @@ export const TodoItem = ({ editTodo, categoryId, todo, todoLocalId, getInitDatas
           )}
         </MateContainer>
       </LeftContainer>
-      <CheckBox disabled={Done} onPress={() => handlePress()}>
-        {Finished ? (
+      <CheckBox disabled={isLoading} onPress={() => handlePress()}>
+        {finished ? (
           <CheckIcon style={{ opacity: Done ? 0.4 : 1 }} source={Complete} />
         ) : (
           <CheckIcon source={InComplete} />

@@ -11,7 +11,6 @@ import { ScrollView } from 'react-native'
 
 export const PamilyChoiceToggle = (props) => {
   const pamilyList = props.pamilyList
-
   const options = pamilyList.length > 0 ? pamilyList.map((item) => item) : []
   // 패밀리 선택 toggle isOpen
   const [isOpen, setIsOpen] = useState(false)
@@ -23,7 +22,9 @@ export const PamilyChoiceToggle = (props) => {
   }
 
   const handleOptionSelect = (value) => {
-    console.log(value)
+    let tempArr = { id: value.teamId, name: value.teamName, auth: value.authority }
+    console.log('topTeam Changed', tempArr)
+    props.setTopteam(tempArr)
     props.setTopTeamId(value.teamId)
     props.setTopTeamName(value.teamName)
     setIsOpen(false)

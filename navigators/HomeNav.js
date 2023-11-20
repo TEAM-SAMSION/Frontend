@@ -8,6 +8,7 @@ import { TouchableOpacity } from 'react-native'
 import BackButton from '../assets/Svgs/chevron_back.svg'
 import AddPetProfile from '../screens/Home/AddPetProfile'
 import EditPetProfile from '../screens/Home/EditPetProfile'
+import AlarmNav from './AlarmNav'
 
 const Stack = createStackNavigator()
 
@@ -78,6 +79,15 @@ export default function HomeNav() {
           headerTitle: '펫 정보 수정',
         })}
       />
+      <Stack.Screen
+        name="AlarmNav"
+        options={{
+          headerShown: false,
+          headerBackTitleVisible: false,
+        }}
+      >
+        {() => <AlarmNav />}
+      </Stack.Screen>
     </Stack.Navigator>
   )
 }

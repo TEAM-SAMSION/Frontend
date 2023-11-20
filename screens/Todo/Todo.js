@@ -19,7 +19,7 @@ import { CategoryIndicator } from '../../components/Todo/CategoryIndicator'
 import { useFocusEffect, useIsFocused } from '@react-navigation/native'
 import { TabBarAtom } from '../../recoil/TabAtom'
 
-export default Todo = ({ navigation }) => {
+export default Todo = ({ navigation, route }) => {
   const setIsTabVisible = useSetRecoilState(TabBarAtom)
 
   const { StatusBarManager } = NativeModules
@@ -63,6 +63,7 @@ export default Todo = ({ navigation }) => {
       acc[id] = [category.categoryId, category.categoryName, todosArr[id]]
       return acc
     }, [])
+
     if (Object.entries(todosByCategory).length > 0) {
       setTodosByCategory(Object.entries(todosByCategory))
     } else {
@@ -81,12 +82,13 @@ export default Todo = ({ navigation }) => {
           return null
         }
         let tempTeamList = []
-        data.map((team) => tempTeamList.push({ id: team.teamId, name: team.teamName }))
+        data.map((team) => tempTeamList.push({ id: team.teamId, name: team.teamName, auth: team.authority }))
         console.log('1. Team 리스트들을 정리')
         setTodoTeamList(tempTeamList)
         if (!selectedTeam) {
           //만약 선택된 팀이 없다면(초기상태의 경우), 불러온 Team의 가장 마지막 팀(가장 최근) 설정
           setSelectedTeam({
+            auth: tempTeamList[tempTeamList.length - 1]?.authority,
             name: tempTeamList[tempTeamList.length - 1]?.name,
             id: tempTeamList[tempTeamList.length - 1]?.id,
           })
@@ -116,19 +118,22 @@ export default Todo = ({ navigation }) => {
     var d = new Date()
     var s = d.getMilliseconds()
     if (s == 0) {
-      console.log('자동갱신')
-      // getAllData(selectedDate)
+      getAllData(selectedDate)
     }
   }
   setInterval(refreshTime, 1000)
   useFocusEffect(
     useCallback(() => {
+      if (route.params) {
+        setSelectedTeam(route.params)
+      }
       console.log(selectedDate, selectedTeam)
       getAllData(selectedDate)
       setIsTabVisible(true)
-    }, [selectedDate, selectedTeam]),
+    }, [selectedDate, selectedTeam, route]),
   )
   const handleBottomSheetHeight = (status) => {
+    console.log(status)
     if (status == 0) {
       bottomModal.current?.dismiss()
     } else if (status == 1) {

@@ -40,6 +40,9 @@ export default function Home({ navigation }) {
   const [todoList, setTodoList] = useState([])
   const [isDog, setIsDog] = useState(true)
 
+  //김형석 임시로 추가했음 -> todoTeam 구조가 {authority, id , name} 3개를 포함하는거로 바뀌었는데, todo넘어갈때 이 3개 값을 모두받아야해서 별도로 state변수 만들었슴다
+  const [topTeam, setTopTeam] = useState(null)
+
   const getUserNickname = () => {
     getUserInfo(ACCESSTOKEN).then((result) => {
       setName(result.nickname)
@@ -60,6 +63,7 @@ export default function Home({ navigation }) {
           setPamilyNum(1)
           setTopTeamId(teamList[0].teamId)
           setTopTeamName(teamList[0].teamName)
+          setTopTeam({ id: teamList[0].teamId, name: teamList[0].teamName, auth: teamList[0].authority }) //여기 김형석
 
           // Todo 데이터 가져오기
           const todoList = await getMyTodoList(ACCESSTOKEN, teamList[0].teamId)
@@ -161,6 +165,8 @@ export default function Home({ navigation }) {
               setTopTeamName={setTopTeamName}
               topTeamId={topTeamId}
               setTopTeamId={setTopTeamId}
+              setTopteam={setTopTeam}
+              //여기도 김형석
             />
             <MainImage isDog={isDog} progress={progress} pamilyNum={pamilyNum} />
             <PamilyStatContainer>
@@ -274,7 +280,7 @@ export default function Home({ navigation }) {
                 </View>
               )}
             </TodoContainer>
-            <AllTodoButton onPress={() => navigation.navigate('ToDoNav', { screen: 'ToDo' })}>
+            <AllTodoButton onPress={() => navigation.navigate('ToDoNav', { screen: 'Todo', params: topTeam })}>
               <ButtonText>전체 TODO 확인하기</ButtonText>
             </AllTodoButton>
           </>

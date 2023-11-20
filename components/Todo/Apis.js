@@ -47,7 +47,7 @@ export const getTodos = async (categoryId, date) => {
       moveDate: date,
     },
   })
-  // console.log('response.data.todos:', response.data.content) //{"assignNames": [[Object], [Object]], "completionStatus": "INCOMPLETE", "task": "test1", "todoId": 6182},
+  // console.log('response.data:', response.data.content[0]) //{"assignNames": [[Object], [Object]], "completionStatus": "INCOMPLETE", "task": "test1", "todoId": 6182},
   return response.data.content
 }
 

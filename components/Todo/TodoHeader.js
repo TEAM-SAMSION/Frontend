@@ -35,7 +35,7 @@ export const TodoHeader = ({ navigation, todoTeamList, setSelectedTeam, selected
                   setIsOpen(false)
                   // changeTodoTeam(todoTeam.id)
                   console.log()
-                  setSelectedTeam({ name: todoTeam.name, id: todoTeam.id })
+                  setSelectedTeam({ name: todoTeam.name, id: todoTeam.id, auth: todoTeam.auth })
                 }}
               >
                 <Detail_Text>{todoTeam.name}</Detail_Text>
@@ -45,12 +45,14 @@ export const TodoHeader = ({ navigation, todoTeamList, setSelectedTeam, selected
         )}
       </DropDownListContainer>
       <RightIcon>
-        <IconContainer onPress={() => navigation.navigate('ManageTodo', { teamId: selectedTeam.id })}>
-          <Setting width={24} height={24} />
-        </IconContainer>
+        {selectedTeam?.auth != 'MEMBER' && (
+          <IconContainer onPress={() => navigation.navigate('ManageTodo', { teamId: selectedTeam.id })}>
+            <Setting width={24} height={24} />
+          </IconContainer>
+        )}
         <IconContainer
           onPress={() => {
-            navigation.navigate('Alarms')
+            navigation.navigate('AlarmNav')
           }}
         >
           <Alarm color={colors.grey_350} width={24} height={24} />

@@ -15,6 +15,7 @@ import DeleteAccount2 from '../screens/MyPage/DeleteAccount2'
 import DeleteAccount3 from '../screens/MyPage/DeleteAccount3'
 import ServiceTerms from '../screens/MyPage/ServiceTerms'
 import PrivacyTerms from '../screens/MyPage/PrivacyTerms'
+import AlarmNav from './AlarmNav'
 
 const Stack = createStackNavigator()
 
@@ -221,6 +222,16 @@ export default function MyPageNav() {
         }}
       >
         {() => AdministratorNav()}
+      </Stack.Screen>
+
+      <Stack.Screen
+        name="AlarmNav"
+        options={{
+          headerShown: false,
+          headerBackTitleVisible: false,
+        }}
+      >
+        {() => <AlarmNav />}
       </Stack.Screen>
     </Stack.Navigator>
   )

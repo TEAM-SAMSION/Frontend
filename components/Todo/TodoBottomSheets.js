@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import axios from 'axios'
-import { Keyboard, Platform } from 'react-native'
+import { ActivityIndicator, Keyboard, Platform } from 'react-native'
 import styled from 'styled-components/native'
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator, TransitionPresets } from '@react-navigation/stack'
@@ -87,7 +87,8 @@ export const TodoEditBottomSheet = ({
     </NavigationContainer>
   )
 }
-const TodoEditHome = ({ navigation, selectedTodo, selectedDate, getInitDatas }) => {
+const TodoEditHome = ({ navigation, selectedTodo, selectedDate, getInitDatas, handleBottomSheetHeight }) => {
+  const [isLoading, setIsLoading] = useState(false)
   return (
     <BottomSheetBase
       style={{
@@ -105,15 +106,26 @@ const TodoEditHome = ({ navigation, selectedTodo, selectedDate, getInitDatas }) 
             <Detail_Text>수정하기</Detail_Text>
           </SmallBox>
           <SmallBox
-            onPress={() =>
-              deleteTodo(selectedTodo.todoId).then(() => {
-                getInitDatas(selectedDate)
-                handleBottomSheetHeight(3)
-              })
-            }
+            onPress={() => {
+              setIsLoading(true)
+              deleteTodo(selectedTodo.todoId)
+                .then(() => {
+                  getInitDatas(selectedDate)
+                })
+                .then(() => {
+                  setIsLoading(false)
+                  handleBottomSheetHeight(0)
+                })
+            }}
           >
-            <Delete width={24} height={24} />
-            <Detail_Text>삭제하기</Detail_Text>
+            {isLoading ? (
+              <ActivityIndicator />
+            ) : (
+              <>
+                <Delete width={24} height={24} />
+                <Detail_Text>삭제하기</Detail_Text>
+              </>
+            )}
           </SmallBox>
         </RowContainer>
         <BigBox onPress={() => navigation.navigate('TodoTimeSetting')}>
