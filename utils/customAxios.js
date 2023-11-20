@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import axios, { Axios } from 'axios'
+import axios from 'axios'
 
 const updateToken = async () => {
   const refreshToken = await AsyncStorage.getItem('refreshToken')

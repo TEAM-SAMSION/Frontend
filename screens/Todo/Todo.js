@@ -75,6 +75,11 @@ export default Todo = ({ navigation }) => {
     //TodoTeam과 Default TodoTeam에 한해 User들을 일시적으로 반환(나중에 Team 변경하면 해당 변수 대체됨)
     getTodoTeamList()
       .then((data) => {
+        if (data.length == 0) {
+          console.log('***. TodoTeam없으므로 getAllData 스킵')
+          setIsLoading(false)
+          return null
+        }
         let tempTeamList = []
         data.map((team) => tempTeamList.push({ id: team.teamId, name: team.teamName }))
         console.log('1. Team 리스트들을 정리')
@@ -91,16 +96,19 @@ export default Todo = ({ navigation }) => {
         }
       })
       .then(async (selectedTeamID) => {
-        await getCategoryList(selectedTeamID).then((categories) => {
-          console.log('2. 카테고리로 Todo 불러와서 저장', categories.toString().substring(0, 10))
-          getTodosByCategory(categories, date).then(setIsLoading(false))
-        })
-        await getTeamUser(selectedTeamID).then((res) => {
-          let tempTeamUserList = []
-          res.map((user) => tempTeamUserList.push({ id: user.registerId, name: user.registerName }))
-          console.log('3. 선택된 팀의 사용자들 state로 저장', tempTeamUserList.toString().substring(0, 10))
-          setTeamUserList(tempTeamUserList) //나중에 Team 변경하면 해당 변수 대체됨
-        })
+        if (selectedTeamID) {
+          //null 반환받으면, TodoTeam 없다는 것을 의미하기에 api호출 스킵
+          await getCategoryList(selectedTeamID).then((categories) => {
+            console.log('2. 카테고리로 Todo 불러와서 저장', categories.toString().substring(0, 10))
+            getTodosByCategory(categories, date).then(setIsLoading(false))
+          })
+          await getTeamUser(selectedTeamID).then((res) => {
+            let tempTeamUserList = []
+            res.map((user) => tempTeamUserList.push({ id: user.registerId, name: user.registerName }))
+            console.log('3. 선택된 팀의 사용자들 state로 저장', tempTeamUserList.toString().substring(0, 10))
+            setTeamUserList(tempTeamUserList) //나중에 Team 변경하면 해당 변수 대체됨
+          })
+        }
       })
   }
 
