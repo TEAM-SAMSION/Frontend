@@ -24,7 +24,7 @@ const axiosInstance = axios.create({
 axiosInstance.interceptors.request.use(
   async (config) => {
     const accessToken = await AsyncStorage.getItem('accessToken')
-    console.log('asyncStorage내 accessToken 현황:', accessToken.substring(0, 10))
+    //console.log('asyncStorage내 accessToken 현황:', accessToken.substring(0, 10))
     if (!accessToken) {
       return
     } else {
