@@ -163,7 +163,6 @@ export default function CreateTeam({ route, navigation }) {
 
     const json = JSON.stringify(teamInfo)
     pamilyData.append('todoTeamCreateInfo', { string: json, type: 'application/json' })
-
     postTeamInfo(ACCESSTOKEN, pamilyData)
   }
 
@@ -345,7 +344,7 @@ export default function CreateTeam({ route, navigation }) {
                 onPress={() => {
                   setCreateVisible(false)
                   createPamily()
-                  navigation.navigate('toDoNav', { screen: 'todo' })
+                  navigation.navigate('ToDoNav', { screen: 'todo' })
                 }}
               >
                 <BodySm_Text color={colors.red_350}>예</BodySm_Text>
