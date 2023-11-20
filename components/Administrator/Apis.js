@@ -1,5 +1,7 @@
 import axiosInstance from '../../utils/customAxios'
 import { url } from '../Shared'
+import axiosInstance from '../../utils/customAxios'
+
 ////// 팀 정보 //////
 export const getTeamInfo = async (accessToken, teamId) => {
   let API = `/teams/${teamId}`
