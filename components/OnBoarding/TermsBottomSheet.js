@@ -5,16 +5,16 @@ import { colors } from '../../colors'
 import { useState } from 'react'
 import { Button_PinkBg } from '../Buttons'
 import { useRecoilValue, useSetRecoilState } from 'recoil'
-import { loggedInState, userInfoState } from '../../recoil/AuthAtom'
+import { loggedInState, platformState, userInfoState } from '../../recoil/AuthAtom'
 import { BodyBoldSm_Text, BodyBold_Text, Detail_Text } from '../Fonts'
-import { registerNickname } from './Apis'
+import { registerNickname, registerRoute } from './Apis'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
-export const TermsBottomSheet = ({ nickname, selectedRoute, detailRoute, accessToken, refreshToken }) => {
+export const TermsBottomSheet = ({ nickname, selectedRoute, detailRoute, accessToken, refreshToken, provider }) => {
   const [termState, setTermState] = useState({ 0: false, 1: false, 2: false })
   const [isLoading, setIsLoading] = useState(false)
   const setLoggedIn = useSetRecoilState(loggedInState)
-
+  const setPlatform = useSetRecoilState(platformState)
   const handleTermPress = (id) => {
     let tempTermState = JSON.parse(JSON.stringify(termState))
     tempTermState[id] = !tempTermState[id]
@@ -27,19 +27,23 @@ export const TermsBottomSheet = ({ nickname, selectedRoute, detailRoute, accessT
       setTermState({ 0: true, 1: true, 2: true })
     }
   }
+  console.log(provider)
   const handleSubmit = () => {
     setIsLoading(true)
     let paths = ['인스타', '지인추천', '반려동물 커뮤니티', '검색']
     let path = selectedRoute == 5 ? detailRoute : paths[selectedRoute - 1]
-
-    registerNickname(nickname).then((result) => {
+    console.log('?')
+    registerNickname(nickname, accessToken).then((result) => {
+      console.log('registerNick', result)
       if (result == 200) {
-        registerRoute(path).then((res) => {
-          console.log('registerRoute api 반환값:,', res)
-        })
         console.log('회원가입완료하였으므로, AsyncStorage에 토큰 저장하고 Login')
-        AsyncStorage.setItem('accessToken', accessToken)
         AsyncStorage.setItem('refreshToken', refreshToken)
+        AsyncStorage.setItem('accessToken', accessToken).then(() =>
+          registerRoute(path).then((res) => {
+            console.log('registerRoute api 반환값:,', res)
+          }),
+        )
+        setPlatform(provider)
         setLoggedIn(true)
       } else {
         console.log('닉네임등록이 잘 안되었는뎁쇼')

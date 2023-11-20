@@ -63,20 +63,20 @@ export default function ManageTodo({ navigation, route }) {
     })
   }
   const createCategory = (text) => {
-    setIsLoading(true)
+    // setIsLoading(true)
     CreateCategory(text, teamId).then((status) => {
       if (status == 200) {
-        setIsLoading(false)
+        // setIsLoading(false)
         setIsCreate(false)
         refreshData()
       }
     })
   }
   const toggleStatus = (index) => {
-    setIsLoading(true)
+    // setIsLoading(true)
     ToggleCategory(categoryList[index].categoryId).then((status) => {
       if (status == 200) {
-        setIsLoading(false)
+        // setIsLoading(false)
         let tempArr = JSON.parse(JSON.stringify(categoryList))
         if (tempArr[index].categoryStatus == 'OFF') {
           tempArr[index].categoryStatus = 'ON'

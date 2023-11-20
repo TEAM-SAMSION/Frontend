@@ -17,8 +17,8 @@ export const UserSetting = ({ navigation, route }) => {
   const [detailRoute, setDetailRoute] = useState('')
   const [nickname, setNickname] = useState('')
 
-  let refreshToken = route.params?.refreshToken
-  let accessToken = route.params?.accessToken
+  let { accessToken, refreshToken, provider } = route?.params
+  console.log(accessToken, refreshToken, provider)
   Platform.OS == 'ios'
     ? StatusBarManager.getHeight((statusBarFrameData) => {
         setStatusBarHeight(statusBarFrameData.height)
@@ -125,6 +125,7 @@ export const UserSetting = ({ navigation, route }) => {
           accessToken={accessToken}
           nickname={nickname}
           selectedRoute={selectedRoute}
+          provider={provider}
           detailRoute={detailRoute}
         />
       </BottomSheet>
