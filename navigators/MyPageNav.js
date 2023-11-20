@@ -13,6 +13,8 @@ import EditUserInfo from '../screens/MyPage/EditUserInfo'
 import DeleteAccount from '../screens/MyPage/DeleteAccount'
 import DeleteAccount2 from '../screens/MyPage/DeleteAccount2'
 import DeleteAccount3 from '../screens/MyPage/DeleteAccount3'
+import ServiceTerms from '../screens/MyPage/ServiceTerms'
+import PrivacyTerms from '../screens/MyPage/PrivacyTerms'
 
 const Stack = createStackNavigator()
 
@@ -159,6 +161,44 @@ export default function MyPageNav() {
         component={DeleteAccount3}
         options={({ navigation }) => ({
           headerTitle: '포잇 탈퇴하기',
+          headerLeft: () => (
+            <TouchableOpacity
+              onPress={() => navigation.goBack()}
+              style={{
+                justifyContent: 'center',
+                alignItems: 'center',
+                marginLeft: 16,
+              }}
+            >
+              <BackButton width={24} height={24} />
+            </TouchableOpacity>
+          ),
+        })}
+      />
+      <Stack.Screen
+        name="ServiceTerms"
+        component={ServiceTerms}
+        options={({ navigation }) => ({
+          headerTitle: '서비스 이용약관',
+          headerLeft: () => (
+            <TouchableOpacity
+              onPress={() => navigation.goBack()}
+              style={{
+                justifyContent: 'center',
+                alignItems: 'center',
+                marginLeft: 16,
+              }}
+            >
+              <BackButton width={24} height={24} />
+            </TouchableOpacity>
+          ),
+        })}
+      />
+      <Stack.Screen
+        name="PrivacyTerms"
+        component={PrivacyTerms}
+        options={({ navigation }) => ({
+          headerTitle: '개인정보처리방침',
           headerLeft: () => (
             <TouchableOpacity
               onPress={() => navigation.goBack()}
