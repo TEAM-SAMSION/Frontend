@@ -55,7 +55,7 @@ export default function AppBase() {
     async function prepare() {
       try {
         await AsyncStorage.getItem('accessToken').then((accessToken) => {
-          if (accessToken) {
+          if (accessToken != null) {
             //RecoilState로 로그인여부 저장
             setLoggedIn(true)
             checkFCMToken()
@@ -84,7 +84,6 @@ export default function AppBase() {
     }
     foregroundListener()
     prepare()
-    checkFCMToken()
     requestUserPermission()
     const type = 'notification'
     PushNotificationIOS.addEventListener(type, onRemoteNotification)

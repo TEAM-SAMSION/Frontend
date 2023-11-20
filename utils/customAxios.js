@@ -24,9 +24,9 @@ const axiosInstance = axios.create({
 axiosInstance.interceptors.request.use(
   async (config) => {
     const accessToken = await AsyncStorage.getItem('accessToken')
-    console.log('asyncStorage내 accessToken 현황:', accessToken.substring(0, 10))
+    console.log('asyncStorage내 accessToken 현황:', accessToken ? accessToken.substring(0, 10) : '없음')
     if (!accessToken) {
-      return
+      return config
     } else {
       config.headers['Authorization'] = `${accessToken}`
       return config
@@ -38,7 +38,7 @@ axiosInstance.interceptors.request.use(
 axiosInstance.interceptors.response.use(
   (response) => response, // 응답이 성공적인 경우 아무것도 하지 않음
   async (error) => {
-    console.log('axiosInstance에서 에러 감지')
+    console.log('axiosInstance에서 에러 감지', error)
     // 액세스 토큰이 만료됐다면
     if (error.response.errorCode === 1001) {
       console.log('액서스토큰 만료')

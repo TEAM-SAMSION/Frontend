@@ -42,7 +42,7 @@ export default function Auth({ navigation }) {
       } else if (res.authority == 'GUEST') {
         //닉네임 설정전까지는 앱 내부로 들여오게 해서는 안되기 때문에, 캐시에 저장아직 안함
         console.log('권한 Guest라서 닉네임설정으로 넘어감')
-        navigation.navigate('UserSetting', { accessToken, refreshToken })
+        navigation.navigate('UserSetting', { accessToken, refreshToken, provider })
       } else {
         console.log('유저 권한 확인단계에서 예외발생:', res)
       }

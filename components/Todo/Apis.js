@@ -10,7 +10,6 @@ export const deleteTodo = async (todoId) => {
 export const getTodoTeamList = async (page = 0, size = 20) => {
   let API = `/teams?page=${page}&size=${size}` //500
   const response = await axiosInstance.get(url + API)
-  console.log('getTodoTeamList Res:', response.data)
   return response.data.content
   //response: [{"teamId": 1, "teamName": "test"}, {"teamId": 3, "teamName": "test"}, {"teamId": 6, "teamName": "test"}, {"teamId": 7, "teamName": "test"}]
 }
