@@ -8,11 +8,11 @@ import { Swipeable } from 'react-native-gesture-handler'
 
 export const AddPetBox = ({ pet, navigation, handleDelete, teamId, swipeableRef }) => {
   const petInfo = {
-    name: pet.petName,
-    age: pet.petAge,
-    description: pet.petDescription,
-    genus: pet.petGenus,
-    species: pet.petSpecies,
+    name: pet.name,
+    age: pet.age,
+    description: pet.description,
+    genus: pet.genus,
+    species: pet.species,
     profileUrl: pet.imageUrl,
     file: pet.file,
     petId: pet.petId,
@@ -40,9 +40,9 @@ export const AddPetBox = ({ pet, navigation, handleDelete, teamId, swipeableRef 
         <InfoBox>
           <InfoTop>
             <TitleBox>
-              <BodyBold_Text>{pet.petName}</BodyBold_Text>
+              <BodyBold_Text>{pet.name}</BodyBold_Text>
               <AgeBox>
-                <Detail_Text color={colors.on_primary_container}>{pet.petAge}살</Detail_Text>
+                <Detail_Text color={colors.on_primary_container}>{pet.age}살</Detail_Text>
               </AgeBox>
             </TitleBox>
             <TouchableOpacity
@@ -53,13 +53,13 @@ export const AddPetBox = ({ pet, navigation, handleDelete, teamId, swipeableRef 
               <EditIcon width={22} height={22} color={colors.grey_350} />
             </TouchableOpacity>
           </InfoTop>
-          <Detail_Text>{pet.petDescription}</Detail_Text>
+          <Detail_Text>{pet.description}</Detail_Text>
           <InfoBottom>
             <CategroyBox style={{ backgroundColor: colors.grey_150 }}>
-              <Detail_Text>{pet.petGenus}</Detail_Text>
+              <Detail_Text>{pet.genus}</Detail_Text>
             </CategroyBox>
             <CategroyBox style={{ backgroundColor: colors.grey_150 }}>
-              <Detail_Text>{pet.petSpecies}</Detail_Text>
+              <Detail_Text>{pet.species}</Detail_Text>
             </CategroyBox>
           </InfoBottom>
         </InfoBox>
