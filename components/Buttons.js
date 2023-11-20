@@ -11,7 +11,7 @@ const NonLayoutButton = styled.TouchableOpacity`
   border-radius: 8px;
   align-items: center;
   justify-content: center;
-  margin-bottom: ${Platform.OS == 'android' && 32}px;
+  margin-bottom: ${Platform.OS == 'android' ? 32 : 20}px;
 `
 export const OnboardingButton = ({ func, lastFunc, currentIdx, data }) => {
   const isLastItem = currentIdx === data.length - 1
@@ -22,8 +22,6 @@ export const OnboardingButton = ({ func, lastFunc, currentIdx, data }) => {
         !isLastItem
           ? Platform.OS == 'ios'
             ? {
-                borderWidth: 2,
-                borderColor: colors.primary,
                 backgroundColor: colors.grey_100,
               }
             : { opacity: 0, height: 44 }

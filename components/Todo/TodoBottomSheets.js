@@ -16,12 +16,12 @@ import Alarm from '../../assets/Svgs/Alarm.svg'
 import Back from '../../assets/Svgs/chevron_back.svg'
 import Edit from '../../assets/Svgs/Todo_edit.svg'
 import DatePicker from 'react-native-date-picker'
-import { deleteTodo, editTodoDate, editTodoName } from './Apis'
+import { deleteTodo, editTodoDate, editTodoName, setTodoAlarm } from './Apis'
+import axiosInstance from '../../utils/customAxios'
 
 export const TodoEditBottomSheet = ({
   handleBottomSheetHeight,
   selectedTodo,
-  accessToken,
   getInitDatas,
   setSelectedTodo,
   selectedDate,
@@ -54,18 +54,18 @@ export const TodoEditBottomSheet = ({
               selectedDate={selectedDate}
               getInitDatas={getInitDatas}
               selectedTodo={selectedTodo}
-              accessToken={accessToken}
               handleBottomSheetHeight={handleBottomSheetHeight}
             />
           )}
         </Stack.Screen>
-        <Stack.Screen name="TimeSetting" options={screenBOptions} component={TimeSetting} />
+        <Stack.Screen name="TodoTimeSetting" options={screenBOptions}>
+          {(props) => <TodoTimeSetting {...props} selectedTodo={selectedTodo} />}
+        </Stack.Screen>
         <Stack.Screen name="TodoDataEditing" options={screenBOptions}>
           {(props) => (
             <TodoDataEditing
               {...props}
               selectedTodo={selectedTodo}
-              accessToken={accessToken}
               selectedDate={selectedDate}
               setSelectedTodo={setSelectedTodo}
               handleBottomSheetHeight={handleBottomSheetHeight}
@@ -73,14 +73,13 @@ export const TodoEditBottomSheet = ({
             />
           )}
         </Stack.Screen>
-        <Stack.Screen name="DateSetting" options={screenBOptions}>
+        <Stack.Screen name="TodoDateSetting" options={screenBOptions}>
           {(props) => (
-            <DateSetting
+            <TodoDateSetting
               {...props}
               getInitDatas={getInitDatas}
               selectedDate={selectedDate}
               selectedTodo={selectedTodo}
-              accessToken={accessToken}
             />
           )}
         </Stack.Screen>
@@ -88,7 +87,7 @@ export const TodoEditBottomSheet = ({
     </NavigationContainer>
   )
 }
-const TodoEditHome = ({ navigation, selectedTodo, selectedDate, accessToken, getInitDatas }) => {
+const TodoEditHome = ({ navigation, selectedTodo, selectedDate, getInitDatas }) => {
   return (
     <BottomSheetBase
       style={{
@@ -107,7 +106,7 @@ const TodoEditHome = ({ navigation, selectedTodo, selectedDate, accessToken, get
           </SmallBox>
           <SmallBox
             onPress={() =>
-              deleteTodo(selectedTodo.todoId, accessToken).then(() => {
+              deleteTodo(selectedTodo.todoId).then(() => {
                 getInitDatas(selectedDate)
                 handleBottomSheetHeight(3)
               })
@@ -117,11 +116,11 @@ const TodoEditHome = ({ navigation, selectedTodo, selectedDate, accessToken, get
             <Detail_Text>삭제하기</Detail_Text>
           </SmallBox>
         </RowContainer>
-        <BigBox onPress={() => navigation.navigate('TimeSetting')}>
+        <BigBox onPress={() => navigation.navigate('TodoTimeSetting')}>
           <Alarm color={colors.grey_800} width={24} height={24} />
           <Detail_Text>시간 알림</Detail_Text>
         </BigBox>
-        <BigBox onPress={() => navigation.navigate('DateSetting')}>
+        <BigBox onPress={() => navigation.navigate('TodoDateSetting')}>
           <Change width={24} height={24} />
           <Detail_Text>날짜 변경</Detail_Text>
         </BigBox>
@@ -133,7 +132,6 @@ const TodoDataEditing = ({
   navigation,
   selectedTodo,
   handleBottomSheetHeight,
-  accessToken,
   getInitDatas,
   selectedDate,
   setSelectedTodo,
@@ -184,7 +182,7 @@ const TodoDataEditing = ({
   const handleSubmit = () => {
     setIsLoading(true)
     popKeyboard()
-    editTodoName(selectedTodo.todoId, name, accessToken).then((res) => {
+    editTodoName(selectedTodo.todoId, name).then((res) => {
       getInitDatas(selectedDate) //BackGround에서의 정보갱신
       updateSelectedTodo(name) //BottomSheet 내부에서의 정보 갱신
       setIsLoading(false)
@@ -255,15 +253,14 @@ const TodoDataEditing = ({
     </BottomSheetBase>
   )
 }
-const DateSetting = ({ navigation, selectedTodo, accessToken, selectedDate, getInitDatas }) => {
+const TodoDateSetting = ({ navigation, selectedTodo, selectedDate, getInitDatas }) => {
   const [isLoading, setIsLoading] = useState(false)
   const initDay = new Date()
-  initDay.setDate(initDay.getDate() + 1)
   const [date, setDate] = useState(new Date())
   const handleSubmit = () => {
     setIsLoading(true)
-    date.setDate(date.getDate() + 1) //이거 왜 date 하루 전으로 최종결정되는거죠? 이거 에러 나중에 탐구해봐야할듯 **
-    editTodoDate(selectedTodo.todoId, date.toISOString().substring(0, 10), accessToken).then((res) => {
+    let formattedDate = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
+    editTodoDate(selectedTodo.todoId, formattedDate).then((res) => {
       setIsLoading(false)
       getInitDatas(selectedDate)
       navigation.goBack()
@@ -298,9 +295,17 @@ const DateSetting = ({ navigation, selectedTodo, accessToken, selectedDate, getI
     </BottomSheetBase>
   )
 }
-const TimeSetting = ({ navigation }) => {
-  const [date, setDate] = useState(new Date())
-  const finishEditDate = () => {}
+const TodoTimeSetting = ({ navigation, selectedTodo }) => {
+  let initTime = new Date()
+  initTime.setHours(12, 0, 0)
+  const [date, setDate] = useState(initTime)
+  const finishSetTime = () => {
+    let formattedTime = date.toString().substring(16, 21)
+    setTodoAlarm(selectedTodo, formattedTime).then((res) => {
+      console.log('setTodoAlarmRes:', res.status)
+      navigation.goBack()
+    })
+  }
   return (
     <BottomSheetBase
       style={{
@@ -317,7 +322,7 @@ const TimeSetting = ({ navigation }) => {
       <DatePicker
         date={date}
         locale="ko"
-        onDateChange={(date) => console.log(date)}
+        onDateChange={setDate}
         fadeToColor="none"
         mode="time"
         style={{ width: ScreenWidth * 0.9 }}
@@ -325,7 +330,7 @@ const TimeSetting = ({ navigation }) => {
         dividerHeight={2}
       />
 
-      <Button_PinkBg isLoading={false} isEnabled={true} text="완료" func={() => finishEditDate()} />
+      <Button_PinkBg isLoading={false} isEnabled={true} text="완료" func={() => finishSetTime()} />
     </BottomSheetBase>
   )
 }
@@ -333,14 +338,13 @@ const TimeSetting = ({ navigation }) => {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 export const TodoCreateBottomSheet = ({
   selectedCategoryID,
-  accessToken,
   handleBottomSheetHeight,
   teamUserList,
   selectedDate,
   getInitDatas,
 }) => {
   const [users, setUsers] = useState(teamUserList?.map((users) => ({ ...users, selected: false })))
-  const [name, setName] = useState()
+  const [name, setName] = useState(null)
   console.log(name)
   const [isLoading, setIsLoading] = useState(false)
   const selectedUser = users.reduce((acc, user) => {
@@ -374,9 +378,7 @@ export const TodoCreateBottomSheet = ({
     }
     try {
       let API = `/teams/todos`
-      const response = axios.post(url + API, data, {
-        headers: { Authorization: accessToken },
-      })
+      const response = axiosInstance.post(url + API, data)
       console.log('CreateTodoSuccessed!, response:', response)
     } catch (e) {
       console.log('CreateTodo Error:', e)

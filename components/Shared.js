@@ -8,17 +8,16 @@ import { Animated, Image, Modal } from 'react-native'
 
 ////////// safearea //////////
 export const ScreenContainer = styled.SafeAreaView`
+  background-color: ${colors.grey_100};
   flex: 1;
-  /* width: 100%; */
-  background-color: white;
 `
 
 export const ScreenWidth = Dimensions.get('window').width
 export const ScreenHeight = Dimensions.get('screen').height
 
-export const ScreenLayout = ({ children }) => {
+export const ScreenLayout = ({ children, backgroundColor = 'white' }) => {
   return (
-    <ScreenContainer>
+    <ScreenContainer style={{ backgroundColor }}>
       <StatusBar />
       {children}
     </ScreenContainer>
@@ -70,10 +69,10 @@ const KeyBoardAwareContainer = styled.KeyboardAvoidingView`
   flex: 1;
 `
 
-export const ScreenKeyboardLayout = ({ children, onPress = null, verticalOffset, behavior = 'padding' }) => {
+export const ScreenKeyboardLayout = ({ children, onPress = null, verticalOffset, behavior = 'padding', disabled }) => {
   return (
     <ScreenContainer style={{ paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0 }}>
-      <Pressable onPress={onPress} style={{ width: '100%', flex: 1 }}>
+      <Pressable disabled={disabled} onPress={() => onPress} style={{ width: '100%', flex: 1 }}>
         <KeyBoardAwareContainer keyboardVerticalOffset={verticalOffset} behavior={behavior}>
           {children}
         </KeyBoardAwareContainer>

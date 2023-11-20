@@ -10,6 +10,7 @@ import { useRecoilValue, useSetRecoilState } from 'recoil'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import Auth from './Auth'
 import { PAGES } from '../../datas/OnBoarding/data'
+import { colors } from '../../colors'
 
 export default function OnBoarding({ navigation }) {
   const scrollX = useRef(new Animated.Value(0)).current
@@ -44,7 +45,7 @@ export default function OnBoarding({ navigation }) {
       {onboarded ? (
         <Auth navigation={navigation} />
       ) : (
-        <ScreenLayout>
+        <ScreenLayout backgroundColor={colors.primary_container}>
           <Container>
             <FlatList
               style={{ marginTop: 16 }}
@@ -81,5 +82,5 @@ export default function OnBoarding({ navigation }) {
 
 const Container = styled.View`
   flex: 1;
-  margin-top: 40px;
+  padding-top: 46px;
 `

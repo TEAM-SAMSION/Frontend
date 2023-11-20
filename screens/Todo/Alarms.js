@@ -51,7 +51,7 @@ export const Alarms = ({ navigation }) => {
       </FilterBase> */}
       <ContentBase>
         {alarmList ? (
-          <ScrollView>
+          <ScrollView horizontal={false}>
             {alarmList.map((item, id) => {
               return (
                 <AlarmBase style={{ borderBottomWidth: 1, borderBottomColor: colors.outline }}>
@@ -120,6 +120,7 @@ const ContentBase = styled.View`
   align-items: center;
   background-color: ${colors.grey_150};
   flex: 1;
+  flex-direction: column;
 `
 const AlarmBase = styled.View`
   flex-direction: row;

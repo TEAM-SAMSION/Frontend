@@ -8,11 +8,24 @@ import { useSetRecoilState, useRecoilValue } from 'recoil'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import 'moment'
 import 'moment/locale/ko' // language must match config
-import { accessTokenState, loggedInState, onboardedState, userInfoState } from './recoil/AuthAtom'
+import { loggedInState, onboardedState, userInfoState } from './recoil/AuthAtom'
 import messaging from '@react-native-firebase/messaging'
+import PushNotificationIOS from '@react-native-community/push-notification-ios'
+import { postDeviceToken } from './components/OnBoarding/Apis'
 
 export default function AppBase() {
   const [appIsReady, setAppIsReady] = useState(false)
+
+  const requestUserPermission = async () => {
+    const authStatus = await messaging().requestPermission()
+    const enabled =
+      authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+      authStatus === messaging.AuthorizationStatus.PROVISIONAL
+
+    if (enabled) {
+      console.log('Authorization status:', authStatus)
+    }
+  }
   const { loggedIn } = useRecoilValue(userInfoState)
   const foregroundListener = useCallback(() => {
     messaging().onMessage(async (message) => {
@@ -20,15 +33,22 @@ export default function AppBase() {
     })
   }, [])
   const setLoggedIn = useSetRecoilState(loggedInState)
-  const setToken = useSetRecoilState(accessTokenState)
   const setOnboarded = useSetRecoilState(onboardedState)
 
-  //토큰 재발급 시에, 디바이스토큰값 api로 호출하는 순서로 ㄱㄱ
   const checkFCMToken = async () => {
     const fcmToken = await messaging().getToken()
     if (fcmToken) {
-      console.log('fcmToken:', fcmToken)
+      postDeviceToken(fcmToken)
     }
+  }
+
+  const onRemoteNotification = (notification) => {
+    const isClicked = notification.getData().userInteraction === 1
+    if (isClicked) {
+      console.log('Alarm Clicked')
+    }
+    const result = PushNotificationIOS.FetchResult.NoData
+    notification.finish(result)
   }
 
   useEffect(() => {
@@ -38,9 +58,7 @@ export default function AppBase() {
           if (accessToken) {
             //RecoilState로 로그인여부 저장
             setLoggedIn(true)
-            //RecoilState로 액서스토큰 저장
-            setToken(accessToken)
-            console.log('자동으로 로그인되고, Recoil변수로 액서스토큰 저장됨')
+            checkFCMToken()
           }
         })
 
@@ -57,7 +75,6 @@ export default function AppBase() {
           'Spoqa-Light': require('./assets/Fonts/SpoqaHanSansNeo-Light.otf'),
           'Spoqa-Thin': require('./assets/Fonts/SpoqaHanSansNeo-Thin.otf'),
         })
-        checkFCMToken()
       } catch (e) {
         console.warn(e)
       } finally {
@@ -67,7 +84,15 @@ export default function AppBase() {
     }
     foregroundListener()
     prepare()
+    checkFCMToken()
+    requestUserPermission()
+    const type = 'notification'
+    PushNotificationIOS.addEventListener(type, onRemoteNotification)
+    return () => {
+      PushNotificationIOS.removeEventListener(type)
+    }
   }, [])
+
   const onLayoutRootView = useCallback(async () => {
     if (appIsReady) {
       await SplashScreen.hideAsync()
