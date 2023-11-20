@@ -50,7 +50,7 @@ export default function AddPet({ route, navigation }) {
       headerRight: () => (
         <TouchableOpacity
           disabled={!enabled}
-          onPress={() => {
+          onPress={async () => {
             createPet()
             navigation.navigate('ManagePet', { teamId })
           }}
@@ -88,8 +88,8 @@ export default function AddPet({ route, navigation }) {
     const petInfo = {
       name: petName,
       age: petAge,
-      petGenus: petCategory,
-      petSpecies: petDetail,
+      genus: petCategory,
+      species: petDetail,
       description: petIntro,
     }
     const json = JSON.stringify(petInfo)

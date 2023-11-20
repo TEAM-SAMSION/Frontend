@@ -64,7 +64,7 @@ export default function EditPet({ route, navigation }) {
         <TouchableOpacity
           disabled={!enabled}
           onPress={async () => {
-            await editPet()
+            editPet()
             navigation.navigate('ManagePet', { teamId })
           }}
           style={{ marginRight: 16 }}
@@ -105,11 +105,11 @@ export default function EditPet({ route, navigation }) {
     const petDatas = {
       name: petName,
       age: petAge,
-      petGenus: petCategory,
-      petSpecies: petDetail,
+      genus: petCategory,
+      species: petDetail,
       description: petIntro,
     }
-    console.log(petDatas)
+
     const json = JSON.stringify(petDatas)
     petData.append('petUpdateInfo', { string: json, type: 'application/json' })
     changePetInfo(ACCESSTOKEN, petId, petData)

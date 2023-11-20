@@ -25,7 +25,7 @@ export default function ManagePet({ route, navigation }) {
     getPet(ACCESSTOKEN, teamId).then((result) => {
       setSavedPets(result)
     })
-  }, [isFocused, isDeletePet])
+  }, [isFocused, isDeletePet, savedPets])
 
   return (
     <ScreenLayout>

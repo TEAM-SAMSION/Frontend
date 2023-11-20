@@ -20,6 +20,10 @@ export const TodoBox = (props) => {
     todo.completionStatus == 'COMPLETE' && setIsChecked(true)
   }, [])
 
+  useEffect(() => {
+    todo.completionStatus == 'COMPLETE' && setIsChecked(true)
+  }, [todo.completionStatus])
+
   return (
     <TodoBoxContainer index={index}>
       <TodoContent>
