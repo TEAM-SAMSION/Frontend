@@ -33,8 +33,14 @@ export default function Setting({ navigation }) {
           <ContentIcon width={16} height={16} color={colors.grey_450} />
         </TouchableIcon>
       </ContentContainer>
-      <ContentContainer>
+      <ContentContainer onPress={() => navigation.navigate('PrivacyTerms')}>
         <ContentText>개인정보처리방침</ContentText>
+        <TouchableIcon>
+          <ContentIcon width={16} height={16} color={colors.grey_450} />
+        </TouchableIcon>
+      </ContentContainer>
+      <ContentContainer onPress={() => navigation.navigate('ServiceTerms')}>
+        <ContentText>서비스 이용약관</ContentText>
         <TouchableIcon>
           <ContentIcon width={16} height={16} color={colors.grey_450} />
         </TouchableIcon>
