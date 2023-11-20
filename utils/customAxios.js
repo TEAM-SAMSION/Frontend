@@ -38,7 +38,7 @@ axiosInstance.interceptors.request.use(
 axiosInstance.interceptors.response.use(
   (response) => response, // 응답이 성공적인 경우 아무것도 하지 않음
   async (error) => {
-    console.log('axiosInstance에서 에러 감지', error)
+    console.log('axiosInstance에서 에러 감지', error.config.method, error.config.url)
     // 액세스 토큰이 만료됐다면
     if (error.response.errorCode === 1001) {
       console.log('액서스토큰 만료')
