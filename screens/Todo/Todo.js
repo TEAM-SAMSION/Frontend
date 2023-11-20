@@ -57,13 +57,15 @@ export default Todo = ({ navigation }) => {
   const renderBackdrop = useCallback((props) => <BottomSheetBackdrop {...props} pressBehavior="close" appearsOnIndex={0} disappearsOnIndex={-1} ><Pressable onPress={()=>Keyboard.dismiss()} style={{flex:1}}/></BottomSheetBackdrop>,[],)
 
   const changeTodoTeam = (todoTeamId) => {
+    console.log('todoTeamId:', todoTeamId)
     //상단 메뉴를 통해 TodoTeam을 변경할때 사용하는 Function
     getCategoryList(todoTeamId).then((categories) => {
       getTodosByCategory(categories, selectedDate)
     })
     getTeamUser(todoTeamId).then((res) => {
+      console.log('getTeamUser:', res)
       let tempTeamUserList = []
-      res.registers?.map((user) => tempTeamUserList.push({ id: user.registerId, name: user.registerName }))
+      res.map((user) => tempTeamUserList.push({ id: user.registerId, name: user.registerName }))
       setTeamUserList(tempTeamUserList)
     })
   }
@@ -137,7 +139,7 @@ export default Todo = ({ navigation }) => {
 
   useFocusEffect(
     useCallback(() => {
-      console.log(selectedDate)
+      console.log('selectedDate:', selectedDate)
       getInitDatas(selectedDate)
     }, []),
   )
