@@ -20,6 +20,9 @@ export default function ManageMember({ route, navigation }) {
   const [allMember, setAllMember] = useState([])
   const [memberData, setMemberData] = useState([])
 
+  // onFocus
+  const [onName, setOnName] = useState(false)
+
   useEffect(() => {
     getMember(ACCESSTOKEN, teamId).then((result) => {
       setMemberData(result)
@@ -55,7 +58,7 @@ export default function ManageMember({ route, navigation }) {
             <Detail_Text color={colors.secondary}>복사</Detail_Text>
           </CodeButton>
         </InputBox>
-        <Block>
+        <Block style={{ borderWidth: onName ? 1 : 0, borderColor: onName ? 'rgba(0, 0, 0, 0.12)' : '' }}>
           <InputBlock
             editable
             onChangeText={(text) => setSearchedName(text)}
@@ -66,6 +69,8 @@ export default function ManageMember({ route, navigation }) {
               borderTopRightRadius: 0,
             }}
             returnKeyType="done"
+            onFocus={() => setOnName(true)}
+            onBlur={() => setOnName(false)}
           />
           <IconBox>
             <SearchIcon width={16} height={16} />
@@ -130,7 +135,7 @@ const InputBlock = styled.TextInput`
   font-family: 'Spoqa-Medium';
   background-color: ${colors.grey_150};
   color: ${colors.grey_600};
-  height: 44px;
+  height: 42px;
   font-size: 14px;
   line-height: 19px;
 `

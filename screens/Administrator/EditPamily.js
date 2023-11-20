@@ -26,6 +26,10 @@ export default function EditPamily({ route, navigation }) {
 
   const ACCESSTOKEN = useRecoilValue(accessTokenState)
 
+  // onFocus
+  const [onName, setOnName] = useState(false)
+  const [onIntro, setOnIntro] = useState(false)
+
   const data = route.params
   const teamId = data.teamId
   const code = data.teamCode
@@ -157,7 +161,7 @@ export default function EditPamily({ route, navigation }) {
                     </CodeButton>
                   </CodeBox>
                 </InputBox>
-                <InputBox>
+                <InputBox style={{ borderWidth: onName ? 1 : 0, borderColor: onName ? 'rgba(0, 0, 0, 0.12)' : '' }}>
                   <Detail_Text color={colors.grey_800}>Pamily 이름</Detail_Text>
                   <InputBlock
                     editable
@@ -165,9 +169,11 @@ export default function EditPamily({ route, navigation }) {
                     placeholder={name}
                     placeholderTextColor={colors.grey_600}
                     returnKeyType="done"
+                    onFocus={() => setOnName(true)}
+                    onBlur={() => setOnName(false)}
                   />
                 </InputBox>
-                <InputBox>
+                <InputBox style={{ borderWidth: onIntro ? 1 : 0, borderColor: onIntro ? 'rgba(0, 0, 0, 0.12)' : '' }}>
                   <Detail_Text color={colors.grey_800}>한줄소개</Detail_Text>
                   <InputBlock
                     editable
@@ -175,6 +181,8 @@ export default function EditPamily({ route, navigation }) {
                     placeholder={intro}
                     placeholderTextColor={colors.grey_600}
                     returnKeyType="done"
+                    onFocus={() => setOnIntro(true)}
+                    onBlur={() => setOnIntro(false)}
                   />
                 </InputBox>
               </InfoContainer>

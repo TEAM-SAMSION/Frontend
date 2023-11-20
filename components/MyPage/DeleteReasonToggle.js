@@ -6,7 +6,7 @@ import { colors } from '../../colors'
 import { ModalPopUp } from '../Shared'
 import Close from '../../assets/Svgs/Close.svg'
 import { useNavigation } from '@react-navigation/native'
-import { BodySm_Text, Detail_Text, SubHead_Text } from '../Fonts'
+import { BodyBold_Text, BodySm_Text, Detail_Text, SubHead_Text } from '../Fonts'
 
 export const DeleteReasonToggle = (props) => {
   const options = [
@@ -14,11 +14,16 @@ export const DeleteReasonToggle = (props) => {
     '더이상 관리할 펫이 없어서',
     '서비스 이용에 어려움이 있어서',
     '서비스의 필요성을 못느껴서',
+    '기타',
   ]
+
+  // onFocus
+  const [onReason, setOnReason] = useState(false)
 
   // 패밀리 선택 toggle isOpen
   const [isOpen, setIsOpen] = useState(false)
   const [selectedValue, setSelectedValue] = useState('')
+  const [personalReason, setPersonalReason] = useState('')
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen)
@@ -27,8 +32,15 @@ export const DeleteReasonToggle = (props) => {
   const handleOptionSelect = (value) => {
     setSelectedValue(value)
     props.setReason(value)
+    {
+      value == '기타' ? props.setIsEnabled(false) : props.setIsEnabled(true)
+    }
     setIsOpen(false)
   }
+
+  useEffect(() => {
+    personalReason == '' ? '' : props.setIsEnabled(true) & props.setPersonalReason(personalReason)
+  }, [personalReason])
 
   return (
     <>
@@ -53,6 +65,24 @@ export const DeleteReasonToggle = (props) => {
             ))}
           </DropDownContent>
         </>
+      )}
+
+      {selectedValue == '기타' && (
+        <ReasonBox>
+          <BodyBold_Text>탈퇴 이유를 자세히 입력해주세요</BodyBold_Text>
+          <InputBox style={{ borderWidth: onReason ? 1 : 0, borderColor: onReason ? 'rgba(0, 0, 0, 0.12)' : '' }}>
+            <InputBlock
+              editable
+              placeholder="탈퇴 이유 입력하기"
+              onChangeText={(text) => setPersonalReason(text)}
+              returnKeyType="done"
+              onFocus={() => setOnReason(true)}
+              onBlur={() => {
+                setOnReason(false)
+              }}
+            />
+          </InputBox>
+        </ReasonBox>
       )}
     </>
   )
@@ -79,31 +109,22 @@ const DropDownContent = styled.View`
   background-color: ${colors.grey_150};
   border-radius: 10px;
 `
-const PopContent = styled.View`
-  justify-content: center;
-  align-items: center;
-  margin-bottom: 40px;
-`
-const PopButtonContainer = styled.View`
+const InputBox = styled.View`
   flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-`
-const PopButton = styled.TouchableOpacity`
-  display: flex;
-  flex: 1 0 0;
+  background-color: ${colors.grey_150};
+  padding: 12px;
   height: 44px;
-  padding: 12px 16px;
-  justify-content: center;
-  align-items: center;
   border-radius: 8px;
-  background-color: ${colors.red_200};
+  align-items: center;
+  justify-content: flex-start;
 `
-const CloseButton = styled.TouchableOpacity``
-const ModalHeader = styled.View`
-  width: '100%';
-  align-items: flex-end;
-  justify-content: center;
-  margin-bottom: 24px;
+const InputBlock = styled.TextInput`
+  font-family: 'Spoqa-Medium';
+  background-color: ${colors.grey_150};
+  color: ${colors.grey_600};
+  font-size: 12px;
+`
+const ReasonBox = styled.View`
+  margin-top: 8px;
+  gap: 10px;
 `

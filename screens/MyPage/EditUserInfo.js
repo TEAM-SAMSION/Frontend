@@ -34,6 +34,9 @@ export default function EditUserInfo({ route, navigation }) {
   const [email, setEmail] = useState('')
   const [profileFile, setProfileFile] = useState('file://' + RNFS.MainBundlePath + '/default_pet.png')
 
+  // onFocus
+  const [onName, setOnName] = useState(false)
+
   useEffect(() => {
     isFocused && setIsTabVisible(false)
   }, [isFocused, isTabVisible])
@@ -118,7 +121,7 @@ export default function EditUserInfo({ route, navigation }) {
                 </TouchableOpacity>
               </ProfileContainer>
               <InfoContainer>
-                <InputBox>
+                <InputBox style={{ borderWidth: onName ? 1 : 0, borderColor: onName ? 'rgba(0, 0, 0, 0.12)' : '' }}>
                   <Detail_Text color={colors.grey_800}>닉네임</Detail_Text>
                   <InputBlock
                     editable
@@ -126,6 +129,8 @@ export default function EditUserInfo({ route, navigation }) {
                     placeholder={name}
                     placeholderTextColor={colors.grey_600}
                     returnKeyType="done"
+                    onFocus={() => setOnName(true)}
+                    onBlur={() => setOnName(false)}
                   />
                 </InputBox>
                 <InputBox>

@@ -30,6 +30,13 @@ export default function AddPetProfile({ route, navigation }) {
   const [petIntro, setPetIntro] = useState('')
   const [petFile, setPetFile] = useState('file://' + RNFS.MainBundlePath + '/default_pet.png')
 
+  // onFocus
+  const [onName, setOnName] = useState(false)
+  const [onAge, setOnAge] = useState(false)
+  const [onIntro, setOnIntro] = useState(false)
+  const [onCategory, setOnCategory] = useState(false)
+  const [onDetail, setOnDetail] = useState(false)
+
   useEffect(() => {
     const isEmpty = petName === '' || petAge === '' || petCategory === '' || petDetail === '' || petIntro === ''
     setEnabled(!isEmpty)
@@ -102,7 +109,7 @@ export default function AddPetProfile({ route, navigation }) {
                 </TouchableOpacity>
               </ProfileContainer>
               <InfoContainer>
-                <InputBox>
+                <InputBox style={{ borderWidth: onName ? 1 : 0, borderColor: onName ? 'rgba(0, 0, 0, 0.12)' : '' }}>
                   <Detail_Text color={colors.grey_800}>이름</Detail_Text>
                   <InputBlock
                     editable
@@ -110,9 +117,11 @@ export default function AddPetProfile({ route, navigation }) {
                     placeholder="이름을 입력해주세요."
                     placeholderTextColor={colors.grey_400}
                     returnKeyType="done"
+                    onFocus={() => setOnName(true)}
+                    onBlur={() => setOnName(false)}
                   />
                 </InputBox>
-                <InputBox>
+                <InputBox style={{ borderWidth: onAge ? 1 : 0, borderColor: onAge ? 'rgba(0, 0, 0, 0.12)' : '' }}>
                   <Detail_Text color={colors.grey_800}>나이</Detail_Text>
                   <InputBlock
                     editable
@@ -121,12 +130,16 @@ export default function AddPetProfile({ route, navigation }) {
                     placeholderTextColor={colors.grey_400}
                     keyboardType="number"
                     returnKeyType="done"
+                    onFocus={() => setOnAge(true)}
+                    onBlur={() => setOnAge(false)}
                   />
                 </InputBox>
                 <CategoryBlock>
                   <InputBox
                     style={{
                       width: (ScreenWidth - 40) / 2,
+                      borderWidth: onCategory ? 1 : 0,
+                      borderColor: onCategory ? 'rgba(0, 0, 0, 0.12)' : '',
                     }}
                   >
                     <Detail_Text color={colors.grey_800}>종류</Detail_Text>
@@ -141,11 +154,15 @@ export default function AddPetProfile({ route, navigation }) {
                         borderBottomRightRadius: 0,
                       }}
                       returnKeyType="done"
+                      onFocus={() => setOnCategory(true)}
+                      onBlur={() => setOnCategory(false)}
                     />
                   </InputBox>
                   <InputBox
                     style={{
                       width: (ScreenWidth - 40) / 2,
+                      borderWidth: onDetail ? 1 : 0,
+                      borderColor: onDetail ? 'rgba(0, 0, 0, 0.12)' : '',
                     }}
                   >
                     <Detail_Text color={colors.grey_800}>펫 종</Detail_Text>
@@ -160,10 +177,12 @@ export default function AddPetProfile({ route, navigation }) {
                         borderTopLeftRadius: 0,
                       }}
                       returnKeyType="done"
+                      onFocus={() => setOnDetail(true)}
+                      onBlur={() => setOnDetail(false)}
                     />
                   </InputBox>
                 </CategoryBlock>
-                <InputBox>
+                <InputBox style={{ borderWidth: onIntro ? 1 : 0, borderColor: onIntro ? 'rgba(0, 0, 0, 0.12)' : '' }}>
                   <Detail_Text color={colors.grey_800}>한줄소개</Detail_Text>
                   <InputBlock
                     editable
@@ -173,6 +192,8 @@ export default function AddPetProfile({ route, navigation }) {
                     placeholder="한줄소개를 입력해주세요.(20자이내)"
                     placeholderTextColor={colors.grey_400}
                     returnKeyType="done"
+                    onFocus={() => setOnIntro(true)}
+                    onBlur={() => setOnIntro(false)}
                   />
                 </InputBox>
               </InfoContainer>

@@ -14,6 +14,8 @@ import { DeleteReasonToggle } from '../../components/MyPage/DeleteReasonToggle'
 export default function DeleteAccount2({ route, navigation }) {
   const ACCESSTOKEN = useRecoilValue(accessTokenState)
   const [reason, setReason] = useState('')
+  const [personalReason, setPersonalReason] = useState('')
+  const [isEnabled, setIsEnabled] = useState(false)
 
   return (
     <ScreenLayout>
@@ -25,14 +27,22 @@ export default function DeleteAccount2({ route, navigation }) {
             <SubHead_Text>를 알려주세요.</SubHead_Text>
           </OneLine>
         </TitleBox>
-        <DeleteReasonToggle setReason={setReason} />
+        <DeleteReasonToggle setReason={setReason} setPersonalReason={setPersonalReason} setIsEnabled={setIsEnabled} />
       </Container>
       <DeleteButton
+        disabled={isEnabled ? false : true}
         onPress={() => {
-          navigation.navigate('DeleteAccount3', { reason })
+          console.log(reason)
+          console.log(personalReason)
+          if (reason == '기타') {
+            navigation.navigate('DeleteAccount3', { personalReason })
+          } else {
+            navigation.navigate('DeleteAccount3', { reason })
+          }
         }}
+        style={{ backgroundColor: isEnabled ? colors.primary_container : colors.grey_150 }}
       >
-        <ButtonText>다음</ButtonText>
+        <ButtonText style={{ color: isEnabled ? colors.primary : colors.grey_500 }}>다음</ButtonText>
       </DeleteButton>
     </ScreenLayout>
   )
