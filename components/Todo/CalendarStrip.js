@@ -10,10 +10,11 @@ import Reset from '../../assets/Svgs/Reset.svg'
 import { BodyBoldSm_Text, Detail_Text } from '../Fonts'
 import moment from 'moment'
 
-export const MyCalendarStrip = ({ handleDateSelect }) => {
-  const today = moment(new Date()).format('YYYY-MM-DD-d')
-  const [selectedDate, setSelectedDate] = useState(today)
-  const [month, setMonth] = useState(today.substring(5, 7))
+export const MyCalendarStrip = ({ selectedDate, setSelectedDate }) => {
+  //2023-11-20
+  let today = new Date()
+  const [month, setMonth] = useState(selectedDate.substring(5, 7))
+  const [customDay, setCustomDay] = useState(today.getDay())
   const locale = { name: 'ko', config: { weekdays: '화수목금토일월' } } // const markedDate = [{ date: today,dots: [ {color: 'red' },],} ]
   const weekdays = ['일', '월', '화', '수', '목', '금', '토']
   const calendarRef = useRef(null)
@@ -36,13 +37,11 @@ export const MyCalendarStrip = ({ handleDateSelect }) => {
         locale={locale}
         scrollable
         onDateSelected={(date) => {
-          setSelectedDate(date.format('YYYY-MM-DD-d'))
-          handleDateSelect(date.format('YYYY-MM-DD'))
+          setSelectedDate(date.format('YYYY-MM-DD'))
+          setCustomDay(date.format('d'))
         }}
-        // daySelectionAnimation={true}
         style={{ height: 68 }}
-        selectedDate={new Date()}
-        // markedDates={markedDate}
+        selectedDate={new Date()} //** 실제 렌더링에서의 성능체감 */
         highlightDateNumberContainerStyle={{
           backgroundColor: colors.primary_container,
           borderRadius: 4,
@@ -79,7 +78,7 @@ export const MyCalendarStrip = ({ handleDateSelect }) => {
       <Divider />
       <TodoListHeader>
         <BodyBoldSm_Text color={colors.grey_800}>
-          {selectedDate.substring(5, 7)}월 {selectedDate.substring(8, 10)}일 {weekdays[selectedDate.substring(11, 12)]}
+          {selectedDate.substring(5, 7)}월 {selectedDate.substring(8, 10)}일 {weekdays[customDay]}
           요일
         </BodyBoldSm_Text>
         <TodayButton onPress={() => calendarRef.current.setSelectedDate(new Date())}>

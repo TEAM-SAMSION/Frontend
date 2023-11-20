@@ -144,7 +144,7 @@ export default function Home({ navigation }) {
 
   return (
     <ScreenLayout>
-      <ScrollView>
+      <ScrollView showsVerticalScrollIndicator={false}>
         <TopHeader navigation={navigation} />
         <BannerContainer>
           <NickBox>

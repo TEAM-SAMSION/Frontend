@@ -7,7 +7,7 @@ import { useState } from 'react'
 import DownIcon from '../../assets/Svgs/arrow_down.svg'
 import UpIcon from '../../assets/Svgs/arrow_up.svg'
 import { Detail_Text } from '../Fonts'
-export const TodoHeader = ({ navigation, changeTodoTeam, todoTeamList, setSelectedTeam, selectedTeam }) => {
+export const TodoHeader = ({ navigation, todoTeamList, setSelectedTeam, selectedTeam }) => {
   const [isOpen, setIsOpen] = useState(false)
   const toggleDropdown = () => {
     setIsOpen(!isOpen)
@@ -27,14 +27,15 @@ export const TodoHeader = ({ navigation, changeTodoTeam, todoTeamList, setSelect
 
         {isOpen && (
           <>
-            {todoTeamList.reverse().map((todoTeam, id) => (
+            {todoTeamList.map((todoTeam, id) => (
               <DropdownBox
                 key={id}
                 style={id == todoTeamList.length - 1 && { borderBottomLeftRadius: 8, borderBottomRightRadius: 8 }}
                 onPress={() => {
                   setIsOpen(false)
-                  changeTodoTeam(todoTeam.id)
-                  setSelectedTeam({ id: todoTeam.id, name: todoTeam.name })
+                  // changeTodoTeam(todoTeam.id)
+                  console.log()
+                  setSelectedTeam({ name: todoTeam.name, id: todoTeam.id })
                 }}
               >
                 <Detail_Text>{todoTeam.name}</Detail_Text>

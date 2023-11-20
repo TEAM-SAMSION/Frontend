@@ -7,11 +7,11 @@ export const deleteTodo = async (todoId) => {
   console.log(response)
 }
 //정상작동됨
-export const getTodoTeamList = async (page, size) => {
+export const getTodoTeamList = async (page = 0, size = 20) => {
   let API = `/teams?page=${page}&size=${size}` //500
   const response = await axiosInstance.get(url + API)
   console.log('getTodoTeamList Res:', response.data)
-  return response.data
+  return response.data.content
   //response: [{"teamId": 1, "teamName": "test"}, {"teamId": 3, "teamName": "test"}, {"teamId": 6, "teamName": "test"}, {"teamId": 7, "teamName": "test"}]
 }
 export const getCategoryListAdmin = async (teamId) => {
@@ -48,7 +48,7 @@ export const getTodos = async (categoryId, date) => {
       moveDate: date,
     },
   })
-  console.log('response.data.todos:', response.data.content) //{"assignNames": [[Object], [Object]], "completionStatus": "INCOMPLETE", "task": "test1", "todoId": 6182},
+  // console.log('response.data.todos:', response.data.content) //{"assignNames": [[Object], [Object]], "completionStatus": "INCOMPLETE", "task": "test1", "todoId": 6182},
   return response.data.content
 }
 
