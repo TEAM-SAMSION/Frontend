@@ -27,7 +27,6 @@ export default function ManageMember({ route, navigation }) {
     getMember(ACCESSTOKEN, teamId).then((result) => {
       setMemberData(result)
       setAllMember(result)
-      //console.log(result)
     })
   }, [])
 
@@ -77,7 +76,7 @@ export default function ManageMember({ route, navigation }) {
           </IconBox>
         </Block>
         {memberData.length > 5 ? (
-          <ScrollView>
+          <ScrollView showsVerticalScrollIndicator={false} style={{ marginBottom: 100 }}>
             <MemberBox>
               {memberData.map((item, index) => (
                 <MemberSearchBox
