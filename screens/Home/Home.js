@@ -109,20 +109,23 @@ export default function Home({ navigation }) {
   }
 
   useEffect(() => {
+    getUserNickname()
+  }, [isFocused])
+
+  useEffect(() => {
     fetchTeamList()
-    {
-      pamilyNum !== 0 && fetchMyTodo()
-    }
+    pamilyNum !== 0 && fetchMyTodo()
   }, [isFocused, updated, topTeamId, pamilyNum])
 
   const [myTodo, setMyTodo] = useState([])
   const [todoPage, setTodoPage] = useState(0)
 
   const fetchMyTodo = () => {
-    getMyTodoList(ACCESSTOKEN, topTeamId).then((result) => {
-      setResultArray(result)
-      setMyTodo(result)
-    })
+    pamilyNum &&
+      getMyTodoList(ACCESSTOKEN, topTeamId).then((result) => {
+        setResultArray(result)
+        setMyTodo(result)
+      })
   }
 
   const setResultArray = (result) => {
@@ -137,7 +140,7 @@ export default function Home({ navigation }) {
 
   useEffect(() => {
     fetchMyTodo()
-  }, [pamilyList, todoPage])
+  }, [isFocused, pamilyList, todoPage])
 
   return (
     <ScreenLayout>
