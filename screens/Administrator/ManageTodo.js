@@ -116,7 +116,6 @@ export default function ManageTodo({ navigation, route }) {
     setSelectedCategory(category)
     setIsVisible(true)
   }
-
   useEffect(() => {
     refreshData()
   }, [])

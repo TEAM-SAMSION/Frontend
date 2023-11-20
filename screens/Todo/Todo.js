@@ -20,11 +20,7 @@ import { useFocusEffect, useIsFocused } from '@react-navigation/native'
 import { TabBarAtom } from '../../recoil/TabAtom'
 
 export default Todo = ({ navigation }) => {
-  const isFocused = useIsFocused()
   const setIsTabVisible = useSetRecoilState(TabBarAtom)
-  useEffect(() => {
-    isFocused && setIsTabVisible(true)
-  }, [isFocused])
 
   const { StatusBarManager } = NativeModules
   const tempDate = new Date()
@@ -35,7 +31,7 @@ export default Todo = ({ navigation }) => {
 
   const [todosByCategory, setTodosByCategory] = useState(null)
 
-  const [todoTeamList, setTodoTeamList] = useState([])
+  const [todoTeamList, setTodoTeamList] = useState(null)
   const [teamUserList, setTeamUserList] = useState([])
   const [snappoints, setSnappoints] = useState([])
   const [isVisible, setIsVisible] = useState(false)
@@ -52,23 +48,8 @@ export default Todo = ({ navigation }) => {
 
   //prettier-ignore
   Platform.OS == 'ios'? StatusBarManager.getHeight((statusBarFrameData) => {setStatusBarHeight(statusBarFrameData.height)}): null //KeyboardAwareView가 정상 작동하기 위해서 StatusBar의 높이값을 초기에 구해야함.
-
   //prettier-ignore
   const renderBackdrop = useCallback((props) => <BottomSheetBackdrop {...props} pressBehavior="close" appearsOnIndex={0} disappearsOnIndex={-1} ><Pressable onPress={()=>Keyboard.dismiss()} style={{flex:1}}/></BottomSheetBackdrop>,[],)
-
-  const changeTodoTeam = (todoTeamId) => {
-    console.log('todoTeamId:', todoTeamId)
-    //상단 메뉴를 통해 TodoTeam을 변경할때 사용하는 Function
-    getCategoryList(todoTeamId).then((categories) => {
-      getTodosByCategory(categories, selectedDate)
-    })
-    getTeamUser(todoTeamId).then((res) => {
-      console.log('getTeamUser:', res)
-      let tempTeamUserList = []
-      res.map((user) => tempTeamUserList.push({ id: user.registerId, name: user.registerName }))
-      setTeamUserList(tempTeamUserList)
-    })
-  }
 
   const getTodosByCategory = async (categories, date) => {
     // 각 categoryId에 대해 getTodo 함수를 병렬로 호출
@@ -83,65 +64,61 @@ export default Todo = ({ navigation }) => {
       return acc
     }, [])
     if (Object.entries(todosByCategory).length > 0) {
-      console.log('hello:', Object.entries(todosByCategory)[0][1][2])
       setTodosByCategory(Object.entries(todosByCategory))
     } else {
       setTodosByCategory(null)
     }
   }
 
-  const getInitDatas = (date = today) => {
-    setIsLoading(true)
-    console.log('todaydate:', date)
+  const getAllData = (date = today) => {
+    !todoTeamList && setIsLoading(true)
     //TodoTeam과 Default TodoTeam에 한해 User들을 일시적으로 반환(나중에 Team 변경하면 해당 변수 대체됨)
-    getTodoTeamList(0, 10)
-      .then((res) => {
-        //1. TeamList를 저장
+    getTodoTeamList()
+      .then((data) => {
         let tempTeamList = []
-        res.content?.map((team) => tempTeamList.push({ id: team.teamId, name: team.teamName }))
+        data.map((team) => tempTeamList.push({ id: team.teamId, name: team.teamName }))
+        console.log('1. Team 리스트들을 정리')
         setTodoTeamList(tempTeamList)
-        setSelectedTeam({
-          name: tempTeamList[tempTeamList.length - 1]?.name,
-          id: tempTeamList[tempTeamList.length - 1]?.id,
-        })
-        // console.log(tempTeamList[tempTeamList.length - 1]?.id)
-        return tempTeamList[tempTeamList.length - 1]?.id
+        if (!selectedTeam) {
+          //만약 선택된 팀이 없다면(초기상태의 경우), 불러온 Team의 가장 마지막 팀(가장 최근) 설정
+          setSelectedTeam({
+            name: tempTeamList[tempTeamList.length - 1]?.name,
+            id: tempTeamList[tempTeamList.length - 1]?.id,
+          })
+          return tempTeamList[tempTeamList.length - 1]?.id
+        } else {
+          return selectedTeam.id
+        }
       })
-      .then((selectedID_temp) => {
-        // console.log('selectedID_temp: 133', selectedID_temp)
-        getCategoryList(selectedID_temp).then((categories) => {
-          // console.log('categories: 135', categories)
+      .then(async (selectedTeamID) => {
+        await getCategoryList(selectedTeamID).then((categories) => {
+          console.log('2. 카테고리로 Todo 불러와서 저장', categories.toString().substring(0, 10))
           getTodosByCategory(categories, date).then(setIsLoading(false))
         })
-        return selectedID_temp
-      })
-      .then((selectedID_temp) =>
-        getTeamUser(selectedID_temp).then((res) => {
-          //4. TeamUser를 저장/ teamList의 가장 마지막 요소가 가장 처음에 만들어진 Team이라서 length-1번째 teamId를 인자로 넣었음
+        await getTeamUser(selectedTeamID).then((res) => {
           let tempTeamUserList = []
           res.map((user) => tempTeamUserList.push({ id: user.registerId, name: user.registerName }))
+          console.log('3. 선택된 팀의 사용자들 state로 저장', tempTeamUserList.toString().substring(0, 10))
           setTeamUserList(tempTeamUserList) //나중에 Team 변경하면 해당 변수 대체됨
-        }),
-      )
-  }
-  const handleDateSelect = (date) => {
-    //date = 2023-10-15 //날짜를 선택 시, 해당 날짜에서의 Todo 조회 및 todosByCategory 갱신
-    setIsLoading(true)
-    setSelectedDate(date)
-    getCategoryList(selectedTeam.id).then((categories) => {
-      getTodosByCategory(categories, date).then(setIsLoading(false))
-    })
+        })
+      })
   }
 
-  useEffect(() => {
-    getInitDatas(selectedDate)
-  }, [])
-
+  let refreshTime = () => {
+    var d = new Date()
+    var s = d.getMilliseconds()
+    if (s == 0) {
+      console.log('자동갱신')
+      // getAllData(selectedDate)
+    }
+  }
+  setInterval(refreshTime, 1000)
   useFocusEffect(
     useCallback(() => {
-      console.log('selectedDate:', selectedDate)
-      getInitDatas(selectedDate)
-    }, []),
+      console.log(selectedDate, selectedTeam)
+      getAllData(selectedDate)
+      setIsTabVisible(true)
+    }, [selectedDate, selectedTeam]),
   )
   const handleBottomSheetHeight = (status) => {
     if (status == 0) {
@@ -173,13 +150,12 @@ export default Todo = ({ navigation }) => {
         <TodoHeader
           selectedTeam={selectedTeam}
           setSelectedTeam={setSelectedTeam}
-          changeTodoTeam={changeTodoTeam}
           todoTeamList={todoTeamList}
           navigation={navigation}
         />
         <ScrollViewContainer>
           <ScrollView showsVerticalScrollIndicator={false}>
-            <MyCalendarStrip handleDateSelect={handleDateSelect} />
+            <MyCalendarStrip selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
             {!todosByCategory && <NoItem />}
             {isLoading ? (
               <LoadingContainer>
@@ -199,7 +175,7 @@ export default Todo = ({ navigation }) => {
                       {todos[1][2].map((todo, index) => (
                         <TodoItem
                           setIsVisible={setIsVisible}
-                          getInitDatas={getInitDatas}
+                          getInitDatas={getAllData}
                           selectedDate={selectedDate}
                           key={index}
                           todo={todo}
@@ -235,7 +211,7 @@ export default Todo = ({ navigation }) => {
             handleBottomSheetHeight={handleBottomSheetHeight}
             teamUserList={teamUserList}
             selectedDate={selectedDate}
-            getInitDatas={getInitDatas}
+            getInitDatas={getAllData}
           />
         ) : (
           <TodoEditBottomSheet
@@ -244,7 +220,7 @@ export default Todo = ({ navigation }) => {
             selectedTodo={selectedTodo}
             selectedDate={selectedDate}
             setSelectedTodo={setSelectedTodo}
-            getInitDatas={getInitDatas}
+            getInitDatas={getAllData}
           />
         )}
       </BottomSheetModal>
@@ -287,15 +263,6 @@ const ModalHeader = styled.View`
 const CloseButton = styled.TouchableOpacity``
 const TodoItemBase = styled.View`
   margin-bottom: 32px;
-`
-const TodayButton = styled.TouchableOpacity`
-  flex-direction: row;
-  border: 1px solid ${colors.grey_250};
-  justify-content: center;
-  align-items: center;
-  padding: 4px 10px;
-  border-radius: 99px;
-  display: inline-block;
 `
 const LoadingContainer = styled.View`
   flex: 1;

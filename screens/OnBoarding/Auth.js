@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import axios from 'axios'
 import { styled } from 'styled-components/native'
 import * as KakaoLogin from '@react-native-seoul/kakao-login'
