@@ -31,7 +31,7 @@ export const changeAuthority = async (accessToken, teamId, registerId, authority
 }
 
 export const searchMember = async (accessToken, teamId, nickname) => {
-  let API = `/teams/${teamId}/registers/search`
+  let API = `/teams/${teamId}/registers/search?nickname=${nickname}`
   const response = await axiosInstance.get(url + API)
   return response.data.content
 }
