@@ -171,15 +171,6 @@ export default Todo = ({ navigation }) => {
           todoTeamList={todoTeamList}
           navigation={navigation}
         />
-        {/*
-        <TodayButton
-          onPress={() =>
-            // AsyncStorage.clear()
-            checkTokenValid(refreshToken)
-          }
-        >
-          <BodyBold_Text color={colors.grey_400}>토큰재발급</BodyBold_Text>
-        </TodayButton> */}
         <ScrollViewContainer>
           <ScrollView showsVerticalScrollIndicator={false}>
             <MyCalendarStrip handleDateSelect={handleDateSelect} />

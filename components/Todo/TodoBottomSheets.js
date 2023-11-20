@@ -16,7 +16,7 @@ import Alarm from '../../assets/Svgs/Alarm.svg'
 import Back from '../../assets/Svgs/chevron_back.svg'
 import Edit from '../../assets/Svgs/Todo_edit.svg'
 import DatePicker from 'react-native-date-picker'
-import { deleteTodo, editTodoDate, editTodoName } from './Apis'
+import { deleteTodo, editTodoDate, editTodoName, setTodoAlarm } from './Apis'
 import axiosInstance from '../../utils/customAxios'
 
 export const TodoEditBottomSheet = ({
@@ -58,7 +58,9 @@ export const TodoEditBottomSheet = ({
             />
           )}
         </Stack.Screen>
-        <Stack.Screen name="TimeSetting" options={screenBOptions} component={TimeSetting} />
+        <Stack.Screen name="TodoTimeSetting" options={screenBOptions}>
+          {(props) => <TodoTimeSetting {...props} selectedTodo={selectedTodo} />}
+        </Stack.Screen>
         <Stack.Screen name="TodoDataEditing" options={screenBOptions}>
           {(props) => (
             <TodoDataEditing
@@ -71,9 +73,9 @@ export const TodoEditBottomSheet = ({
             />
           )}
         </Stack.Screen>
-        <Stack.Screen name="DateSetting" options={screenBOptions}>
+        <Stack.Screen name="TodoDateSetting" options={screenBOptions}>
           {(props) => (
-            <DateSetting
+            <TodoDateSetting
               {...props}
               getInitDatas={getInitDatas}
               selectedDate={selectedDate}
@@ -114,11 +116,11 @@ const TodoEditHome = ({ navigation, selectedTodo, selectedDate, getInitDatas }) 
             <Detail_Text>삭제하기</Detail_Text>
           </SmallBox>
         </RowContainer>
-        <BigBox onPress={() => navigation.navigate('TimeSetting')}>
+        <BigBox onPress={() => navigation.navigate('TodoTimeSetting')}>
           <Alarm color={colors.grey_800} width={24} height={24} />
           <Detail_Text>시간 알림</Detail_Text>
         </BigBox>
-        <BigBox onPress={() => navigation.navigate('DateSetting')}>
+        <BigBox onPress={() => navigation.navigate('TodoDateSetting')}>
           <Change width={24} height={24} />
           <Detail_Text>날짜 변경</Detail_Text>
         </BigBox>
@@ -251,7 +253,7 @@ const TodoDataEditing = ({
     </BottomSheetBase>
   )
 }
-const DateSetting = ({ navigation, selectedTodo, selectedDate, getInitDatas }) => {
+const TodoDateSetting = ({ navigation, selectedTodo, selectedDate, getInitDatas }) => {
   const [isLoading, setIsLoading] = useState(false)
   const initDay = new Date()
   initDay.setDate(initDay.getDate() + 1)
@@ -294,9 +296,17 @@ const DateSetting = ({ navigation, selectedTodo, selectedDate, getInitDatas }) =
     </BottomSheetBase>
   )
 }
-const TimeSetting = ({ navigation }) => {
-  const [date, setDate] = useState(new Date())
-  const finishEditDate = () => {}
+const TodoTimeSetting = ({ navigation, selectedTodo }) => {
+  let initTime = new Date()
+  initTime.setHours(12, 0, 0)
+  const [date, setDate] = useState(initTime)
+  const finishSetTime = () => {
+    let formattedTime = date.toString().substring(16, 21)
+    setTodoAlarm(selectedTodo, formattedTime).then((res) => {
+      console.log('setTodoAlarmRes:', res.status)
+      navigation.goBack()
+    })
+  }
   return (
     <BottomSheetBase
       style={{
@@ -313,7 +323,7 @@ const TimeSetting = ({ navigation }) => {
       <DatePicker
         date={date}
         locale="ko"
-        onDateChange={(date) => console.log(date)}
+        onDateChange={setDate}
         fadeToColor="none"
         mode="time"
         style={{ width: ScreenWidth * 0.9 }}
@@ -321,7 +331,7 @@ const TimeSetting = ({ navigation }) => {
         dividerHeight={2}
       />
 
-      <Button_PinkBg isLoading={false} isEnabled={true} text="완료" func={() => finishEditDate()} />
+      <Button_PinkBg isLoading={false} isEnabled={true} text="완료" func={() => finishSetTime()} />
     </BottomSheetBase>
   )
 }

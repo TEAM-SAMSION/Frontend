@@ -48,7 +48,7 @@ export const getTodos = async (categoryId, date) => {
       moveDate: date,
     },
   })
-  // console.log('response.data.todos:', response.data.content) //{"assignNames": [[Object], [Object]], "completionStatus": "INCOMPLETE", "task": "test1", "todoId": 6182},
+  console.log('response.data.todos:', response.data.content) //{"assignNames": [[Object], [Object]], "completionStatus": "INCOMPLETE", "task": "test1", "todoId": 6182},
   return response.data.content
 }
 
@@ -58,7 +58,20 @@ export const completeTodo = async (todo) => {
   try {
     const response = await axiosInstance.put(url + API, data)
     return response
-  } catch (e) {}
+  } catch (e) {
+    console.log('completeTodo:', e)
+  }
+}
+export const setTodoAlarm = async (todo, notificationTime) => {
+  console.log(notificationTime)
+  let API = `/teams/todos/${todo.todoId}/assign/notification?notificationTime=${notificationTime}`
+  let data = { notificationTime }
+  try {
+    const response = await axiosInstance.post(url + API, data)
+    return response
+  } catch (e) {
+    console.log('setTodoAlarm:', e)
+  }
 }
 
 export const checkComplete = async (todoId) => {

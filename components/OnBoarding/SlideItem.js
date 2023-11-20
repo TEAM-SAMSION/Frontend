@@ -14,7 +14,7 @@ const SlideItem = ({ item }) => {
     <SlideBase style={{ width: Platform.OS == 'android' ? ScreenWidth.toFixed(1) : ScreenWidth }}>
       <TextContainer>
         {item.title ? <TitleText>{item.title}</TitleText> : <LOGOTypo width={157} height={35} />}
-        <ContentText style={item.title && { marginTop: 8 }}>{item.content}</ContentText>
+        <ContentText style={{ marginTop: item.title ? 8 : 16 }}>{item.content}</ContentText>
       </TextContainer>
       <ImageContainer>
         <Image source={item.image} />
@@ -35,23 +35,22 @@ const TextContainer = styled.View`
   margin-left: 24px;
 `
 const TitleText = styled.Text`
-  color: ${colors.grey_600};
+  color: ${colors.grey_700};
   font-size: 36px;
   font-family: Spoqa-Bold;
   line-height: 43px;
 `
 const ContentText = styled.Text`
-  margin-top: 16px;
-  color: ${colors.grey_450};
+  color: ${colors.grey_600};
   font-size: 14px;
   font-family: Spoqa-Medium;
   line-height: 19px;
 `
 const ImageContainer = styled.View`
-  margin-bottom: 64px;
+  margin-bottom: 20px;
 `
 const Image = styled.Image`
-  height: 325px;
+  height: 395px;
   width: ${ScreenWidth + 1}px;
   object-fit: fill;
 `

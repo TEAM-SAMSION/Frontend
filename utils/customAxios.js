@@ -37,10 +37,10 @@ axiosInstance.interceptors.request.use(
 axiosInstance.interceptors.response.use(
   (response) => response, // 응답이 성공적인 경우 아무것도 하지 않음
   async (error) => {
-    console.log('helloasdfasdfasdf')
+    console.log('axiosInstance에서 에러 감지')
     // 액세스 토큰이 만료됐다면
     if (error.response.errorCode === 1001) {
-      const refreshToken = AsyncStorage.getItem('accessToken')
+      console.log('액서스토큰 만료')
       const data = await updateToken() // 액세스토큰 갱신
 
       // 갱신된 accessToken을 받으면
