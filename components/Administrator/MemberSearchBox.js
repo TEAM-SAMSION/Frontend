@@ -16,12 +16,16 @@ import CrownIcon from '../../assets/Svgs/Crown.svg'
 import { MemberPopUp } from './MemberPopUp'
 import { changeAuthority, deleteMember } from './Apis'
 import ErrorIcon from '../../assets/Svgs/error.svg'
+import { getUserInfo } from '../MyPage/Apis'
+import { useNavigation } from '@react-navigation/native'
 
 export const MemberSearchBox = (props) => {
   const ACCESSTOKEN = props.accessToken
   const teamId = props.teamId
   const myAuthority = props.myAuthority
+  const navigation = useNavigation()
 
+  const [nickname, setNickname] = useState('')
   const [visible, setVisible] = useState(false)
   const [deleteVisible, setDeleteVisible] = useState(false)
   const [changeVisible, setChangeVisible] = useState(false)
@@ -63,6 +67,12 @@ export const MemberSearchBox = (props) => {
     }
   }
 
+  useEffect(() => {
+    getUserInfo(ACCESSTOKEN).then((result) => {
+      setNickname(result.nickname)
+    })
+  }, [])
+
   return (
     <>
       <Card>
@@ -89,9 +99,13 @@ export const MemberSearchBox = (props) => {
             </EmailText>
           </TeamInfoBox>
         </TeamContentBox>
-        <MoreButton onPress={() => setVisible(true)}>
-          <MoreIcon width={24} height={24} />
-        </MoreButton>
+        {myAuthority == 'EXECUTIVE' && authority == 'PRESIDENT' ? (
+          ''
+        ) : (
+          <MoreButton onPress={() => setVisible(true)}>
+            <MoreIcon width={24} height={24} />
+          </MoreButton>
+        )}
       </Card>
       <MemberPopUp
         visible={visible}
@@ -195,13 +209,16 @@ export const MemberSearchBox = (props) => {
         </PopButtonContainer>
       </ModalPopUp>
       <ModalPopUp visible={isRejectVisible} petIcon={false} height={258}>
-        <PopUpContainer>
+        <PopUpContainer style={{ marginTop: 18, marginBottom: 33 }}>
           <ErrorBox>
             <ErrorIcon width={48} height={48} color={colors.grey_100} />
           </ErrorBox>
           <MessageBox>
-            <BodyBold_Text>관리자 위임 후 권한 변경이 가능합니다!</BodyBold_Text>
-            <BodySm_Text color={colors.grey_450}>다른 멤버에게 위임 후 다시 시도해주세요.</BodySm_Text>
+            <TextBox>
+              <BodyBold_Text>{nickname}님은 관리자 권한 위임 후,</BodyBold_Text>
+              <BodyBold_Text>권한 변경을 할 수 있습니다</BodyBold_Text>
+            </TextBox>
+            <BodySm_Text color={colors.grey_450}>다른 회원에게 위임 후 다시 시도해주세요</BodySm_Text>
           </MessageBox>
         </PopUpContainer>
         <PopButtonContainer>
@@ -218,7 +235,7 @@ export const MemberSearchBox = (props) => {
               setIsRejectVisible(false)
             }}
           >
-            <PopButtonText>완료</PopButtonText>
+            <PopButtonText>확인</PopButtonText>
           </PopButton>
         </PopButtonContainer>
       </ModalPopUp>
@@ -229,8 +246,8 @@ export const MemberSearchBox = (props) => {
           </ErrorBox>
           <MessageBox>
             <TextBox>
-              <BodyBold_Text>00님은 위임 후,</BodyBold_Text>
-              <BodyBold_Text>일반 멤버로 자동 권한 변경됩니다.</BodyBold_Text>
+              <BodyBold_Text>{nickname}님은 관리자 권한 위임 후,</BodyBold_Text>
+              <BodyBold_Text>일반 멤버로 자동 권한 변경됩니다</BodyBold_Text>
             </TextBox>
             <BodySm_Text color={colors.grey_450}>권한 위임을 계속하시겠습니까?</BodySm_Text>
           </MessageBox>
@@ -247,14 +264,10 @@ export const MemberSearchBox = (props) => {
           <PopButton
             onPress={async () => {
               await changeAuthority(ACCESSTOKEN, teamId, registerId, changing)
-              props.changeFunction()
-              setIsAlertVisible(false)
-              setChangingToPresident(false)
-              setChangingToExecutive(false)
-              setChangingToMember(false)
+              navigation.navigate('MyPage')
             }}
           >
-            <PopButtonText>완료</PopButtonText>
+            <PopButtonText>확인</PopButtonText>
           </PopButton>
         </PopButtonContainer>
       </ModalPopUp>
