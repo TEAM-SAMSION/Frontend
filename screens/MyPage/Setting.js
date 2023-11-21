@@ -45,6 +45,9 @@ export default function Setting({ navigation }) {
           <ContentIcon width={16} height={16} color={colors.grey_450} />
         </TouchableIcon>
       </ContentContainer>
+      {/* <ContentContainer>
+        <ContentText>공지사항</ContentText>
+      </ContentContainer> */}
       <ContentContainer>
         <ContentText>앱 정보</ContentText>
         <ContentText2>ver 1.0.0</ContentText2>
@@ -55,10 +58,7 @@ export default function Setting({ navigation }) {
           setLoggedIn(false)
         }}
       >
-        <ContentText>로그아웃</ContentText>
-      </ContentContainer>
-      <ContentContainer>
-        <ContentText>공지사항</ContentText>
+        <ContentText style={{ color: colors.primary_outline }}>로그아웃</ContentText>
       </ContentContainer>
     </ScreenLayout>
   )
@@ -75,6 +75,7 @@ const ContentText = styled.Text`
   font-family: 'Spoqa-Bold';
   font-size: 16px;
   line-height: 22px;
+  color: ${colors.grey_700};
 `
 const ContentText2 = styled.Text`
   font-family: 'Spoqa-Medium';
