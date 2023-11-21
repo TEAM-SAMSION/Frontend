@@ -169,7 +169,7 @@ export default function EditPet({ route, navigation }) {
                       borderColor: onCategory ? 'rgba(0, 0, 0, 0.12)' : '',
                     }}
                   >
-                    <Detail_Text color={colors.grey_800}>종류</Detail_Text>
+                    <Detail_Text color={colors.grey_800}>펫 종</Detail_Text>
                     <InputBlock
                       editable
                       onChangeText={(text) => setPetCategroy(text)}
@@ -191,7 +191,7 @@ export default function EditPet({ route, navigation }) {
                       borderColor: onDetail ? 'rgba(0, 0, 0, 0.12)' : '',
                     }}
                   >
-                    <Detail_Text color={colors.grey_800}>펫 종</Detail_Text>
+                    <Detail_Text color={colors.grey_800}>종류</Detail_Text>
                     <InputBlock
                       editable
                       onChangeText={(text) => setPetDetail(text)}

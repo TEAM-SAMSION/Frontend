@@ -150,7 +150,7 @@ export default function EditUserInfo({ route, navigation }) {
             }}
           >
             <BottomTitle>
-              <BottomTitleText>회원 프로필 사진 설정</BottomTitleText>
+              <BottomTitleText>회원 프로필 등록</BottomTitleText>
             </BottomTitle>
             <ProfileImageModal
               profileUrl={profileUrl}

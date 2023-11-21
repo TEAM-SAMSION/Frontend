@@ -159,7 +159,7 @@ export default function AdminHome({ route, navigation }) {
               <CrownIcon width={34} height={34} />
               <BodyBold_Text>관리자 권한</BodyBold_Text>
             </CrownTitle>
-            <Detail_Text color={colors.secondary}>관리자는 어쩌구 저쩌구</Detail_Text>
+            <Detail_Text color={colors.secondary}>아래 내용은 Pamily의 관리자에게만 부여되는 권한입니다.</Detail_Text>
           </TopBox>
           <InfoBox>
             <NumBox>
