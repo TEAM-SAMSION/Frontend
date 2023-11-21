@@ -36,7 +36,7 @@ export const getTeamUsers = async (data) => {
 export const getTeamUser = async (teamId) => {
   let API = `/teams/${teamId}/registers`
   const response = await axiosInstance.get(url + API)
-  console.log('getTeamUser: 52', response.data.content)
+  // console.log('getTeamUser: 52', response.data.content)getTeamUser: 52 [{"registerId": 2, "registerName": "김형석"}, {"registerId": 3, "registerName": "test"}, {"registerId": 4, "registerName": "neon"}, {"registerId": 16, "registerName": "test🌕"}, {"registerId": 20, "registerName": "주희이"}, {"registerId": 22, "registerName": "주희2"}, {"registerId": 23, "registerName": "심규민"}, {"registerId": 24, "registerName": "센"}, {"registerId": 31, "registerName": "신민선"}, {"registerId": 36, "registerName": "한수현"}, {"registerId": 39, "registerName": "아이러브엽떡"}, {"registerId": 40, "registerName": "한덩이"}, {"registerId": 46, "registerName": "김가연"}]
   return response.data.content
 }
 

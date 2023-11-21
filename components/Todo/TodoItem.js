@@ -1,13 +1,13 @@
-import React, { useState } from 'react'
+import React, { memo, useState } from 'react'
 import { Detail_Text, Label_Text } from '../Fonts'
 import { colors } from '../../colors'
 import Complete from '../../assets/Imgs/Complete.png'
 import InComplete from '../../assets/Imgs/InComplete.png'
 import styled from 'styled-components/native'
 import { completeTodo } from './Apis'
-import { ActivityIndicator, Alert } from 'react-native'
+import { Alert } from 'react-native'
 
-export const TodoItem = ({ editTodo, categoryId, todo, todoLocalId, getInitDatas, selectedDate, setIsVisible }) => {
+const TodoItem = ({ editTodo, categoryId, todo, todoLocalId, getInitDatas, selectedDate, setIsVisible }) => {
   const [isLoading, setIsLoading] = useState(false)
 
   //내가 포함되어있는 투두 아이템이며, 첫번째 담당자가 이것을 완수하였을때 -> 즉 내가 완수하였을때!
@@ -79,6 +79,7 @@ export const TodoItem = ({ editTodo, categoryId, todo, todoLocalId, getInitDatas
     </TodoContainer>
   )
 }
+export default memo(TodoItem) //이거 혁신이다 이거 블로그에 쓰자
 const TodoContainer = styled.TouchableOpacity`
   display: flex;
   flex-direction: row;

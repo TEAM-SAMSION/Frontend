@@ -6,9 +6,8 @@ import { TodoHeader } from '../../components/Todo/TodoHeader'
 import { Body_Text } from '../../components/Fonts'
 import { ActivityIndicator, Keyboard, NativeModules, Platform, Pressable, ScrollView, View } from 'react-native'
 import Caution from '../../assets/Svgs/Caution.svg'
-import { useSetRecoilState } from 'recoil'
+import { useRecoilState, useSetRecoilState } from 'recoil'
 import Close from '../../assets/Svgs/Close.svg'
-import { TodoItem } from '../../components/Todo/TodoItem'
 import { NoItem } from '../../components/Todo/NoToDoItem'
 import { BottomSheetBackdrop, BottomSheetModal } from '@gorhom/bottom-sheet'
 import { TodoCreateBottomSheet, TodoEditBottomSheet } from '../../components/Todo/TodoBottomSheets'
@@ -17,7 +16,8 @@ import { MyCalendarStrip } from '../../components/Todo/CalendarStrip'
 import { getCategoryList, getTeamUser, getTodoTeamList, getTodos } from '../../components/Todo/Apis'
 import { CategoryIndicator } from '../../components/Todo/CategoryIndicator'
 import { useFocusEffect, useIsFocused } from '@react-navigation/native'
-import { TabBarAtom } from '../../recoil/TabAtom'
+import { SelectedTeamAtom, TabBarAtom } from '../../recoil/TabAtom'
+import TodoItem from '../../components/Todo/TodoItem'
 
 export default Todo = ({ navigation, route }) => {
   const setIsTabVisible = useSetRecoilState(TabBarAtom)
@@ -36,7 +36,8 @@ export default Todo = ({ navigation, route }) => {
   const [snappoints, setSnappoints] = useState([])
   const [isVisible, setIsVisible] = useState(false)
 
-  const [selectedTeam, setSelectedTeam] = useState(null)
+  // const [selectedTeam, setSelectedTeam] = useState(null)
+  const [selectedTeam, setSelectedTeam] = useRecoilState(SelectedTeamAtom)
   const [selectedCategoryID, setSelectedCategoryID] = useState(null)
   const [selectedTodo, setSelectedTodo] = useState(null)
   const [selectedDate, setSelectedDate] = useState(today)
@@ -98,6 +99,7 @@ export default Todo = ({ navigation, route }) => {
         }
       })
       .then(async (selectedTeamID) => {
+        console.log(selectedTeamID, selectedTeam.id)
         if (selectedTeamID) {
           //null 반환받으면, TodoTeam 없다는 것을 의미하기에 api호출 스킵
           await getCategoryList(selectedTeamID).then((categories) => {
@@ -113,24 +115,24 @@ export default Todo = ({ navigation, route }) => {
         }
       })
   }
-
-  let refreshTime = () => {
-    var d = new Date()
-    var s = d.getMilliseconds()
-    if (s == 0) {
+  useEffect(() => {
+    let timer
+    timer = setInterval(() => {
+      const sec = new Date().getSeconds()
+      if (sec) return
+      console.log('*********************자동갱신****************************')
       getAllData(selectedDate)
+    }, 1000)
+    return () => {
+      clearInterval(timer)
     }
-  }
-  // setInterval(refreshTime, 1000)
+  }, [])
   useFocusEffect(
     useCallback(() => {
-      // if (route.params) {
-      //   setSelectedTeam(route.params)
-      // }
       console.log(selectedDate, selectedTeam)
       getAllData(selectedDate)
       setIsTabVisible(true)
-    }, [selectedDate, selectedTeam, route]),
+    }, [selectedDate, selectedTeam]),
   )
   const handleBottomSheetHeight = (status) => {
     console.log(status)

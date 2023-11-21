@@ -22,9 +22,9 @@ export const PamilyChoiceToggle = (props) => {
   }
 
   const handleOptionSelect = (value) => {
-    let tempArr = { id: value.teamId, name: value.teamName, auth: value.authority }
-    console.log('topTeam Changed', tempArr)
-    props.setTopteam(tempArr)
+    let tempArr = { id: value.teamId, name: value.teamName, auth: value.authority } //이거 김형석
+    console.log('topTeam Changed', tempArr) //이거 김형석
+    props.setSelectedTeam(tempArr) //이거 김형석
     props.setTopTeamId(value.teamId)
     props.setTopTeamName(value.teamName)
     setIsOpen(false)

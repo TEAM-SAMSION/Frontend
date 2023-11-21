@@ -10,12 +10,12 @@ import { MainStat } from '../../components/Home/MainStat'
 import { PamilyChoiceToggle } from '../../components/Home/PamilyChoiceToggle'
 import { MainImage } from '../../components/Home/MainImage'
 import { TodoBox } from '../../components/Home/TodoBox'
-import { useRecoilValue, useSetRecoilState } from 'recoil'
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
 import { accessTokenState } from '../../recoil/AuthAtom'
 import { getMyTodoList, getTeamList, getTodoProgress, getUserInfo } from '../../components/Home/Apis'
 import { StackActions, useIsFocused } from '@react-navigation/native'
 import { BodySm_Text, DetailSm_Text } from '../../components/Fonts'
-import { TabBarAtom } from '../../recoil/TabAtom'
+import { SelectedTeamAtom, TabBarAtom } from '../../recoil/TabAtom'
 import Swiper from 'react-native-swiper'
 
 export default function Home({ navigation }) {
@@ -40,8 +40,8 @@ export default function Home({ navigation }) {
   const [todoList, setTodoList] = useState([])
   const [isDog, setIsDog] = useState(true)
 
-  //김형석 임시로 추가했음 -> todoTeam 구조가 {authority, id , name} 3개를 포함하는거로 바뀌었는데, todo넘어갈때 이 3개 값을 모두받아야해서 별도로 state변수 만들었슴다
-  const [topTeam, setTopTeam] = useState(null)
+  //김형석 임시로 추가했음 -> navigation으로 이동할때마다 전달하기보단, 선택된 Team을 글로벌 변수로 가져가는게 버그도 없고, 성능저하 없을거같아서 Atom 새로 만들었어!
+  const [selectedTeam, setSelectedTeam] = useRecoilState(SelectedTeamAtom) //김형석
 
   const getUserNickname = () => {
     getUserInfo(ACCESSTOKEN).then((result) => {
@@ -63,7 +63,7 @@ export default function Home({ navigation }) {
           setPamilyNum(1)
           setTopTeamId(teamList[0].teamId)
           setTopTeamName(teamList[0].teamName)
-          setTopTeam({ id: teamList[0].teamId, name: teamList[0].teamName, auth: teamList[0].authority }) //여기 김형석
+          setSelectedTeam({ id: teamList[0].teamId, name: teamList[0].teamName, auth: teamList[0].authority }) //여기 김형석
 
           // Todo 데이터 가져오기
           const todoList = await getMyTodoList(ACCESSTOKEN, teamList[0].teamId)
@@ -165,7 +165,7 @@ export default function Home({ navigation }) {
               setTopTeamName={setTopTeamName}
               topTeamId={topTeamId}
               setTopTeamId={setTopTeamId}
-              setTopteam={setTopTeam}
+              setSelectedTeam={setSelectedTeam}
               //여기도 김형석
             />
             <MainImage isDog={isDog} progress={progress} pamilyNum={pamilyNum} />
@@ -280,7 +280,7 @@ export default function Home({ navigation }) {
                 </View>
               )}
             </TodoContainer>
-            <AllTodoButton onPress={() => navigation.navigate('ToDoNav', { screen: 'Todo', params: topTeam })}>
+            <AllTodoButton onPress={() => navigation.navigate('ToDoNav', { screen: 'Todo' })}>
               <ButtonText>전체 TODO 확인하기</ButtonText>
             </AllTodoButton>
           </>

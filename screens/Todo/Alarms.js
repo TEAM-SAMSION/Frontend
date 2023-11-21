@@ -12,13 +12,11 @@ import { useRecoilValue } from 'recoil'
 import { userInfoState } from '../../recoil/AuthAtom'
 
 export const Alarms = ({ navigation }) => {
-  const { accessToken, refreshToken } = useRecoilValue(userInfoState)
-  let items = ['전체', 'TODO', '공지사항']
-  const [selectedId, setSelectedId] = useState(0)
+  // let items = ['전체', 'TODO', '공지사항']
   const [alarmList, setAlarmList] = useState(null)
 
   const getAlarmList = async () => {
-    getAlarms(accessToken).then((data) => {
+    getAlarms().then((data) => {
       console.log('getAlarmList:', data)
       if (data.length > 0) {
         setAlarmList(data)
@@ -30,6 +28,17 @@ export const Alarms = ({ navigation }) => {
   useEffect(() => {
     getAlarmList()
   }, [])
+  const elapsedTime = (date) => {
+    const now = new Date()
+    const receivedTime = new Date(date)
+    const elapsedTime = now.getTime() - receivedTime.getTime()
+    const elapsedFormattedTime =
+      elapsedTime > 60 * 60 * 1000
+        ? `${Math.floor(elapsedTime / (1000 * 60 * 60))}시간 전`
+        : `${Math.floor(elapsedTime / (1000 * 60))}분 전`
+
+    return elapsedFormattedTime
+  }
   return (
     //** ScrollView는 직접 Height 조정 불가능하기에, 바깥 부모를 통해 조정해야한다. */
     <ScreenLayout color={colors.grey_100}>
@@ -63,8 +72,8 @@ export const Alarms = ({ navigation }) => {
                     />
                   </AlarmIcon>
                   <AlarmTextContainer>
-                    <BodySm_Text color={colors.grey_600}>{item.name}</BodySm_Text>
-                    <DetailSm_Text color={colors.grey_400}>{item.time}</DetailSm_Text>
+                    <BodySm_Text color={colors.grey_600}>{item.message}</BodySm_Text>
+                    <DetailSm_Text color={colors.grey_400}>{elapsedTime(item.createdAt)}</DetailSm_Text>
                   </AlarmTextContainer>
                 </AlarmBase>
               )
