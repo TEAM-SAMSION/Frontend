@@ -1,12 +1,20 @@
 import { useEffect, useState } from 'react'
 import styled from 'styled-components/native'
 import { colors } from '../../colors'
-import { BodyBoldSm_Text, BodyBold_Text, BodySm_Text, Detail_Text, SubHeadSm_Text, SubHead_Text } from '../Fonts'
+import {
+  BodyBoldSm_Text,
+  BodyBold_Text,
+  BodySm_Text,
+  Body_Text,
+  Detail_Text,
+  SubHeadSm_Text,
+  SubHead_Text,
+} from '../Fonts'
 import { ModalPopUp } from '../Shared'
 import MoreIcon from '../../assets/Svgs/More.svg'
 import CrownIcon from '../../assets/Svgs/Crown.svg'
 import { MemberPopUp } from './MemberPopUp'
-import { changeAuthority } from './Apis'
+import { changeAuthority, deleteMember } from './Apis'
 import ErrorIcon from '../../assets/Svgs/error.svg'
 
 export const MemberSearchBox = (props) => {
@@ -15,6 +23,7 @@ export const MemberSearchBox = (props) => {
   const myAuthority = props.myAuthority
 
   const [visible, setVisible] = useState(false)
+  const [deleteVisible, setDeleteVisible] = useState(false)
   const [changeVisible, setChangeVisible] = useState(false)
   const [changing, setChanging] = useState('')
   const [changingToPresident, setChangingToPresident] = useState(false)
@@ -31,7 +40,7 @@ export const MemberSearchBox = (props) => {
   const registerEmail = data.registerEmail
   const profileImage = data.profileImage
 
-  const setAuthority = () => {
+  const setAuthority = async () => {
     console.log(changing)
     console.log(registerId)
     console.log(teamId)
@@ -46,7 +55,8 @@ export const MemberSearchBox = (props) => {
       setChangingToExecutive(false)
       setChangingToMember(false)
     } else {
-      changeAuthority(ACCESSTOKEN, teamId, registerId, changing)
+      await changeAuthority(ACCESSTOKEN, teamId, registerId, changing)
+      props.changeFunction()
       setChangingToPresident(false)
       setChangingToExecutive(false)
       setChangingToMember(false)
@@ -74,7 +84,9 @@ export const MemberSearchBox = (props) => {
               )}
             </TeamInfoDetailBox>
             <BodyBold_Text color={colors.grey_700}>{registerName}</BodyBold_Text>
-            <BodySm_Text color={colors.grey_350}>{registerEmail}</BodySm_Text>
+            <EmailText numberOfLines={1} ellipsizeMode="tail">
+              {registerEmail}
+            </EmailText>
           </TeamInfoBox>
         </TeamContentBox>
         <MoreButton onPress={() => setVisible(true)}>
@@ -84,9 +96,35 @@ export const MemberSearchBox = (props) => {
       <MemberPopUp
         visible={visible}
         setVisible={setVisible}
+        setDeleteVisible={setDeleteVisible}
         setChangeVisible={setChangeVisible}
         authority={authority}
       />
+      <ModalPopUp visible={deleteVisible} petIcon={false} height={217}>
+        <DeleteContent>
+          <BodyBold_Text color={colors.grey_700}>{registerName}</BodyBold_Text>
+          <Body_Text color={colors.grey_500}>님을 내보내시겠습니까?</Body_Text>
+        </DeleteContent>
+        <PopButtonContainer>
+          <PopButton
+            onPress={() => {
+              setDeleteVisible(false)
+            }}
+            style={{ backgroundColor: colors.grey_100, borderColor: colors.grey_150, borderWidth: 2 }}
+          >
+            <BodySm_Text color={colors.red_350}>아니오</BodySm_Text>
+          </PopButton>
+          <PopButton
+            onPress={async () => {
+              await deleteMember(teamId, registerId)
+              setDeleteVisible(false)
+              props.changeFunction()
+            }}
+          >
+            <BodySm_Text color={colors.red_350}>예</BodySm_Text>
+          </PopButton>
+        </PopButtonContainer>
+      </ModalPopUp>
       <ModalPopUp visible={changeVisible} petIcon={false} height={258}>
         <PopContent>
           <BodyBold_Text>권한 변경</BodyBold_Text>
@@ -207,8 +245,9 @@ export const MemberSearchBox = (props) => {
             <PopButtonText>취소</PopButtonText>
           </PopButton>
           <PopButton
-            onPress={() => {
-              changeAuthority(ACCESSTOKEN, teamId, registerId, changing)
+            onPress={async () => {
+              await changeAuthority(ACCESSTOKEN, teamId, registerId, changing)
+              props.changeFunction()
               setIsAlertVisible(false)
               setChangingToPresident(false)
               setChangingToExecutive(false)
@@ -244,7 +283,17 @@ const TeamImage = styled.Image`
   background-color: pink;
 `
 const TeamInfoBox = styled.View`
+  width: 220px;
   gap: 2px;
+  overflow: hidden;
+`
+const EmailText = styled.Text`
+  font-family: 'Spoqa-Medium';
+  font-size: 14px;
+  font-style: normal;
+  line-height: 19px;
+  overflow: hidden;
+  color: ${colors.grey_350};
 `
 const TeamInfoDetailBox = styled.View`
   flex-direction: row;
@@ -261,6 +310,12 @@ const Box = styled.View`
 `
 const MoreButton = styled.TouchableOpacity``
 ////////
+const DeleteContent = styled.View`
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin: 76px 0px 59px 0px;
+`
 const PopContent = styled.View`
   align-items: center;
   margin-top: 8px;
