@@ -28,8 +28,8 @@ export default function Home({ navigation }) {
   }, [isFocused])
 
   const [name, setName] = useState('포잇')
-  const [now, setNow] = useState(new Date(Date.now() + 9 * 60 * 60 * 1000))
-  const date = parseInt(now.toISOString().substring(8, 10))
+  const now = new Date()
+  const date = now.getDate()
   const month = now.getMonth() + 1
   const [pamilyList, setPamilyList] = useState([])
   const [progress, setProgress] = useState(0)
@@ -166,7 +166,6 @@ export default function Home({ navigation }) {
               topTeamId={topTeamId}
               setTopTeamId={setTopTeamId}
               setSelectedTeam={setSelectedTeam}
-              //여기도 김형석
             />
             <MainImage isDog={isDog} progress={progress} pamilyNum={pamilyNum} />
             <PamilyStatContainer>
@@ -346,7 +345,6 @@ const TeamContainer = styled.View`
   flex-direction: row;
   justify-content: space-between;
   padding: 24px 16px 16px 16px;
-  padding-bottom: 200px;
   gap: 12px;
 `
 const StartTeamContainer = styled.TouchableOpacity`
@@ -396,7 +394,7 @@ const AllTodoButton = styled.TouchableOpacity`
   justify-content: center;
   align-items: center;
   border-radius: 8px;
-  background-color: ${colors.primary};
+  background-color: ${colors.red_350};
 `
 const ButtonText = styled.Text`
   font-family: 'Spoqa-Bold';
