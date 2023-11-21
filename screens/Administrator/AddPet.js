@@ -140,7 +140,7 @@ export default function AddPet({ route, navigation }) {
                     onChangeText={(text) => setPetAge(text)}
                     placeholder="나이를 입력해주세요."
                     placeholderTextColor={colors.grey_400}
-                    keyboardType="number"
+                    keyboardType="numeric"
                     returnKeyType="done"
                     onFocus={() => setOnAge(true)}
                     onBlur={() => setOnAge(false)}

@@ -151,7 +151,7 @@ export default function EditPetProfile({ route, navigation }) {
                     onChangeText={(text) => setPetAge(text)}
                     placeholder={petAge}
                     placeholderTextColor={colors.grey_600}
-                    keyboardType="number"
+                    keyboardType="numeric"
                     returnKeyType="done"
                     onFocus={() => setOnAge(true)}
                     onBlur={() => setOnAge(false)}
