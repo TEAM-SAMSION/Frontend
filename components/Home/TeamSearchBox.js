@@ -1,7 +1,15 @@
 import { useState } from 'react'
 import styled from 'styled-components/native'
 import { colors } from '../../colors'
-import { BodyBoldSm_Text, BodyBold_Text, BodySm_Text, Detail_Text, SubHeadSm_Text, SubHead_Text } from '../Fonts'
+import {
+  BodyBoldSm_Text,
+  BodyBold_Text,
+  BodySm_Text,
+  Body_Text,
+  Detail_Text,
+  SubHeadSm_Text,
+  SubHead_Text,
+} from '../Fonts'
 import { ModalPopUp } from '../Shared'
 import { postJoiningTeam } from './Apis'
 import Close from '../../assets/Svgs/Close.svg'
@@ -9,9 +17,11 @@ import { CommonActions, StackActions, useNavigation } from '@react-navigation/na
 import { useRecoilValue } from 'recoil'
 import { accessTokenState } from '../../recoil/AuthAtom'
 import ToDoNav from '../../navigators/ToDoNav'
+import ErrorIcon from '../../assets/Svgs/error.svg'
 
 export const TeamSearchBox = (props) => {
   const [visible, setVisible] = useState(false)
+  const [isDuplicated, setIsDuplicated] = useState(false)
   const ACCESSTOKEN = useRecoilValue(accessTokenState)
 
   const data = props.data
@@ -23,6 +33,22 @@ export const TeamSearchBox = (props) => {
   const teamImageUrl = data.teamImageUrl
 
   const navigation = useNavigation()
+
+  const joinTeam = async () => {
+    try {
+      await postJoiningTeam(ACCESSTOKEN, teamCode)
+      setVisible(false)
+      navigation.dispatch(
+        CommonActions.reset({
+          routes: [{ name: 'Home' }],
+        }),
+      )
+      navigation.navigate('ToDoNav', { screen: 'Todo' })
+    } catch (error) {
+      setVisible(false)
+      setIsDuplicated(true)
+    }
+  }
 
   return (
     <>
@@ -65,7 +91,6 @@ export const TeamSearchBox = (props) => {
           <CloseButton
             onPress={() => {
               setVisible(false)
-              setIsOpen(false)
             }}
           >
             <Close width={24} height={24} />
@@ -86,20 +111,29 @@ export const TeamSearchBox = (props) => {
           </PopButton>
           <PopButton
             onPress={() => {
-              console.log(teamCode)
-              postJoiningTeam(ACCESSTOKEN, teamCode)
-              setVisible(false)
-              navigation.dispatch(
-                CommonActions.reset({
-                  routes: [{ name: 'Home' }],
-                }),
-              )
-              navigation.navigate('ToDoNav', { screen: 'Todo' })
+              joinTeam()
             }}
           >
             <BodySm_Text color={colors.red_350}>예</BodySm_Text>
           </PopButton>
         </PopButtonContainer>
+      </ModalPopUp>
+      <ModalPopUp visible={isDuplicated} petIcon={false} height={159}>
+        <ModalHeader style={{ marginBottom: 0 }}>
+          <CloseButton
+            onPress={() => {
+              setIsDuplicated(false)
+            }}
+          >
+            <Close width={24} height={24} />
+          </CloseButton>
+        </ModalHeader>
+        <PopContent style={{ marginBottom: 22 }}>
+          <ErrorBox>
+            <ErrorIcon width={48} height={48} color={colors.grey_100} />
+          </ErrorBox>
+          <Body_Text>이미 해당 Pamily에 참여중 입니다!</Body_Text>
+        </PopContent>
       </ModalPopUp>
     </>
   )
@@ -175,4 +209,13 @@ const ModalHeader = styled.View`
   align-items: flex-end;
   justify-content: center;
   margin-bottom: 24px;
+`
+const ErrorBox = styled.View`
+  width: 48px;
+  height: 48px;
+  border-radius: 24px;
+  background-color: ${colors.primary_outline};
+  margin-bottom: 12px;
+  align-items: center;
+  justify-content: center;
 `
