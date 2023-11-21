@@ -71,7 +71,7 @@ const GroupBoxContainer = styled.View`
   margin-top: 8px;
   margin-bottom: 8px;
   background-color: #fff;
-  width: calc(SCREEN_WIDTH - 24) px;
+  width: auto;
 `
 const GroupImage = styled.Image`
   width: 48px;

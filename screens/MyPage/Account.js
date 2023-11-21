@@ -19,7 +19,7 @@ export default function Account({ navigation }) {
         <AccountText>{socialAccount}</AccountText>
       </ContentContainer>
       <ContentContainer onPress={() => navigation.navigate('DeleteAccount')}>
-        <ContentText>계정 탈퇴</ContentText>
+        <ContentText style={{ color: colors.primary_outline }}>계정 탈퇴</ContentText>
       </ContentContainer>
     </ScreenLayout>
   )
@@ -36,6 +36,7 @@ const ContentText = styled.Text`
   font-family: 'Spoqa-Bold';
   font-size: 16px;
   line-height: 22px;
+  color: ${colors.grey_700};
 `
 const AccountText = styled.Text`
   font-family: 'Spoqa-Medium';

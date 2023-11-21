@@ -29,7 +29,7 @@ export default function ManagePet({ route, navigation }) {
 
   return (
     <ScreenLayout>
-      <ScrollView>
+      <ScrollView showsVerticalScrollIndicator={false}>
         <PetAddContainer>
           {savedPets.length < 0
             ? ''

@@ -36,6 +36,10 @@ export const searchMember = async (accessToken, teamId, nickname) => {
   return response.data.content
 }
 
+export const deleteMember = async (teamId, registerId) => {
+  let API = `/teams/registers/${registerId}`
+  const response = await axiosInstance.put(url + API)
+}
 ////// 펫 관리 //////
 export const getPet = async (accessToken, teamId) => {
   let API = `/teams/${teamId}/pets`

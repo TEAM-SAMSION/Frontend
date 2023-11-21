@@ -1,12 +1,12 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { Text, TouchableOpacity, TouchableWithoutFeedback, Keyboard, ScrollView } from 'react-native'
+import { Text, TouchableOpacity, TouchableWithoutFeedback, Keyboard, ScrollView, View } from 'react-native'
 import { colors } from '../../colors'
 import { ModalPopUp, ScreenLayout } from '../../components/Shared'
 import styled from 'styled-components/native'
 import PlusIcon from '../../assets/Svgs/miniPlus.svg'
 import { BottomSheetBackdrop, BottomSheetModal, BottomSheetModalProvider } from '@gorhom/bottom-sheet'
 import { ProfileImageModal } from '../../components/Home/ProfileImageModal'
-import { useRecoilState, useRecoilValue } from 'recoil'
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
 import { accessTokenState } from '../../recoil/AuthAtom'
 import BackButton from '../../assets/Svgs/chevron_back.svg'
 import {
@@ -18,13 +18,14 @@ import {
   SubHead_Text,
 } from '../../components/Fonts'
 import { getTeamCode, postTeamInfo } from '../../components/Home/Apis'
-import { TabBarAtom } from '../../recoil/TabAtom'
-import { useIsFocused } from '@react-navigation/native'
+import { SelectedTeamAtom, TabBarAtom } from '../../recoil/TabAtom'
+import { CommonActions, useIsFocused } from '@react-navigation/native'
 import EditIcon from '../../assets/Svgs/Edit.svg'
 import Clipboard from '@react-native-clipboard/clipboard'
 import { AddPetBox } from '../../components/Home/AddPetBox'
 import RNFS from 'react-native-fs'
 import Close from '../../assets/Svgs/Close.svg'
+import ErrorIcon from '../../assets/Svgs/error.svg'
 
 export default function CreateTeam({ route, navigation }) {
   const isFocused = useIsFocused()
@@ -41,6 +42,8 @@ export default function CreateTeam({ route, navigation }) {
   const [pamilyFile, setPamilyFile] = useState('file://' + RNFS.MainBundlePath + '/default_pamily.png')
   const ACCESSTOKEN = useRecoilValue(accessTokenState)
 
+  const setTodoPage = useSetRecoilState(SelectedTeamAtom)
+
   // onFocus
   const [onName, setOnName] = useState(false)
   const [onIntro, setOnIntro] = useState(false)
@@ -55,6 +58,9 @@ export default function CreateTeam({ route, navigation }) {
 
   // 패밀리 생성 팝업
   const [createVisible, setCreateVisible] = useState(false)
+
+  // 패밀리 생성 완료 팝업
+  const [completeVisible, setCompleteVisible] = useState(false)
 
   useEffect(() => {
     isFocused && setIsTabVisible(false)
@@ -169,7 +175,7 @@ export default function CreateTeam({ route, navigation }) {
   return (
     <BottomSheetModalProvider>
       <ScreenLayout>
-        <ScrollView>
+        <ScrollView showsVerticalScrollIndicator={false}>
           <TouchableWithoutFeedback
             onPress={() => {
               Keyboard.dismiss()
@@ -243,9 +249,21 @@ export default function CreateTeam({ route, navigation }) {
                         }
                   }
                 >
-                  <Detail_Text>펫 프로필</Detail_Text>
+                  <Detail_Text>펫 등록</Detail_Text>
                   <PlusIcon width={16} height={16} />
                 </Block>
+                {savedPets.length > 0 ? (
+                  ''
+                ) : (
+                  <AlertBox>
+                    <ErrorBox>
+                      <ErrorIcon width={12} height={12} color={colors.primary_outline} />
+                    </ErrorBox>
+                    <Detail_Text color={colors.grey_400}>
+                      펫을 1마리 이상을 등록해야 Pamily 생성이 가능합니다.
+                    </Detail_Text>
+                  </AlertBox>
+                )}
               </Container>
               <PetBlock>
                 {savedPets.length < 0
@@ -318,16 +336,7 @@ export default function CreateTeam({ route, navigation }) {
             </PopButtonContainer>
           </ModalPopUp>
           <ModalPopUp visible={createVisible} petIcon={false} height={217}>
-            <ModalHeader>
-              <CloseButton
-                onPress={() => {
-                  setCreateVisible(false)
-                }}
-              >
-                <Close width={24} height={24} />
-              </CloseButton>
-            </ModalHeader>
-            <PopContent style={{ flexDirection: 'column', marginTop: 0, marginBottom: 39 }}>
+            <PopContent style={{ flexDirection: 'column', marginTop: 59, marginBottom: 44 }}>
               <SubHead_Text color={colors.grey_700}>{pamilyName}</SubHead_Text>
               <HeadLineSm_Text color={colors.grey_500}>Pamily를 생성하시겠습니까?</HeadLineSm_Text>
             </PopContent>
@@ -342,12 +351,45 @@ export default function CreateTeam({ route, navigation }) {
               </PopButton>
               <PopButton
                 onPress={() => {
-                  setCreateVisible(false)
                   createPamily()
-                  navigation.navigate('ToDoNav', { screen: 'todo' })
+                  setCreateVisible(false)
+                  setCompleteVisible(true)
                 }}
               >
                 <BodySm_Text color={colors.red_350}>예</BodySm_Text>
+              </PopButton>
+            </PopButtonContainer>
+          </ModalPopUp>
+          <ModalPopUp visible={completeVisible} petIcon={false} height={217}>
+            <ModalHeader>
+              <CloseButton
+                onPress={() => {
+                  setCompleteVisible(false)
+                  navigation.dispatch(
+                    CommonActions.reset({
+                      routes: [{ name: 'Home' }],
+                    }),
+                  )
+                  navigation.navigate('ToDoNav', { screen: 'todo' })
+                }}
+              >
+                <Close width={24} height={24} />
+              </CloseButton>
+            </ModalHeader>
+            <PopContent style={{ flexDirection: 'column', marginTop: 0, marginBottom: 39, gap: 4 }}>
+              <SubHead_Text color={colors.grey_700}>Pamily 생성 완료!</SubHead_Text>
+              <View style={{ alignItems: 'center' }}>
+                <HeadLineSm_Text color={colors.grey_500}>지금 나와 함께 할</HeadLineSm_Text>
+                <HeadLineSm_Text color={colors.grey_500}>다른 Pamily를 초대해주세요!</HeadLineSm_Text>
+              </View>
+            </PopContent>
+            <PopButtonContainer>
+              <PopButton
+                onPress={() => {
+                  copyTeamCode()
+                }}
+              >
+                <BodySm_Text color={colors.red_350}>초대링크 복사하기</BodySm_Text>
               </PopButton>
             </PopButtonContainer>
           </ModalPopUp>
@@ -398,22 +440,6 @@ const IconCover = styled.View`
 const Container = styled.View`
   gap: 8px;
   margin: 0px 16px;
-`
-const Bar = styled.View`
-  width: 343px;
-  height: 1px;
-  background-color: rgba(0, 0, 0, 0.12);
-`
-const BlockView = styled.View`
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  width: 343px;
-  height: 44px;
-  padding: 0px 16px;
-  border-radius: 8px;
-  background-color: ${colors.grey_150};
-  margin-top: 16px;
 `
 const Block = styled.TouchableOpacity`
   flex-direction: row;
@@ -484,4 +510,19 @@ const ModalHeader = styled.View`
   align-items: flex-end;
   justify-content: center;
   margin-bottom: 24px;
+`
+const ErrorBox = styled.View`
+  width: 12px;
+  height: 12px;
+  border-radius: 6px;
+  border: 1px solid ${colors.primary_outline};
+  justify-content: center;
+  align-items: center;
+`
+const AlertBox = styled.View`
+  flex-direction: row;
+  gap: 4px;
+  align-items: center;
+  margin-left: 12px;
+  margin-top: 6px;
 `

@@ -137,8 +137,7 @@ export default function EditPetProfile({ route, navigation }) {
                   <InputBlock
                     editable
                     onChangeText={(text) => setPetName(text)}
-                    placeholder={petName}
-                    placeholderTextColor={colors.grey_600}
+                    value={petName}
                     returnKeyType="done"
                     onFocus={() => setOnName(true)}
                     onBlur={() => setOnName(false)}
@@ -149,9 +148,8 @@ export default function EditPetProfile({ route, navigation }) {
                   <InputBlock
                     editable
                     onChangeText={(text) => setPetAge(text)}
-                    placeholder={petAge}
-                    placeholderTextColor={colors.grey_600}
-                    keyboardType="number"
+                    value={petAge}
+                    keyboardType="numeric"
                     returnKeyType="done"
                     onFocus={() => setOnAge(true)}
                     onBlur={() => setOnAge(false)}
@@ -165,12 +163,11 @@ export default function EditPetProfile({ route, navigation }) {
                       borderColor: onCategory ? 'rgba(0, 0, 0, 0.12)' : '',
                     }}
                   >
-                    <Detail_Text color={colors.grey_800}>종류</Detail_Text>
+                    <Detail_Text color={colors.grey_800}>펫 종</Detail_Text>
                     <InputBlock
                       editable
                       onChangeText={(text) => setPetCategroy(text)}
-                      placeholder={petCategory}
-                      placeholderTextColor={colors.grey_600}
+                      value={petCategory}
                       style={{
                         flexGrow: 1,
                         borderTopRightRadius: 0,
@@ -188,12 +185,11 @@ export default function EditPetProfile({ route, navigation }) {
                       borderColor: onDetail ? 'rgba(0, 0, 0, 0.12)' : '',
                     }}
                   >
-                    <Detail_Text color={colors.grey_800}>펫 종</Detail_Text>
+                    <Detail_Text color={colors.grey_800}>종류</Detail_Text>
                     <InputBlock
                       editable
                       onChangeText={(text) => setPetDetail(text)}
-                      placeholder={petDetail}
-                      placeholderTextColor={colors.grey_600}
+                      value={petDetail}
                       style={{
                         flexGrow: 1,
                         borderBottomLeftRadius: 0,
@@ -210,8 +206,7 @@ export default function EditPetProfile({ route, navigation }) {
                   <InputBlock
                     editable
                     onChangeText={(text) => setPetIntro(text)}
-                    placeholder={petIntro}
-                    placeholderTextColor={colors.grey_600}
+                    value={petIntro}
                     returnKeyType="done"
                     onFocus={() => setOnIntro(true)}
                     onBlur={() => setOnIntro(false)}

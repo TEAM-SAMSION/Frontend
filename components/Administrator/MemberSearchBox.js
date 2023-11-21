@@ -1,20 +1,33 @@
 import { useEffect, useState } from 'react'
 import styled from 'styled-components/native'
 import { colors } from '../../colors'
-import { BodyBoldSm_Text, BodyBold_Text, BodySm_Text, Detail_Text, SubHeadSm_Text, SubHead_Text } from '../Fonts'
+import {
+  BodyBoldSm_Text,
+  BodyBold_Text,
+  BodySm_Text,
+  Body_Text,
+  Detail_Text,
+  SubHeadSm_Text,
+  SubHead_Text,
+} from '../Fonts'
 import { ModalPopUp } from '../Shared'
 import MoreIcon from '../../assets/Svgs/More.svg'
 import CrownIcon from '../../assets/Svgs/Crown.svg'
 import { MemberPopUp } from './MemberPopUp'
-import { changeAuthority } from './Apis'
+import { changeAuthority, deleteMember } from './Apis'
 import ErrorIcon from '../../assets/Svgs/error.svg'
+import { getUserInfo } from '../MyPage/Apis'
+import { useNavigation } from '@react-navigation/native'
 
 export const MemberSearchBox = (props) => {
   const ACCESSTOKEN = props.accessToken
   const teamId = props.teamId
   const myAuthority = props.myAuthority
+  const navigation = useNavigation()
 
+  const [nickname, setNickname] = useState('')
   const [visible, setVisible] = useState(false)
+  const [deleteVisible, setDeleteVisible] = useState(false)
   const [changeVisible, setChangeVisible] = useState(false)
   const [changing, setChanging] = useState('')
   const [changingToPresident, setChangingToPresident] = useState(false)
@@ -31,7 +44,7 @@ export const MemberSearchBox = (props) => {
   const registerEmail = data.registerEmail
   const profileImage = data.profileImage
 
-  const setAuthority = () => {
+  const setAuthority = async () => {
     console.log(changing)
     console.log(registerId)
     console.log(teamId)
@@ -46,12 +59,19 @@ export const MemberSearchBox = (props) => {
       setChangingToExecutive(false)
       setChangingToMember(false)
     } else {
-      changeAuthority(ACCESSTOKEN, teamId, registerId, changing)
+      await changeAuthority(ACCESSTOKEN, teamId, registerId, changing)
+      props.changeFunction()
       setChangingToPresident(false)
       setChangingToExecutive(false)
       setChangingToMember(false)
     }
   }
+
+  useEffect(() => {
+    getUserInfo(ACCESSTOKEN).then((result) => {
+      setNickname(result.nickname)
+    })
+  }, [])
 
   return (
     <>
@@ -74,19 +94,51 @@ export const MemberSearchBox = (props) => {
               )}
             </TeamInfoDetailBox>
             <BodyBold_Text color={colors.grey_700}>{registerName}</BodyBold_Text>
-            <BodySm_Text color={colors.grey_350}>{registerEmail}</BodySm_Text>
+            <EmailText numberOfLines={1} ellipsizeMode="tail">
+              {registerEmail}
+            </EmailText>
           </TeamInfoBox>
         </TeamContentBox>
-        <MoreButton onPress={() => setVisible(true)}>
-          <MoreIcon width={24} height={24} />
-        </MoreButton>
+        {myAuthority == 'EXECUTIVE' && authority == 'PRESIDENT' ? (
+          ''
+        ) : (
+          <MoreButton onPress={() => setVisible(true)}>
+            <MoreIcon width={24} height={24} />
+          </MoreButton>
+        )}
       </Card>
       <MemberPopUp
         visible={visible}
         setVisible={setVisible}
+        setDeleteVisible={setDeleteVisible}
         setChangeVisible={setChangeVisible}
         authority={authority}
       />
+      <ModalPopUp visible={deleteVisible} petIcon={false} height={217}>
+        <DeleteContent>
+          <BodyBold_Text color={colors.grey_700}>{registerName}</BodyBold_Text>
+          <Body_Text color={colors.grey_500}>님을 내보내시겠습니까?</Body_Text>
+        </DeleteContent>
+        <PopButtonContainer>
+          <PopButton
+            onPress={() => {
+              setDeleteVisible(false)
+            }}
+            style={{ backgroundColor: colors.grey_100, borderColor: colors.grey_150, borderWidth: 2 }}
+          >
+            <BodySm_Text color={colors.red_350}>아니오</BodySm_Text>
+          </PopButton>
+          <PopButton
+            onPress={async () => {
+              await deleteMember(teamId, registerId)
+              setDeleteVisible(false)
+              props.changeFunction()
+            }}
+          >
+            <BodySm_Text color={colors.red_350}>예</BodySm_Text>
+          </PopButton>
+        </PopButtonContainer>
+      </ModalPopUp>
       <ModalPopUp visible={changeVisible} petIcon={false} height={258}>
         <PopContent>
           <BodyBold_Text>권한 변경</BodyBold_Text>
@@ -157,13 +209,16 @@ export const MemberSearchBox = (props) => {
         </PopButtonContainer>
       </ModalPopUp>
       <ModalPopUp visible={isRejectVisible} petIcon={false} height={258}>
-        <PopUpContainer>
+        <PopUpContainer style={{ marginTop: 18, marginBottom: 33 }}>
           <ErrorBox>
-            <ErrorIcon width={48} height={48} />
+            <ErrorIcon width={48} height={48} color={colors.grey_100} />
           </ErrorBox>
           <MessageBox>
-            <BodyBold_Text>관리자 위임 후 권한 변경이 가능합니다!</BodyBold_Text>
-            <BodySm_Text color={colors.grey_450}>다른 멤버에게 위임 후 다시 시도해주세요.</BodySm_Text>
+            <TextBox>
+              <BodyBold_Text>{nickname}님은 관리자 권한 위임 후,</BodyBold_Text>
+              <BodyBold_Text>권한 변경을 할 수 있습니다</BodyBold_Text>
+            </TextBox>
+            <BodySm_Text color={colors.grey_450}>다른 회원에게 위임 후 다시 시도해주세요</BodySm_Text>
           </MessageBox>
         </PopUpContainer>
         <PopButtonContainer>
@@ -180,19 +235,19 @@ export const MemberSearchBox = (props) => {
               setIsRejectVisible(false)
             }}
           >
-            <PopButtonText>완료</PopButtonText>
+            <PopButtonText>확인</PopButtonText>
           </PopButton>
         </PopButtonContainer>
       </ModalPopUp>
       <ModalPopUp visible={isAlertVisible} petIcon={false} height={258}>
         <PopUpContainer style={{ marginTop: 18, marginBottom: 33 }}>
           <ErrorBox>
-            <ErrorIcon width={48} height={48} />
+            <ErrorIcon width={48} height={48} color={colors.grey_100} />
           </ErrorBox>
           <MessageBox>
             <TextBox>
-              <BodyBold_Text>00님은 위임 후,</BodyBold_Text>
-              <BodyBold_Text>일반 멤버로 자동 권한 변경됩니다.</BodyBold_Text>
+              <BodyBold_Text>{nickname}님은 관리자 권한 위임 후,</BodyBold_Text>
+              <BodyBold_Text>일반 멤버로 자동 권한 변경됩니다</BodyBold_Text>
             </TextBox>
             <BodySm_Text color={colors.grey_450}>권한 위임을 계속하시겠습니까?</BodySm_Text>
           </MessageBox>
@@ -207,15 +262,12 @@ export const MemberSearchBox = (props) => {
             <PopButtonText>취소</PopButtonText>
           </PopButton>
           <PopButton
-            onPress={() => {
-              changeAuthority(ACCESSTOKEN, teamId, registerId, changing)
-              setIsAlertVisible(false)
-              setChangingToPresident(false)
-              setChangingToExecutive(false)
-              setChangingToMember(false)
+            onPress={async () => {
+              await changeAuthority(ACCESSTOKEN, teamId, registerId, changing)
+              navigation.navigate('MyPage')
             }}
           >
-            <PopButtonText>완료</PopButtonText>
+            <PopButtonText>확인</PopButtonText>
           </PopButton>
         </PopButtonContainer>
       </ModalPopUp>
@@ -244,7 +296,17 @@ const TeamImage = styled.Image`
   background-color: pink;
 `
 const TeamInfoBox = styled.View`
+  width: 220px;
   gap: 2px;
+  overflow: hidden;
+`
+const EmailText = styled.Text`
+  font-family: 'Spoqa-Medium';
+  font-size: 14px;
+  font-style: normal;
+  line-height: 19px;
+  overflow: hidden;
+  color: ${colors.grey_350};
 `
 const TeamInfoDetailBox = styled.View`
   flex-direction: row;
@@ -261,6 +323,12 @@ const Box = styled.View`
 `
 const MoreButton = styled.TouchableOpacity``
 ////////
+const DeleteContent = styled.View`
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin: 76px 0px 59px 0px;
+`
 const PopContent = styled.View`
   align-items: center;
   margin-top: 8px;

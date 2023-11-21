@@ -1,17 +1,27 @@
 import { useState } from 'react'
 import styled from 'styled-components/native'
 import { colors } from '../../colors'
-import { BodyBoldSm_Text, BodySm_Text, Detail_Text, SubHeadSm_Text, SubHead_Text } from '../Fonts'
+import {
+  BodyBoldSm_Text,
+  BodyBold_Text,
+  BodySm_Text,
+  Body_Text,
+  Detail_Text,
+  SubHeadSm_Text,
+  SubHead_Text,
+} from '../Fonts'
 import { ModalPopUp } from '../Shared'
 import { postJoiningTeam } from './Apis'
 import Close from '../../assets/Svgs/Close.svg'
-import { StackActions, useNavigation } from '@react-navigation/native'
+import { CommonActions, StackActions, useNavigation } from '@react-navigation/native'
 import { useRecoilValue } from 'recoil'
 import { accessTokenState } from '../../recoil/AuthAtom'
 import ToDoNav from '../../navigators/ToDoNav'
+import ErrorIcon from '../../assets/Svgs/error.svg'
 
 export const TeamSearchBox = (props) => {
   const [visible, setVisible] = useState(false)
+  const [isDuplicated, setIsDuplicated] = useState(false)
   const ACCESSTOKEN = useRecoilValue(accessTokenState)
 
   const data = props.data
@@ -24,6 +34,22 @@ export const TeamSearchBox = (props) => {
 
   const navigation = useNavigation()
 
+  const joinTeam = async () => {
+    try {
+      await postJoiningTeam(ACCESSTOKEN, teamCode)
+      setVisible(false)
+      navigation.dispatch(
+        CommonActions.reset({
+          routes: [{ name: 'Home' }],
+        }),
+      )
+      navigation.navigate('ToDoNav', { screen: 'Todo' })
+    } catch (error) {
+      setVisible(false)
+      setIsDuplicated(true)
+    }
+  }
+
   return (
     <>
       <Card>
@@ -35,35 +61,29 @@ export const TeamSearchBox = (props) => {
           <TeamInfoBox>
             <TeamInfoDetailBox>
               <Box>
-                <Detail_Text color={colors.grey_600}>Pamily 이름</Detail_Text>
+                <BodyBoldSm_Text color={colors.grey_600}>Pamily 이름</BodyBoldSm_Text>
               </Box>
-              <Detail_Text color={colors.grey_450}>{teamName}</Detail_Text>
+              <BodySm_Text color={colors.grey_450}>{teamName}</BodySm_Text>
             </TeamInfoDetailBox>
             <TeamInfoDetailBox>
               <Box>
-                <Detail_Text color={colors.grey_600}>Pamily 대표</Detail_Text>
+                <BodyBoldSm_Text color={colors.grey_600}>Pamily 대표</BodyBoldSm_Text>
               </Box>
-              <Detail_Text color={colors.grey_450}>{teamLeader}</Detail_Text>
+              <BodySm_Text color={colors.grey_450}>{teamLeader}</BodySm_Text>
             </TeamInfoDetailBox>
             <TeamInfoDetailBox>
               <Box>
-                <Detail_Text color={colors.grey_600}>참여 멤버 수</Detail_Text>
+                <BodyBoldSm_Text color={colors.grey_600}>참여 멤버 수</BodyBoldSm_Text>
               </Box>
-              <Detail_Text color={colors.grey_450}>{teamNumber}명</Detail_Text>
+              <BodySm_Text color={colors.grey_450}>{teamNumber}명</BodySm_Text>
             </TeamInfoDetailBox>
-            {/* <TeamInfoDetailBox>
-              <Box>
-                <Detail_Text color={colors.grey_600}>모임 공개 여부</Detail_Text>
-              </Box>
-              <Detail_Text color={colors.grey_450}>{teamPrivacy}</Detail_Text>
-            </TeamInfoDetailBox> */}
           </TeamInfoBox>
         </TeamContentBox>
         <TeamIntroBox>
-          <Detail_Text color={colors.grey_450}>{teamIntro}</Detail_Text>
+          <BodySm_Text color={colors.grey_450}>{teamIntro}</BodySm_Text>
         </TeamIntroBox>
         <JoinButton onPress={() => setVisible(true)}>
-          <BodySm_Text color={colors.red_350}>참여하기</BodySm_Text>
+          <BodyBoldSm_Text color={colors.red_350}>참여하기</BodyBoldSm_Text>
         </JoinButton>
       </Card>
       <ModalPopUp visible={visible} petIcon={false} height={217}>
@@ -71,7 +91,6 @@ export const TeamSearchBox = (props) => {
           <CloseButton
             onPress={() => {
               setVisible(false)
-              setIsOpen(false)
             }}
           >
             <Close width={24} height={24} />
@@ -92,15 +111,29 @@ export const TeamSearchBox = (props) => {
           </PopButton>
           <PopButton
             onPress={() => {
-              console.log(teamCode)
-              postJoiningTeam(ACCESSTOKEN, teamCode)
-              setVisible(false)
-              navigation.navigate('ToDoNav', { screen: 'Todo' })
+              joinTeam()
             }}
           >
             <BodySm_Text color={colors.red_350}>예</BodySm_Text>
           </PopButton>
         </PopButtonContainer>
+      </ModalPopUp>
+      <ModalPopUp visible={isDuplicated} petIcon={false} height={159}>
+        <ModalHeader style={{ marginBottom: 0 }}>
+          <CloseButton
+            onPress={() => {
+              setIsDuplicated(false)
+            }}
+          >
+            <Close width={24} height={24} />
+          </CloseButton>
+        </ModalHeader>
+        <PopContent style={{ marginBottom: 22 }}>
+          <ErrorBox>
+            <ErrorIcon width={48} height={48} color={colors.grey_100} />
+          </ErrorBox>
+          <Body_Text>이미 해당 Pamily에 참여중 입니다!</Body_Text>
+        </PopContent>
       </ModalPopUp>
     </>
   )
@@ -110,8 +143,9 @@ const Card = styled.View`
   margin: 0px 16px;
   border-radius: 12px;
   background-color: ${colors.grey_100};
+  border: 1px solid rgba(0, 0, 0, 0.12);
   padding: 16px;
-  gap: 16px;
+  gap: 10px;
 `
 const TeamCodeBox = styled.View``
 const TeamContentBox = styled.View`
@@ -137,7 +171,7 @@ const TeamInfoDetailBox = styled.View`
 `
 const Box = styled.View`
   justify-content: center;
-  width: 72px;
+  width: 76px;
 `
 const TeamIntroBox = styled.View``
 const JoinButton = styled.TouchableOpacity`
@@ -175,4 +209,13 @@ const ModalHeader = styled.View`
   align-items: flex-end;
   justify-content: center;
   margin-bottom: 24px;
+`
+const ErrorBox = styled.View`
+  width: 48px;
+  height: 48px;
+  border-radius: 24px;
+  background-color: ${colors.primary_outline};
+  margin-bottom: 12px;
+  align-items: center;
+  justify-content: center;
 `

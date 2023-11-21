@@ -140,7 +140,7 @@ export default function AddPet({ route, navigation }) {
                     onChangeText={(text) => setPetAge(text)}
                     placeholder="나이를 입력해주세요."
                     placeholderTextColor={colors.grey_400}
-                    keyboardType="number"
+                    keyboardType="numeric"
                     returnKeyType="done"
                     onFocus={() => setOnAge(true)}
                     onBlur={() => setOnAge(false)}
@@ -154,7 +154,7 @@ export default function AddPet({ route, navigation }) {
                       borderColor: onCategory ? 'rgba(0, 0, 0, 0.12)' : '',
                     }}
                   >
-                    <Detail_Text color={colors.grey_800}>종류</Detail_Text>
+                    <Detail_Text color={colors.grey_800}>펫 종</Detail_Text>
                     <InputBlock
                       editable
                       onChangeText={(text) => setPetCategroy(text)}
@@ -177,7 +177,7 @@ export default function AddPet({ route, navigation }) {
                       borderColor: onDetail ? 'rgba(0, 0, 0, 0.12)' : '',
                     }}
                   >
-                    <Detail_Text color={colors.grey_800}>펫 종</Detail_Text>
+                    <Detail_Text color={colors.grey_800}>종류</Detail_Text>
                     <InputBlock
                       editable
                       onChangeText={(text) => setPetDetail(text)}
@@ -221,7 +221,7 @@ export default function AddPet({ route, navigation }) {
             }}
           >
             <BottomTitle>
-              <BottomTitleText>펫 프로필 사진 설정</BottomTitleText>
+              <BottomTitleText>펫 프로필 등록</BottomTitleText>
             </BottomTitle>
             <PetImageModal profileUrl={petImageUrl} setProfileUrl={setPetImageUrl} setPetFile={setPetFile} />
           </BottomSheetModal>

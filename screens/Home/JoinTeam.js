@@ -11,6 +11,7 @@ import { accessTokenState } from '../../recoil/AuthAtom'
 import axios from 'axios'
 import { TabBarAtom } from '../../recoil/TabAtom'
 import { useIsFocused } from '@react-navigation/native'
+import { SubHeadSm_Text } from '../../components/Fonts'
 
 export default function JoinTeam({ navigation }) {
   const isFocused = useIsFocused()
@@ -19,6 +20,7 @@ export default function JoinTeam({ navigation }) {
   const ACCESSTOKEN = useRecoilValue(accessTokenState)
   const [pamilyCode, setPamilyCode] = useState('')
   const [searchedData, setSearchedData] = useState([])
+  const [isNonResult, setIsNonResult] = useState(false)
 
   // onFocus
   const [onName, setOnName] = useState(false)
@@ -27,15 +29,16 @@ export default function JoinTeam({ navigation }) {
     isFocused && setIsTabVisible(false)
   }, [isFocused, isTabVisible])
 
-  const searchTeam = (teamCode) => {
-    getSearchedTeam(ACCESSTOKEN, teamCode).then((result) => {
-      {
-        result.length !== 0 && setSearchedData(result)
-      }
-      console.log(result)
-      // result 없을 경우 -> alert 창 뜨게 해야 함
-      // 검색 에러 코드 받아오기
-    })
+  const searchTeam = async (teamCode) => {
+    try {
+      await getSearchedTeam(ACCESSTOKEN, teamCode).then((result) => {
+        {
+          result.length !== 0 && setIsNonResult(false) & setSearchedData(result)
+        }
+      })
+    } catch (error) {
+      setIsNonResult(true) & setSearchedData([])
+    }
   }
 
   return (
@@ -66,6 +69,13 @@ export default function JoinTeam({ navigation }) {
             </IconBox>
           </Block>
           {searchedData.length !== 0 && <TeamSearchBox data={searchedData} />}
+          {isNonResult ? (
+            <NoneBox>
+              <SubHeadSm_Text color={colors.grey_400}>검색 결과가 없습니다</SubHeadSm_Text>
+            </NoneBox>
+          ) : (
+            ''
+          )}
         </Container>
       </TouchableWithoutFeedback>
     </ScreenLayout>
@@ -94,3 +104,8 @@ const Block = styled.View`
   background-color: ${colors.grey_150};
 `
 const IconBox = styled.TouchableOpacity``
+const NoneBox = styled.View`
+  margin-top: 234px;
+  justify-content: center;
+  align-items: center;
+`

@@ -18,7 +18,7 @@ export const ProfileImageModal = (props) => {
   return (
     <>
       <BottomTitle>
-        <BottomTitleText>Pamily 프로필 사진 설정</BottomTitleText>
+        <BottomTitleText>Pamily 프로필 등록</BottomTitleText>
       </BottomTitle>
       <ImageContainer>
         <ProfileImageBox
@@ -53,7 +53,7 @@ export const ProfileImageModal = (props) => {
             props.setImageFile(imageFile)
           }}
         >
-          <BodySm_Text color={colors.red_350}>확인</BodySm_Text>
+          <BodySm_Text color={colors.red_350}>완료</BodySm_Text>
         </OkButton>
       </ButtonContainer>
     </>

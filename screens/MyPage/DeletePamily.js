@@ -10,6 +10,7 @@ import { useIsFocused } from '@react-navigation/native'
 import { TabBarAtom } from '../../recoil/TabAtom'
 import { ScrollView } from 'react-native-gesture-handler'
 import { BodyBoldSm_Text, DetailSm_Text } from '../../components/Fonts'
+import { ScreenLayout } from '../../components/Shared'
 
 export default function DeletePamily({ route, navigation }) {
   const ACCESSTOKEN = useRecoilValue(accessTokenState)
@@ -89,7 +90,7 @@ export default function DeletePamily({ route, navigation }) {
   )
 
   return (
-    <ScrollView style={{ backgroundColor: colors.grey_100 }} showsVerticalScrollIndicator={false}>
+    <ScreenLayout>
       <Container>
         <TimeBox>
           <Title>
@@ -112,7 +113,15 @@ export default function DeletePamily({ route, navigation }) {
               <TeamNameText>{teamName}</TeamNameText>과 함께한 {userNickname}님의 Todo, {todoNum}개
             </Title>
           </TitleBox>
-          <FlatList data={todoList} renderItem={renderItem} onEndReached={loadMore} onEndReachedThreshold={1} />
+          <Todos>
+            <FlatList
+              data={todoList}
+              renderItem={renderItem}
+              onEndReached={loadMore}
+              onEndReachedThreshold={1}
+              showsVerticalScrollIndicator={false}
+            />
+          </Todos>
         </TodoBox>
         <DeleteButton
           onPress={() => {
@@ -120,17 +129,16 @@ export default function DeletePamily({ route, navigation }) {
             navigation.navigate('DeletePamily2')
           }}
         >
-          <ButtonText>모임 탈퇴하기</ButtonText>
+          <ButtonText>나가기</ButtonText>
         </DeleteButton>
       </Container>
-    </ScrollView>
+    </ScreenLayout>
   )
 }
 
 const Container = styled.View`
   flex: 1;
   padding: 0px 16px;
-  margin-bottom: 22px;
   background-color: ${colors.grey_100};
 `
 const TimeBox = styled.View`
@@ -163,7 +171,7 @@ const DateText = styled.Text`
   line-height: 30px;
 `
 const TodoBox = styled.View`
-  gap: 16px;
+  gap: 12px;
   margin-bottom: 70px;
 `
 const TitleBox = styled.View`
@@ -175,9 +183,9 @@ const TodoContainer = styled.View`
   flex-direction: row;
   align-items: center;
   padding: 16px;
-  height: 77px;
+  height: 70px;
   border-radius: 16px;
-  margin: 2px 2px 16px 2px;
+  margin: 2px 2px 12px 2px;
   background-color: ${colors.grey_100};
   gap: 12px;
 `
@@ -193,7 +201,7 @@ const ContentContainer = styled.View`
 `
 const DeleteButton = styled.TouchableOpacity`
   position: absolute;
-  bottom: 10px;
+  bottom: 0px;
   left: 16px;
   right: 16px;
   background-color: ${colors.red_200};
@@ -208,4 +216,7 @@ const ButtonText = styled.Text`
   font-family: 'Spoqa-Bold';
   font-size: 14px;
   line-height: 19px;
+`
+const Todos = styled.View`
+  height: 420px;
 `
