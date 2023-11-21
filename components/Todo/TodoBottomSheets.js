@@ -129,12 +129,12 @@ const TodoEditHome = ({ navigation, selectedTodo, selectedDate, getInitDatas, ha
           </SmallBox>
         </RowContainer>
         <BigBox onPress={() => navigation.navigate('TodoTimeSetting')}>
-          <Alarm color={colors.grey_800} width={24} height={24} />
-          <Detail_Text>시간 알림</Detail_Text>
+          <Alarm color={colors.grey_400} width={24} height={24} />
+          <Detail_Text>시간알림</Detail_Text>
         </BigBox>
         <BigBox onPress={() => navigation.navigate('TodoDateSetting')}>
-          <Change width={24} height={24} />
-          <Detail_Text>날짜 변경</Detail_Text>
+          <Change color={colors.grey_400} width={24} height={24} />
+          <Detail_Text>날짜변경</Detail_Text>
         </BigBox>
       </ContentContainer>
     </BottomSheetBase>
