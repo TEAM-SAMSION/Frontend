@@ -70,7 +70,7 @@ export default function MyPage({ navigation }) {
     <BottomSheetModalProvider>
       <ScreenLayout>
         <TopHeader navigation={navigation} />
-        <ScrollView>
+        <ScrollView showsVerticalScrollIndicator={false}>
           <UserContainer>
             <UserDetailContainer>
               <ProfileImage

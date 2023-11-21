@@ -6,7 +6,7 @@ import { ScreenLayout } from '../../components/Shared'
 export default function ServiceTerms() {
   return (
     <ScreenLayout>
-      <ScrollView>
+      <ScrollView showsVerticalScrollIndicator={false}>
         <Container>
           <TitleText style={{ color: colors.primary_outline, marginTop: 0 }}>제 1장 총 칙</TitleText>
           <TitleText style={{ color: colors.grey_700, marginVertical: 4 }}>제 1조 (목적)</TitleText>
