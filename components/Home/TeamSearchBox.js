@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import styled from 'styled-components/native'
 import { colors } from '../../colors'
-import { BodyBoldSm_Text, BodySm_Text, Detail_Text, SubHeadSm_Text, SubHead_Text } from '../Fonts'
+import { BodyBoldSm_Text, BodyBold_Text, BodySm_Text, Detail_Text, SubHeadSm_Text, SubHead_Text } from '../Fonts'
 import { ModalPopUp } from '../Shared'
 import { postJoiningTeam } from './Apis'
 import Close from '../../assets/Svgs/Close.svg'
@@ -35,35 +35,29 @@ export const TeamSearchBox = (props) => {
           <TeamInfoBox>
             <TeamInfoDetailBox>
               <Box>
-                <Detail_Text color={colors.grey_600}>Pamily 이름</Detail_Text>
+                <BodyBoldSm_Text color={colors.grey_600}>Pamily 이름</BodyBoldSm_Text>
               </Box>
-              <Detail_Text color={colors.grey_450}>{teamName}</Detail_Text>
+              <BodySm_Text color={colors.grey_450}>{teamName}</BodySm_Text>
             </TeamInfoDetailBox>
             <TeamInfoDetailBox>
               <Box>
-                <Detail_Text color={colors.grey_600}>Pamily 대표</Detail_Text>
+                <BodyBoldSm_Text color={colors.grey_600}>Pamily 대표</BodyBoldSm_Text>
               </Box>
-              <Detail_Text color={colors.grey_450}>{teamLeader}</Detail_Text>
+              <BodySm_Text color={colors.grey_450}>{teamLeader}</BodySm_Text>
             </TeamInfoDetailBox>
             <TeamInfoDetailBox>
               <Box>
-                <Detail_Text color={colors.grey_600}>참여 멤버 수</Detail_Text>
+                <BodyBoldSm_Text color={colors.grey_600}>참여 멤버 수</BodyBoldSm_Text>
               </Box>
-              <Detail_Text color={colors.grey_450}>{teamNumber}명</Detail_Text>
+              <BodySm_Text color={colors.grey_450}>{teamNumber}명</BodySm_Text>
             </TeamInfoDetailBox>
-            {/* <TeamInfoDetailBox>
-              <Box>
-                <Detail_Text color={colors.grey_600}>모임 공개 여부</Detail_Text>
-              </Box>
-              <Detail_Text color={colors.grey_450}>{teamPrivacy}</Detail_Text>
-            </TeamInfoDetailBox> */}
           </TeamInfoBox>
         </TeamContentBox>
         <TeamIntroBox>
-          <Detail_Text color={colors.grey_450}>{teamIntro}</Detail_Text>
+          <BodySm_Text color={colors.grey_450}>{teamIntro}</BodySm_Text>
         </TeamIntroBox>
         <JoinButton onPress={() => setVisible(true)}>
-          <BodySm_Text color={colors.red_350}>참여하기</BodySm_Text>
+          <BodyBoldSm_Text color={colors.red_350}>참여하기</BodyBoldSm_Text>
         </JoinButton>
       </Card>
       <ModalPopUp visible={visible} petIcon={false} height={217}>
@@ -115,8 +109,9 @@ const Card = styled.View`
   margin: 0px 16px;
   border-radius: 12px;
   background-color: ${colors.grey_100};
+  border: 1px solid rgba(0, 0, 0, 0.12);
   padding: 16px;
-  gap: 16px;
+  gap: 10px;
 `
 const TeamCodeBox = styled.View``
 const TeamContentBox = styled.View`
@@ -142,7 +137,7 @@ const TeamInfoDetailBox = styled.View`
 `
 const Box = styled.View`
   justify-content: center;
-  width: 72px;
+  width: 76px;
 `
 const TeamIntroBox = styled.View``
 const JoinButton = styled.TouchableOpacity`

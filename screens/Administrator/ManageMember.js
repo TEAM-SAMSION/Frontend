@@ -57,19 +57,19 @@ export default function ManageMember({ route, navigation }) {
     <ScreenLayout>
       <Container>
         <InputBox>
+          <Detail_Text color={colors.grey_800}>Pamily 코드</Detail_Text>
           <CodeBox>
-            <BodySm_Text color={colors.grey_800}>Pamily 코드</BodySm_Text>
-            <BodySm_Text style={{ color: colors.grey_400 }}>{pamilyCode}</BodySm_Text>
+            <Detail_Text style={{ color: colors.grey_400 }}>{pamilyCode}</Detail_Text>
+            <CodeButton onPress={copyTeamCode}>
+              <Detail_Text color={colors.secondary}>복사</Detail_Text>
+            </CodeButton>
           </CodeBox>
-          <CodeButton onPress={copyTeamCode}>
-            <Detail_Text color={colors.secondary}>복사</Detail_Text>
-          </CodeButton>
         </InputBox>
         <Block style={{ borderWidth: onName ? 1 : 0, borderColor: onName ? 'rgba(0, 0, 0, 0.12)' : '' }}>
           <InputBlock
             editable
             onChangeText={(text) => setSearchedName(text)}
-            placeholder="이름을 검색해주세요."
+            placeholder="회원을 검색해주세요"
             placeholderTextColor={colors.grey_400}
             style={{
               borderTopLeftRadius: 0,
@@ -118,13 +118,13 @@ export default function ManageMember({ route, navigation }) {
 }
 
 const Container = styled.View`
-  gap: 16px;
+  gap: 8px;
   margin: 16px;
 `
 const InputBox = styled.View`
   flex-direction: row;
   background-color: ${colors.grey_150};
-  padding: 0px 16px;
+  padding: 0 12px;
   height: 44px;
   border-radius: 12px;
   align-items: center;
@@ -153,7 +153,8 @@ const Block = styled.View`
   justify-content: space-between;
   align-items: center;
   height: 44px;
-  padding: 0px 16px;
+  padding: 0 16px;
+  margin-bottom: 8px;
   border-radius: 12px;
   background-color: ${colors.grey_150};
 `
