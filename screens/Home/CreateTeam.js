@@ -6,7 +6,7 @@ import styled from 'styled-components/native'
 import PlusIcon from '../../assets/Svgs/miniPlus.svg'
 import { BottomSheetBackdrop, BottomSheetModal, BottomSheetModalProvider } from '@gorhom/bottom-sheet'
 import { ProfileImageModal } from '../../components/Home/ProfileImageModal'
-import { useRecoilState, useRecoilValue } from 'recoil'
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
 import { accessTokenState } from '../../recoil/AuthAtom'
 import BackButton from '../../assets/Svgs/chevron_back.svg'
 import {
@@ -18,8 +18,8 @@ import {
   SubHead_Text,
 } from '../../components/Fonts'
 import { getTeamCode, postTeamInfo } from '../../components/Home/Apis'
-import { TabBarAtom } from '../../recoil/TabAtom'
-import { useIsFocused } from '@react-navigation/native'
+import { SelectedTeamAtom, TabBarAtom } from '../../recoil/TabAtom'
+import { CommonActions, useIsFocused } from '@react-navigation/native'
 import EditIcon from '../../assets/Svgs/Edit.svg'
 import Clipboard from '@react-native-clipboard/clipboard'
 import { AddPetBox } from '../../components/Home/AddPetBox'
@@ -40,6 +40,8 @@ export default function CreateTeam({ route, navigation }) {
   const [savedPets, setSavedPets] = useState([])
   const [pamilyFile, setPamilyFile] = useState('file://' + RNFS.MainBundlePath + '/default_pamily.png')
   const ACCESSTOKEN = useRecoilValue(accessTokenState)
+
+  const setTodoPage = useSetRecoilState(SelectedTeamAtom)
 
   // onFocus
   const [onName, setOnName] = useState(false)
@@ -169,7 +171,7 @@ export default function CreateTeam({ route, navigation }) {
   return (
     <BottomSheetModalProvider>
       <ScreenLayout>
-        <ScrollView>
+        <ScrollView showsVerticalScrollIndicator={false}>
           <TouchableWithoutFeedback
             onPress={() => {
               Keyboard.dismiss()
@@ -344,6 +346,11 @@ export default function CreateTeam({ route, navigation }) {
                 onPress={() => {
                   setCreateVisible(false)
                   createPamily()
+                  navigation.dispatch(
+                    CommonActions.reset({
+                      routes: [{ name: 'Home' }],
+                    }),
+                  )
                   navigation.navigate('ToDoNav', { screen: 'todo' })
                 }}
               >

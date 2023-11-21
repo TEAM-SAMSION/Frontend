@@ -5,7 +5,7 @@ import { BodyBoldSm_Text, BodySm_Text, Detail_Text, SubHeadSm_Text, SubHead_Text
 import { ModalPopUp } from '../Shared'
 import { postJoiningTeam } from './Apis'
 import Close from '../../assets/Svgs/Close.svg'
-import { StackActions, useNavigation } from '@react-navigation/native'
+import { CommonActions, StackActions, useNavigation } from '@react-navigation/native'
 import { useRecoilValue } from 'recoil'
 import { accessTokenState } from '../../recoil/AuthAtom'
 import ToDoNav from '../../navigators/ToDoNav'
@@ -95,6 +95,11 @@ export const TeamSearchBox = (props) => {
               console.log(teamCode)
               postJoiningTeam(ACCESSTOKEN, teamCode)
               setVisible(false)
+              navigation.dispatch(
+                CommonActions.reset({
+                  routes: [{ name: 'Home' }],
+                }),
+              )
               navigation.navigate('ToDoNav', { screen: 'Todo' })
             }}
           >

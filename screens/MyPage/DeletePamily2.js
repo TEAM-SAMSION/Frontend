@@ -1,7 +1,7 @@
 import styled from 'styled-components/native'
 import { colors } from '../../colors'
 import { ScreenLayout } from '../../components/Shared'
-import { StackActions } from '@react-navigation/native'
+import { CommonActions, StackActions } from '@react-navigation/native'
 import { StatusBar } from 'react-native'
 
 export default function DeletePamily2({ navigation }) {
@@ -16,7 +16,16 @@ export default function DeletePamily2({ navigation }) {
         <PetLeft source={require('../../assets/Imgs/Dog50.png')} />
         <PetRight source={require('../../assets/Imgs/Cat50.png')} />
       </ImageContainer>
-      <DeleteButton onPress={() => navigation.navigate('HomeNav', { screen: 'Home' })}>
+      <DeleteButton
+        onPress={() => {
+          navigation.dispatch(
+            CommonActions.reset({
+              routes: [{ name: 'MyPage' }],
+            }),
+          )
+          navigation.navigate('HomeNav', { screen: 'Home' })
+        }}
+      >
         <ButtonText>메인 홈으로 돌아가기</ButtonText>
       </DeleteButton>
     </Container>
