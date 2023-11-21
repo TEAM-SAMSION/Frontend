@@ -7,7 +7,7 @@ import { colors } from '../../colors'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useRecoilState } from 'recoil'
 import { loggedInState } from '../../recoil/AuthAtom'
-import { useIsFocused } from '@react-navigation/native'
+import { CommonActions, useIsFocused } from '@react-navigation/native'
 import { TabBarAtom } from '../../recoil/TabAtom'
 
 export default function Setting({ navigation }) {
@@ -18,6 +18,18 @@ export default function Setting({ navigation }) {
   useEffect(() => {
     isFocused && setIsTabVisible(false)
   }, [isFocused, isTabVisible])
+  const finishLogout = async () => {
+    await AsyncStorage.removeItem('accessToken')
+    await AsyncStorage.removeItem('refreshToken').then(setLoggedIn(false))
+  }
+  const logOut = async () => {
+    navigation.dispatch(
+      CommonActions.reset({
+        routes: [{ name: 'HomeNav' }],
+      }),
+    )
+    finishLogout()
+  }
 
   return (
     <ScreenLayout>
@@ -49,12 +61,7 @@ export default function Setting({ navigation }) {
         <ContentText>앱 정보</ContentText>
         <ContentText2>ver 1.0.0</ContentText2>
       </ContentContainer>
-      <ContentContainer
-        onPress={() => {
-          AsyncStorage.clear()
-          setLoggedIn(false)
-        }}
-      >
+      <ContentContainer onPress={() => logOut()}>
         <ContentText>로그아웃</ContentText>
       </ContentContainer>
       <ContentContainer>
