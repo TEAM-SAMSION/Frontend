@@ -25,6 +25,7 @@ import Clipboard from '@react-native-clipboard/clipboard'
 import { AddPetBox } from '../../components/Home/AddPetBox'
 import RNFS from 'react-native-fs'
 import Close from '../../assets/Svgs/Close.svg'
+import ErrorIcon from '../../assets/Svgs/error.svg'
 
 export default function CreateTeam({ route, navigation }) {
   const isFocused = useIsFocused()
@@ -245,9 +246,21 @@ export default function CreateTeam({ route, navigation }) {
                         }
                   }
                 >
-                  <Detail_Text>펫 프로필</Detail_Text>
+                  <Detail_Text>펫 등록</Detail_Text>
                   <PlusIcon width={16} height={16} />
                 </Block>
+                {savedPets.length > 0 ? (
+                  ''
+                ) : (
+                  <AlertBox>
+                    <ErrorBox>
+                      <ErrorIcon width={12} height={12} color={colors.primary_outline} />
+                    </ErrorBox>
+                    <Detail_Text color={colors.grey_400}>
+                      펫을 1마리 이상을 등록해야 Pamily 생성이 가능합니다.
+                    </Detail_Text>
+                  </AlertBox>
+                )}
               </Container>
               <PetBlock>
                 {savedPets.length < 0
@@ -491,4 +504,19 @@ const ModalHeader = styled.View`
   align-items: flex-end;
   justify-content: center;
   margin-bottom: 24px;
+`
+const ErrorBox = styled.View`
+  width: 12px;
+  height: 12px;
+  border-radius: 6px;
+  border: 1px solid ${colors.primary_outline};
+  justify-content: center;
+  align-items: center;
+`
+const AlertBox = styled.View`
+  flex-direction: row;
+  gap: 4px;
+  align-items: center;
+  margin-left: 12px;
+  margin-top: 6px;
 `

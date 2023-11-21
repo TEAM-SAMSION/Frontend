@@ -197,7 +197,7 @@ export const MemberSearchBox = (props) => {
       <ModalPopUp visible={isRejectVisible} petIcon={false} height={258}>
         <PopUpContainer>
           <ErrorBox>
-            <ErrorIcon width={48} height={48} />
+            <ErrorIcon width={48} height={48} color={colors.grey_100} />
           </ErrorBox>
           <MessageBox>
             <BodyBold_Text>관리자 위임 후 권한 변경이 가능합니다!</BodyBold_Text>
@@ -225,7 +225,7 @@ export const MemberSearchBox = (props) => {
       <ModalPopUp visible={isAlertVisible} petIcon={false} height={258}>
         <PopUpContainer style={{ marginTop: 18, marginBottom: 33 }}>
           <ErrorBox>
-            <ErrorIcon width={48} height={48} />
+            <ErrorIcon width={48} height={48} color={colors.grey_100} />
           </ErrorBox>
           <MessageBox>
             <TextBox>
