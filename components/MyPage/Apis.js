@@ -47,7 +47,7 @@ export const getAllTodoList = async (accessToken, teamId, page) => {
   const response = await axiosInstance.get(url + API, {
     params: {
       page: page,
-      size: 10,
+      size: 5,
     },
   })
   return response.data.content
@@ -71,7 +71,7 @@ export const getAllTodos = async (accessToken, page) => {
   const response = await axiosInstance.get(url + API, {
     params: {
       page: page,
-      size: 10,
+      size: 4,
     },
   })
   return response.data.content
