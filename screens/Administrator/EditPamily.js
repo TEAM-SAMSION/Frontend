@@ -166,8 +166,7 @@ export default function EditPamily({ route, navigation }) {
                   <InputBlock
                     editable
                     onChangeText={(text) => setName(text)}
-                    placeholder={name}
-                    placeholderTextColor={colors.grey_600}
+                    value={name}
                     returnKeyType="done"
                     onFocus={() => setOnName(true)}
                     onBlur={() => setOnName(false)}
@@ -178,8 +177,7 @@ export default function EditPamily({ route, navigation }) {
                   <InputBlock
                     editable
                     onChangeText={(text) => setIntro(text)}
-                    placeholder={intro}
-                    placeholderTextColor={colors.grey_600}
+                    value={intro}
                     returnKeyType="done"
                     onFocus={() => setOnIntro(true)}
                     onBlur={() => setOnIntro(false)}

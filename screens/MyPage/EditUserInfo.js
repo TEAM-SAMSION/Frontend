@@ -126,8 +126,7 @@ export default function EditUserInfo({ route, navigation }) {
                   <InputBlock
                     editable
                     onChangeText={(text) => setName(text)}
-                    placeholder={name}
-                    placeholderTextColor={colors.grey_600}
+                    value={name}
                     returnKeyType="done"
                     onFocus={() => setOnName(true)}
                     onBlur={() => setOnName(false)}

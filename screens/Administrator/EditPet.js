@@ -143,8 +143,7 @@ export default function EditPet({ route, navigation }) {
                   <InputBlock
                     editable
                     onChangeText={(text) => setPetName(text)}
-                    placeholder={petName}
-                    placeholderTextColor={colors.grey_600}
+                    value={petName}
                     returnKeyType="done"
                     onFocus={() => setOnName(true)}
                     onBlur={() => setOnName(false)}
@@ -155,8 +154,7 @@ export default function EditPet({ route, navigation }) {
                   <InputBlock
                     editable
                     onChangeText={(text) => setPetAge(text)}
-                    placeholder={`${petAge}`}
-                    placeholderTextColor={colors.grey_600}
+                    value={`${petAge}`}
                     keyboardType="numeric"
                     returnKeyType="done"
                     onFocus={() => setOnAge(true)}
@@ -175,8 +173,7 @@ export default function EditPet({ route, navigation }) {
                     <InputBlock
                       editable
                       onChangeText={(text) => setPetCategroy(text)}
-                      placeholder={petCategory}
-                      placeholderTextColor={colors.grey_600}
+                      value={petCategory}
                       style={{
                         flexGrow: 1,
                         borderTopRightRadius: 0,
@@ -198,8 +195,7 @@ export default function EditPet({ route, navigation }) {
                     <InputBlock
                       editable
                       onChangeText={(text) => setPetDetail(text)}
-                      placeholder={petDetail}
-                      placeholderTextColor={colors.grey_600}
+                      value={petDetail}
                       style={{
                         flexGrow: 1,
                         borderBottomLeftRadius: 0,
@@ -216,8 +212,7 @@ export default function EditPet({ route, navigation }) {
                   <InputBlock
                     editable
                     onChangeText={(text) => setPetIntro(text)}
-                    placeholder={petIntro}
-                    placeholderTextColor={colors.grey_600}
+                    value={petIntro}
                     returnKeyType="done"
                     onFocus={() => setOnIntro(true)}
                     onBlur={() => setOnIntro(false)}
