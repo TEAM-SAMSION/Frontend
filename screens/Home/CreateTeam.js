@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { Text, TouchableOpacity, TouchableWithoutFeedback, Keyboard, ScrollView } from 'react-native'
+import { Text, TouchableOpacity, TouchableWithoutFeedback, Keyboard, ScrollView, View } from 'react-native'
 import { colors } from '../../colors'
 import { ModalPopUp, ScreenLayout } from '../../components/Shared'
 import styled from 'styled-components/native'
@@ -58,6 +58,9 @@ export default function CreateTeam({ route, navigation }) {
 
   // 패밀리 생성 팝업
   const [createVisible, setCreateVisible] = useState(false)
+
+  // 패밀리 생성 완료 팝업
+  const [completeVisible, setCompleteVisible] = useState(false)
 
   useEffect(() => {
     isFocused && setIsTabVisible(false)
@@ -333,16 +336,7 @@ export default function CreateTeam({ route, navigation }) {
             </PopButtonContainer>
           </ModalPopUp>
           <ModalPopUp visible={createVisible} petIcon={false} height={217}>
-            <ModalHeader>
-              <CloseButton
-                onPress={() => {
-                  setCreateVisible(false)
-                }}
-              >
-                <Close width={24} height={24} />
-              </CloseButton>
-            </ModalHeader>
-            <PopContent style={{ flexDirection: 'column', marginTop: 0, marginBottom: 39 }}>
+            <PopContent style={{ flexDirection: 'column', marginTop: 59, marginBottom: 44 }}>
               <SubHead_Text color={colors.grey_700}>{pamilyName}</SubHead_Text>
               <HeadLineSm_Text color={colors.grey_500}>Pamily를 생성하시겠습니까?</HeadLineSm_Text>
             </PopContent>
@@ -357,8 +351,20 @@ export default function CreateTeam({ route, navigation }) {
               </PopButton>
               <PopButton
                 onPress={() => {
-                  setCreateVisible(false)
                   createPamily()
+                  setCreateVisible(false)
+                  setCompleteVisible(true)
+                }}
+              >
+                <BodySm_Text color={colors.red_350}>예</BodySm_Text>
+              </PopButton>
+            </PopButtonContainer>
+          </ModalPopUp>
+          <ModalPopUp visible={completeVisible} petIcon={false} height={217}>
+            <ModalHeader>
+              <CloseButton
+                onPress={() => {
+                  setCompleteVisible(false)
                   navigation.dispatch(
                     CommonActions.reset({
                       routes: [{ name: 'Home' }],
@@ -367,7 +373,23 @@ export default function CreateTeam({ route, navigation }) {
                   navigation.navigate('ToDoNav', { screen: 'todo' })
                 }}
               >
-                <BodySm_Text color={colors.red_350}>예</BodySm_Text>
+                <Close width={24} height={24} />
+              </CloseButton>
+            </ModalHeader>
+            <PopContent style={{ flexDirection: 'column', marginTop: 0, marginBottom: 39, gap: 4 }}>
+              <SubHead_Text color={colors.grey_700}>Pamily 생성 완료!</SubHead_Text>
+              <View style={{ alignItems: 'center' }}>
+                <HeadLineSm_Text color={colors.grey_500}>지금 나와 함께 할</HeadLineSm_Text>
+                <HeadLineSm_Text color={colors.grey_500}>다른 Pamily를 초대해주세요!</HeadLineSm_Text>
+              </View>
+            </PopContent>
+            <PopButtonContainer>
+              <PopButton
+                onPress={() => {
+                  copyTeamCode()
+                }}
+              >
+                <BodySm_Text color={colors.red_350}>초대링크 복사하기</BodySm_Text>
               </PopButton>
             </PopButtonContainer>
           </ModalPopUp>
@@ -418,22 +440,6 @@ const IconCover = styled.View`
 const Container = styled.View`
   gap: 8px;
   margin: 0px 16px;
-`
-const Bar = styled.View`
-  width: 343px;
-  height: 1px;
-  background-color: rgba(0, 0, 0, 0.12);
-`
-const BlockView = styled.View`
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  width: 343px;
-  height: 44px;
-  padding: 0px 16px;
-  border-radius: 8px;
-  background-color: ${colors.grey_150};
-  margin-top: 16px;
 `
 const Block = styled.TouchableOpacity`
   flex-direction: row;
