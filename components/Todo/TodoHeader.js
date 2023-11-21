@@ -7,7 +7,11 @@ import { useState } from 'react'
 import DownIcon from '../../assets/Svgs/arrow_down.svg'
 import UpIcon from '../../assets/Svgs/arrow_up.svg'
 import { Detail_Text } from '../Fonts'
-export const TodoHeader = ({ navigation, todoTeamList, setSelectedTeam, selectedTeam }) => {
+import { useRecoilState } from 'recoil'
+import { SelectedTeamAtom } from '../../recoil/TabAtom'
+export const TodoHeader = ({ navigation, todoTeamList }) => {
+  const [selectedTeam, setSelectedTeam] = useRecoilState(SelectedTeamAtom)
+
   const [isOpen, setIsOpen] = useState(false)
   const toggleDropdown = () => {
     setIsOpen(!isOpen)

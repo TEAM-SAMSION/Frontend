@@ -162,12 +162,7 @@ export default Todo = ({ navigation, route }) => {
   return (
     <ScreenLayout verticalOffset={statusBarHeight + 44} behavior="position">
       <ContentLayout>
-        <TodoHeader
-          selectedTeam={selectedTeam}
-          setSelectedTeam={setSelectedTeam}
-          todoTeamList={todoTeamList}
-          navigation={navigation}
-        />
+        <TodoHeader todoTeamList={todoTeamList} navigation={navigation} />
         <ScrollViewContainer>
           <ScrollView showsVerticalScrollIndicator={false}>
             <MyCalendarStrip selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
