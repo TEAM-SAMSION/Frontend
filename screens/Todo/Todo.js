@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { ModalPopUp, ScreenLayout } from '../../components/Shared'
+import { ModalPopUp, PetModalPopUp, ScreenLayout } from '../../components/Shared'
 import { colors } from '../../colors'
 import styled from 'styled-components/native'
 import { TodoHeader } from '../../components/Todo/TodoHeader'
@@ -34,8 +34,8 @@ export default Todo = ({ navigation, route }) => {
   const [todoTeamList, setTodoTeamList] = useState(null)
   const [teamUserList, setTeamUserList] = useState([])
   const [snappoints, setSnappoints] = useState([])
-  const [isVisible, setIsVisible] = useState(false)
-
+  const [isDeleteVisible, setIsDeleteVisible] = useState(false)
+  const [isCreateVisible, setIsCreateVisible] = useState(false)
   // const [selectedTeam, setSelectedTeam] = useState(null)
   const [selectedTeam, setSelectedTeam] = useRecoilState(SelectedTeamAtom)
   const [selectedCategoryID, setSelectedCategoryID] = useState(null)
@@ -162,7 +162,7 @@ export default Todo = ({ navigation, route }) => {
   return (
     <ScreenLayout verticalOffset={statusBarHeight + 44} behavior="position">
       <ContentLayout>
-        <TodoHeader todoTeamList={todoTeamList} navigation={navigation} />
+        <TodoHeader setIsCreateVisible={setIsCreateVisible} todoTeamList={todoTeamList} navigation={navigation} />
         <ScrollViewContainer>
           <ScrollView showsVerticalScrollIndicator={false}>
             <MyCalendarStrip selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
@@ -186,7 +186,7 @@ export default Todo = ({ navigation, route }) => {
                       {todos[1][2].map((todo, index) => (
                         <TodoItem
                           getInitDatas={getAllData}
-                          setIsVisible={setIsVisible}
+                          setIsDeleteVisible={setIsDeleteVisible}
                           selectedDate={selectedDate}
                           key={index}
                           todo={todo}
@@ -202,6 +202,14 @@ export default Todo = ({ navigation, route }) => {
               </TodoItemBase>
             )}
           </ScrollView>
+          <PetModalPopUp
+            navigation={navigation}
+            petIcon={true}
+            visible={isCreateVisible}
+            height={211}
+            setIsVisible={() => setIsCreateVisible()}
+            setIsOpen={() => console.log('setIsOpen')}
+          />
         </ScrollViewContainer>
       </ContentLayout>
       <BottomSheetModal
@@ -235,11 +243,11 @@ export default Todo = ({ navigation, route }) => {
           />
         )}
       </BottomSheetModal>
-      <ModalPopUp visible={isVisible} petIcon={false} height={204}>
+      <ModalPopUp visible={isDeleteVisible} petIcon={false} height={204}>
         <ModalHeader>
           <CloseButton
             onPress={() => {
-              setIsVisible(false)
+              setIsDeleteVisible(false)
             }}
           >
             <Close width={24} height={24} />
@@ -250,6 +258,7 @@ export default Todo = ({ navigation, route }) => {
           <Body_Text color={colors.grey_700}>나에게 할당된 TODO가 아닙니다.</Body_Text>
         </PopContent>
       </ModalPopUp>
+      <PetModalPopUp visible={isCreateVisible}></PetModalPopUp>
     </ScreenLayout>
   )
 }

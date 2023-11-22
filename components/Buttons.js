@@ -56,7 +56,7 @@ export const Button_PinkBg = ({ isEnabled, func, text, isLoading }) => {
       disabled={!isEnabled}
       style={{
         backgroundColor: isEnabled ? colors.primary_container : colors.grey_150,
-        marginBottom: Platform.OS == 'android' ? 32 : 0,
+        marginBottom: 32,
       }}
       onPress={func}
     >
