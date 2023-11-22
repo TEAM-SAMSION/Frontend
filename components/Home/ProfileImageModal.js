@@ -91,8 +91,7 @@ const SampleImage = styled.Image`
   width: 59px;
   height: 59px;
   border-radius: 16px;
-  border-width: 1px;
-  border-color: ${colors.grey_200};
+  border: 1px solid ${colors.grey_200};
 `
 const SampleImageContainer = styled.TouchableOpacity`
   width: 59px;
@@ -104,8 +103,7 @@ const ButtonContainer = styled.View`
   gap: 8px;
 `
 const CancelButton = styled.TouchableOpacity`
-  border: 2px solid;
-  border-color: ${colors.grey_150};
+  border: 2px solid ${colors.grey_150};
   background-color: ${colors.grey_100};
   display: flex;
   height: 44px;

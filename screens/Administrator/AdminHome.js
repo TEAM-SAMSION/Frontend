@@ -255,9 +255,8 @@ const GroupContainer = styled.View`
 const GroupInfoContainer = styled.View`
   flex-direction: row;
   margin: 0px 16px;
-  border: 1px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
   border-radius: 8px;
-  border-color: rgba(0, 0, 0, 0.12);
   margin-bottom: 15px;
 `
 const GroupInfoBox = styled.View`

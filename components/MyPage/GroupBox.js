@@ -5,6 +5,7 @@ import { Swipeable } from 'react-native-gesture-handler'
 import { colors } from '../../colors'
 import CrownIcon from '../../assets/Svgs/Crown.svg'
 import { BodyBoldSm_Text, BodySm_Text } from '../Fonts'
+import { Platform } from 'react-native'
 
 const SCREEN_WIDTH = Dimensions.get('window').width
 
@@ -33,12 +34,12 @@ const GroupBox = (props) => {
       renderRightActions={RightSwipe}
     >
       <GroupBoxContainer
-        style={{
-          shadowColor: 'rgb(0,0,0)',
-          shadowRadius: 2,
-          shadowOpacity: 0.17,
-          shadowOffset: [0, 0],
-        }}
+        Platform={Platform.OS}
+        style={
+          Platform.OS == 'android'
+            ? { elevation: 0.5 }
+            : { shadowColor: 'rgb(0,0,0)', shadowRadius: 2, shadowOpacity: 0.17, shadowOffset: [0, 0], border: none }
+        }
       >
         <GroupImage source={{ uri: `${props.data.teamProfileImageUrl}` }} />
         <GroupInfoBox>
@@ -79,6 +80,7 @@ const GroupBoxContainer = styled.View`
   margin-bottom: 8px;
   background-color: #fff;
   width: auto;
+  border: 0.7px solid rgba(0, 0, 0, 0.01);
 `
 const GroupImage = styled.Image`
   width: 48px;

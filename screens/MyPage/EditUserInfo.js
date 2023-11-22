@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { TouchableOpacity, View } from 'react-native'
+import { Keyboard, TouchableOpacity, View } from 'react-native'
 import styled from 'styled-components/native'
 import { colors } from '../../colors'
 import { BodySm_Text, Body_Text, Detail_Text } from '../../components/Fonts'

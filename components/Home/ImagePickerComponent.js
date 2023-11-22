@@ -46,8 +46,7 @@ const SampleImage = styled.Image`
   width: 59px;
   height: 59px;
   border-radius: 16px;
-  border-width: 1px;
-  border-color: ${colors.grey_200};
+  border: 1px solid ${colors.grey_200};
 `
 const SampleImageContainer = styled.TouchableOpacity`
   width: 59px;

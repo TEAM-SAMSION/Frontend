@@ -3,7 +3,7 @@ import DownIcon from '../../assets/Svgs/arrow_down.svg'
 import UpIcon from '../../assets/Svgs/arrow_up.svg'
 import styled from 'styled-components/native'
 import { colors } from '../../colors'
-import { ModalPopUp } from '../Shared'
+import { ModalPopUp, PetModalPopUp } from '../Shared'
 import Close from '../../assets/Svgs/Close.svg'
 import { useNavigation } from '@react-navigation/native'
 import { BodySm_Text, Detail_Text, SubHead_Text } from '../Fonts'
@@ -79,7 +79,7 @@ export const PamilyChoiceToggle = (props) => {
             </DropdownBox>
           </>
         ))}
-      <ModalPopUp visible={visible} petIcon={true} height={211}>
+      <PetModalPopUp visible={visible} petIcon={true} height={211}>
         <ModalHeader>
           <CloseButton
             onPress={() => {
@@ -114,7 +114,7 @@ export const PamilyChoiceToggle = (props) => {
             <BodySm_Text color={colors.red_350}>Pamily 참여하기</BodySm_Text>
           </PopButton>
         </PopButtonContainer>
-      </ModalPopUp>
+      </PetModalPopUp>
     </>
   )
 }

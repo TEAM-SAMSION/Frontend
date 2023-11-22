@@ -49,8 +49,7 @@ const BoxContainer = styled.View`
   padding: 0px 24px;
 `
 const DefaultBox = styled.TouchableOpacity`
-  border: 2px solid;
-  border-color: ${colors.grey_150};
+  border: 2px solid ${colors.grey_150};
   width: 156px;
   height: 44px;
   border-radius: 8px;
