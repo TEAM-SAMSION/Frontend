@@ -38,7 +38,7 @@ const GroupBox = (props) => {
         style={
           Platform.OS == 'android'
             ? { elevation: 0.5 }
-            : { shadowColor: 'rgb(0,0,0)', shadowRadius: 2, shadowOpacity: 0.17, shadowOffset: [0, 0], border: none }
+            : { shadowColor: 'rgb(0,0,0)', shadowRadius: 2, shadowOpacity: 0.17, shadowOffset: [0, 0], border: 'none' }
         }
       >
         <GroupImage source={{ uri: `${props.data.teamProfileImageUrl}` }} />
