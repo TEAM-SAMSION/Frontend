@@ -166,7 +166,8 @@ export default Todo = ({ navigation, route }) => {
         <ScrollViewContainer>
           <ScrollView showsVerticalScrollIndicator={false}>
             <MyCalendarStrip selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
-            {!todosByCategory && todoTeamList ? <NoTodo /> : <NoPamily />}
+            {/* prettier-ignore */}
+            {!todosByCategory && (todoTeamList ? <NoTodo /> : <NoPamily />)}
             {isLoading ? (
               <LoadingContainer>
                 <ActivityIndicator />
