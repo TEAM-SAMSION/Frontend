@@ -31,6 +31,7 @@ export default function Auth({ navigation }) {
 
     //권한확인 API 통해서 닉네임 변경 거치는지 or 홈화면 바로 가는지
     checkAuthority(accessToken).then(async (res) => {
+      console.log(res)
       if (res.authority == 'USER') {
         //향후 앱을 껐다가 켜도 유효한 사용자가 앱을 접속하는 것이기 때문에, 캐시에 토큰 저장
         await AsyncStorage.setItem('accessToken', accessToken)
@@ -47,6 +48,7 @@ export default function Auth({ navigation }) {
         console.log('유저 권한 확인단계에서 예외발생:', res)
       }
     })
+    // .then(logoutNaver())
   }
 
   const checkAuthority = async (accessToken) => {
@@ -78,17 +80,19 @@ export default function Auth({ navigation }) {
       })
   }
   const loginNaver = async () => {
-    const { failureResponse, successResponse } = await NaverLogin.login({
+    const { failureResponse, successResponse } = NaverLogin.login({
       appName: 'Pawith',
       consumerKey: 'Oto4EWnaTmbyQFJIA6qP',
       consumerSecret: '8n99KCI4r9',
       serviceUrlScheme: 'pawithnaverlogin',
     })
+    console.log(failureResponse, successResponse)
     try {
       getToken(successResponse.accessToken, 'NAVER')
     } catch (error) {
-      console.error('Failed to fetch data:', error)
+      console.error('Failed to fetch data-Naver:', error)
     }
+    // })
   }
   const loginApple = async () => {
     const appleAuthRequestResponse = await appleAuth.performRequest({
@@ -99,7 +103,7 @@ export default function Auth({ navigation }) {
     try {
       getToken(identityToken, 'APPLE')
     } catch (error) {
-      console.error('Failed to fetch data:', error)
+      console.error('Failed to fetch data-Apple:', error)
     }
     // get current authentication state for user
     // /!\ This method must be tested on a real device. On the iOS simulator it always throws an error.
@@ -113,13 +117,17 @@ export default function Auth({ navigation }) {
 
   const getToken = async (accessToken, provider) => {
     let API = `/oauth/${provider}?accessToken=${accessToken}` //500
-    const response = await axios.get(url + API, {
-      headers: {
-        Authorization: accessToken,
-        'Content-Type': `application/json; charset=UTF-8`,
-      },
-    })
-    finishLogin(response.data.accessToken, response.data.refreshToken, provider)
+    try {
+      const response = await axios.get(url + API, {
+        headers: {
+          Authorization: accessToken,
+          'Content-Type': `application/json; charset=UTF-8`,
+        },
+      })
+      finishLogin(response.data.accessToken, response.data.refreshToken, provider)
+    } catch (e) {
+      console.log('Failed To get Token:,', e)
+    }
   }
 
   useEffect(() => {
@@ -127,6 +135,7 @@ export default function Auth({ navigation }) {
     return appleAuth.onCredentialRevoked(async () => {
       console.warn('If this function executes, User Credentials have been Revoked')
     })
+
     // onCredentialRevoked returns a function that will remove the event listener. useEffect will call this function when the component unmounts
   }, []) // passing in an empty array as the second argument ensures this is only ran once when component mounts initially.
 
@@ -179,14 +188,3 @@ const SymbolIcon = styled.Image`
   width: 168px;
   height: 168px;
 `
-// const logoutNaver = async () => {
-//   console.log('Naver Logout')
-//   try {
-//     await NaverLogin.logout()
-//     setSuccessRes(undefined)
-//     setFailureRes(undefined)
-//     setGetProfileRes(undefined)
-//   } catch (e) {
-//     console.error(e)
-//   }
-// }

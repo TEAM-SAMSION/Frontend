@@ -17,11 +17,15 @@ export const TodoHeader = ({ navigation, todoTeamList }) => {
     setIsOpen(!isOpen)
   }
 
+  console.log(todoTeamList, selectedTeam)
   return (
     <CustomHeader>
       <DropDownListContainer>
         <DropdownContainer isOpen={isOpen} onPress={toggleDropdown}>
-          <Detail_Text>{selectedTeam?.name || '패밀리 선택 '}</Detail_Text>
+          <Detail_Text color={todoTeamList ? colors.grey_600 : colors.grey_400}>
+            {/* TodoTeamList가 Null이면, 자연스레 TodoTeamList의 끝요소인 SelectedTeam도 없으며, Home화면에서 선택되는 TodoTeam또한 없기에, Null을 반환받는다 */}
+            {selectedTeam?.name || '패밀리 없음'}
+          </Detail_Text>
           {isOpen ? (
             <UpIcon width={16} height={16} style={{ position: 'absolute', right: 10 }} />
           ) : (
@@ -31,7 +35,7 @@ export const TodoHeader = ({ navigation, todoTeamList }) => {
 
         {isOpen && (
           <>
-            {todoTeamList.map((todoTeam, id) => (
+            {todoTeamList?.map((todoTeam, id) => (
               <DropdownBox
                 key={id}
                 style={id == todoTeamList.length - 1 && { borderBottomLeftRadius: 8, borderBottomRightRadius: 8 }}
@@ -45,11 +49,17 @@ export const TodoHeader = ({ navigation, todoTeamList }) => {
                 <Detail_Text>{todoTeam.name}</Detail_Text>
               </DropdownBox>
             ))}
+            <DropdownBox
+              style={{ borderBottomLeftRadius: 8, borderBottomRightRadius: 8 }}
+              onPress={() => setVisible(true)}
+            >
+              <Detail_Text color={colors.grey_600}>+</Detail_Text>
+            </DropdownBox>
           </>
         )}
       </DropDownListContainer>
       <RightIcon>
-        {selectedTeam?.auth != 'MEMBER' && (
+        {selectedTeam && selectedTeam?.auth != 'MEMBER' && (
           <IconContainer onPress={() => navigation.navigate('ManageTodo', { teamId: selectedTeam.id })}>
             <Setting width={24} height={24} />
           </IconContainer>
@@ -88,6 +98,7 @@ const DropdownBox = styled.Pressable`
   padding: 8px 10px 8px 16px;
   align-items: center;
   flex-direction: row;
+
   background-color: ${colors.grey_150};
 `
 const CustomHeader = styled.View`

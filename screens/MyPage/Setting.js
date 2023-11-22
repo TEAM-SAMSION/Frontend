@@ -5,20 +5,29 @@ import { styled } from 'styled-components/native'
 import ContentIcon from '../../assets/Svgs/chevron_right.svg'
 import { colors } from '../../colors'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { useRecoilState } from 'recoil'
-import { loggedInState } from '../../recoil/AuthAtom'
+import { useRecoilState, useRecoilValue } from 'recoil'
+import { loggedInState, platformState } from '../../recoil/AuthAtom'
 import { CommonActions, useIsFocused } from '@react-navigation/native'
 import { TabBarAtom } from '../../recoil/TabAtom'
+import NaverLogin from '@react-native-seoul/naver-login'
 
 export default function Setting({ navigation }) {
   const isFocused = useIsFocused()
   const [isTabVisible, setIsTabVisible] = useRecoilState(TabBarAtom)
   const [loggedIn, setLoggedIn] = useRecoilState(loggedInState)
+  const { platform } = useRecoilValue(platformState)
 
   useEffect(() => {
     isFocused && setIsTabVisible(false)
   }, [isFocused, isTabVisible])
   const finishLogout = async () => {
+    try {
+      console.log('Naver Logout')
+      await NaverLogin.logout()
+    } catch (e) {
+      console.log(e)
+    }
+
     await AsyncStorage.removeItem('accessToken')
     await AsyncStorage.removeItem('refreshToken').then(setLoggedIn(false))
   }
@@ -64,9 +73,7 @@ export default function Setting({ navigation }) {
         <ContentText>앱 정보</ContentText>
         <ContentText2>ver 1.0.0</ContentText2>
       </ContentContainer>
-      <ContentContainer
-        onPress={() => logOut()}
-      >
+      <ContentContainer onPress={() => logOut()}>
         <ContentText style={{ color: colors.primary_outline }}>로그아웃</ContentText>
       </ContentContainer>
     </ScreenLayout>

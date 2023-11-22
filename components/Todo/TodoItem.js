@@ -1,7 +1,8 @@
 import React, { memo, useState } from 'react'
-import { Detail_Text, Label_Text } from '../Fonts'
+import { DetailSm_Text, Detail_Text, Label_Text } from '../Fonts'
 import { colors } from '../../colors'
 import Complete from '../../assets/Imgs/Complete.png'
+import Alarm from '../../assets/Svgs/Alarm.svg'
 import InComplete from '../../assets/Imgs/InComplete.png'
 import styled from 'styled-components/native'
 import { completeTodo } from './Apis'
@@ -9,7 +10,8 @@ import { Alert } from 'react-native'
 
 const TodoItem = ({ editTodo, categoryId, todo, todoLocalId, getInitDatas, selectedDate, setIsVisible }) => {
   const [isLoading, setIsLoading] = useState(false)
-
+  console.log(todo) // {"assignNames": [{"assigneeId": 5, "assigneeName": "김형석", "completionStatus": "INCOMPLETE"}, {"assigneeId": 9, "assigneeName": "주희", "completionStatus": "COMPLETE"}, {"assigneeId": 11, "assigneeName": "심규민", "completionStatus": "INCOMPLETE"}, {"assigneeId": 13, "assigneeName": "센", "completionStatus": "INCOMPLETE"}, {"assigneeId": 14, "assigneeName": "신민선", "completionStatus": "INCOMPLETE"}], "completionStatus": "INCOMPLETE", "isAssigned": true,
+  // "notificationInfo": {"isNotification": true, "notificationTime": "15:06:00"}, "task": "QA", "todoId": 6431}
   //내가 포함되어있는 투두 아이템이며, 첫번째 담당자가 이것을 완수하였을때 -> 즉 내가 완수하였을때!
   let finishedStatus = todo.isAssigned && todo.assignNames[0].completionStatus == 'COMPLETE'
   const [finished, setFinished] = useState(finishedStatus)
@@ -31,7 +33,12 @@ const TodoItem = ({ editTodo, categoryId, todo, todoLocalId, getInitDatas, selec
       setIsVisible(true)
     }
   }
-
+  let tempTime = todo.notificationInfo.notificationTime?.split(':')
+  let notificationTime = ''
+  if (tempTime) {
+    notificationTime =
+      tempTime[0] < 12 ? '오전' : '오후' + ` ${tempTime[0] > 12 ? tempTime[0] - 12 : tempTime[0]}:${tempTime[1]}`
+  }
   let Done = todo.completionStatus == 'COMPLETE'
   return (
     <TodoContainer
@@ -47,6 +54,12 @@ const TodoItem = ({ editTodo, categoryId, todo, todoLocalId, getInitDatas, selec
         <Label_Text style={{ padding: 4 }} color={Done ? colors.grey_400 : colors.grey_800}>
           {todo.task}
         </Label_Text>
+        {todo.notificationInfo?.isNotification && (
+          <AlarmContainer>
+            <Alarm color={colors.grey_300} width={16} height={16} />
+            <DetailSm_Text>{notificationTime}</DetailSm_Text>
+          </AlarmContainer>
+        )}
         <MateContainer>
           {todo?.assignNames?.map((assignee, id) => {
             if (id <= 2) {
@@ -112,4 +125,8 @@ const LeftContainer = styled.View`
   flex-direction: column;
   align-items: start;
   width: 20%;
+`
+const AlarmContainer = styled.View`
+  flex-direction: row;
+  gap: 4px;
 `

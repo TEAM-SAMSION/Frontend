@@ -8,14 +8,14 @@ import { ActivityIndicator, Keyboard, NativeModules, Platform, Pressable, Scroll
 import Caution from '../../assets/Svgs/Caution.svg'
 import { useRecoilState, useSetRecoilState } from 'recoil'
 import Close from '../../assets/Svgs/Close.svg'
-import { NoItem } from '../../components/Todo/NoToDoItem'
+import { NoPamily, NoTodo } from '../../components/Todo/NoToDoBox'
 import { BottomSheetBackdrop, BottomSheetModal } from '@gorhom/bottom-sheet'
 import { TodoCreateBottomSheet, TodoEditBottomSheet } from '../../components/Todo/TodoBottomSheets'
 
 import { MyCalendarStrip } from '../../components/Todo/CalendarStrip'
 import { getCategoryList, getTeamUser, getTodoTeamList, getTodos } from '../../components/Todo/Apis'
 import { CategoryIndicator } from '../../components/Todo/CategoryIndicator'
-import { useFocusEffect, useIsFocused } from '@react-navigation/native'
+import { useFocusEffect } from '@react-navigation/native'
 import { SelectedTeamAtom, TabBarAtom } from '../../recoil/TabAtom'
 import TodoItem from '../../components/Todo/TodoItem'
 
@@ -99,7 +99,7 @@ export default Todo = ({ navigation, route }) => {
         }
       })
       .then(async (selectedTeamID) => {
-        console.log(selectedTeamID, selectedTeam.id)
+        // console.log(selectedTeamID, selectedTeam.id)
         if (selectedTeamID) {
           //null 반환받으면, TodoTeam 없다는 것을 의미하기에 api호출 스킵
           await getCategoryList(selectedTeamID).then((categories) => {
@@ -166,7 +166,7 @@ export default Todo = ({ navigation, route }) => {
         <ScrollViewContainer>
           <ScrollView showsVerticalScrollIndicator={false}>
             <MyCalendarStrip selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
-            {!todosByCategory && <NoItem />}
+            {!todosByCategory && todoTeamList ? <NoTodo /> : <NoPamily />}
             {isLoading ? (
               <LoadingContainer>
                 <ActivityIndicator />
@@ -184,8 +184,8 @@ export default Todo = ({ navigation, route }) => {
                       />
                       {todos[1][2].map((todo, index) => (
                         <TodoItem
-                          setIsVisible={setIsVisible}
                           getInitDatas={getAllData}
+                          setIsVisible={setIsVisible}
                           selectedDate={selectedDate}
                           key={index}
                           todo={todo}

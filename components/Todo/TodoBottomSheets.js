@@ -1,19 +1,20 @@
 import { useMemo, useState } from 'react'
 import axios from 'axios'
-import { ActivityIndicator, Keyboard, Platform } from 'react-native'
+import { ActivityIndicator, Alert, Keyboard, Platform } from 'react-native'
 import styled from 'styled-components/native'
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator, TransitionPresets } from '@react-navigation/stack'
-
 import { colors } from '../../colors'
-import { Input, ScreenWidth, url } from '../Shared'
-import { BodyBoldSm_Text, Body_Text, Detail_Text } from '../Fonts'
+import { Input, ModalPopUp, ScreenWidth, url } from '../Shared'
+import { BodyBoldSm_Text, BodyBold_Text, Body_Text, Detail_Text } from '../Fonts'
 import { Button_PinkBg } from '../Buttons'
 
+import Caution from '../../assets/Svgs/Caution.svg'
 import Change from '../../assets/Svgs/Todo_change.svg'
 import Delete from '../../assets/Svgs/Todo_delete.svg'
 import Alarm from '../../assets/Svgs/Alarm.svg'
 import Back from '../../assets/Svgs/chevron_back.svg'
+import Close from '../../assets/Svgs/Close.svg'
 import Edit from '../../assets/Svgs/Todo_edit.svg'
 import DatePicker from 'react-native-date-picker'
 import { deleteTodo, editTodoDate, editTodoName, setTodoAlarm } from './Apis'
@@ -59,7 +60,14 @@ export const TodoEditBottomSheet = ({
           )}
         </Stack.Screen>
         <Stack.Screen name="TodoTimeSetting" options={screenBOptions}>
-          {(props) => <TodoTimeSetting {...props} selectedTodo={selectedTodo} />}
+          {(props) => (
+            <TodoTimeSetting
+              {...props}
+              selectedDate={selectedDate}
+              getInitDatas={getInitDatas}
+              selectedTodo={selectedTodo}
+            />
+          )}
         </Stack.Screen>
         <Stack.Screen name="TodoDataEditing" options={screenBOptions}>
           {(props) => (
@@ -89,6 +97,24 @@ export const TodoEditBottomSheet = ({
 }
 const TodoEditHome = ({ navigation, selectedTodo, selectedDate, getInitDatas, handleBottomSheetHeight }) => {
   const [isLoading, setIsLoading] = useState(false)
+  const [isVisible, setIsVisible] = useState(false)
+
+  const handleTodoDelete = () => {
+    setIsLoading(true)
+    if (selectedTodo.isAssigned) {
+      deleteTodo(selectedTodo.todoId)
+        .then(() => {
+          getInitDatas(selectedDate)
+        })
+        .then(() => {
+          setIsLoading(false)
+          handleBottomSheetHeight(0)
+        })
+    } else {
+      setIsVisible(true)
+      setIsLoading(false)
+    }
+  }
   return (
     <BottomSheetBase
       style={{
@@ -105,19 +131,7 @@ const TodoEditHome = ({ navigation, selectedTodo, selectedDate, getInitDatas, ha
             <Edit width={24} height={24} />
             <Detail_Text>수정하기</Detail_Text>
           </SmallBox>
-          <SmallBox
-            onPress={() => {
-              setIsLoading(true)
-              deleteTodo(selectedTodo.todoId)
-                .then(() => {
-                  getInitDatas(selectedDate)
-                })
-                .then(() => {
-                  setIsLoading(false)
-                  handleBottomSheetHeight(0)
-                })
-            }}
-          >
+          <SmallBox onPress={() => handleTodoDelete()}>
             {isLoading ? (
               <ActivityIndicator />
             ) : (
@@ -137,9 +151,37 @@ const TodoEditHome = ({ navigation, selectedTodo, selectedDate, getInitDatas, ha
           <Detail_Text>날짜변경</Detail_Text>
         </BigBox>
       </ContentContainer>
+      <ModalPopUp visible={isVisible} petIcon={false} height={204}>
+        <ModalHeader>
+          <CloseButton onPress={() => setIsVisible(false)}>
+            <Close width={24} height={24} />
+          </CloseButton>
+        </ModalHeader>
+        <PopContent>
+          <Caution width={48} height={48} />
+          <Body_Text color={colors.grey_700}>나에게 할당된 TODO가 아닙니다.</Body_Text>
+        </PopContent>
+      </ModalPopUp>
     </BottomSheetBase>
   )
 }
+
+const ModalHeader = styled.View`
+  width: 100%;
+  align-items: flex-end;
+  justify-content: center;
+  margin-bottom: 24px;
+`
+const PopContent = styled.View`
+  flex-direction: column;
+  padding-bottom: 40px;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+`
+
+const CloseButton = styled.TouchableOpacity``
+
 const TodoDataEditing = ({
   navigation,
   selectedTodo,
@@ -308,14 +350,15 @@ const TodoDateSetting = ({ navigation, selectedTodo, selectedDate, getInitDatas 
     </BottomSheetBase>
   )
 }
-const TodoTimeSetting = ({ navigation, selectedTodo }) => {
+const TodoTimeSetting = ({ navigation, selectedTodo, selectedDate, getInitDatas }) => {
   let initTime = new Date()
   initTime.setHours(12, 0, 0)
   const [date, setDate] = useState(initTime)
   const finishSetTime = () => {
     let formattedTime = date.toString().substring(16, 21)
     setTodoAlarm(selectedTodo, formattedTime).then((res) => {
-      console.log('setTodoAlarmRes:', res.status)
+      console.log(res)
+      getInitDatas(selectedDate)
       navigation.goBack()
     })
   }
