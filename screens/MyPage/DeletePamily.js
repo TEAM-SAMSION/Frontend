@@ -37,7 +37,7 @@ export default function DeletePamily({ route, navigation }) {
       headerLeft: () => (
         <TouchableOpacity
           onPress={() => {
-            deleteItem.swipeableRefs.current[deleteItem.deleteTeam.teamId]?.close()
+            deleteItem.swipeableRefs.current.close()
             navigation.goBack()
           }}
           style={{

@@ -50,7 +50,7 @@ export default function CreateTeam({ route, navigation }) {
 
   // 펫 삭제 팝업
   const [deleteVisible, setDeleteVisible] = useState(false)
-  const swipeableRefs = useRef([])
+  const swipeableRefs = useRef(null)
   const [deletePetInfo, setDeletePetInfo] = useState('')
 
   // 뒤로가기 팝업
@@ -281,7 +281,13 @@ export default function CreateTeam({ route, navigation }) {
                         handleEdit={() => {
                           deletePet(pet)
                         }}
-                        swipeableRef={(ref) => (swipeableRefs.current[pet] = ref)}
+                        onSwipeableOpenHandler={(ref) => {
+                          if (swipeableRefs.current && ref !== swipeableRefs.current) {
+                            swipeableRefs.current.close()
+                            swipeableRefs.current = null
+                          }
+                          swipeableRefs.current = ref
+                        }}
                       />
                     ))}
               </PetBlock>
@@ -296,7 +302,7 @@ export default function CreateTeam({ route, navigation }) {
               <PopButton
                 onPress={() => {
                   setDeleteVisible(false)
-                  swipeableRefs.current[deletePetInfo]?.close()
+                  swipeableRefs.current.close()
                 }}
                 style={{ backgroundColor: colors.grey_100, borderColor: colors.grey_150, borderWidth: 2 }}
               >
