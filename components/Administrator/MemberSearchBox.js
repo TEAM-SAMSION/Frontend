@@ -94,9 +94,11 @@ export const MemberSearchBox = (props) => {
               )}
             </TeamInfoDetailBox>
             <BodyBold_Text color={colors.grey_700}>{registerName}</BodyBold_Text>
-            <EmailText numberOfLines={1} ellipsizeMode="tail">
-              {registerEmail}
-            </EmailText>
+            <EmailBox>
+              <EmailText numberOfLines={1} ellipsizeMode="tail">
+                {registerEmail}
+              </EmailText>
+            </EmailBox>
           </TeamInfoBox>
         </TeamContentBox>
         {myAuthority == 'EXECUTIVE' && authority == 'PRESIDENT' ? (
@@ -296,8 +298,12 @@ const TeamImage = styled.Image`
   background-color: pink;
 `
 const TeamInfoBox = styled.View`
-  width: 220px;
+  //width: 220px;
   gap: 2px;
+  overflow: hidden;
+`
+const EmailBox = styled.View`
+  width: 200px;
   overflow: hidden;
 `
 const EmailText = styled.Text`
