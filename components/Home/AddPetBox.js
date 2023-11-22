@@ -5,8 +5,11 @@ import DeleteIcon from '../../assets/Svgs/delete.svg'
 import { colors } from '../../colors'
 import { TouchableOpacity } from 'react-native'
 import { Swipeable } from 'react-native-gesture-handler'
+import { useRef } from 'react'
 
-export const AddPetBox = ({ pet, grey, navigation, handleDelete, handleEdit, swipeableRef }) => {
+export const AddPetBox = ({ pet, grey, navigation, handleDelete, handleEdit, onSwipeableOpenHandler }) => {
+  const deleteSwipeRef = useRef(null)
+
   const petInfo = {
     name: pet.name,
     age: pet.age,
@@ -33,7 +36,12 @@ export const AddPetBox = ({ pet, grey, navigation, handleDelete, handleEdit, swi
     )
   }
   return (
-    <Swipeable ref={swipeableRef} renderRightActions={RightSwipe} hitSlop={{ left: -100 }}>
+    <Swipeable
+      ref={deleteSwipeRef}
+      onSwipeableOpen={() => onSwipeableOpenHandler(deleteSwipeRef.current)}
+      renderRightActions={RightSwipe}
+      hitSlop={{ left: -100 }}
+    >
       <PetBox style={{ backgroundColor: grey ? colors.grey_150 : colors.grey_100, padding: grey ? 12 : 16 }}>
         <ProfileImage source={{ uri: pet.profileUrl }} />
         <InfoBox>

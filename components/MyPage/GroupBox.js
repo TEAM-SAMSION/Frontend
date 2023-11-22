@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Dimensions, TouchableOpacity, View } from 'react-native'
 import { styled } from 'styled-components/native'
 import { Swipeable } from 'react-native-gesture-handler'
@@ -9,6 +9,8 @@ import { BodyBoldSm_Text, BodySm_Text } from '../Fonts'
 const SCREEN_WIDTH = Dimensions.get('window').width
 
 const GroupBox = (props) => {
+  const deleteSwipeRef = useRef(null)
+
   const RightSwipe = () => {
     return (
       <TouchableOpacity
@@ -24,7 +26,12 @@ const GroupBox = (props) => {
     )
   }
   return (
-    <Swipeable ref={props.swipeableRef} renderRightActions={RightSwipe}>
+    <Swipeable
+      ref={deleteSwipeRef}
+      friction={2}
+      onSwipeableOpen={() => props.onSwipeableOpenHandler(deleteSwipeRef.current)}
+      renderRightActions={RightSwipe}
+    >
       <GroupBoxContainer
         style={{
           shadowColor: 'rgb(0,0,0)',

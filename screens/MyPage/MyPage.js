@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { ScreenLayout } from '../../components/Shared'
 import { styled } from 'styled-components/native'
 import { TopHeader } from '../../components/MyPage/TopHeader'
-import { FlatList, Text } from 'react-native'
+import { FlatList, TouchableWithoutFeedback } from 'react-native'
 import GroupBox from '../../components/MyPage/GroupBox'
 import { Alert, ScrollView, TouchableOpacity, View } from 'react-native'
 import EditIcon from '../../assets/Svgs/Edit.svg'
@@ -32,7 +32,7 @@ export default function MyPage({ navigation }) {
     'https://pawith.s3.ap-northeast-2.amazonaws.com/base-image/default_user.png',
   )
 
-  const swipeableRefs = useRef([])
+  const swipeableRefs = useRef(null)
 
   const fetchUserInfo = () => {
     getUserInfo(ACCESSTOKEN).then((result) => {
@@ -71,68 +71,82 @@ export default function MyPage({ navigation }) {
       <ScreenLayout>
         <TopHeader navigation={navigation} />
         <ScrollView showsVerticalScrollIndicator={false}>
-          <UserContainer>
-            <UserDetailContainer>
-              <ProfileImage
-                source={{
-                  uri: `${profileUrl}`,
-                }}
-              />
-              <UserBox>
-                <SubHead_Text>{name}</SubHead_Text>
-                <Detail_Text color={colors.grey_600}>{email}</Detail_Text>
-              </UserBox>
-            </UserDetailContainer>
-            <EditBox onPress={() => navigation.navigate('EditUserInfo', { profileUrl, name, email })}>
-              <EditIcon width={16} height={16} color={'#4D4D4D'} />
-            </EditBox>
-          </UserContainer>
-          <GroupContainer>
-            <Title>내가 속한 Pamily</Title>
-            {groupInfo.length == 0 ? (
-              <NoneGroupBox>
-                <DogIcon source={require(`../../assets/Imgs/DogDefault.png`)} />
-                <BodyBoldSm_Text color={colors.grey_400}>소속된 Pamily가 없습니다.</BodyBoldSm_Text>
-                <ButtonContainer>
-                  <ButtonBox onPress={() => navigation.navigate('HomeNav', { screen: 'JoinTeam' })}>
-                    <BodySm_Text color={colors.red_350}>참여하기</BodySm_Text>
-                  </ButtonBox>
-                  <ButtonBox onPress={() => navigation.navigate('HomeNav', { screen: 'CreateTeam' })}>
-                    <BodySm_Text color={colors.red_350}>생성하기</BodySm_Text>
-                  </ButtonBox>
-                </ButtonContainer>
-              </NoneGroupBox>
-            ) : (
-              <Groups>
-                <FlatList
-                  data={groupInfo}
-                  renderItem={({ item }) => {
-                    return (
-                      <GroupBox
-                        data={item}
-                        handleDelete={() => {
-                          setDeleteTeam(item)
-                          setDeleteTeamName(item.teamName)
-                          setDeleteTeamPeriod(item.registerPeriod + 1)
-                          setVisible(true)
-                        }}
-                        gotoAdminNav={() =>
-                          navigation.navigate('AdministratorNav', { screen: 'AdminHome', params: { item } })
-                        }
-                        swipeableRef={(ref) => (swipeableRefs.current[item.teamId] = ref)}
-                      />
-                    )
-                  }}
-                />
-              </Groups>
-            )}
-          </GroupContainer>
-          <FooterContainer>
-            <Detail_Text color={'#A09999'}>
-              포잇에 대해 더 알아볼까요?{'\n'}좀 더 똑똑하게 포잇을 사용하고 싶다면?
-            </Detail_Text>
-            <Guide>포잇가이드</Guide>
-          </FooterContainer>
+          <TouchableWithoutFeedback
+            onPress={() => {
+              swipeableRefs.current.close()
+            }}
+          >
+            <View>
+              <UserContainer>
+                <UserDetailContainer>
+                  <ProfileImage
+                    source={{
+                      uri: `${profileUrl}`,
+                    }}
+                  />
+                  <UserBox>
+                    <SubHead_Text>{name}</SubHead_Text>
+                    <Detail_Text color={colors.grey_600}>{email}</Detail_Text>
+                  </UserBox>
+                </UserDetailContainer>
+                <EditBox onPress={() => navigation.navigate('EditUserInfo', { profileUrl, name, email })}>
+                  <EditIcon width={16} height={16} color={'#4D4D4D'} />
+                </EditBox>
+              </UserContainer>
+              <GroupContainer>
+                <Title>내가 속한 Pamily</Title>
+                {groupInfo.length == 0 ? (
+                  <NoneGroupBox>
+                    <DogIcon source={require(`../../assets/Imgs/DogDefault.png`)} />
+                    <BodyBoldSm_Text color={colors.grey_400}>소속된 Pamily가 없습니다.</BodyBoldSm_Text>
+                    <ButtonContainer>
+                      <ButtonBox onPress={() => navigation.navigate('HomeNav', { screen: 'JoinTeam' })}>
+                        <BodySm_Text color={colors.red_350}>참여하기</BodySm_Text>
+                      </ButtonBox>
+                      <ButtonBox onPress={() => navigation.navigate('HomeNav', { screen: 'CreateTeam' })}>
+                        <BodySm_Text color={colors.red_350}>생성하기</BodySm_Text>
+                      </ButtonBox>
+                    </ButtonContainer>
+                  </NoneGroupBox>
+                ) : (
+                  <Groups>
+                    <FlatList
+                      data={groupInfo}
+                      renderItem={({ item }) => {
+                        return (
+                          <GroupBox
+                            data={item}
+                            handleDelete={() => {
+                              setDeleteTeam(item)
+                              setDeleteTeamName(item.teamName)
+                              setDeleteTeamPeriod(item.registerPeriod + 1)
+                              setVisible(true)
+                            }}
+                            gotoAdminNav={() =>
+                              navigation.navigate('AdministratorNav', { screen: 'AdminHome', params: { item } })
+                            }
+                            onSwipeableOpenHandler={(ref) => {
+                              if (swipeableRefs.current && ref !== swipeableRefs.current) {
+                                swipeableRefs.current.close()
+                                swipeableRefs.current = null
+                              }
+                              swipeableRefs.current = ref
+                            }}
+                          />
+                        )
+                      }}
+                    />
+                  </Groups>
+                )}
+              </GroupContainer>
+              <FooterContainer>
+                <Detail_Text color={'#A09999'}>
+                  포잇에 대해 더 알아볼까요?{'\n'}좀 더 똑똑하게 포잇을 사용하고 싶다면?
+                </Detail_Text>
+                <Guide>포잇가이드</Guide>
+              </FooterContainer>
+            </View>
+          </TouchableWithoutFeedback>
         </ScrollView>
         <ModalPopUp visible={visible} petIcon={false} height={290}>
           <PopContent>
@@ -165,7 +179,7 @@ export default function MyPage({ navigation }) {
             <PopButton
               onPress={() => {
                 setVisible(false)
-                swipeableRefs.current[deleteTeam.teamId]?.close()
+                swipeableRefs.current.close()
               }}
             >
               <PopButtonText>아니오</PopButtonText>
