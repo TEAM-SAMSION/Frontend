@@ -25,12 +25,12 @@ export default function ManagePet({ route, navigation }) {
     getPet(ACCESSTOKEN, teamId).then((result) => {
       setSavedPets(result)
     })
-  }, [isFocused, isDeletePet, savedPets])
+  }, [isFocused, isDeletePet])
 
   return (
     <ScreenLayout>
       <ScrollView showsVerticalScrollIndicator={false}>
-        <TouchableWithoutFeedback onPress={() => swipeableRefs.current.close()}>
+        <TouchableWithoutFeedback onPress={() => swipeableRefs.current?.close()}>
           <View>
             <PetAddContainer>
               {savedPets.length < 0

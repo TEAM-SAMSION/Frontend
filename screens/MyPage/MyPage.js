@@ -73,7 +73,7 @@ export default function MyPage({ navigation }) {
         <ScrollView showsVerticalScrollIndicator={false}>
           <TouchableWithoutFeedback
             onPress={() => {
-              swipeableRefs.current.close()
+              swipeableRefs.current?.close()
             }}
           >
             <View>
