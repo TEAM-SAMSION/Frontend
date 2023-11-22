@@ -156,25 +156,14 @@ export const NumberInput = ({ onPress, value, placeholder, active, isDark }) => 
 
 export const ModalPopUp = ({ petIcon, visible, height, children }) => {
   const [showModal, setShowModal] = useState(visible)
-  //   const scaleValue = useRef(new Animated.Value(0)).current
   useEffect(() => {
     toggleModal()
   }, [visible])
   const toggleModal = () => {
     if (visible) {
       setShowModal(true)
-      //   Animated.spring(scaleValue, {
-      //     toValue: 1,
-      //     duration: 300,
-      //     useNativeDriver: true,
-      //   }).start()
     } else {
       setShowModal(false)
-      //   Animated.timing(scaleValue, {
-      //     toValue: 0,
-      //     duration: 300,
-      //     useNativeDriver: true,
-      //   })
     }
   }
   return (
@@ -201,8 +190,36 @@ const ModalContainer = styled.View`
 `
 const PopImage = styled.Image`
   width: 112px;
-  height: 118px;
   overflow: visible;
-  top: 48px;
-  //z-index: -1;
 `
+
+export const PetModalPopUp = ({ petIcon, visible, height, children }) => {
+  const [showModal, setShowModal] = useState(visible)
+  useEffect(() => {
+    toggleModal()
+  }, [visible])
+  const toggleModal = () => {
+    if (visible) {
+      setShowModal(true)
+    } else {
+      setShowModal(false)
+    }
+  }
+  return (
+    <Modal transparent visible={showModal}>
+      <ModalBackground>
+        {petIcon ? (
+          <PopImage
+            style={Platform.OS == 'android' ? { height: 200, top: 80 } : { height: 118, top: 48 }}
+            source={require('../assets/Imgs/TopPopup.png')}
+          />
+        ) : (
+          ''
+        )}
+        <ModalContainer style={{ height: `${height}px`, marginBottom: Platform.OS == 'android' ? 100 : '' }}>
+          {children}
+        </ModalContainer>
+      </ModalBackground>
+    </Modal>
+  )
+}
