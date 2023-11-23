@@ -21,11 +21,9 @@ export const PamilyChoiceToggle = (props) => {
   }
 
   const handleOptionSelect = (value) => {
-    let tempArr = { id: value.teamId, name: value.teamName, auth: value.authority } //이거 김형석
-    console.log('topTeam Changed', tempArr) //이거 김형석
-    props.setSelectedTeam(tempArr) //이거 김형석
-    props.setTopTeamId(value.teamId)
-    props.setTopTeamName(value.teamName)
+    let tempArr = { id: value.teamId, name: value.teamName, auth: value.authority }
+    console.log('topTeam Changed', tempArr)
+    props.setSelectedTeam(tempArr)
     setIsOpen(false)
   }
 
@@ -33,7 +31,7 @@ export const PamilyChoiceToggle = (props) => {
     <>
       <DropdownContainer isOpen={isOpen} onPress={toggleDropdown}>
         <Detail_Text color={colors.grey_600} style={{ width: 67 }}>
-          {props.topTeamName || '패밀리 선택 '}
+          {props.selectedTeam.name || '패밀리 선택 '}
         </Detail_Text>
         {isOpen ? (
           <UpIcon width={16} height={16} style={{ position: 'absolute', right: 10 }} />

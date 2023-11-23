@@ -35,14 +35,11 @@ export default function Home({ navigation }) {
   const [pamilyList, setPamilyList] = useState([])
   const [progress, setProgress] = useState(0)
   const [pamilyNum, setPamilyNum] = useState(0)
-  const [topTeamId, setTopTeamId] = useState(0)
-  const [topTeamName, setTopTeamName] = useState('')
   const [updated, setUpdated] = useState(false)
   const [todoList, setTodoList] = useState([])
   const [isDog, setIsDog] = useState(true)
 
-  //김형석 임시로 추가했음 -> navigation으로 이동할때마다 전달하기보단, 선택된 Team을 글로벌 변수로 가져가는게 버그도 없고, 성능저하 없을거같아서 Atom 새로 만들었어!
-  const [selectedTeam, setSelectedTeam] = useRecoilState(SelectedTeamAtom) //김형석
+  const [selectedTeam, setSelectedTeam] = useRecoilState(SelectedTeamAtom)
 
   const getUserNickname = () => {
     getUserInfo(ACCESSTOKEN).then((result) => {
@@ -62,9 +59,7 @@ export default function Home({ navigation }) {
 
         if (teamList.length !== 0) {
           setPamilyNum(1)
-          setTopTeamId(teamList[0].teamId)
-          setTopTeamName(teamList[0].teamName)
-          setSelectedTeam({ id: teamList[0].teamId, name: teamList[0].teamName, auth: teamList[0].authority }) //여기 김형석
+          setSelectedTeam({ id: teamList[0].teamId, name: teamList[0].teamName, auth: teamList[0].authority })
 
           // Todo 데이터 가져오기
           const todoList = await getMyTodoList(ACCESSTOKEN, teamList[0].teamId)
@@ -99,15 +94,8 @@ export default function Home({ navigation }) {
     })
   }
 
-  const setTeamId = () => {
-    setPamilyNum(1)
-    setTopTeamId(pamilyList[0].teamId)
-    console.log(topTeamId)
-    setTopTeamName(pamilyList[0].teamName)
-  }
-
   const fetchProgress = () => {
-    getTodoProgress(ACCESSTOKEN, topTeamId).then((result) => {
+    getTodoProgress(ACCESSTOKEN, selectedTeam.id).then((result) => {
       setProgress(result)
       //console.log(progress)
     })
@@ -120,14 +108,14 @@ export default function Home({ navigation }) {
   useEffect(() => {
     fetchTeamList()
     pamilyNum !== 0 && fetchMyTodo()
-  }, [isFocused, updated, topTeamId, pamilyNum])
+  }, [isFocused, updated, selectedTeam, pamilyNum])
 
   const [myTodo, setMyTodo] = useState([])
   const [todoPage, setTodoPage] = useState(0)
 
   const fetchMyTodo = () => {
     pamilyNum &&
-      getMyTodoList(ACCESSTOKEN, topTeamId).then((result) => {
+      getMyTodoList(ACCESSTOKEN, selectedTeam.id).then((result) => {
         setResultArray(result)
         setMyTodo(result)
       })
@@ -160,14 +148,7 @@ export default function Home({ navigation }) {
             <SubText>오늘도 포잇과 함께 마이펫을 관리해볼까요?</SubText>
           </NickBox>
           <PamilyContainer>
-            <PamilyChoiceToggle
-              pamilyList={pamilyList}
-              topTeamName={topTeamName}
-              setTopTeamName={setTopTeamName}
-              topTeamId={topTeamId}
-              setTopTeamId={setTopTeamId}
-              setSelectedTeam={setSelectedTeam}
-            />
+            <PamilyChoiceToggle pamilyList={pamilyList} selectedTeam={selectedTeam} setSelectedTeam={setSelectedTeam} />
             <MainImage isDog={isDog} progress={progress} pamilyNum={pamilyNum} />
             <PamilyStatContainer>
               {pamilyNum == 0 ? (

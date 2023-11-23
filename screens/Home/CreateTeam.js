@@ -17,7 +17,7 @@ import {
   HeadLineSm_Text,
   SubHead_Text,
 } from '../../components/Fonts'
-import { getTeamCode, postTeamInfo } from '../../components/Home/Apis'
+import { getLatestTeam, getTeamCode, postTeamInfo } from '../../components/Home/Apis'
 import { SelectedTeamAtom, TabBarAtom } from '../../recoil/TabAtom'
 import { CommonActions, useIsFocused } from '@react-navigation/native'
 import EditIcon from '../../assets/Svgs/Edit.svg'
@@ -42,7 +42,7 @@ export default function CreateTeam({ route, navigation }) {
   const [pamilyFile, setPamilyFile] = useState('file://' + RNFS.MainBundlePath + '/default_pamily.png')
   const ACCESSTOKEN = useRecoilValue(accessTokenState)
 
-  const setTodoPage = useSetRecoilState(SelectedTeamAtom)
+  const [selectedTeam, setSelectedTeam] = useRecoilState(SelectedTeamAtom)
 
   // onFocus
   const [onName, setOnName] = useState(false)
@@ -169,7 +169,12 @@ export default function CreateTeam({ route, navigation }) {
 
     const json = JSON.stringify(teamInfo)
     pamilyData.append('todoTeamCreateInfo', { string: json, type: 'application/json' })
-    postTeamInfo(ACCESSTOKEN, pamilyData)
+    postTeamInfo(ACCESSTOKEN, pamilyData).then(() => {
+      getLatestTeam().then((result) => {
+        console.log(result)
+        setSelectedTeam(result)
+      })
+    })
   }
 
   return (
@@ -393,6 +398,13 @@ export default function CreateTeam({ route, navigation }) {
               <PopButton
                 onPress={() => {
                   copyTeamCode()
+                  setCompleteVisible(false)
+                  navigation.dispatch(
+                    CommonActions.reset({
+                      routes: [{ name: 'Home' }],
+                    }),
+                  )
+                  navigation.navigate('ToDoNav', { screen: 'todo' })
                 }}
               >
                 <BodySm_Text color={colors.red_350}>초대링크 복사하기</BodySm_Text>
