@@ -17,6 +17,7 @@ import { StackActions, useIsFocused } from '@react-navigation/native'
 import { BodySm_Text, DetailSm_Text } from '../../components/Fonts'
 import { SelectedTeamAtom, TabBarAtom } from '../../recoil/TabAtom'
 import Swiper from 'react-native-swiper'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 export default function Home({ navigation }) {
   const isFocused = useIsFocused()
@@ -49,7 +50,7 @@ export default function Home({ navigation }) {
     })
   }
 
-  useEffect(() => {
+  useEffect(async () => {
     const fetchData = async () => {
       try {
         // 닉네임 가져오기

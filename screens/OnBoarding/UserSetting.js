@@ -48,7 +48,7 @@ export const UserSetting = ({ navigation, route }) => {
     [],
   )
   return (
-    <ScreenKeyboardLayout onPress={() => Keyboard.dismiss()} behavior="padding" verticalOffset={statusBarHeight + 44}>
+    <ScreenKeyboardLayout onPress={() => Keyboard.dismiss()} behavior="none" verticalOffset={statusBarHeight + 44}>
       <BackButton onPress={() => navigation.goBack()}>
         <BackArrow width={24} height={24} />
       </BackButton>

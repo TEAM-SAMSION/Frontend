@@ -9,7 +9,7 @@ import UpIcon from '../../assets/Svgs/arrow_up.svg'
 import { Detail_Text } from '../Fonts'
 import { useRecoilState } from 'recoil'
 import { SelectedTeamAtom } from '../../recoil/TabAtom'
-export const TodoHeader = ({ navigation, todoTeamList }) => {
+export const TodoHeader = ({ navigation, todoTeamList, setIsCreateVisible }) => {
   const [selectedTeam, setSelectedTeam] = useRecoilState(SelectedTeamAtom)
 
   const [isOpen, setIsOpen] = useState(false)
@@ -38,7 +38,6 @@ export const TodoHeader = ({ navigation, todoTeamList }) => {
             {todoTeamList?.map((todoTeam, id) => (
               <DropdownBox
                 key={id}
-                style={id == todoTeamList.length - 1 && { borderBottomLeftRadius: 8, borderBottomRightRadius: 8 }}
                 onPress={() => {
                   setIsOpen(false)
                   // changeTodoTeam(todoTeam.id)
@@ -51,7 +50,7 @@ export const TodoHeader = ({ navigation, todoTeamList }) => {
             ))}
             <DropdownBox
               style={{ borderBottomLeftRadius: 8, borderBottomRightRadius: 8 }}
-              onPress={() => setVisible(true)}
+              onPress={() => setIsCreateVisible(true)}
             >
               <Detail_Text color={colors.grey_600}>+</Detail_Text>
             </DropdownBox>

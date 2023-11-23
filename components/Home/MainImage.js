@@ -1,3 +1,4 @@
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useEffect, useState } from 'react'
 import { Image } from 'react-native'
 import styled from 'styled-components/native'
@@ -8,6 +9,8 @@ export const MainImage = (props) => {
 
   useEffect(() => {
     setIsDog(props.isDog)
+    // console.log(JSON.stringify(props.isDog))
+    // AsyncStorage.setItem('mainIcon', JSON.stringify(props.isDog))
   }, [props.isDog])
 
   const getImageSource = () => {

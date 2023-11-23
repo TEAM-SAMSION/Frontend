@@ -2,7 +2,7 @@ import { atom, DefaultValue, selector } from 'recoil'
 
 export const platformState = atom({
   key: 'platform',
-  default: '네이버',
+  default: 'NAVER',
 })
 export const accessTokenState = atom({
   key: 'accessToken',

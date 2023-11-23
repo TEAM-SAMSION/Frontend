@@ -84,7 +84,7 @@ export const ScreenKeyboardLayout = ({ children, onPress = null, verticalOffset,
 //****************** HeaderWithBack  *******************************************************/
 
 import Back from '../assets/Svgs/chevron_back'
-import { BodyBold_Text } from './Fonts'
+import { BodyBold_Text, BodySm_Text, Detail_Text, SubHead_Text } from './Fonts'
 
 export const HeaderWithBack = ({ title, navigation }) => {
   return (
@@ -193,7 +193,9 @@ const PopImage = styled.Image`
   overflow: visible;
 `
 
-export const PetModalPopUp = ({ petIcon, visible, height, children }) => {
+import Close from '../assets/Svgs/Close.svg'
+
+export const PetModalPopUp = ({ petIcon, visible, height, setIsVisible, setIsOpen, navigation }) => {
   const [showModal, setShowModal] = useState(visible)
   useEffect(() => {
     toggleModal()
@@ -205,6 +207,7 @@ export const PetModalPopUp = ({ petIcon, visible, height, children }) => {
       setShowModal(false)
     }
   }
+
   return (
     <Modal transparent visible={showModal}>
       <ModalBackground>
@@ -217,9 +220,71 @@ export const PetModalPopUp = ({ petIcon, visible, height, children }) => {
           ''
         )}
         <ModalContainer style={{ height: `${height}px`, marginBottom: Platform.OS == 'android' ? 100 : '' }}>
-          {children}
+          <ModalHeader>
+            <CloseButton
+              onPress={() => {
+                setIsVisible(false)
+                setIsOpen(false)
+              }}
+            >
+              <Close width={24} height={24} />
+            </CloseButton>
+          </ModalHeader>
+          <PopContent>
+            <SubHead_Text color={colors.grey_700}>Pamily와 함께하시겠습니까?</SubHead_Text>
+            <Detail_Text color={colors.grey_500}>Pamily는 나의 반려동물을 함께 키우는 모임을 말합니다.</Detail_Text>
+          </PopContent>
+          <PopButtonContainer>
+            <PopButton
+              onPress={() => {
+                navigation.navigate('CreateTeam')
+                setIsVisible(false)
+                setIsOpen(false)
+              }}
+            >
+              <BodySm_Text color={colors.red_350}>Pamily 생성하기</BodySm_Text>
+            </PopButton>
+            <PopButton
+              onPress={() => {
+                navigation.navigate('JoinTeam')
+                setIsVisible(false)
+                setIsOpen(false)
+              }}
+            >
+              <BodySm_Text color={colors.red_350}>Pamily 참여하기</BodySm_Text>
+            </PopButton>
+          </PopButtonContainer>
         </ModalContainer>
       </ModalBackground>
     </Modal>
   )
 }
+
+const PopContent = styled.View`
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 40px;
+`
+const PopButtonContainer = styled.View`
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+`
+const PopButton = styled.TouchableOpacity`
+  display: flex;
+  flex: 1 0 0;
+  height: 44px;
+  padding: 12px 16px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 8px;
+  background-color: ${colors.red_200};
+`
+const CloseButton = styled.TouchableOpacity``
+const ModalHeader = styled.View`
+  width: '100%';
+  align-items: flex-end;
+  justify-content: center;
+  margin-bottom: 24px;
+`
