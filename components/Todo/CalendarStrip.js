@@ -8,7 +8,6 @@ import Arrow_right from '../../assets/Svgs/arrow_right.svg'
 import Reset from '../../assets/Svgs/Reset.svg'
 
 import { BodyBoldSm_Text, Detail_Text, SubHeadSm_Text } from '../Fonts'
-import moment from 'moment'
 
 export const MyCalendarStrip = ({ selectedDate, setSelectedDate }) => {
   //2023-11-20
@@ -63,14 +62,14 @@ export const MyCalendarStrip = ({ selectedDate, setSelectedDate }) => {
           fontFamily: 'Spoqa-Medium',
           fontSize: 12,
           padding: 12,
-          margin: -5,
+          margin: -6,
         }}
         highlightDateNumberStyle={{
-          color: colors.grey_800,
+          color: colors.primary,
           fontFamily: 'Spoqa-Medium',
           fontSize: 12,
           padding: 12,
-          margin: -5,
+          margin: -6,
         }}
         leftSelector={[]}
         rightSelector={[]}

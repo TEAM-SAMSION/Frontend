@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react'
-import { ScrollView, Text, View } from 'react-native'
+import React, { useCallback, useEffect, useState } from 'react'
+import { RefreshControl, ScrollView, Text, View } from 'react-native'
 import styled from 'styled-components/native'
 import { colors } from '../../colors'
 import { HeaderWithBack, ScreenLayout } from '../../components/Shared'
@@ -13,8 +13,16 @@ import { userInfoState } from '../../recoil/AuthAtom'
 
 export const Alarms = ({ navigation }) => {
   // let items = ['전체', 'TODO', '공지사항']
+  const [refreshing, setRefreshing] = useState(false)
   const [alarmList, setAlarmList] = useState(null)
 
+  const onRefresh = useCallback(() => {
+    setRefreshing(true)
+    getAlarmList()
+    setTimeout(() => {
+      setRefreshing(false)
+    }, 1000)
+  }, [])
   const getAlarmList = async () => {
     getAlarms().then((data) => {
       console.log('getAlarmList:', data)
@@ -28,6 +36,7 @@ export const Alarms = ({ navigation }) => {
   useEffect(() => {
     getAlarmList()
   }, [])
+
   const elapsedTime = (date) => {
     const now = new Date()
     const receivedTime = new Date(date)
@@ -59,9 +68,12 @@ export const Alarms = ({ navigation }) => {
         </ScrollView>
       </FilterBase> */}
       <ContentBase>
-        {alarmList ? (
-          <ScrollView horizontal={false}>
-            {alarmList.map((item, id) => {
+        <ScrollView
+          style={{ flex: 1, width: '100%' }}
+          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={() => onRefresh()} />}
+        >
+          {alarmList ? (
+            alarmList.map((item, id) => {
               return (
                 <AlarmBase style={{ borderBottomWidth: 1, borderBottomColor: colors.outline }}>
                   <AlarmIcon>
@@ -77,17 +89,15 @@ export const Alarms = ({ navigation }) => {
                   </AlarmTextContainer>
                 </AlarmBase>
               )
-            })}
-          </ScrollView>
-        ) : (
-          <>
-            <NoAlarmImg source={NoAlarm} />
-            <SubHead_Text color={colors.grey_400}>알림이 없습니다</SubHead_Text>
-            <RefreshButton onPress={() => getAlarmList()}>
-              <BodySm_Text color={colors.primary_outline}>새로고침</BodySm_Text>
-            </RefreshButton>
-          </>
-        )}
+            })
+          ) : (
+            <ContentBase style={{ marginTop: 64 }}>
+              <NoAlarmImg source={NoAlarm} />
+              <SubHead_Text color={colors.grey_400}>알림이 없습니다</SubHead_Text>
+              <BodySm_Text color={colors.primary_outline}>당겨서 새로고침</BodySm_Text>
+            </ContentBase>
+          )}
+        </ScrollView>
       </ContentBase>
     </ScreenLayout>
   )
@@ -141,7 +151,6 @@ const AlarmBase = styled.View`
 const AlarmTextContainer = styled.View`
   flex-direction: column;
   justify-content: center;
-  gap: inherit;
   margin-left: 16px;
   flex: 1;
 `

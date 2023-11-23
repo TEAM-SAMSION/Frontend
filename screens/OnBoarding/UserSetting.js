@@ -1,10 +1,10 @@
 import React, { useCallback, useRef, useState } from 'react'
-import { Input, InputTitle, ScreenKeyboardLayout, url } from '../../components/Shared'
+import { Input, InputTitle, ScreenKeyboardLayout, ScreenWidth, url } from '../../components/Shared'
 import styled from 'styled-components/native'
 import { colors } from '../../colors'
 import BackArrow from '../../assets/Svgs/chevron_back.svg'
 import { Button_PinkBg } from '../../components/Buttons'
-import { Keyboard, NativeModules } from 'react-native'
+import { Keyboard, NativeModules, Pressable } from 'react-native'
 import BottomSheet, { BottomSheetBackdrop } from '@gorhom/bottom-sheet'
 import { routeList } from '../../datas/OnBoarding/data'
 import { TermsBottomSheet } from '../../components/OnBoarding/TermsBottomSheet'
@@ -17,8 +17,9 @@ export const UserSetting = ({ navigation, route }) => {
   const [detailRoute, setDetailRoute] = useState('')
   const [nickname, setNickname] = useState('')
 
-  let { accessToken, refreshToken, provider } = route?.params
-  console.log(accessToken, refreshToken, provider)
+  // let { accessToken, refreshToken, provider } = route?.params
+  let { accessToken, refreshToken, provider } = ['asdf', 'fdas', 'Navaer']
+  // console.log(accessToken, refreshToken, provider)
   Platform.OS == 'ios'
     ? StatusBarManager.getHeight((statusBarFrameData) => {
         setStatusBarHeight(statusBarFrameData.height)
@@ -28,7 +29,11 @@ export const UserSetting = ({ navigation, route }) => {
   const bottomModal = useRef()
   const handleSubmit = () => {
     Keyboard.dismiss()
-    bottomModal.current?.snapToIndex(0)
+    if (ScreenWidth < 380) {
+      bottomModal.current?.snapToIndex(1)
+    } else {
+      bottomModal.current?.snapToIndex(0)
+    }
   }
   const handleSelect = (id) => {
     if (id != 4) {
@@ -48,87 +53,89 @@ export const UserSetting = ({ navigation, route }) => {
     [],
   )
   return (
-    <ScreenKeyboardLayout onPress={() => Keyboard.dismiss()} behavior="none" verticalOffset={statusBarHeight + 44}>
-      <BackButton onPress={() => navigation.goBack()}>
-        <BackArrow width={24} height={24} />
-      </BackButton>
-      <ContentContainer>
-        <TopContainer>
-          <SubHead_Text color={colors.grey_800}>포잇과 함께 하게되어 영광이에요!</SubHead_Text>
-          <TextContainer>
-            <SubHead_Text color={colors.primary}>사전 정보 입력</SubHead_Text>
-            <SubHead_Text color={colors.grey_800}>을 완료해주세요!</SubHead_Text>
-          </TextContainer>
-          <InputContainer>
-            <InputTitle>닉네임 설정</InputTitle>
-            <Input
-              style={{ backgroundColor: colors.grey_150, color: colors.grey_700 }}
-              autoCapitalize="none"
-              placeholderTextColor={colors.grey_450}
-              onSubmitEditing={() => Keyboard.dismiss()}
-              placeholder="닉네임을 입력해주세요"
-              returnKeyType="done"
-              inputMode="text"
-              blurOnSubmit={false}
-              onChangeText={(text) => setNickname(text)}
-            />
-          </InputContainer>
-          <InputContainer>
-            <InputTitle>포잇을 알게된 경로</InputTitle>
-            <RouteItemContainer>
-              {routeList.map((item, id) => {
-                return (
-                  <RouteItem
-                    onPress={() => handleSelect(id)}
-                    style={{ backgroundColor: selectedRoute == id + 1 ? colors.primary_container : colors.grey_150 }}
-                    key={id}
-                  >
-                    <Detail_Text color={colors.grey_600}>{item}</Detail_Text>
-                  </RouteItem>
-                )
-              })}
-            </RouteItemContainer>
-          </InputContainer>
-          {selectedRoute == 5 && (
+    <ScreenKeyboardLayout behavior="none" verticalOffset={statusBarHeight + 44}>
+      <Pressable style={{ width: '100%', flex: 1 }} onPress={() => Keyboard.dismiss()}>
+        <BackButton onPress={() => navigation.goBack()}>
+          <BackArrow width={24} height={24} />
+        </BackButton>
+        <ContentContainer>
+          <TopContainer>
+            <SubHead_Text color={colors.grey_800}>포잇과 함께 하게되어 영광이에요!</SubHead_Text>
+            <TextContainer>
+              <SubHead_Text color={colors.primary}>사전 정보 입력</SubHead_Text>
+              <SubHead_Text color={colors.grey_800}>을 완료해주세요!</SubHead_Text>
+            </TextContainer>
             <InputContainer>
-              <InputTitle>포잇을 알게된 경로를 자세히 입력해주세요</InputTitle>
+              <InputTitle>닉네임 설정</InputTitle>
               <Input
                 style={{ backgroundColor: colors.grey_150, color: colors.grey_700 }}
                 autoCapitalize="none"
                 placeholderTextColor={colors.grey_450}
                 onSubmitEditing={() => Keyboard.dismiss()}
-                placeholder="경로를 입력해주세요"
+                placeholder="닉네임을 입력해주세요"
                 returnKeyType="done"
                 inputMode="text"
                 blurOnSubmit={false}
-                onChangeText={(text) => setDetailRoute(text)}
+                onChangeText={(text) => setNickname(text)}
               />
             </InputContainer>
-          )}
-        </TopContainer>
-        <Button_PinkBg text="입력 완료" isEnabled={isEnabled} func={() => handleSubmit()} />
-      </ContentContainer>
-      <BottomSheet
-        ref={bottomModal}
-        backdropComponent={renderBackdrop}
-        index={-1}
-        snapPoints={['55%']}
-        enablePanDownToClose={false}
-        enableHandlePanningGesture={false}
-        enableContentPanningGesture={false}
-        handleHeight={0}
-        enableDismissOnClose
-        handleIndicatorStyle={{ backgroundColor: colors.grey_300, width: 72, height: 6 }}
-      >
-        <TermsBottomSheet
-          refreshToken={refreshToken}
-          accessToken={accessToken}
-          nickname={nickname}
-          selectedRoute={selectedRoute}
-          provider={provider}
-          detailRoute={detailRoute}
-        />
-      </BottomSheet>
+            <InputContainer>
+              <InputTitle>포잇을 알게된 경로</InputTitle>
+              <RouteItemContainer>
+                {routeList.map((item, id) => {
+                  return (
+                    <RouteItem
+                      onPress={() => handleSelect(id)}
+                      style={{ backgroundColor: selectedRoute == id + 1 ? colors.primary_container : colors.grey_150 }}
+                      key={id}
+                    >
+                      <Detail_Text color={colors.grey_600}>{item}</Detail_Text>
+                    </RouteItem>
+                  )
+                })}
+              </RouteItemContainer>
+            </InputContainer>
+            {selectedRoute == 5 && (
+              <InputContainer>
+                <InputTitle>포잇을 알게된 경로를 자세히 입력해주세요</InputTitle>
+                <Input
+                  style={{ backgroundColor: colors.grey_150, color: colors.grey_700 }}
+                  autoCapitalize="none"
+                  placeholderTextColor={colors.grey_450}
+                  onSubmitEditing={() => Keyboard.dismiss()}
+                  placeholder="경로를 입력해주세요"
+                  returnKeyType="done"
+                  inputMode="text"
+                  blurOnSubmit={false}
+                  onChangeText={(text) => setDetailRoute(text)}
+                />
+              </InputContainer>
+            )}
+          </TopContainer>
+          <Button_PinkBg text="입력 완료" isEnabled={isEnabled} func={() => handleSubmit()} />
+        </ContentContainer>
+        <BottomSheet
+          ref={bottomModal}
+          backdropComponent={renderBackdrop}
+          index={-1}
+          snapPoints={['55%', '68%']}
+          enablePanDownToClose={false}
+          enableHandlePanningGesture={false}
+          enableContentPanningGesture={false}
+          handleHeight={0}
+          enableDismissOnClose
+          handleIndicatorStyle={{ backgroundColor: colors.grey_300, width: 72, height: 6 }}
+        >
+          <TermsBottomSheet
+            refreshToken={refreshToken}
+            accessToken={accessToken}
+            nickname={nickname}
+            selectedRoute={selectedRoute}
+            provider={provider}
+            detailRoute={detailRoute}
+          />
+        </BottomSheet>
+      </Pressable>
     </ScreenKeyboardLayout>
   )
 }

@@ -17,7 +17,7 @@ export default LoginButton = ({ loginFunc, id }) => {
       style={[id == 0 && { borderColor: '#4d4d4d', borderWidth: 1 }, { backgroundColor: color[id] }]}
       onPress={() => {
         loginFunc()
-        setIsLoading(true)
+        // setIsLoading(true)
       }}
     >
       <LOGOIcon source={logo[id]} />

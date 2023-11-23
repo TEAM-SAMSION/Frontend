@@ -4,7 +4,6 @@ import { url } from '../Shared'
 export const deleteTodo = async (todoId) => {
   let API = `/teams/todos/${todoId}`
   const response = await axiosInstance.delete(url + API)
-  console.log(response)
 }
 //정상작동됨
 export const getTodoTeamList = async (page = 0, size = 20) => {
