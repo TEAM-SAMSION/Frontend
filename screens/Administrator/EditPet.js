@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { TouchableOpacity, View } from 'react-native'
+import { Keyboard, TouchableOpacity, View } from 'react-native'
 import styled from 'styled-components/native'
 import { colors } from '../../colors'
 import { BodyBold_Text, BodySm_Text, Body_Text, Detail_Text } from '../../components/Fonts'
@@ -84,6 +84,7 @@ export default function EditPet({ route, navigation }) {
   const bottomSheetModalRef = useRef(null)
   const snapPoints = ['40%']
   const handlePresentModal = useCallback(() => {
+    Keyboard.dismiss()
     bottomSheetModalRef.current?.present()
   }, [])
   const renderBackdrop = useCallback(

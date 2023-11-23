@@ -89,6 +89,7 @@ export default function EditPetProfile({ route, navigation }) {
   const bottomSheetModalRef = useRef(null)
   const snapPoints = ['40%']
   const handlePresentModal = useCallback(() => {
+    Keyboard.dismiss()
     bottomSheetModalRef.current?.present()
   }, [])
   const renderBackdrop = useCallback(
