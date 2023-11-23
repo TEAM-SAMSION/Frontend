@@ -10,9 +10,11 @@ import { useRecoilValue } from 'recoil'
 import { accessTokenState } from '../../recoil/AuthAtom'
 import { getMember, searchMember } from '../../components/Administrator/Apis'
 import { ScrollView } from 'react-native'
+import { useIsFocused } from '@react-navigation/native'
 
 export default function ManageMember({ route, navigation }) {
   const ACCESSTOKEN = useRecoilValue(accessTokenState)
+  const isFocused = useIsFocused()
   const data = route.params
   const teamId = data.teamId
   const pamilyCode = data.teamCode
@@ -28,17 +30,21 @@ export default function ManageMember({ route, navigation }) {
       setMemberData(result)
       setAllMember(result)
     })
-  }, [])
+  }, [isFocused])
 
   useEffect(() => {
+    console.log(searchedName)
     if (searchedName == '') {
       setMemberData(allMember)
+    } else {
+      searchMember(ACCESSTOKEN, teamId, searchedName).then((result) => {
+        if (result.length > 0) {
+          setMemberData(result)
+        } else {
+          setMemberData([])
+        }
+      })
     }
-    searchMember(ACCESSTOKEN, teamId, searchedName).then((result) => {
-      if (result.length > 0) {
-        setMemberData(result)
-      }
-    })
   }, [searchedName])
 
   const reloadMember = () => {
