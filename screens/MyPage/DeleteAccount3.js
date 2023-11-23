@@ -16,6 +16,8 @@ import {
 } from '../../components/Fonts'
 import { ScreenLayout } from '../../components/Shared'
 import { deleteAccount, postReason } from '../../components/MyPage/Apis'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import { CommonActions } from '@react-navigation/native'
 
 export default function DeleteAccount3({ route, navigation }) {
   const ACCESSTOKEN = useRecoilValue(accessTokenState)
@@ -23,6 +25,26 @@ export default function DeleteAccount3({ route, navigation }) {
   const reason = data.reason
   const [isChecked, setIsChecked] = useState(false)
   const [loggedIn, setLoggedIn] = useRecoilState(loggedInState)
+
+  const finishWithDraw = async () => {
+    try {
+      console.log('Naver Logout')
+      await NaverLogin.logout()
+    } catch (e) {
+      console.log(e)
+    }
+
+    await AsyncStorage.removeItem('accessToken')
+    await AsyncStorage.removeItem('refreshToken').then(setLoggedIn(false))
+  }
+  const logOut = async () => {
+    navigation.dispatch(
+      CommonActions.reset({
+        routes: [{ name: 'HomeNav' }],
+      }),
+    )
+    finishWithDraw()
+  }
 
   const withDraw = () => {
     postReason(ACCESSTOKEN, reason)
@@ -88,10 +110,9 @@ export default function DeleteAccount3({ route, navigation }) {
       </Container>
       <DeleteButton
         disabled={isChecked ? false : true}
-        onPress={() => {
-          withDraw()
-          AsyncStorage.clear()
-          setLoggedIn(false)
+        onPress={async () => {
+          await withDraw()
+          logOut()
         }}
         style={{ backgroundColor: isChecked ? colors.primary_container : colors.grey_150 }}
       >
