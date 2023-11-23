@@ -120,15 +120,7 @@ export default function ManageTodo({ navigation, route }) {
     refreshData()
   }, [])
   return (
-    <ScreenKeyboardLayout
-      verticalOffset={statusBarHeight + 44}
-      disabled={true}
-      // onPress={() => {
-      //   setIsVisible(false)
-      //   Keyboard.dismiss()
-      // }}
-      behavior="padding"
-    >
+    <ScreenKeyboardLayout verticalOffset={statusBarHeight + 44} disabled={true} behavior="padding">
       <HeaderWithBack navigation={navigation} title="카테고리 관리" />
       <ScrollViewContainer>
         <ScrollView showsVerticalScrollIndicator={false}>

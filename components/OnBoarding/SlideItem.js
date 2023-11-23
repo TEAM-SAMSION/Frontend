@@ -17,7 +17,7 @@ const SlideItem = ({ item }) => {
         <ContentText style={{ marginTop: item.title ? 8 : 16 }}>{item.content}</ContentText>
       </TextContainer>
       <ImageContainer>
-        <Image source={item.image} />
+        <Image resizeMode="contain" source={item.image} />
       </ImageContainer>
     </SlideBase>
   )
@@ -47,10 +47,11 @@ const ContentText = styled.Text`
   line-height: 19px;
 `
 const ImageContainer = styled.View`
-  margin-bottom: 20px;
+  flex: 1;
+  justify-content: center;
+  align-items: center;
 `
 const Image = styled.Image`
-  height: 395px;
-  width: ${ScreenWidth + 1}px;
-  object-fit: fill;
+  width: ${ScreenWidth}px;
+  height: ${ScreenWidth * (395 / 375)}px;
 `

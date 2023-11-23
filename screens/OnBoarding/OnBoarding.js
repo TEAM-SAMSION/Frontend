@@ -2,7 +2,7 @@ import React, { useRef, useState } from 'react'
 import { styled } from 'styled-components/native'
 import { FlatList, Animated } from 'react-native'
 import SlideItem from '../../components/OnBoarding/SlideItem'
-import { ScreenLayout } from '../../components/Shared'
+import { ScreenLayout, ScreenWidth } from '../../components/Shared'
 import Paginator from '../../components/OnBoarding/Paginator'
 import Button, { OnboardingButton } from '../../components/Buttons'
 import { onboardedState } from '../../recoil/AuthAtom'
@@ -46,7 +46,7 @@ export default function OnBoarding({ navigation }) {
         <Auth navigation={navigation} />
       ) : (
         <ScreenLayout backgroundColor={colors.primary_container}>
-          <Container>
+          <Container style={{ paddingTop: ScreenWidth < 380 ? 16 : 46 }}>
             <FlatList
               style={{ marginTop: 16 }}
               horizontal
@@ -82,5 +82,4 @@ export default function OnBoarding({ navigation }) {
 
 const Container = styled.View`
   flex: 1;
-  padding-top: 46px;
 `

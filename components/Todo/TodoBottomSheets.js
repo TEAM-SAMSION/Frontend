@@ -313,7 +313,6 @@ const TodoDateSetting = ({ navigation, selectedTodo, selectedDate, getInitDatas 
   const [date, setDate] = useState(new Date())
   const handleSubmit = () => {
     setIsLoading(true)
-    console.log(date.toLocaleString())
     // date.setDate(date.getDate() + 1) //이거 왜 date 하루 전으로 최종결정되는거죠? 이거 에러 나중에 탐구해봐야할듯 **
     editTodoDate(selectedTodo.todoId, date.toLocaleString().substring(0, 10)).then((res) => {
       setIsLoading(false)
@@ -357,7 +356,7 @@ const TodoTimeSetting = ({ navigation, selectedTodo, selectedDate, getInitDatas 
   const finishSetTime = () => {
     let formattedTime = date.toString().substring(16, 21)
     setTodoAlarm(selectedTodo, formattedTime).then((res) => {
-      console.log(res)
+      console.log('setTodoAlarm Res:', res)
       getInitDatas(selectedDate)
       navigation.goBack()
     })

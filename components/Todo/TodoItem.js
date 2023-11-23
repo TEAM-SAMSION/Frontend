@@ -8,11 +8,12 @@ import styled from 'styled-components/native'
 import { completeTodo } from './Apis'
 import { Alert } from 'react-native'
 
-const TodoItem = ({ editTodo, categoryId, todo, todoLocalId, getInitDatas, selectedDate, setIsVisible }) => {
+const TodoItem = ({ editTodo, categoryId, todo, todoLocalId, getInitDatas, selectedDate, setIsDeleteVisible }) => {
   const [isLoading, setIsLoading] = useState(false)
-  console.log(todo) // {"assignNames": [{"assigneeId": 5, "assigneeName": "김형석", "completionStatus": "INCOMPLETE"}, {"assigneeId": 9, "assigneeName": "주희", "completionStatus": "COMPLETE"}, {"assigneeId": 11, "assigneeName": "심규민", "completionStatus": "INCOMPLETE"}, {"assigneeId": 13, "assigneeName": "센", "completionStatus": "INCOMPLETE"}, {"assigneeId": 14, "assigneeName": "신민선", "completionStatus": "INCOMPLETE"}], "completionStatus": "INCOMPLETE", "isAssigned": true,
+  // console.log(todo) // {"assignNames": [{"assigneeId": 5, "assigneeName": "김형석", "completionStatus": "INCOMPLETE"}, {"assigneeId": 9, "assigneeName": "주희", "completionStatus": "COMPLETE"}, {"assigneeId": 11, "assigneeName": "심규민", "completionStatus": "INCOMPLETE"}, {"assigneeId": 13, "assigneeName": "센", "completionStatus": "INCOMPLETE"}, {"assigneeId": 14, "assigneeName": "신민선", "completionStatus": "INCOMPLETE"}], "completionStatus": "INCOMPLETE", "isAssigned": true,
   // "notificationInfo": {"isNotification": true, "notificationTime": "15:06:00"}, "task": "QA", "todoId": 6431}
   //내가 포함되어있는 투두 아이템이며, 첫번째 담당자가 이것을 완수하였을때 -> 즉 내가 완수하였을때!
+  //선택된 날짜 == todo의 날짜 => 선택된 날짜가 오늘 이전이다 -> 안보이게
   let finishedStatus = todo.isAssigned && todo.assignNames[0].completionStatus == 'COMPLETE'
   const [finished, setFinished] = useState(finishedStatus)
   const handlePress = () => {
@@ -30,9 +31,11 @@ const TodoItem = ({ editTodo, categoryId, todo, todoLocalId, getInitDatas, selec
         })
         .then(setTimeout(() => setIsLoading(false), 500))
     } else {
-      setIsVisible(true)
+      setIsDeleteVisible(true)
+      setIsLoading(false)
     }
   }
+
   let tempTime = todo.notificationInfo.notificationTime?.split(':')
   let notificationTime = ''
   if (tempTime) {
@@ -40,6 +43,10 @@ const TodoItem = ({ editTodo, categoryId, todo, todoLocalId, getInitDatas, selec
       tempTime[0] < 12 ? '오전' : '오후' + ` ${tempTime[0] > 12 ? tempTime[0] - 12 : tempTime[0]}:${tempTime[1]}`
   }
   let Done = todo.completionStatus == 'COMPLETE'
+
+  let t = new Date(new Date().setHours(0, 0, 0, 0))
+  let formattedSelectedDate = new Date(selectedDate)
+  let passed = t - formattedSelectedDate > 0
   return (
     <TodoContainer
       disabled={Done}
@@ -82,13 +89,15 @@ const TodoItem = ({ editTodo, categoryId, todo, todoLocalId, getInitDatas, selec
           )}
         </MateContainer>
       </LeftContainer>
-      <CheckBox disabled={isLoading} onPress={() => handlePress()}>
-        {finished ? (
-          <CheckIcon style={{ opacity: Done ? 0.4 : 1 }} source={Complete} />
-        ) : (
-          <CheckIcon source={InComplete} />
-        )}
-      </CheckBox>
+      {!passed && (
+        <CheckBox disabled={isLoading} onPress={() => handlePress()}>
+          {finished ? (
+            <CheckIcon style={{ opacity: Done ? 0.4 : 1 }} source={Complete} />
+          ) : (
+            <CheckIcon source={InComplete} />
+          )}
+        </CheckBox>
+      )}
     </TodoContainer>
   )
 }

@@ -17,7 +17,7 @@ export const TodoHeader = ({ navigation, todoTeamList, setIsCreateVisible }) => 
     setIsOpen(!isOpen)
   }
 
-  console.log(todoTeamList, selectedTeam)
+  // console.log(todoTeamList, selectedTeam)
   return (
     <CustomHeader>
       <DropDownListContainer>

@@ -50,11 +50,11 @@ export default function Home({ navigation }) {
     })
   }
 
-  useEffect(async () => {
+  useEffect(() => {
     const fetchData = async () => {
       try {
         // 닉네임 가져오기
-        await getUserNickname()
+        getUserNickname()
 
         // 팀 목록 가져오기
         const teamList = await getTeamList(ACCESSTOKEN)
