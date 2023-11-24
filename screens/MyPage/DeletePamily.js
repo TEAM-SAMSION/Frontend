@@ -4,18 +4,20 @@ import styled from 'styled-components/native'
 import { categoryColors, colors } from '../../colors'
 import BackButton from '../../assets/Svgs/chevron_back.svg'
 import { deleteTeam, getAllTodoList, getTodoNum } from '../../components/MyPage/Apis'
-import { useRecoilState, useRecoilValue } from 'recoil'
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
 import { accessTokenState } from '../../recoil/AuthAtom'
 import { useIsFocused } from '@react-navigation/native'
-import { TabBarAtom } from '../../recoil/TabAtom'
+import { SelectedTeamAtom, TabBarAtom } from '../../recoil/TabAtom'
 import { ScrollView } from 'react-native-gesture-handler'
 import { BodyBoldSm_Text, DetailSm_Text } from '../../components/Fonts'
 import { ScreenLayout } from '../../components/Shared'
+import { getLatestTeam } from '../../components/Home/Apis'
 
 export default function DeletePamily({ route, navigation }) {
   const ACCESSTOKEN = useRecoilValue(accessTokenState)
   const isFocused = useIsFocused()
   const [isTabVisible, setIsTabVisible] = useRecoilState(TabBarAtom)
+  const setSelectedTeam = useSetRecoilState(SelectedTeamAtom)
 
   const deleteItem = route.params
   const userNickname = deleteItem.name
@@ -124,8 +126,18 @@ export default function DeletePamily({ route, navigation }) {
           </Todos>
         </TodoBox>
         <DeleteButton
-          onPress={() => {
-            deletePamily()
+          onPress={async () => {
+            await deletePamily()
+            getLatestTeam().then((result) => {
+              if (result.teamId == deleteTeamId) {
+                console.log('여기 수정 필요')
+                setSelectedTeam('')
+              } else {
+                let tempArr = { id: result.teamId, name: result.teamName, auth: result.authority }
+                console.log('topTeam Changed', tempArr)
+                setSelectedTeam(tempArr)
+              }
+            })
             navigation.navigate('DeletePamily2')
           }}
         >

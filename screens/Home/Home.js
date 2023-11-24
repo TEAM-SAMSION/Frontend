@@ -55,11 +55,15 @@ export default function Home({ navigation }) {
 
         // 팀 목록 가져오기
         const teamList = await getTeamList(ACCESSTOKEN)
+        setSelectedTeam({
+          id: teamList[0]?.teamId,
+          name: teamList[0]?.teamName,
+          auth: teamList[0]?.authority,
+        })
         setPamilyList(teamList)
 
         if (teamList.length !== 0) {
           setPamilyNum(1)
-          setSelectedTeam({ id: teamList[0].teamId, name: teamList[0].teamName, auth: teamList[0].authority })
 
           // Todo 데이터 가져오기
           const todoList = await getMyTodoList(ACCESSTOKEN, teamList[0].teamId)

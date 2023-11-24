@@ -31,7 +31,7 @@ export const PamilyChoiceToggle = (props) => {
     <>
       <DropdownContainer isOpen={isOpen} onPress={toggleDropdown}>
         <Detail_Text color={colors.grey_600} style={{ width: 67 }}>
-          {props.selectedTeam.name || '패밀리 선택 '}
+          {props.selectedTeam?.name || '패밀리 선택 '}
         </Detail_Text>
         {isOpen ? (
           <UpIcon width={16} height={16} style={{ position: 'absolute', right: 10 }} />
@@ -91,7 +91,7 @@ export const PamilyChoiceToggle = (props) => {
 const DropdownContainer = styled.Pressable`
   width: 109px;
   height: 32px;
-  padding: 8px 10px 8px 16px;
+  padding: 0px 10px 0px 16px;
   margin: 12px 0px 0px 12px;
   z-index: 999;
   border-radius: ${({ isOpen }) => (isOpen ? '8px 8px 0px 0px' : '8px')};
@@ -104,7 +104,7 @@ const DropdownContainer = styled.Pressable`
 const DropdownBox = styled.Pressable`
   width: 109px;
   height: 32px;
-  padding: 8px 10px 8px 16px;
+  padding: 0px 10px 0px 16px;
   margin-left: 12px;
   z-index: 1;
   align-items: center;

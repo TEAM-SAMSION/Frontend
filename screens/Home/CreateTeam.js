@@ -42,7 +42,7 @@ export default function CreateTeam({ route, navigation }) {
   const [pamilyFile, setPamilyFile] = useState('file://' + RNFS.MainBundlePath + '/default_pamily.png')
   const ACCESSTOKEN = useRecoilValue(accessTokenState)
 
-  const [selectedTeam, setSelectedTeam] = useRecoilState(SelectedTeamAtom)
+  const setSelectedTeam = useSetRecoilState(SelectedTeamAtom)
 
   // onFocus
   const [onName, setOnName] = useState(false)
@@ -171,8 +171,9 @@ export default function CreateTeam({ route, navigation }) {
     pamilyData.append('todoTeamCreateInfo', { string: json, type: 'application/json' })
     postTeamInfo(ACCESSTOKEN, pamilyData).then(() => {
       getLatestTeam().then((result) => {
-        console.log(result)
-        setSelectedTeam(result)
+        let tempArr = { id: result.teamId, name: result.teamName, auth: result.authority }
+        console.log('topTeam Changed', tempArr)
+        setSelectedTeam(tempArr)
       })
     })
   }
@@ -181,123 +182,113 @@ export default function CreateTeam({ route, navigation }) {
     <BottomSheetModalProvider>
       <ScreenLayout>
         <ScrollView showsVerticalScrollIndicator={false}>
-          <TouchableWithoutFeedback
-            onPress={() => {
-              Keyboard.dismiss()
-            }}
-          >
-            <>
-              <ProfileContainer>
-                <TouchableOpacity onPress={handlePresentModal}>
-                  <ProfileImage
-                    source={{
-                      uri: `${profileUrl}`,
+          <ProfileContainer>
+            <TouchableOpacity onPress={handlePresentModal}>
+              <ProfileImage
+                source={{
+                  uri: `${profileUrl}`,
+                }}
+              />
+              <IconCover>
+                <EditIcon width={16} height={16} color={'#4D4D4D'} />
+              </IconCover>
+            </TouchableOpacity>
+          </ProfileContainer>
+          <Container>
+            <InputBox style={{ paddingRight: 12 }}>
+              <Detail_Text color={colors.grey_800}>Pamily 코드</Detail_Text>
+              {pamilyCode == '' ? (
+                <CodeButton onPress={createTeamCode}>
+                  <Detail_Text color={colors.secondary}>발급 받기</Detail_Text>
+                </CodeButton>
+              ) : (
+                <CodeBox>
+                  <Detail_Text style={{ color: colors.grey_400 }}>{pamilyCode}</Detail_Text>
+
+                  <CodeButton onPress={copyTeamCode}>
+                    <Detail_Text color={colors.secondary}>복사</Detail_Text>
+                  </CodeButton>
+                </CodeBox>
+              )}
+            </InputBox>
+            <InputBox style={{ borderWidth: onName ? 1 : 0, borderColor: onName ? 'rgba(0, 0, 0, 0.12)' : '' }}>
+              <Detail_Text color={colors.grey_800}> Pamily 이름</Detail_Text>
+              <InputBlock
+                editable
+                onChangeText={(text) => setPamilyName(text)}
+                placeholder="이름을 입력해주세요."
+                placeholderTextColor={colors.grey_400}
+                returnKeyType="done"
+                onFocus={() => setOnName(true)}
+                onBlur={() => setOnName(false)}
+              />
+            </InputBox>
+            <InputBox style={{ borderWidth: onIntro ? 1 : 0, borderColor: onIntro ? 'rgba(0, 0, 0, 0.12)' : '' }}>
+              <Detail_Text color={colors.grey_800}>한줄소개</Detail_Text>
+              <InputBlock
+                editable
+                onChangeText={(text) => setPamilyIntro(text)}
+                placeholder="한줄소개를 입력해주세요. (20자이내)"
+                placeholderTextColor={colors.grey_400}
+                keyboardType="number"
+                returnKeyType="done"
+                onFocus={() => setOnIntro(true)}
+                onBlur={() => setOnIntro(false)}
+              />
+            </InputBox>
+            <Block
+              onPress={() => navigation.navigate('AddPetProfile')}
+              style={
+                savedPets.length <= 0
+                  ? {}
+                  : {
+                      borderBottomLeftRadius: 0,
+                      borderBottomRightRadius: 0,
+                      borderBottomWidth: 1,
+                      borderBottomColor: 'rgba(0, 0, 0, 0.12)',
+                    }
+              }
+            >
+              <Detail_Text>펫 등록</Detail_Text>
+              <PlusIcon width={16} height={16} />
+            </Block>
+            {savedPets.length > 0 ? (
+              ''
+            ) : (
+              <AlertBox>
+                <ErrorBox>
+                  <ErrorIcon width={12} height={12} color={colors.primary_outline} />
+                </ErrorBox>
+                <Detail_Text color={colors.grey_400}>펫을 1마리 이상을 등록해야 Pamily 생성이 가능합니다.</Detail_Text>
+              </AlertBox>
+            )}
+          </Container>
+          <PetBlock>
+            {savedPets.length < 0
+              ? ''
+              : savedPets.map((pet, index) => (
+                  <AddPetBox
+                    key={index}
+                    pet={pet}
+                    grey={true}
+                    navigation={navigation}
+                    handleDelete={() => {
+                      setDeletePetInfo(pet)
+                      setDeleteVisible(true)
+                    }}
+                    handleEdit={() => {
+                      deletePet(pet)
+                    }}
+                    onSwipeableOpenHandler={(ref) => {
+                      if (swipeableRefs.current && ref !== swipeableRefs.current) {
+                        swipeableRefs.current.close()
+                        swipeableRefs.current = null
+                      }
+                      swipeableRefs.current = ref
                     }}
                   />
-                  <IconCover>
-                    <EditIcon width={16} height={16} color={'#4D4D4D'} />
-                  </IconCover>
-                </TouchableOpacity>
-              </ProfileContainer>
-              <Container>
-                <InputBox>
-                  <Detail_Text color={colors.grey_800}>Pamily 코드</Detail_Text>
-                  {pamilyCode == '' ? (
-                    <CodeButton onPress={createTeamCode}>
-                      <Detail_Text color={colors.secondary}>발급 받기</Detail_Text>
-                    </CodeButton>
-                  ) : (
-                    <CodeBox>
-                      <Detail_Text style={{ color: colors.grey_400 }}>{pamilyCode}</Detail_Text>
-
-                      <CodeButton onPress={copyTeamCode}>
-                        <Detail_Text color={colors.secondary}>복사</Detail_Text>
-                      </CodeButton>
-                    </CodeBox>
-                  )}
-                </InputBox>
-                <InputBox style={{ borderWidth: onName ? 1 : 0, borderColor: onName ? 'rgba(0, 0, 0, 0.12)' : '' }}>
-                  <Detail_Text color={colors.grey_800}> Pamily 이름</Detail_Text>
-                  <InputBlock
-                    editable
-                    onChangeText={(text) => setPamilyName(text)}
-                    placeholder="이름을 입력해주세요."
-                    placeholderTextColor={colors.grey_400}
-                    returnKeyType="done"
-                    onFocus={() => setOnName(true)}
-                    onBlur={() => setOnName(false)}
-                  />
-                </InputBox>
-                <InputBox style={{ borderWidth: onIntro ? 1 : 0, borderColor: onIntro ? 'rgba(0, 0, 0, 0.12)' : '' }}>
-                  <Detail_Text color={colors.grey_800}>한줄소개</Detail_Text>
-                  <InputBlock
-                    editable
-                    onChangeText={(text) => setPamilyIntro(text)}
-                    placeholder="한줄소개를 입력해주세요. (20자이내)"
-                    placeholderTextColor={colors.grey_400}
-                    keyboardType="number"
-                    returnKeyType="done"
-                    onFocus={() => setOnIntro(true)}
-                    onBlur={() => setOnIntro(false)}
-                  />
-                </InputBox>
-                <Block
-                  onPress={() => navigation.navigate('AddPetProfile')}
-                  style={
-                    savedPets.length <= 0
-                      ? {}
-                      : {
-                          borderBottomLeftRadius: 0,
-                          borderBottomRightRadius: 0,
-                          borderBottomWidth: 1,
-                          borderBottomColor: 'rgba(0, 0, 0, 0.12)',
-                        }
-                  }
-                >
-                  <Detail_Text>펫 등록</Detail_Text>
-                  <PlusIcon width={16} height={16} />
-                </Block>
-                {savedPets.length > 0 ? (
-                  ''
-                ) : (
-                  <AlertBox>
-                    <ErrorBox>
-                      <ErrorIcon width={12} height={12} color={colors.primary_outline} />
-                    </ErrorBox>
-                    <Detail_Text color={colors.grey_400}>
-                      펫을 1마리 이상을 등록해야 Pamily 생성이 가능합니다.
-                    </Detail_Text>
-                  </AlertBox>
-                )}
-              </Container>
-              <PetBlock>
-                {savedPets.length < 0
-                  ? ''
-                  : savedPets.map((pet, index) => (
-                      <AddPetBox
-                        key={index}
-                        pet={pet}
-                        grey={true}
-                        navigation={navigation}
-                        handleDelete={() => {
-                          setDeletePetInfo(pet)
-                          setDeleteVisible(true)
-                        }}
-                        handleEdit={() => {
-                          deletePet(pet)
-                        }}
-                        onSwipeableOpenHandler={(ref) => {
-                          if (swipeableRefs.current && ref !== swipeableRefs.current) {
-                            swipeableRefs.current.close()
-                            swipeableRefs.current = null
-                          }
-                          swipeableRefs.current = ref
-                        }}
-                      />
-                    ))}
-              </PetBlock>
-            </>
-          </TouchableWithoutFeedback>
+                ))}
+          </PetBlock>
           <ModalPopUp visible={deleteVisible} petIcon={false} height={217}>
             <PopContent>
               <BodyBold_Text color={colors.grey_700}>{deletePetInfo.name}</BodyBold_Text>
@@ -481,15 +472,16 @@ const CodeBox = styled.View`
 const InputBox = styled.View`
   flex-direction: row;
   background-color: ${colors.grey_150};
-  padding: 0px 12px;
+  padding-left: 12px;
   height: 44px;
   border-radius: 8px;
   align-items: center;
   justify-content: space-between;
 `
 const InputBlock = styled.TextInput`
+  width: 80%;
+  padding: 12px;
   font-family: 'Spoqa-Medium';
-  background-color: ${colors.grey_150};
   color: ${colors.grey_600};
   font-size: 12px;
   text-align: right;
