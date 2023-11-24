@@ -289,12 +289,6 @@ const PopTitle = styled.Text`
   line-height: 22px;
   color: ${colors.grey_800};
 `
-const PopSubTitle = styled.Text`
-  font-family: 'Spoqa-Medium';
-  font-size: 16px;
-  line-height: 22px;
-  color: ${colors.grey_500};
-`
 const PopButtonContainer = styled.View`
   flex-direction: row;
   align-items: center;

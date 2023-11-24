@@ -14,11 +14,12 @@ import {
   Detail_Text,
   SubHead_Text,
 } from '../../components/Fonts'
-import { ScreenLayout } from '../../components/Shared'
+import { ModalPopUp, ScreenLayout } from '../../components/Shared'
 import { deleteAccount, postReason } from '../../components/MyPage/Apis'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { CommonActions } from '@react-navigation/native'
-import { ScrollView } from 'react-native'
+import { Alert, ScrollView } from 'react-native'
+import ErrorIcon from '../../assets/Svgs/error.svg'
 
 export default function DeleteAccount3({ route, navigation }) {
   const ACCESSTOKEN = useRecoilValue(accessTokenState)
@@ -26,6 +27,8 @@ export default function DeleteAccount3({ route, navigation }) {
   const reason = data.reason
   const [isChecked, setIsChecked] = useState(false)
   const [loggedIn, setLoggedIn] = useRecoilState(loggedInState)
+  const [visible, setVisible] = useState(false)
+  const [isRejectVisible, setIsRejectVisible] = useState(false)
 
   const finishWithDraw = async () => {
     try {
@@ -47,9 +50,13 @@ export default function DeleteAccount3({ route, navigation }) {
     finishWithDraw()
   }
 
-  const withDraw = () => {
-    postReason(ACCESSTOKEN, reason)
-    deleteAccount(ACCESSTOKEN)
+  const withDraw = async () => {
+    await postReason(ACCESSTOKEN, reason)
+    await deleteAccount(ACCESSTOKEN).then((result) => {
+      Alert.alert('탈퇴 구현 중')
+    })
+    //logOut()
+    //setIsRejectVisible(true)
   }
 
   return (
@@ -115,14 +122,67 @@ export default function DeleteAccount3({ route, navigation }) {
       </Container>
       <DeleteButton
         disabled={isChecked ? false : true}
-        onPress={async () => {
-          await withDraw()
-          logOut()
+        onPress={() => {
+          setVisible(true)
         }}
         style={{ backgroundColor: isChecked ? colors.primary_container : colors.grey_150 }}
       >
         <ButtonText style={{ color: isChecked ? colors.primary : colors.grey_500 }}>포잇 탈퇴하기</ButtonText>
       </DeleteButton>
+      <ModalPopUp visible={visible} petIcon={false} height={204}>
+        <PopContent>
+          <PopTitleBox>
+            <PopTitle>정말 </PopTitle>
+            <PopTitle style={{ color: colors.primary_outline }}>포잇</PopTitle>
+            <PopTitle>을 탈퇴하시겠습니까?</PopTitle>
+          </PopTitleBox>
+        </PopContent>
+        <PopButtonContainer>
+          <PopButton
+            onPress={() => withDraw()}
+            style={{ backgroundColor: colors.grey_100, borderColor: colors.grey_150, borderWidth: 2 }}
+          >
+            <PopButtonText>예</PopButtonText>
+          </PopButton>
+          <PopButton
+            onPress={() => {
+              setVisible(false)
+            }}
+          >
+            <PopButtonText>아니오</PopButtonText>
+          </PopButton>
+        </PopButtonContainer>
+      </ModalPopUp>
+      <ModalPopUp visible={isRejectVisible} petIcon={false} height={258}>
+        <PopUpContainer style={{ marginTop: 18, marginBottom: 33 }}>
+          <ErrorBox>
+            <ErrorIcon width={48} height={48} color={colors.grey_100} />
+          </ErrorBox>
+          <MessageBox>
+            <TextBox>
+              <BodyBold_Text>관리자 권한을 위임해야 탈퇴할 수 있습니다</BodyBold_Text>
+            </TextBox>
+            <BodySm_Text color={colors.grey_450}>다른 회원에게 위임 후 다시 시도해주세요</BodySm_Text>
+          </MessageBox>
+        </PopUpContainer>
+        <PopButtonContainer>
+          <PopButton
+            onPress={() => {
+              setIsRejectVisible(false)
+            }}
+            style={{ backgroundColor: colors.grey_100, borderColor: colors.grey_150, borderWidth: 2 }}
+          >
+            <PopButtonText>취소</PopButtonText>
+          </PopButton>
+          <PopButton
+            onPress={() => {
+              setIsRejectVisible(false)
+            }}
+          >
+            <PopButtonText>확인</PopButtonText>
+          </PopButton>
+        </PopButtonContainer>
+      </ModalPopUp>
     </ScreenLayout>
   )
 }
@@ -174,4 +234,63 @@ const ButtonText = styled.Text`
   font-family: 'Spoqa-Bold';
   font-size: 14px;
   line-height: 19px;
+`
+const PopContent = styled.View`
+  justify-content: center;
+  align-items: center;
+  margin-top: 57px;
+  margin-bottom: 49px;
+`
+const PopTitle = styled.Text`
+  font-family: 'Spoqa-Bold';
+  font-size: 16px;
+  line-height: 22px;
+  color: ${colors.grey_800};
+`
+const PopButtonContainer = styled.View`
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+`
+const PopButton = styled.TouchableOpacity`
+  display: flex;
+  flex: 1 0 0;
+  height: 44px;
+  padding: 12px 16px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 8px;
+  background-color: ${colors.red_200};
+`
+const PopButtonText = styled.Text`
+  font-family: 'Spoqa-Medium';
+  font-size: 14px;
+  line-height: 19px;
+  color: ${colors.red_350};
+`
+const PopTitleBox = styled.View`
+  flex-direction: row;
+`
+const ErrorBox = styled.View`
+  width: 48px;
+  height: 48px;
+  border-radius: 24px;
+  background-color: ${colors.primary_outline};
+  margin-bottom: 16px;
+  align-items: center;
+  justify-content: center;
+`
+const MessageBox = styled.View`
+  gap: 4px;
+  align-items: center;
+  justify-content: center;
+`
+const PopUpContainer = styled.View`
+  justify-content: center;
+  align-items: center;
+  margin: 28px 0px 44px 0px;
+`
+const TextBox = styled.View`
+  align-items: center;
 `
