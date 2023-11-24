@@ -13,9 +13,10 @@ import { accessTokenState } from '../../recoil/AuthAtom'
 import { ModalPopUp } from '../../components/Shared'
 import { colors } from '../../colors'
 import { deleteTeam, getPeriod, getTeamList, getUserInfo } from '../../components/MyPage/Apis'
-import { BodyBoldSm_Text, BodySm_Text, Detail_Text, SubHead_Text } from '../../components/Fonts'
+import { BodyBoldSm_Text, BodyBold_Text, BodySm_Text, Detail_Text, SubHead_Text } from '../../components/Fonts'
 import { TabBarAtom } from '../../recoil/TabAtom'
 import { useIsFocused } from '@react-navigation/native'
+import ErrorIcon from '../../assets/Svgs/error.svg'
 
 export default function MyPage({ navigation }) {
   const isFocused = useIsFocused()
@@ -62,6 +63,7 @@ export default function MyPage({ navigation }) {
   }, [isFocused])
 
   const [visible, setVisible] = useState(false)
+  const [isRejectVisible, setIsRejectVisible] = useState(false)
   const [deleteTeam, setDeleteTeam] = useState('')
   const [deleteTeamName, setDeleteTeamName] = useState('')
   const [deleteTeamPeriod, setDeleteTeamPeriod] = useState()
@@ -148,29 +150,23 @@ export default function MyPage({ navigation }) {
             </View>
           </TouchableWithoutFeedback>
         </ScrollView>
-        <ModalPopUp visible={visible} petIcon={false} height={290}>
+        <ModalPopUp visible={visible} petIcon={false} height={204}>
           <PopContent>
-            <PopSubTitle>정말 Pamily를 나가시겠습니까?</PopSubTitle>
             <PopTitleBox>
+              <PopTitle>정말 </PopTitle>
               <PopTitle style={{ color: colors.primary_outline }}>{deleteTeamName}</PopTitle>
-              <PopTitle>와 함께한 {name}님의 시간</PopTitle>
+              <PopTitle>을 나가시겠습니까?</PopTitle>
             </PopTitleBox>
           </PopContent>
-          <DateContent
-            style={{
-              shadowColor: 'rgb(0,0,0)',
-              shadowRadius: 2,
-              shadowOpacity: 0.2,
-              shadowOffset: [0, 0],
-            }}
-          >
-            <DateText>{deleteTeamPeriod}일</DateText>
-          </DateContent>
           <PopButtonContainer>
             <PopButton
               onPress={() => {
                 setVisible(false)
-                navigation.navigate('DeletePamily', { deleteTeam, name, swipeableRefs })
+                if (deleteTeam.authority == 'PRESIDENT') {
+                  setIsRejectVisible(true)
+                } else {
+                  navigation.navigate('DeletePamily', { deleteTeam, name, swipeableRefs })
+                }
               }}
               style={{ backgroundColor: colors.grey_100, borderColor: colors.grey_150, borderWidth: 2 }}
             >
@@ -183,6 +179,39 @@ export default function MyPage({ navigation }) {
               }}
             >
               <PopButtonText>아니오</PopButtonText>
+            </PopButton>
+          </PopButtonContainer>
+        </ModalPopUp>
+        <ModalPopUp visible={isRejectVisible} petIcon={false} height={258}>
+          <PopUpContainer style={{ marginTop: 18, marginBottom: 33 }}>
+            <ErrorBox>
+              <ErrorIcon width={48} height={48} color={colors.grey_100} />
+            </ErrorBox>
+            <MessageBox>
+              <TextBox>
+                <BodyBold_Text>{name}님은 관리자 권한 위임 후,</BodyBold_Text>
+                <BodyBold_Text>Pamily를 나갈 수 있습니다</BodyBold_Text>
+              </TextBox>
+              <BodySm_Text color={colors.grey_450}>다른 회원에게 위임 후 다시 시도해주세요</BodySm_Text>
+            </MessageBox>
+          </PopUpContainer>
+          <PopButtonContainer>
+            <PopButton
+              onPress={() => {
+                setIsRejectVisible(false)
+                swipeableRefs.current.close()
+              }}
+              style={{ backgroundColor: colors.grey_100, borderColor: colors.grey_150, borderWidth: 2 }}
+            >
+              <PopButtonText>취소</PopButtonText>
+            </PopButton>
+            <PopButton
+              onPress={() => {
+                setIsRejectVisible(false)
+                swipeableRefs.current.close()
+              }}
+            >
+              <PopButtonText>확인</PopButtonText>
             </PopButton>
           </PopButtonContainer>
         </ModalPopUp>
@@ -251,20 +280,14 @@ const Guide = styled.Text`
 const PopContent = styled.View`
   justify-content: center;
   align-items: center;
-  margin-top: 64px;
-  margin-bottom: 16px;
+  margin-top: 57px;
+  margin-bottom: 49px;
 `
 const PopTitle = styled.Text`
   font-family: 'Spoqa-Bold';
-  font-size: 20px;
-  line-height: 28px;
-  color: ${colors.grey_700};
-`
-const PopSubTitle = styled.Text`
-  font-family: 'Spoqa-Medium';
   font-size: 16px;
   line-height: 22px;
-  color: ${colors.grey_500};
+  color: ${colors.grey_800};
 `
 const PopButtonContainer = styled.View`
   flex-direction: row;
@@ -290,20 +313,6 @@ const PopButtonText = styled.Text`
 `
 const PopTitleBox = styled.View`
   flex-direction: row;
-`
-const DateContent = styled.View`
-  height: 56px;
-  justify-content: center;
-  align-items: center;
-  margin-bottom: 40px;
-  border-radius: 8px;
-  background-color: ${colors.grey_100};
-`
-const DateText = styled.Text`
-  font-family: 'Spoqa-Bold';
-  color: ${colors.secondary};
-  font-size: 22px;
-  line-height: 30px;
 `
 const NoneGroupBox = styled.View`
   display: flex;
@@ -337,4 +346,26 @@ const DogIcon = styled.Image`
   height: 160px;
   top: 0;
   z-index: -1;
+`
+const ErrorBox = styled.View`
+  width: 48px;
+  height: 48px;
+  border-radius: 24px;
+  background-color: ${colors.primary_outline};
+  margin-bottom: 16px;
+  align-items: center;
+  justify-content: center;
+`
+const MessageBox = styled.View`
+  gap: 4px;
+  align-items: center;
+  justify-content: center;
+`
+const PopUpContainer = styled.View`
+  justify-content: center;
+  align-items: center;
+  margin: 28px 0px 44px 0px;
+`
+const TextBox = styled.View`
+  align-items: center;
 `
