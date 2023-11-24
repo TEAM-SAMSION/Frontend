@@ -17,12 +17,10 @@ export const ScreenHeight = Dimensions.get('screen').height
 
 export const ScreenLayout = ({ children, backgroundColor = 'white' }) => {
   return (
-    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-      <ScreenContainer style={{ backgroundColor }}>
-        <StatusBar />
-        {children}
-      </ScreenContainer>
-    </TouchableWithoutFeedback>
+    <ScreenContainer style={{ backgroundColor }}>
+      <StatusBar />
+      {children}
+    </ScreenContainer>
   )
 }
 
