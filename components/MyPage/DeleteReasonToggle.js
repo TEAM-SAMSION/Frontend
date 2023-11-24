@@ -112,15 +112,16 @@ const DropDownContent = styled.View`
 const InputBox = styled.View`
   flex-direction: row;
   background-color: ${colors.grey_150};
-  padding: 12px;
+  padding-right: 12px;
   height: 44px;
   border-radius: 8px;
   align-items: center;
   justify-content: flex-start;
 `
 const InputBlock = styled.TextInput`
+  width: 80%;
+  padding: 12px;
   font-family: 'Spoqa-Medium';
-  background-color: ${colors.grey_150};
   color: ${colors.grey_600};
   font-size: 12px;
 `

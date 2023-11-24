@@ -1,5 +1,5 @@
 import styled from 'styled-components/native'
-import { Dimensions, StatusBar, Platform, Pressable } from 'react-native'
+import { Dimensions, StatusBar, Platform, Pressable, TouchableWithoutFeedback, Keyboard } from 'react-native'
 import { colors } from '../colors'
 import { useEffect, useRef, useState } from 'react'
 import { Animated, Image, Modal } from 'react-native'
@@ -17,10 +17,12 @@ export const ScreenHeight = Dimensions.get('screen').height
 
 export const ScreenLayout = ({ children, backgroundColor = 'white' }) => {
   return (
-    <ScreenContainer style={{ backgroundColor }}>
-      <StatusBar />
-      {children}
-    </ScreenContainer>
+    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+      <ScreenContainer style={{ backgroundColor }}>
+        <StatusBar />
+        {children}
+      </ScreenContainer>
+    </TouchableWithoutFeedback>
   )
 }
 

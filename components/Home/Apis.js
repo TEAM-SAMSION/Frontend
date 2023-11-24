@@ -64,3 +64,9 @@ export const postTeamInfo = async (accessToken, data) => {
     },
   })
 }
+
+export const getLatestTeam = async () => {
+  let API = '/teams/latest'
+  const response = await axiosInstance.get(url + API)
+  return response.data
+}

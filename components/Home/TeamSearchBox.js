@@ -11,18 +11,20 @@ import {
   SubHead_Text,
 } from '../Fonts'
 import { ModalPopUp } from '../Shared'
-import { postJoiningTeam } from './Apis'
+import { getLatestTeam, postJoiningTeam } from './Apis'
 import Close from '../../assets/Svgs/Close.svg'
 import { CommonActions, StackActions, useNavigation } from '@react-navigation/native'
-import { useRecoilValue } from 'recoil'
+import { useRecoilValue, useSetRecoilState } from 'recoil'
 import { accessTokenState } from '../../recoil/AuthAtom'
 import ToDoNav from '../../navigators/ToDoNav'
 import ErrorIcon from '../../assets/Svgs/error.svg'
+import { SelectedTeamAtom } from '../../recoil/TabAtom'
 
 export const TeamSearchBox = (props) => {
   const [visible, setVisible] = useState(false)
   const [isDuplicated, setIsDuplicated] = useState(false)
   const ACCESSTOKEN = useRecoilValue(accessTokenState)
+  const setSelectedTeam = useSetRecoilState(SelectedTeamAtom)
 
   const data = props.data
   const teamCode = data.code
@@ -37,6 +39,10 @@ export const TeamSearchBox = (props) => {
   const joinTeam = async () => {
     try {
       await postJoiningTeam(ACCESSTOKEN, teamCode)
+      getLatestTeam().then((result) => {
+        console.log(result)
+        setSelectedTeam(result)
+      })
       setVisible(false)
       navigation.dispatch(
         CommonActions.reset({

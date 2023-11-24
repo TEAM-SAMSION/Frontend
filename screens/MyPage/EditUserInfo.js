@@ -76,6 +76,7 @@ export default function EditUserInfo({ route, navigation }) {
   const bottomSheetModalRef = useRef(null)
   const snapPoints = ['40%']
   const handlePresentModal = useCallback(() => {
+    Keyboard.dismiss()
     bottomSheetModalRef.current?.present()
   }, [])
   const renderBackdrop = useCallback(
@@ -132,7 +133,7 @@ export default function EditUserInfo({ route, navigation }) {
                     onBlur={() => setOnName(false)}
                   />
                 </InputBox>
-                <InputBox>
+                <InputBox style={{ padding: 12 }}>
                   <Detail_Text color={colors.grey_800}>이메일</Detail_Text>
 
                   <Detail_Text color={colors.grey_400}>{email}</Detail_Text>
@@ -190,15 +191,16 @@ const IconCover = styled.View`
 const InputBox = styled.View`
   flex-direction: row;
   background-color: ${colors.grey_150};
-  padding: 12px;
+  padding-left: 12px;
   height: 44px;
   border-radius: 8px;
   align-items: center;
   justify-content: space-between;
 `
 const InputBlock = styled.TextInput`
+  width: 80%;
+  padding: 12px;
   font-family: 'Spoqa-Medium';
-  background-color: ${colors.grey_150};
   color: ${colors.grey_600};
   font-size: 12px;
   text-align: right;
