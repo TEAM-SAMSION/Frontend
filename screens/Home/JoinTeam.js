@@ -43,41 +43,35 @@ export default function JoinTeam({ navigation }) {
 
   return (
     <ScreenLayout>
-      <TouchableWithoutFeedback
-        onPress={() => {
-          Keyboard.dismiss()
-        }}
-      >
-        <Container>
-          <Block style={{ borderWidth: onName ? 1 : 0, borderColor: onName ? 'rgba(0, 0, 0, 0.12)' : '' }}>
-            <InputBlock
-              editable
-              onChangeText={(text) => setPamilyCode(text)}
-              placeholder="모임 코드 번호를 입력해주세요."
-              placeholderTextColor={colors.grey_400}
-              style={{
-                borderTopLeftRadius: 0,
-                borderTopRightRadius: 0,
-              }}
-              returnKeyType="done"
-              onSubmitEditing={() => searchTeam(pamilyCode)}
-              onFocus={() => setOnName(true)}
-              onBlur={() => setOnName(false)}
-            />
-            <IconBox onPress={() => searchTeam(pamilyCode)}>
-              <SearchIcon width={16} height={16} />
-            </IconBox>
-          </Block>
-          {searchedData.length !== 0 && <TeamSearchBox data={searchedData} />}
-          {isNonResult ? (
-            <NoneBox>
-              <SubHeadSm_Text color={colors.grey_400}>검색 결과가 없습니다</SubHeadSm_Text>
-            </NoneBox>
-          ) : (
-            ''
-          )}
-        </Container>
-      </TouchableWithoutFeedback>
+      <Container>
+        <Block style={{ borderWidth: onName ? 1 : 0, borderColor: onName ? 'rgba(0, 0, 0, 0.12)' : '' }}>
+          <InputBlock
+            editable
+            onChangeText={(text) => setPamilyCode(text)}
+            placeholder="모임 코드 번호를 입력해주세요."
+            placeholderTextColor={colors.grey_400}
+            style={{
+              borderTopLeftRadius: 0,
+              borderTopRightRadius: 0,
+            }}
+            returnKeyType="done"
+            onSubmitEditing={() => searchTeam(pamilyCode)}
+            onFocus={() => setOnName(true)}
+            onBlur={() => setOnName(false)}
+          />
+          <IconBox onPress={() => searchTeam(pamilyCode)}>
+            <SearchIcon width={16} height={16} />
+          </IconBox>
+        </Block>
+        {searchedData.length !== 0 && <TeamSearchBox data={searchedData} />}
+        {isNonResult ? (
+          <NoneBox>
+            <SubHeadSm_Text color={colors.grey_400}>검색 결과가 없습니다</SubHeadSm_Text>
+          </NoneBox>
+        ) : (
+          ''
+        )}
+      </Container>
     </ScreenLayout>
   )
 }
@@ -86,8 +80,9 @@ const Container = styled.View`
   padding-top: 16px;
 `
 const InputBlock = styled.TextInput`
+  width: 85%;
+  padding-left: 16px;
   font-family: 'Spoqa-Medium';
-  background-color: ${colors.grey_150};
   color: ${colors.grey_600};
   height: 42px;
   font-size: 14px;
@@ -99,7 +94,7 @@ const Block = styled.View`
   align-items: center;
   margin: 0px 16px 16px 16px;
   height: 44px;
-  padding: 0px 16px;
+  padding-right: 16px;
   border-radius: 12px;
   background-color: ${colors.grey_150};
 `

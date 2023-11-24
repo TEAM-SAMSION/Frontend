@@ -133,60 +133,51 @@ export default function EditPamily({ route, navigation }) {
     <>
       <BottomSheetModalProvider>
         <ScreenLayout>
-          <TouchableWithoutFeedback
-            onPress={() => {
-              Keyboard.dismiss()
-            }}
-          >
-            <>
-              <ProfileContainer>
-                <TouchableOpacity onPress={handlePresentModal}>
-                  <ProfileImage
-                    source={{
-                      uri: `${profileUrl}`,
-                    }}
-                  />
-                  <IconCover>
-                    <EditIcon width={16} height={16} color={'#4D4D4D'} />
-                  </IconCover>
-                </TouchableOpacity>
-              </ProfileContainer>
-
-              <InfoContainer>
-                <InputBox>
-                  <Detail_Text color={colors.grey_800}>Pamily 코드</Detail_Text>
-                  <CodeBox>
-                    <Detail_Text style={{ color: colors.grey_400 }}>{code}</Detail_Text>
-                    <CodeButton onPress={copyTeamCode}>
-                      <Detail_Text color={colors.secondary}>복사</Detail_Text>
-                    </CodeButton>
-                  </CodeBox>
-                </InputBox>
-                <InputBox style={{ borderWidth: onName ? 1 : 0, borderColor: onName ? 'rgba(0, 0, 0, 0.12)' : '' }}>
-                  <Detail_Text color={colors.grey_800}>Pamily 이름</Detail_Text>
-                  <InputBlock
-                    editable
-                    onChangeText={(text) => setName(text)}
-                    value={name}
-                    returnKeyType="done"
-                    onFocus={() => setOnName(true)}
-                    onBlur={() => setOnName(false)}
-                  />
-                </InputBox>
-                <InputBox style={{ borderWidth: onIntro ? 1 : 0, borderColor: onIntro ? 'rgba(0, 0, 0, 0.12)' : '' }}>
-                  <Detail_Text color={colors.grey_800}>한줄소개</Detail_Text>
-                  <InputBlock
-                    editable
-                    onChangeText={(text) => setIntro(text)}
-                    value={intro}
-                    returnKeyType="done"
-                    onFocus={() => setOnIntro(true)}
-                    onBlur={() => setOnIntro(false)}
-                  />
-                </InputBox>
-              </InfoContainer>
-            </>
-          </TouchableWithoutFeedback>
+          <ProfileContainer>
+            <TouchableOpacity onPress={handlePresentModal}>
+              <ProfileImage
+                source={{
+                  uri: `${profileUrl}`,
+                }}
+              />
+              <IconCover>
+                <EditIcon width={16} height={16} color={'#4D4D4D'} />
+              </IconCover>
+            </TouchableOpacity>
+          </ProfileContainer>
+          <InfoContainer>
+            <InputBox style={{ paddingRight: 12 }}>
+              <Detail_Text color={colors.grey_800}>Pamily 코드</Detail_Text>
+              <CodeBox>
+                <Detail_Text style={{ color: colors.grey_400 }}>{code}</Detail_Text>
+                <CodeButton onPress={copyTeamCode}>
+                  <Detail_Text color={colors.secondary}>복사</Detail_Text>
+                </CodeButton>
+              </CodeBox>
+            </InputBox>
+            <InputBox style={{ borderWidth: onName ? 1 : 0, borderColor: onName ? 'rgba(0, 0, 0, 0.12)' : '' }}>
+              <Detail_Text color={colors.grey_800}>Pamily 이름</Detail_Text>
+              <InputBlock
+                editable
+                onChangeText={(text) => setName(text)}
+                value={name}
+                returnKeyType="done"
+                onFocus={() => setOnName(true)}
+                onBlur={() => setOnName(false)}
+              />
+            </InputBox>
+            <InputBox style={{ borderWidth: onIntro ? 1 : 0, borderColor: onIntro ? 'rgba(0, 0, 0, 0.12)' : '' }}>
+              <Detail_Text color={colors.grey_800}>한줄소개</Detail_Text>
+              <InputBlock
+                editable
+                onChangeText={(text) => setIntro(text)}
+                value={intro}
+                returnKeyType="done"
+                onFocus={() => setOnIntro(true)}
+                onBlur={() => setOnIntro(false)}
+              />
+            </InputBox>
+          </InfoContainer>
           <BottomSheetModal
             ref={bottomSheetModalRef}
             index={0}
@@ -234,15 +225,16 @@ const IconCover = styled.View`
 const InputBox = styled.View`
   flex-direction: row;
   background-color: ${colors.grey_150};
-  padding: 0px 12px;
+  padding-left: 12px;
   height: 44px;
   border-radius: 8px;
   align-items: center;
   justify-content: space-between;
 `
 const InputBlock = styled.TextInput`
+  width: 80%;
+  padding: 12px;
   font-family: 'Spoqa-Medium';
-  background-color: ${colors.grey_150};
   color: ${colors.grey_600};
   font-size: 12px;
   text-align: right;

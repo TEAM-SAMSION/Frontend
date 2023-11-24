@@ -147,8 +147,8 @@ const CodeBox = styled.View`
   gap: 10px;
 `
 const InputBlock = styled.TextInput`
+  width: 85%;
   font-family: 'Spoqa-Medium';
-  background-color: ${colors.grey_150};
   color: ${colors.grey_600};
   height: 42px;
   font-size: 14px;
