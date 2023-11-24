@@ -85,11 +85,8 @@ export const getAllTodoNum = async (accessToken) => {
 
 export const deleteAccount = async (accessToken) => {
   let API = `/user`
-  const response = await axiosInstance.delete(url + API).catch(function (error) {
-    if (error.response) {
-      return error.response.status
-    }
-  })
+  const response = await axiosInstance.delete(url + API)
+  return response.status
 }
 
 export const postReason = async (accessToken, data) => {
