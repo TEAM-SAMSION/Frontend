@@ -54,7 +54,7 @@ axiosInstance.interceptors.response.use(
 
       // 갱신된 accessToken을 받으면
       if (data) {
-        console.log(data)
+        console.log('갱신된 accessToken을 받음 axiosInstance:', data)
         AsyncStorage.setItem('accessToken', data.accessToken) // 새로운 토큰 localStorage 저장
         AsyncStorage.setItem('refreshToken', data.refreshToken)
         error.config.headers['Authorization'] = data.accessToken // 원래 api 요청의 headers의 accessToken도 변경
