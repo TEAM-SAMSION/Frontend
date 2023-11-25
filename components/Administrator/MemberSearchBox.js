@@ -18,6 +18,7 @@ import { changeAuthority, deleteMember } from './Apis'
 import ErrorIcon from '../../assets/Svgs/error.svg'
 import { getUserInfo } from '../MyPage/Apis'
 import { useNavigation } from '@react-navigation/native'
+import { View } from 'react-native'
 
 export const MemberSearchBox = (props) => {
   const ACCESSTOKEN = props.accessToken
@@ -118,7 +119,9 @@ export const MemberSearchBox = (props) => {
       />
       <ModalPopUp visible={deleteVisible} petIcon={false} height={217}>
         <DeleteContent>
-          <BodyBold_Text color={colors.grey_700}>{registerName}</BodyBold_Text>
+          <BodyBold_Text color={colors.grey_700} style={{ flexWrap: 'wrap' }}>
+            {registerName}
+          </BodyBold_Text>
           <Body_Text color={colors.grey_500}>님을 내보내시겠습니까?</Body_Text>
         </DeleteContent>
         <PopButtonContainer>
@@ -217,7 +220,10 @@ export const MemberSearchBox = (props) => {
           </ErrorBox>
           <MessageBox>
             <TextBox>
-              <BodyBold_Text>{nickname}님은 관리자 권한 위임 후,</BodyBold_Text>
+              <View style={{ flexDirection: 'row' }}>
+                <BodyBold_Text>{nickname}님은 </BodyBold_Text>
+                <BodyBold_Text>관리자 권한 위임 후,</BodyBold_Text>
+              </View>
               <BodyBold_Text>권한 변경을 할 수 있습니다</BodyBold_Text>
             </TextBox>
             <BodySm_Text color={colors.grey_450}>다른 회원에게 위임 후 다시 시도해주세요</BodySm_Text>
@@ -248,7 +254,10 @@ export const MemberSearchBox = (props) => {
           </ErrorBox>
           <MessageBox>
             <TextBox>
-              <BodyBold_Text>{nickname}님은 관리자 권한 위임 후,</BodyBold_Text>
+              <View style={{ flexDirection: 'row' }}>
+                <BodyBold_Text>{nickname}님은 </BodyBold_Text>
+                <BodyBold_Text>관리자 권한 위임 후,</BodyBold_Text>
+              </View>
               <BodyBold_Text>일반 멤버로 자동 권한 변경됩니다</BodyBold_Text>
             </TextBox>
             <BodySm_Text color={colors.grey_450}>권한 위임을 계속하시겠습니까?</BodySm_Text>
@@ -333,6 +342,7 @@ const DeleteContent = styled.View`
   justify-content: center;
   align-items: center;
   margin: 76px 0px 59px 0px;
+  flex-wrap: wrap;
 `
 const PopContent = styled.View`
   align-items: center;
