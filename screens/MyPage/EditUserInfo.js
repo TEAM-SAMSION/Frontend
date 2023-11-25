@@ -55,9 +55,10 @@ export default function EditUserInfo({ route, navigation }) {
       headerRight: () => (
         <TouchableOpacity
           disabled={!enabled}
-          onPress={() => {
-            EditUserInfo()
-            navigation.navigate('MyPage')
+          onPress={async () => {
+            EditUserInfo().then(() => {
+              navigation.navigate('MyPage')
+            })
           }}
           style={{ marginRight: 16 }}
         >
@@ -92,10 +93,10 @@ export default function EditUserInfo({ route, navigation }) {
         name: 'default_user.png',
         type: 'image/png',
       })
-      changeProfileImage(ACCESSTOKEN, defaultData)
+      await changeProfileImage(ACCESSTOKEN, defaultData)
     }
     if (data.name !== name) {
-      changeNickname(ACCESSTOKEN, name)
+      await changeNickname(ACCESSTOKEN, name)
     }
   }
 

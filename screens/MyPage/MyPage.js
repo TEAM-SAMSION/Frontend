@@ -46,9 +46,6 @@ export default function MyPage({ navigation }) {
 
   useEffect(() => {
     fetchUserInfo()
-  })
-  useEffect(() => {
-    fetchUserInfo()
   }, [isFocused])
 
   const [groupInfo, setGroupInfo] = useState([])
