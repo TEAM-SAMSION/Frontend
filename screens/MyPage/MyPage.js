@@ -12,11 +12,12 @@ import { useRecoilValue, useSetRecoilState } from 'recoil'
 import { accessTokenState } from '../../recoil/AuthAtom'
 import { ModalPopUp } from '../../components/Shared'
 import { colors } from '../../colors'
-import { deleteTeam, getPeriod, getTeamList, getUserInfo } from '../../components/MyPage/Apis'
+import { deleteTeam, getDeleteValidation, getPeriod, getTeamList, getUserInfo } from '../../components/MyPage/Apis'
 import { BodyBoldSm_Text, BodyBold_Text, BodySm_Text, Detail_Text, SubHead_Text } from '../../components/Fonts'
 import { TabBarAtom } from '../../recoil/TabAtom'
 import { useIsFocused } from '@react-navigation/native'
 import ErrorIcon from '../../assets/Svgs/error.svg'
+import AdministratorNav from '../../navigators/AdministratorNav'
 
 export default function MyPage({ navigation }) {
   const isFocused = useIsFocused()
@@ -67,6 +68,17 @@ export default function MyPage({ navigation }) {
   const [deleteTeam, setDeleteTeam] = useState('')
   const [deleteTeamName, setDeleteTeamName] = useState('')
   const [deleteTeamPeriod, setDeleteTeamPeriod] = useState()
+
+  const deleteValidation = async (teamId) => {
+    // 팀 탈퇴 검증 api -> status에 따라 팝업 종류 다르게
+    try {
+      await getDeleteValidation(teamId).then(() => {
+        setVisible(true)
+      })
+    } catch (error) {
+      setIsRejectVisible(true)
+    }
+  }
 
   return (
     <BottomSheetModalProvider>
@@ -122,7 +134,7 @@ export default function MyPage({ navigation }) {
                               setDeleteTeam(item)
                               setDeleteTeamName(item.teamName)
                               setDeleteTeamPeriod(item.registerPeriod + 1)
-                              setVisible(true)
+                              deleteValidation(item.teamId)
                             }}
                             gotoAdminNav={() =>
                               navigation.navigate('AdministratorNav', { screen: 'AdminHome', params: { item } })
@@ -141,12 +153,12 @@ export default function MyPage({ navigation }) {
                   </Groups>
                 )}
               </GroupContainer>
-              <FooterContainer>
+              {/* <FooterContainer>
                 <Detail_Text color={'#A09999'}>
                   포잇에 대해 더 알아볼까요?{'\n'}좀 더 똑똑하게 포잇을 사용하고 싶다면?
                 </Detail_Text>
                 <Guide>포잇가이드</Guide>
-              </FooterContainer>
+              </FooterContainer> */}
             </View>
           </TouchableWithoutFeedback>
         </ScrollView>
@@ -162,11 +174,7 @@ export default function MyPage({ navigation }) {
             <PopButton
               onPress={() => {
                 setVisible(false)
-                if (deleteTeam.authority == 'PRESIDENT') {
-                  setIsRejectVisible(true)
-                } else {
-                  navigation.navigate('DeletePamily', { deleteTeam, name, swipeableRefs })
-                }
+                navigation.navigate('DeletePamily', { deleteTeam, name, swipeableRefs })
               }}
               style={{ backgroundColor: colors.grey_100, borderColor: colors.grey_150, borderWidth: 2 }}
             >
@@ -206,9 +214,10 @@ export default function MyPage({ navigation }) {
               <PopButtonText>취소</PopButtonText>
             </PopButton>
             <PopButton
-              onPress={() => {
-                setIsRejectVisible(false)
-                swipeableRefs.current.close()
+              onPress={async () => {
+                await setIsRejectVisible(false)
+                await swipeableRefs.current.close()
+                navigation.navigate('AdministratorNav', { screen: 'AdminHome', params: { item: deleteTeam } })
               }}
             >
               <PopButtonText>확인</PopButtonText>

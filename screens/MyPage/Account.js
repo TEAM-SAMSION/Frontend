@@ -12,7 +12,8 @@ export default function Account({ navigation }) {
   const SocialAccount = useRecoilValue(platformState)
   const [isRejectVisible, setIsRejectVisible] = useState(false)
 
-  const [isPresident, setIsPresident] = useState(true)
+  // 탈퇴 가능 상태인지 확인하는 api 연결
+  const [isPresident, setIsPresident] = useState(false)
 
   const [socialAccount, setSocialAccount] = useState('카카오톡')
   useEffect(() => {
