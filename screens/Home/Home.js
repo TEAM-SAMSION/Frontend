@@ -1,5 +1,15 @@
-import React, { useEffect, useRef, useState } from 'react'
-import { Dimensions, FlatList, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
+import {
+  Dimensions,
+  FlatList,
+  Image,
+  RefreshControl,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native'
 import { ScreenLayout, ScreenWidth } from '../../components/Shared'
 import { TopHeader } from '../../components/Home/TopHeader'
 import styled from 'styled-components/native'
@@ -28,7 +38,7 @@ export default function Home({ navigation }) {
     isFocused && setIsTabVisible(true)
   }, [isFocused])
 
-  const [name, setName] = useState('포잇')
+  const [name, setName] = useState('')
   const now = new Date()
   const date = now.getDate()
   const month = now.getMonth() + 1
@@ -139,10 +149,22 @@ export default function Home({ navigation }) {
     fetchMyTodo()
   }, [isFocused, pamilyList, todoPage])
 
+  const [refreshing, setRefreshing] = useState(false)
+
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true)
+    await fetchTeamList()
+    await fetchMyTodo()
+    setRefreshing(false)
+  }, [])
+
   return (
     <ScreenLayout>
-      <ScrollView showsVerticalScrollIndicator={false}>
-        <TopHeader navigation={navigation} />
+      <TopHeader navigation={navigation} />
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+      >
         <BannerContainer>
           <NickBox>
             <NicknameContainer>
@@ -156,7 +178,7 @@ export default function Home({ navigation }) {
             <MainImage isDog={isDog} progress={progress} pamilyNum={pamilyNum} />
             <PamilyStatContainer>
               {pamilyNum == 0 ? (
-                <NoneText>소속된 Pamily가 없습니다.</NoneText>
+                <NoneText>소속된 Pamily가 없습니다</NoneText>
               ) : (
                 <MainStat isDog={isDog} setIsDog={setIsDog} progress={progress} />
               )}
@@ -214,7 +236,9 @@ export default function Home({ navigation }) {
               {myTodo.length == 0 ? (
                 <NoneTodoContainer>
                   <BodySm_Text color={colors.grey_600}>아직 나에게 할당된 TODO가 없어요!</BodySm_Text>
-                  <DetailSm_Text color={colors.grey_400}>관리자에게 TODO를 요청해보세요.</DetailSm_Text>
+                  <DetailSm_Text color={colors.grey_400}>
+                    TODO 담당자를 수정하거나, 새로운 TODO를 생성해보세요!
+                  </DetailSm_Text>
                 </NoneTodoContainer>
               ) : myTodo.length < 5 ? (
                 <FlatList
