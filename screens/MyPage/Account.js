@@ -7,29 +7,35 @@ import { useRecoilValue } from 'recoil'
 import { platformState } from '../../recoil/AuthAtom'
 import ErrorIcon from '../../assets/Svgs/error.svg'
 import { BodyBold_Text, BodySm_Text } from '../../components/Fonts'
+import { getUserDeleteValidation } from '../../components/MyPage/Apis'
+import MyPageNav from '../../navigators/MyPageNav'
 
 export default function Account({ navigation }) {
   const SocialAccount = useRecoilValue(platformState)
   const [isRejectVisible, setIsRejectVisible] = useState(false)
 
-  // 탈퇴 가능 상태인지 확인하는 api 연결
-  const [isPresident, setIsPresident] = useState(false)
-
   const [socialAccount, setSocialAccount] = useState('카카오톡')
   useEffect(() => {
     SocialAccount !== '' && setSocialAccount(SocialAccount)
   }, [])
+
+  const deleteValidation = async () => {
+    try {
+      await getUserDeleteValidation().then(() => {
+        navigation.navigate('DeleteAccount')
+      })
+    } catch (error) {
+      setIsRejectVisible(true)
+    }
+  }
+
   return (
     <ScreenLayout>
       <ContentContainer>
         <ContentText>연결된 계정</ContentText>
         <AccountText>{socialAccount}</AccountText>
       </ContentContainer>
-      <ContentContainer
-        onPress={() => {
-          isPresident ? setIsRejectVisible(true) : navigation.navigate('DeleteAccount')
-        }}
-      >
+      <ContentContainer onPress={() => deleteValidation()}>
         <ContentText style={{ color: colors.primary_outline }}>계정 탈퇴</ContentText>
       </ContentContainer>
       <ModalPopUp visible={isRejectVisible} petIcon={false} height={258}>
@@ -56,6 +62,7 @@ export default function Account({ navigation }) {
           <PopButton
             onPress={() => {
               setIsRejectVisible(false)
+              navigation.navigate('MyPageNav', { screen: 'MyPage' })
             }}
           >
             <PopButtonText>확인</PopButtonText>

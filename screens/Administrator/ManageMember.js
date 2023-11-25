@@ -9,7 +9,7 @@ import { MemberSearchBox } from '../../components/Administrator/MemberSearchBox'
 import { useRecoilValue } from 'recoil'
 import { accessTokenState } from '../../recoil/AuthAtom'
 import { getMember, searchMember } from '../../components/Administrator/Apis'
-import { ScrollView } from 'react-native'
+import { Keyboard, ScrollView, TouchableWithoutFeedback, View } from 'react-native'
 import { useIsFocused } from '@react-navigation/native'
 
 export default function ManageMember({ route, navigation }) {
@@ -60,37 +60,52 @@ export default function ManageMember({ route, navigation }) {
   }
 
   return (
-    <ScreenLayout>
-      <Container>
-        <InputBox>
-          <Detail_Text color={colors.grey_800}>Pamily 코드</Detail_Text>
-          <CodeBox>
-            <Detail_Text style={{ color: colors.grey_400 }}>{pamilyCode}</Detail_Text>
-            <CodeButton onPress={copyTeamCode}>
-              <Detail_Text color={colors.secondary}>복사</Detail_Text>
-            </CodeButton>
-          </CodeBox>
-        </InputBox>
-        <Block style={{ borderWidth: onName ? 1 : 0, borderColor: onName ? 'rgba(0, 0, 0, 0.12)' : '' }}>
-          <InputBlock
-            editable
-            onChangeText={(text) => setSearchedName(text)}
-            placeholder="회원을 검색해주세요"
-            placeholderTextColor={colors.grey_400}
-            style={{
-              borderTopLeftRadius: 0,
-              borderTopRightRadius: 0,
-            }}
-            returnKeyType="done"
-            onFocus={() => setOnName(true)}
-            onBlur={() => setOnName(false)}
-          />
-          <IconBox>
-            <SearchIcon width={16} height={16} />
-          </IconBox>
-        </Block>
-        {memberData.length > 5 ? (
-          <ScrollView showsVerticalScrollIndicator={false} style={{ marginBottom: 100 }}>
+    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+      <Layout>
+        <Container>
+          <InputBox>
+            <Detail_Text color={colors.grey_800}>Pamily 코드</Detail_Text>
+            <CodeBox>
+              <Detail_Text style={{ color: colors.grey_400 }}>{pamilyCode}</Detail_Text>
+              <CodeButton onPress={copyTeamCode}>
+                <Detail_Text color={colors.secondary}>복사</Detail_Text>
+              </CodeButton>
+            </CodeBox>
+          </InputBox>
+          <Block style={{ borderWidth: onName ? 1 : 0, borderColor: onName ? 'rgba(0, 0, 0, 0.12)' : '' }}>
+            <InputBlock
+              editable
+              onChangeText={(text) => setSearchedName(text)}
+              placeholder="회원을 검색해주세요"
+              placeholderTextColor={colors.grey_400}
+              style={{
+                borderTopLeftRadius: 0,
+                borderTopRightRadius: 0,
+              }}
+              returnKeyType="done"
+              onFocus={() => setOnName(true)}
+              onBlur={() => setOnName(false)}
+            />
+            <IconBox>
+              <SearchIcon width={16} height={16} />
+            </IconBox>
+          </Block>
+          {memberData.length > 5 ? (
+            <ScrollView showsVerticalScrollIndicator={false} style={{ marginBottom: 116 }}>
+              <MemberBox onStartShouldSetResponder={() => true}>
+                {memberData.map((item, index) => (
+                  <MemberSearchBox
+                    key={index}
+                    data={item}
+                    accessToken={ACCESSTOKEN}
+                    teamId={teamId}
+                    myAuthority={data.myAuthority}
+                    changeFunction={() => reloadMember()}
+                  />
+                ))}
+              </MemberBox>
+            </ScrollView>
+          ) : (
             <MemberBox>
               {memberData.map((item, index) => (
                 <MemberSearchBox
@@ -103,26 +118,17 @@ export default function ManageMember({ route, navigation }) {
                 />
               ))}
             </MemberBox>
-          </ScrollView>
-        ) : (
-          <MemberBox>
-            {memberData.map((item, index) => (
-              <MemberSearchBox
-                key={index}
-                data={item}
-                accessToken={ACCESSTOKEN}
-                teamId={teamId}
-                myAuthority={data.myAuthority}
-                changeFunction={() => reloadMember()}
-              />
-            ))}
-          </MemberBox>
-        )}
-      </Container>
-    </ScreenLayout>
+          )}
+        </Container>
+      </Layout>
+    </TouchableWithoutFeedback>
   )
 }
 
+const Layout = styled.View`
+  flex: 1;
+  background-color: ${colors.grey_100};
+`
 const Container = styled.View`
   gap: 8px;
   margin: 16px;

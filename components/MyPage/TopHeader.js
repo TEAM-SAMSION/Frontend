@@ -46,8 +46,3 @@ const RightIcon = styled.View`
   flex-direction: row;
   gap: 16px;
 `
-const Setting = styled.View`
-  width: 24px;
-  height: 24px;
-  background-color: pink;
-`

@@ -42,14 +42,16 @@ const GroupBox = (props) => {
             : { shadowColor: 'rgb(0,0,0)', shadowRadius: 2, shadowOpacity: 0.17, shadowOffset: [0, 0], border: 'none' }
         }
       >
-        <GroupImage source={{ uri: `${props.data.teamProfileImageUrl}` }} />
-        <GroupInfoBox>
-          <BodyBoldSm_Text color={colors.grey_800}>{props.data.teamName}</BodyBoldSm_Text>
-          <BodySm_Text color={colors.grey_450}>
-            가입한지 <BodyBoldSm_Text color={colors.primary_outline}>{props.data.registerPeriod + 1}</BodyBoldSm_Text>
-            일째
-          </BodySm_Text>
-        </GroupInfoBox>
+        <LeftContent>
+          <GroupImage source={{ uri: `${props.data.teamProfileImageUrl}` }} />
+          <GroupInfoBox>
+            <BodyBoldSm_Text color={colors.grey_800}>{props.data.teamName}</BodyBoldSm_Text>
+            <BodySm_Text color={colors.grey_450}>
+              가입한지 <BodyBoldSm_Text color={colors.primary_outline}>{props.data.registerPeriod + 1}</BodyBoldSm_Text>
+              일째
+            </BodySm_Text>
+          </GroupInfoBox>
+        </LeftContent>
         {props.data.authority == 'MEMBER' ? (
           <View width={34} height={34} />
         ) : props.data.authority == 'PRESIDENT' ? (
@@ -91,15 +93,17 @@ const GroupBoxContainer = styled.View`
   width: auto;
   border: 0.7px solid rgba(0, 0, 0, 0.01);
 `
+const LeftContent = styled.View`
+  flex-direction: row;
+  gap: 16px;
+`
 const GroupImage = styled.Image`
   width: 48px;
   height: 48px;
   border-radius: 8px;
 `
 const GroupInfoBox = styled.View`
-  margin-left: 16px;
   justify-content: center;
-  width: 212px;
 `
 const DeleteBox = styled.View`
   width: 89px;

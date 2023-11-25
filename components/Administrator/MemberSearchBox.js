@@ -295,7 +295,6 @@ const TeamImage = styled.Image`
   width: 80px;
   height: 80px;
   border-radius: 16px;
-  background-color: pink;
 `
 const TeamInfoBox = styled.View`
   //width: 220px;

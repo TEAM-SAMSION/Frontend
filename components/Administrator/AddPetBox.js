@@ -85,7 +85,6 @@ const ProfileImage = styled.Image`
   width: 80px;
   height: 80px;
   border-radius: 16px;
-  background-color: pink;
 `
 const InfoBox = styled.View`
   flex: 1;
