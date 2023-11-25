@@ -6,27 +6,28 @@ import Alarm from '../../assets/Svgs/Alarm.svg'
 import InComplete from '../../assets/Imgs/InComplete.png'
 import styled from 'styled-components/native'
 import { completeTodo } from './Apis'
-import { Alert } from 'react-native'
+import { ActivityIndicator, Alert } from 'react-native'
 
-const TodoItem = ({ editTodo, categoryId, todo, todoLocalId, getInitDatas, selectedDate, setIsDeleteVisible }) => {
+const TodoItem = ({ editTodo, categoryId, todo, todoLocalId, refreshData, selectedDate, setIsDeleteVisible }) => {
   const [isLoading, setIsLoading] = useState(false)
   // console.log(todo) // {"assignNames": [{"assigneeId": 5, "assigneeName": "김형석", "completionStatus": "INCOMPLETE"}, {"assigneeId": 9, "assigneeName": "주희", "completionStatus": "COMPLETE"}, {"assigneeId": 11, "assigneeName": "심규민", "completionStatus": "INCOMPLETE"}, {"assigneeId": 13, "assigneeName": "센", "completionStatus": "INCOMPLETE"}, {"assigneeId": 14, "assigneeName": "신민선", "completionStatus": "INCOMPLETE"}], "completionStatus": "INCOMPLETE", "isAssigned": true,
   // "notificationInfo": {"isNotification": true, "notificationTime": "15:06:00"}, "task": "QA", "todoId": 6431}
   //내가 포함되어있는 투두 아이템이며, 첫번째 담당자가 이것을 완수하였을때 -> 즉 내가 완수하였을때!
   //선택된 날짜 == todo의 날짜 => 선택된 날짜가 오늘 이전이다 -> 안보이게
-  let finishedStatus = todo.isAssigned && todo.assignNames[0].completionStatus == 'COMPLETE'
-  const [finished, setFinished] = useState(finishedStatus)
+  let meDoneStatus = todo.isAssigned && todo.assignNames[0].completionStatus == 'COMPLETE'
+  const [finished, setFinished] = useState(meDoneStatus)
   const handlePress = () => {
     setIsLoading(true)
     if (todo.isAssigned) {
-      setFinished(!finished)
+      // setFinished(!finished)
       completeTodo(todo)
         .then((res) => {
+          console.log('Res')
           if (res) {
-            getInitDatas(selectedDate)
+            refreshData(selectedDate)
           } else {
             Alert.alert('투두 Complete 오류')
-            setFinished(finishedStatus)
+            setFinished(meDoneStatus)
           }
         })
         .then(setTimeout(() => setIsLoading(false), 500))
@@ -91,7 +92,9 @@ const TodoItem = ({ editTodo, categoryId, todo, todoLocalId, getInitDatas, selec
       </LeftContainer>
       {!passed && (
         <CheckBox disabled={isLoading} onPress={() => handlePress()}>
-          {finished ? (
+          {isLoading ? (
+            <ActivityIndicator style={{ width: 48, height: 48, marginRight: 12 }} />
+          ) : meDoneStatus ? (
             <CheckIcon style={{ opacity: Done ? 0.4 : 1 }} source={Complete} />
           ) : (
             <CheckIcon source={InComplete} />

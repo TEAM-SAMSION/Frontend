@@ -2,49 +2,41 @@ import styled from 'styled-components/native'
 import Alarm from '../../assets/Svgs/Alarm.svg'
 import Setting from '../../assets/Svgs/SettingIcon.svg'
 import { colors } from '../../colors'
-import { useState } from 'react'
 
 import DownIcon from '../../assets/Svgs/arrow_down.svg'
 import UpIcon from '../../assets/Svgs/arrow_up.svg'
 import { Detail_Text } from '../Fonts'
-import { useRecoilState } from 'recoil'
-import { SelectedTeamAtom } from '../../recoil/TabAtom'
-export const TodoHeader = ({ navigation, todoTeamList, setIsCreateVisible }) => {
-  const [selectedTeam, setSelectedTeam] = useRecoilState(SelectedTeamAtom)
-
-  const [isOpen, setIsOpen] = useState(false)
+export const TodoHeader = ({
+  isHeaderOpen,
+  setIsHeaderOpen,
+  navigation,
+  selectedTeam,
+  todoTeamList,
+  setIsCreateVisible,
+  handleTeamChange,
+}) => {
   const toggleDropdown = () => {
-    setIsOpen(!isOpen)
+    setIsHeaderOpen(!isHeaderOpen)
   }
-
-  // console.log(todoTeamList, selectedTeam)
   return (
     <CustomHeader>
       <DropDownListContainer>
-        <DropdownContainer isOpen={isOpen} onPress={toggleDropdown}>
+        <DropdownContainer isHeaderOpen={isHeaderOpen} onPress={toggleDropdown}>
           <Detail_Text color={todoTeamList ? colors.grey_600 : colors.grey_400}>
             {/* TodoTeamList가 Null이면, 자연스레 TodoTeamList의 끝요소인 SelectedTeam도 없으며, Home화면에서 선택되는 TodoTeam또한 없기에, Null을 반환받는다 */}
             {selectedTeam?.name || '패밀리 없음'}
           </Detail_Text>
-          {isOpen ? (
+          {isHeaderOpen ? (
             <UpIcon width={16} height={16} style={{ position: 'absolute', right: 10 }} />
           ) : (
             <DownIcon width={16} height={16} style={{ position: 'absolute', right: 10 }} />
           )}
         </DropdownContainer>
 
-        {isOpen && (
+        {isHeaderOpen && (
           <>
             {todoTeamList?.map((todoTeam, id) => (
-              <DropdownBox
-                key={id}
-                onPress={() => {
-                  setIsOpen(false)
-                  // changeTodoTeam(todoTeam.id)
-                  console.log()
-                  setSelectedTeam({ name: todoTeam.name, id: todoTeam.id, auth: todoTeam.auth })
-                }}
-              >
+              <DropdownBox key={id} onPress={() => handleTeamChange(todoTeam)}>
                 <Detail_Text>{todoTeam.name}</Detail_Text>
               </DropdownBox>
             ))}
@@ -76,10 +68,10 @@ export const TodoHeader = ({ navigation, todoTeamList, setIsCreateVisible }) => 
 }
 const DropdownContainer = styled.Pressable`
   width: 109px;
-  height: ${({ isOpen }) => (isOpen ? '33px' : '32px')};
+  height: ${({ isHeaderOpen }) => (isHeaderOpen ? '33px' : '32px')};
   z-index: 1;
-  border-radius: ${({ isOpen }) => (isOpen ? '8px 8px 0px 0px' : '8px')};
-  border-bottom-width: ${({ isOpen }) => (isOpen ? '1px' : '0px')};
+  border-radius: ${({ isHeaderOpen }) => (isHeaderOpen ? '8px 8px 0px 0px' : '8px')};
+  border-bottom-width: ${({ isHeaderOpen }) => (isHeaderOpen ? '1px' : '0px')};
   border-bottom-color: rgba(0, 0, 0, 0.12);
   align-items: center;
   padding-left: 16px;

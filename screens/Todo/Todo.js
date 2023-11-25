@@ -4,7 +4,7 @@ import { colors } from '../../colors'
 import styled from 'styled-components/native'
 import { TodoHeader } from '../../components/Todo/TodoHeader'
 import { Body_Text } from '../../components/Fonts'
-import { ActivityIndicator, Keyboard, NativeModules, Platform, Pressable, ScrollView, View } from 'react-native'
+import { ActivityIndicator, Keyboard, NativeModules, Platform, Pressable, ScrollView, StatusBar } from 'react-native'
 import Caution from '../../assets/Svgs/Caution.svg'
 import { useRecoilState, useSetRecoilState } from 'recoil'
 import Close from '../../assets/Svgs/Close.svg'
@@ -19,8 +19,9 @@ import { useFocusEffect } from '@react-navigation/native'
 import { SelectedTeamAtom, TabBarAtom } from '../../recoil/TabAtom'
 import TodoItem from '../../components/Todo/TodoItem'
 
-export default Todo = ({ navigation, route }) => {
+export default Todo = ({ navigation }) => {
   const setIsTabVisible = useSetRecoilState(TabBarAtom)
+  const [selectedTeam, setSelectedTeam] = useRecoilState(SelectedTeamAtom)
 
   const { StatusBarManager } = NativeModules
   const tempDate = new Date()
@@ -36,12 +37,12 @@ export default Todo = ({ navigation, route }) => {
   const [snappoints, setSnappoints] = useState([])
   const [isDeleteVisible, setIsDeleteVisible] = useState(false)
   const [isCreateVisible, setIsCreateVisible] = useState(false)
-  // const [selectedTeam, setSelectedTeam] = useState(null)
-  const [selectedTeam, setSelectedTeam] = useRecoilState(SelectedTeamAtom)
+
   const [selectedCategoryID, setSelectedCategoryID] = useState(null)
   const [selectedTodo, setSelectedTodo] = useState(null)
   const [selectedDate, setSelectedDate] = useState(today)
 
+  const [isHeaderOpen, setIsHeaderOpen] = useState(false)
   const [isCreateMode, setIsCreateMode] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
 
@@ -72,6 +73,25 @@ export default Todo = ({ navigation, route }) => {
     }
   }
 
+  const handleTeamChange = (team) => {
+    setIsHeaderOpen(false)
+    setSelectedTeam({ name: team.name, id: team.id, auth: team.auth })
+  }
+  const refreshData = async (date = today) => {
+    console.log('RefreshData', date)
+    // setIsLoading(true)
+    await getCategoryList(selectedTeam.id).then((categories) => {
+      // console.log('2. 카테고리로 Todo 불러와서 저장', categories.toString().substring(0, 10))
+      getTodosByCategory(categories, date)
+    })
+    await getTeamUser(selectedTeam.id).then((res) => {
+      let tempTeamUserList = []
+      res.map((user) => tempTeamUserList.push({ id: user.registerId, name: user.registerName }))
+      console.log('3. 선택된 팀의 사용자들 state로 저장', tempTeamUserList.toString().substring(0, 10))
+      setTeamUserList(tempTeamUserList) //나중에 Team 변경하면 해당 변수 대체됨
+    })
+  }
+
   const getAllData = (date = today) => {
     !todoTeamList && setIsLoading(true)
     //TodoTeam과 Default TodoTeam에 한해 User들을 일시적으로 반환(나중에 Team 변경하면 해당 변수 대체됨)
@@ -99,7 +119,7 @@ export default Todo = ({ navigation, route }) => {
         }
       })
       .then(async (selectedTeamID) => {
-        console.log('실제로 fetch때 사용되는 팀ID:', selectedTeamID, 'Recoil의 팀ID:', selectedTeam.id)
+        // console.log('실제로 fetch때 사용되는 팀ID:', selectedTeamID, 'Recoil의 팀ID:', selectedTeam.id)
         if (selectedTeamID) {
           //null 반환받으면, TodoTeam 없다는 것을 의미하기에 api호출 스킵
           await getCategoryList(selectedTeamID).then((categories) => {
@@ -121,12 +141,12 @@ export default Todo = ({ navigation, route }) => {
       const sec = new Date().getSeconds()
       if (sec) return
       console.log('*********************자동갱신****************************')
-      getAllData(selectedDate)
+      refreshData(selectedDate)
     }, 1000)
     return () => {
       clearInterval(timer)
     }
-  }, [])
+  }, [selectedTeam, selectedDate])
   useFocusEffect(
     useCallback(() => {
       getAllData(selectedDate)
@@ -158,113 +178,127 @@ export default Todo = ({ navigation, route }) => {
     bottomModal.current?.present()
   }
   return (
-    <ScreenLayout verticalOffset={statusBarHeight + 44} behavior="position">
-      <ContentLayout>
-        <TodoHeader setIsCreateVisible={setIsCreateVisible} todoTeamList={todoTeamList} navigation={navigation} />
-        <ScrollViewContainer>
-          <ScrollView showsVerticalScrollIndicator={false}>
-            <MyCalendarStrip selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
-            {/* prettier-ignore */}
-            {!todosByCategory && (todoTeamList ? <NoTodo /> : <NoPamily />)}
-            {isLoading ? (
-              <LoadingContainer>
-                <ActivityIndicator />
-              </LoadingContainer>
-            ) : (
-              <TodoItemBase>
-                {todosByCategory?.map((todos, id) => {
-                  return (
-                    <>
-                      <CategoryIndicator
-                        key={id}
-                        startCreateTodo={startCreateTodo}
-                        todos={todos[1]}
-                        categoryId={todos[1][0]}
-                      />
-                      {todos[1][2].map((todo, index) => (
-                        <TodoItem
-                          getInitDatas={getAllData}
-                          setIsDeleteVisible={setIsDeleteVisible}
-                          selectedDate={selectedDate}
-                          key={index}
-                          todo={todo}
-                          todoLocalId={index}
-                          categoryId={id}
-                          //여기서 categoryID는 배열로 불러왔을때, 임의 순서를 나타낸 것이며, 서버 내에서 식별용으로 사용되는 ID값은 아님
-                          editTodo={startEditTodo}
-                        />
-                      ))}
-                    </>
-                  )
-                })}
-              </TodoItemBase>
-            )}
-          </ScrollView>
-          <PetModalPopUp
+    <ScreenContainer>
+      <StatusBar />
+      <Pressable disabled={!isHeaderOpen} style={{ flex: 1, width: '100%' }} onPress={() => setIsHeaderOpen(false)}>
+        <ContentLayout>
+          <TodoHeader
+            isHeaderOpen={isHeaderOpen}
+            handleTeamChange={handleTeamChange}
+            setIsCreateVisible={setIsCreateVisible}
+            todoTeamList={todoTeamList}
             navigation={navigation}
-            petIcon={true}
-            visible={isCreateVisible}
-            height={211}
-            setIsVisible={() => setIsCreateVisible()}
-            setIsOpen={() => console.log('setIsOpen')}
+            selectedTeam={selectedTeam}
+            setIsHeaderOpen={setIsHeaderOpen}
           />
-        </ScrollViewContainer>
-      </ContentLayout>
-      <BottomSheetModal
-        ref={bottomModal}
-        backdropComponent={renderBackdrop}
-        snapPoints={snappoints}
-        enablePanDownToClose={false}
-        enableHandlePanningGesture={false}
-        enableContentPanningGesture={false}
-        handleHeight={0}
-        enableDismissOnClose
-        backgroundStyle={{ borderRadius: 24 }}
-        handleIndicatorStyle={{ backgroundColor: colors.grey_300, width: 72, height: 6, marginTop: 8 }}
-      >
-        {isCreateMode ? (
-          <TodoCreateBottomSheet
-            selectedCategoryID={selectedCategoryID}
-            handleBottomSheetHeight={handleBottomSheetHeight}
-            teamUserList={teamUserList}
-            selectedDate={selectedDate}
-            getInitDatas={getAllData}
-          />
-        ) : (
-          <TodoEditBottomSheet
-            handleBottomSheetHeight={handleBottomSheetHeight}
-            teamUserList={teamUserList}
-            selectedTodo={selectedTodo}
-            selectedDate={selectedDate}
-            setSelectedTodo={setSelectedTodo}
-            getInitDatas={getAllData}
-          />
-        )}
-      </BottomSheetModal>
-      <ModalPopUp visible={isDeleteVisible} petIcon={false} height={204}>
-        <ModalHeader>
-          <CloseButton
-            onPress={() => {
-              setIsDeleteVisible(false)
-            }}
-          >
-            <Close width={24} height={24} />
-          </CloseButton>
-        </ModalHeader>
-        <PopContent>
-          <Caution width={48} height={48} />
-          <Body_Text color={colors.grey_700}>나에게 할당된 TODO가 아닙니다.</Body_Text>
-        </PopContent>
-      </ModalPopUp>
-      <PetModalPopUp visible={isCreateVisible}></PetModalPopUp>
-    </ScreenLayout>
+          <ScrollViewContainer>
+            <ScrollView showsVerticalScrollIndicator={false}>
+              <MyCalendarStrip selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
+              {/* prettier-ignore */}
+              {!todosByCategory && (todoTeamList ? <NoTodo /> : <NoPamily />)}
+              {isLoading ? (
+                <LoadingContainer>
+                  <ActivityIndicator />
+                </LoadingContainer>
+              ) : (
+                <TodoItemBase>
+                  {todosByCategory?.map((todos, id) => {
+                    return (
+                      <>
+                        <CategoryIndicator
+                          key={id}
+                          startCreateTodo={startCreateTodo}
+                          todos={todos[1]}
+                          categoryId={todos[1][0]}
+                        />
+                        {todos[1][2].map((todo, index) => (
+                          <TodoItem
+                            refreshData={refreshData}
+                            setIsDeleteVisible={setIsDeleteVisible}
+                            selectedDate={selectedDate}
+                            key={index}
+                            todo={todo}
+                            todoLocalId={index}
+                            categoryId={id}
+                            //여기서 categoryID는 배열로 불러왔을때, 임의 순서를 나타낸 것이며, 서버 내에서 식별용으로 사용되는 ID값은 아님
+                            editTodo={startEditTodo}
+                          />
+                        ))}
+                      </>
+                    )
+                  })}
+                </TodoItemBase>
+              )}
+              <PetModalPopUp
+                navigation={navigation}
+                petIcon={true}
+                visible={isCreateVisible}
+                height={211}
+                setIsVisible={setIsCreateVisible}
+                setIsOpen={() => console.log('setIsOpen')}
+              />
+            </ScrollView>
+          </ScrollViewContainer>
+        </ContentLayout>
+        <BottomSheetModal
+          ref={bottomModal}
+          backdropComponent={renderBackdrop}
+          snapPoints={snappoints}
+          enablePanDownToClose={false}
+          enableHandlePanningGesture={false}
+          enableContentPanningGesture={false}
+          handleHeight={0}
+          enableDismissOnClose
+          backgroundStyle={{ borderRadius: 24 }}
+          handleIndicatorStyle={{ backgroundColor: colors.grey_300, width: 72, height: 6, marginTop: 8 }}
+        >
+          {isCreateMode ? (
+            <TodoCreateBottomSheet
+              selectedCategoryID={selectedCategoryID}
+              handleBottomSheetHeight={handleBottomSheetHeight}
+              teamUserList={teamUserList}
+              selectedDate={selectedDate}
+              getInitDatas={getAllData}
+            />
+          ) : (
+            <TodoEditBottomSheet
+              handleBottomSheetHeight={handleBottomSheetHeight}
+              teamUserList={teamUserList}
+              selectedTodo={selectedTodo}
+              selectedDate={selectedDate}
+              setSelectedTodo={setSelectedTodo}
+              getInitDatas={getAllData}
+            />
+          )}
+        </BottomSheetModal>
+        <ModalPopUp visible={isDeleteVisible} petIcon={false} height={204}>
+          <ModalHeader>
+            <CloseButton
+              onPress={() => {
+                setIsDeleteVisible(false)
+              }}
+            >
+              <Close width={24} height={24} />
+            </CloseButton>
+          </ModalHeader>
+          <PopContent>
+            <Caution width={48} height={48} />
+            <Body_Text color={colors.grey_700}>나에게 할당된 TODO가 아닙니다.</Body_Text>
+          </PopContent>
+        </ModalPopUp>
+        <PetModalPopUp visible={isCreateVisible}></PetModalPopUp>
+      </Pressable>
+    </ScreenContainer>
   )
 }
 const ScrollViewContainer = styled.View`
   flex: 1;
   z-index: -1;
 `
-
+const ScreenContainer = styled.SafeAreaView`
+  flex: 1;
+  background-color: ${colors.grey_100};
+`
 const PopContent = styled.View`
   flex-direction: column;
   padding-bottom: 40px;

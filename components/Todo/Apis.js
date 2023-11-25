@@ -87,6 +87,7 @@ export const editTodoName = async (todoId, name) => {
 }
 
 export const editTodoDate = async (todoId, scheduledDate) => {
+  console.log(scheduledDate)
   let API = `/teams/todos/${todoId}/date`
   let data = { scheduledDate: scheduledDate }
   const response = await axiosInstance.put(url + API, data)
