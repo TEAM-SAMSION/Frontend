@@ -24,7 +24,7 @@ export default function DeleteAccount2({ route, navigation }) {
           <SubHead_Text>정말 포잇을 그만하시겠습니까?</SubHead_Text>
           <OneLine>
             <SubHead_Text color={colors.primary}>탈퇴이유</SubHead_Text>
-            <SubHead_Text>를 알려주세요.</SubHead_Text>
+            <SubHead_Text>를 알려주세요</SubHead_Text>
           </OneLine>
         </TitleBox>
         <DeleteReasonToggle setReason={setReason} setPersonalReason={setPersonalReason} setIsEnabled={setIsEnabled} />

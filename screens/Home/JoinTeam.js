@@ -48,7 +48,7 @@ export default function JoinTeam({ navigation }) {
           <InputBlock
             editable
             onChangeText={(text) => setPamilyCode(text)}
-            placeholder="모임 코드 번호를 입력해주세요."
+            placeholder="Pamily 코드를 입력해주세요"
             placeholderTextColor={colors.grey_400}
             style={{
               borderTopLeftRadius: 0,

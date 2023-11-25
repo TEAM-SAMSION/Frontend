@@ -238,7 +238,7 @@ export const PetModalPopUp = ({ petIcon, visible, height, setIsVisible, setIsOpe
           </ModalHeader>
           <PopContent>
             <SubHead_Text color={colors.grey_700}>Pamily와 함께하시겠습니까?</SubHead_Text>
-            <Detail_Text color={colors.grey_500}>Pamily는 나의 반려동물을 함께 키우는 모임을 말합니다.</Detail_Text>
+            <Detail_Text color={colors.grey_500}>Pamily는 나의 펫을 함께 키우는 모임을 말합니다</Detail_Text>
           </PopContent>
           <PopButtonContainer>
             <PopButton
@@ -270,6 +270,7 @@ const PopContent = styled.View`
   justify-content: center;
   align-items: center;
   margin-bottom: 40px;
+  gap: 4px;
 `
 const PopButtonContainer = styled.View`
   flex-direction: row;

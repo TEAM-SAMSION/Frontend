@@ -121,7 +121,7 @@ export default function AddPet({ route, navigation }) {
               <InputBlock
                 editable
                 onChangeText={(text) => setPetName(text)}
-                placeholder="이름을 입력해주세요."
+                placeholder="이름을 입력해주세요"
                 placeholderTextColor={colors.grey_400}
                 returnKeyType="done"
                 onFocus={() => setOnName(true)}
@@ -133,7 +133,7 @@ export default function AddPet({ route, navigation }) {
               <InputBlock
                 editable
                 onChangeText={(text) => setPetAge(text)}
-                placeholder="나이를 입력해주세요."
+                placeholder="나이를 입력해주세요"
                 placeholderTextColor={colors.grey_400}
                 keyboardType="numeric"
                 returnKeyType="done"
@@ -196,7 +196,7 @@ export default function AddPet({ route, navigation }) {
                 onChangeText={(text) => {
                   setPetIntro(text)
                 }}
-                placeholder="한줄소개를 입력해주세요.(20자이내)"
+                placeholder="한줄소개를 입력해주세요 (20자이내)"
                 placeholderTextColor={colors.grey_400}
                 returnKeyType="done"
                 onFocus={() => setOnIntro(true)}

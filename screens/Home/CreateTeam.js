@@ -216,7 +216,7 @@ export default function CreateTeam({ route, navigation }) {
               <InputBlock
                 editable
                 onChangeText={(text) => setPamilyName(text)}
-                placeholder="이름을 입력해주세요."
+                placeholder="이름을 입력해주세요"
                 placeholderTextColor={colors.grey_400}
                 returnKeyType="done"
                 onFocus={() => setOnName(true)}
@@ -228,7 +228,7 @@ export default function CreateTeam({ route, navigation }) {
               <InputBlock
                 editable
                 onChangeText={(text) => setPamilyIntro(text)}
-                placeholder="한줄소개를 입력해주세요. (20자이내)"
+                placeholder="한줄소개를 입력해주세요 (20자이내)"
                 placeholderTextColor={colors.grey_400}
                 keyboardType="number"
                 returnKeyType="done"
@@ -259,7 +259,7 @@ export default function CreateTeam({ route, navigation }) {
                 <ErrorBox>
                   <ErrorIcon width={12} height={12} color={colors.primary_outline} />
                 </ErrorBox>
-                <Detail_Text color={colors.grey_400}>펫을 1마리 이상을 등록해야 Pamily 생성이 가능합니다.</Detail_Text>
+                <Detail_Text color={colors.grey_400}>펫을 1마리 이상을 등록해야 Pamily 생성이 가능합니다</Detail_Text>
               </AlertBox>
             )}
           </Container>
@@ -317,7 +317,7 @@ export default function CreateTeam({ route, navigation }) {
           <ModalPopUp visible={backVisible} petIcon={false} height={204}>
             <PopContent style={{ flexDirection: 'column', marginTop: 54, marginBottom: 46 }}>
               <BodyBold_Text color={colors.grey_600}>취소하시겠습니까?</BodyBold_Text>
-              <BodyBold_Text color={colors.grey_600}>입력하신 정보는 저장되지 않습니다.</BodyBold_Text>
+              <BodyBold_Text color={colors.grey_600}>입력하신 정보는 저장되지 않습니다</BodyBold_Text>
             </PopContent>
             <PopButtonContainer>
               <PopButton

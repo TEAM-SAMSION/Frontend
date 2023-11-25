@@ -217,7 +217,7 @@ export default function EditPet({ route, navigation }) {
           <ModalPopUp visible={backVisible} petIcon={false} height={204}>
             <PopContent style={{ flexDirection: 'column', marginTop: 54, marginBottom: 46 }}>
               <BodyBold_Text color={colors.grey_600}>취소하시겠습니까?</BodyBold_Text>
-              <BodyBold_Text color={colors.grey_600}>입력하신 정보는 저장되지 않습니다.</BodyBold_Text>
+              <BodyBold_Text color={colors.grey_600}>입력하신 정보는 저장되지 않습니다</BodyBold_Text>
             </PopContent>
             <PopButtonContainer>
               <PopButton
