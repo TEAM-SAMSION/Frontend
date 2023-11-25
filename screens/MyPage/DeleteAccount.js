@@ -49,7 +49,9 @@ export default function DeleteAccount({ route, navigation }) {
   const renderTeamItem = ({ item }) => (
     <TeamContainer>
       <TeamImage source={{ uri: `${item.teamProfileImage}` }} />
-      <DetailSm_Text>{item.teamName}</DetailSm_Text>
+      <TeamText numberOfLines={1} ellipsizeMode="tail">
+        {item.teamName}
+      </TeamText>
     </TeamContainer>
   )
 
@@ -192,6 +194,11 @@ const TeamImage = styled.Image`
   border-radius: 16px;
   background-color: ${colors.grey_150};
 `
+const TeamText = styled.Text`
+  font-family: 'Spoqa-Regular';
+  font-size: 12px;
+  line-height: 15px;
+`
 const TodoImage = styled.Image`
   width: 48px;
   height: 48px;
@@ -203,6 +210,7 @@ const TeamContainer = styled.View`
   align-items: center;
   justify-content: center;
   margin-right: 12px;
+  width: 70px;
 `
 const ContentContainer = styled.View`
   gap: 4px;
