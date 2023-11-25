@@ -9,8 +9,8 @@ const Stack = createStackNavigator()
 export default function AuthNav() {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
-      {/* <Stack.Screen name="OnBoarding" component={OnBoarding} />
-      <Stack.Screen name="Auth" component={Auth} /> */}
+      <Stack.Screen name="OnBoarding" component={OnBoarding} />
+      <Stack.Screen name="Auth" component={Auth} />
       <Stack.Screen name="UserSetting" component={UserSetting} />
     </Stack.Navigator>
   )
