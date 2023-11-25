@@ -28,6 +28,7 @@ export const TeamSearchBox = (props) => {
 
   const data = props.data
   const teamCode = data.code
+  const teamId = data.teamId
   const teamName = data.teamName
   const teamLeader = data.presidentName
   const teamNumber = data.registerCount
@@ -39,10 +40,8 @@ export const TeamSearchBox = (props) => {
   const joinTeam = async () => {
     try {
       await postJoiningTeam(ACCESSTOKEN, teamCode)
-      getLatestTeam().then((result) => {
-        console.log(result)
-        setSelectedTeam(result)
-      })
+      let tempArr = { id: teamId, name: teamName, auth: 'MEMBER' }
+      setSelectedTeam(tempArr)
       setVisible(false)
       navigation.dispatch(
         CommonActions.reset({
@@ -63,7 +62,7 @@ export const TeamSearchBox = (props) => {
           <BodyBoldSm_Text color={colors.primary_outline}>{teamCode}</BodyBoldSm_Text>
         </TeamCodeBox>
         <TeamContentBox>
-          <TeamImage source={require('../../assets/Imgs/sample_5.png')} />
+          <TeamImage source={{ uri: teamImageUrl }} />
           <TeamInfoBox>
             <TeamInfoDetailBox>
               <Box>
@@ -166,7 +165,6 @@ const TeamImage = styled.Image`
   width: 80px;
   height: 80px;
   border-radius: 16px;
-  background-color: pink;
 `
 const TeamInfoBox = styled.View`
   gap: 6px;
