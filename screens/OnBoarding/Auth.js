@@ -14,7 +14,7 @@ import { ModalPopUp, ScreenWidth, url } from '../../components/Shared'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import Caution from '../../assets/Svgs/Caution.svg'
 import Close from '../../assets/Svgs/Close.svg'
-import { Body_Text } from '../../components/Fonts'
+import { BodySm_Text, Body_Text, SubHeadSm_Text } from '../../components/Fonts'
 WebBrowser.maybeCompleteAuthSession()
 
 export default function Auth({ navigation }) {
@@ -148,6 +148,7 @@ export default function Auth({ navigation }) {
     }
   }
   useEffect(() => {
+    // AsyncStorage.clear()
     // logoutNaver()
     if (!appleAuth.isSupported) return
     return appleAuth.onCredentialRevoked(async () => {
@@ -185,7 +186,7 @@ export default function Auth({ navigation }) {
           onPress={() => loginApple()}
         />
       )}
-      <ModalPopUp visible={isPopupVisible} petIcon={false} height={204}>
+      <ModalPopUp visible={isPopupVisible} petIcon={false}>
         <ModalHeader>
           <CloseButton onPress={() => setIsPopupVisible(false)}>
             <Close width={24} height={24} />
@@ -193,7 +194,12 @@ export default function Auth({ navigation }) {
         </ModalHeader>
         <PopContent>
           <Caution width={48} height={48} />
-          <Body_Text color={colors.grey_700}>이미 가입한 계정이 있습니다</Body_Text>
+          <SubHeadSm_Text style={{ marginTop: 20 }} color={colors.grey_700}>
+            이미 계정을 갖고 계시군요!
+          </SubHeadSm_Text>
+          <BodySm_Text style={{ marginTop: 4 }} color={colors.grey_450}>
+            다른 방법으로 로그인을 시도해주세요
+          </BodySm_Text>
         </PopContent>
       </ModalPopUp>
     </Container>
@@ -204,12 +210,11 @@ const ModalHeader = styled.View`
   width: 100%;
   align-items: flex-end;
   justify-content: center;
-  margin-bottom: 24px;
 `
 const PopContent = styled.View`
   flex-direction: column;
   padding-bottom: 40px;
-  gap: 10px;
+  /* gap: 10px; */
   align-items: center;
   justify-content: center;
 `

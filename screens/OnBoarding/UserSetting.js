@@ -17,9 +17,9 @@ export const UserSetting = ({ navigation, route }) => {
   const [detailRoute, setDetailRoute] = useState('')
   const [nickname, setNickname] = useState('')
 
-  let { accessToken, refreshToken, provider } = route?.params
-  // let { accessToken, refreshToken, provider } = ['asdf', 'fdas', 'Navaer']
-  console.log(accessToken, refreshToken, provider)
+  // let { accessToken, refreshToken, provider } = route?.params
+  let { accessToken, refreshToken, provider } = ['asdf', 'fdas', 'Navaer'] //** */
+  // console.log(accessToken, refreshToken, provider)
   Platform.OS == 'ios'
     ? StatusBarManager.getHeight((statusBarFrameData) => {
         setStatusBarHeight(statusBarFrameData.height)
@@ -60,10 +60,10 @@ export const UserSetting = ({ navigation, route }) => {
         </BackButton>
         <ContentContainer>
           <TopContainer>
-            <SubHead_Text color={colors.grey_800}>포잇과 함께 하게되어 영광이에요!</SubHead_Text>
+            <SubHead_Text color={colors.grey_800}>포잇과 함께 하게 되어 영광이에요!</SubHead_Text>
             <TextContainer>
-              <SubHead_Text color={colors.primary}>사전 정보 입력</SubHead_Text>
-              <SubHead_Text color={colors.grey_800}>을 완료해주세요!</SubHead_Text>
+              <SubHead_Text color={colors.primary}>사전 정보</SubHead_Text>
+              <SubHead_Text color={colors.grey_800}>를 입력해 주세요!</SubHead_Text>
             </TextContainer>
             <InputContainer>
               <InputTitle>닉네임 설정</InputTitle>
@@ -76,6 +76,7 @@ export const UserSetting = ({ navigation, route }) => {
                 returnKeyType="done"
                 inputMode="text"
                 blurOnSubmit={false}
+                maxLength={10}
                 onChangeText={(text) => setNickname(text)}
               />
             </InputContainer>
@@ -118,7 +119,7 @@ export const UserSetting = ({ navigation, route }) => {
           ref={bottomModal}
           backdropComponent={renderBackdrop}
           index={-1}
-          snapPoints={['55%', '68%']}
+          snapPoints={['50%', '64%']}
           enablePanDownToClose={false}
           enableHandlePanningGesture={false}
           enableContentPanningGesture={false}

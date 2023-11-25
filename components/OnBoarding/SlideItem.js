@@ -41,6 +41,8 @@ const TitleText = styled.Text`
   line-height: 43px;
 `
 const ContentText = styled.Text`
+  flex-wrap: wrap;
+  width: ${ScreenWidth - 48}px;
   color: ${colors.grey_600};
   font-size: 14px;
   font-family: Spoqa-Medium;
