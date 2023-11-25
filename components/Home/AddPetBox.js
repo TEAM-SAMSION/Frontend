@@ -99,6 +99,7 @@ const TitleBox = styled.View`
   flex-direction: row;
   align-items: center;
   gap: 8px;
+  width: 170px;
 `
 const AgeBox = styled.View`
   background-color: ${colors.red_200};

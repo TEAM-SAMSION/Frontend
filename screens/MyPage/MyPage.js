@@ -194,7 +194,10 @@ export default function MyPage({ navigation }) {
             </ErrorBox>
             <MessageBox>
               <TextBox>
-                <BodyBold_Text>{name}님은 관리자 권한 위임 후,</BodyBold_Text>
+                <View style={{ flexDirection: 'row' }}>
+                  <BodyBold_Text>{name}님은 </BodyBold_Text>
+                  <BodyBold_Text>관리자 권한 위임 후,</BodyBold_Text>
+                </View>
                 <BodyBold_Text>Pamily를 나갈 수 있습니다</BodyBold_Text>
               </TextBox>
               <BodySm_Text color={colors.grey_450}>다른 회원에게 위임 후 다시 시도해주세요</BodySm_Text>
@@ -319,6 +322,8 @@ const PopButtonText = styled.Text`
 `
 const PopTitleBox = styled.View`
   flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
 `
 const NoneGroupBox = styled.View`
   display: flex;

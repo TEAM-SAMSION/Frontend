@@ -91,7 +91,7 @@ export const PamilyChoiceToggle = (props) => {
 const DropdownContainer = styled.Pressable`
   width: 109px;
   height: 32px;
-  padding: 0px 10px 0px 16px;
+  padding: 4px 10px 4px 16px;
   margin: 12px 0px 0px 12px;
   z-index: 999;
   border-radius: ${({ isOpen }) => (isOpen ? '8px 8px 0px 0px' : '8px')};
