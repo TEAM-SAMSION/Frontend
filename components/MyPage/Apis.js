@@ -59,12 +59,18 @@ export const getTodoNum = async (accessToken, teamId) => {
   return response.data.todoCount
 }
 
-export const getDeleteValidation = async (teamId) => {
+export const getTeamDeleteValidation = async (teamId) => {
   let API = `/teams/${teamId}/registers/validate`
   const response = await axiosInstance.post(url + API)
 }
 
 ////// 계정 탈퇴 //////
+
+export const getUserDeleteValidation = async () => {
+  let API = `/teams/registers/validate`
+  const response = await axiosInstance.post(url + API)
+}
+
 export const getAllTeams = async (accessToken) => {
   let API = `/teams/withdraw`
   const response = await axiosInstance.get(url + API)

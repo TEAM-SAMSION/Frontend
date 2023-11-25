@@ -12,7 +12,7 @@ import { useRecoilValue, useSetRecoilState } from 'recoil'
 import { accessTokenState } from '../../recoil/AuthAtom'
 import { ModalPopUp } from '../../components/Shared'
 import { colors } from '../../colors'
-import { deleteTeam, getDeleteValidation, getPeriod, getTeamList, getUserInfo } from '../../components/MyPage/Apis'
+import { deleteTeam, getTeamDeleteValidation, getPeriod, getTeamList, getUserInfo } from '../../components/MyPage/Apis'
 import { BodyBoldSm_Text, BodyBold_Text, BodySm_Text, Detail_Text, SubHead_Text } from '../../components/Fonts'
 import { TabBarAtom } from '../../recoil/TabAtom'
 import { useIsFocused } from '@react-navigation/native'
@@ -69,7 +69,7 @@ export default function MyPage({ navigation }) {
   const deleteValidation = async (teamId) => {
     // 팀 탈퇴 검증 api -> status에 따라 팝업 종류 다르게
     try {
-      await getDeleteValidation(teamId).then(() => {
+      await getTeamDeleteValidation(teamId).then(() => {
         setVisible(true)
       })
     } catch (error) {
