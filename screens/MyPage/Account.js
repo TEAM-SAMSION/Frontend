@@ -8,6 +8,7 @@ import { platformState } from '../../recoil/AuthAtom'
 import ErrorIcon from '../../assets/Svgs/error.svg'
 import { BodyBold_Text, BodySm_Text } from '../../components/Fonts'
 import { getUserDeleteValidation } from '../../components/MyPage/Apis'
+import MyPageNav from '../../navigators/MyPageNav'
 
 export default function Account({ navigation }) {
   const SocialAccount = useRecoilValue(platformState)
@@ -61,6 +62,7 @@ export default function Account({ navigation }) {
           <PopButton
             onPress={() => {
               setIsRejectVisible(false)
+              navigation.navigate('MyPageNav', { screen: 'MyPage' })
             }}
           >
             <PopButtonText>확인</PopButtonText>
