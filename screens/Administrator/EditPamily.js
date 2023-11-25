@@ -52,7 +52,7 @@ export default function EditPamily({ route, navigation }) {
   }, [isFocused])
 
   useEffect(() => {
-    if (name === '' || intro === '') {
+    if (name === '' || intro === '' || name.length > 20 || intro.length > 20) {
       setEnabled(false)
       console.log(enabled)
     } else {
@@ -155,7 +155,12 @@ export default function EditPamily({ route, navigation }) {
                 </CodeButton>
               </CodeBox>
             </InputBox>
-            <InputBox style={{ borderWidth: onName ? 1 : 0, borderColor: onName ? 'rgba(0, 0, 0, 0.12)' : '' }}>
+            <InputBox
+              style={{
+                borderWidth: onName ? 1 : 0,
+                borderColor: onName ? (name.length > 20 ? colors.primary_outline : 'rgba(0, 0, 0, 0.12)') : '',
+              }}
+            >
               <Detail_Text color={colors.grey_800}>Pamily 이름</Detail_Text>
               <InputBlock
                 editable
@@ -164,9 +169,20 @@ export default function EditPamily({ route, navigation }) {
                 returnKeyType="done"
                 onFocus={() => setOnName(true)}
                 onBlur={() => setOnName(false)}
+                maxLength={23}
               />
             </InputBox>
-            <InputBox style={{ borderWidth: onIntro ? 1 : 0, borderColor: onIntro ? 'rgba(0, 0, 0, 0.12)' : '' }}>
+            {name.length > 20 && (
+              <TextAlertBox>
+                <Detail_Text color={colors.primary_outline}>20자 이내로 입력해주세요</Detail_Text>
+              </TextAlertBox>
+            )}
+            <InputBox
+              style={{
+                borderWidth: onIntro ? 1 : 0,
+                borderColor: onIntro ? (intro.length > 20 ? colors.primary_outline : 'rgba(0, 0, 0, 0.12)') : '',
+              }}
+            >
               <Detail_Text color={colors.grey_800}>한줄소개</Detail_Text>
               <InputBlock
                 editable
@@ -175,8 +191,14 @@ export default function EditPamily({ route, navigation }) {
                 returnKeyType="done"
                 onFocus={() => setOnIntro(true)}
                 onBlur={() => setOnIntro(false)}
+                maxLength={25}
               />
             </InputBox>
+            {intro.length > 20 && (
+              <TextAlertBox>
+                <Detail_Text color={colors.primary_outline}>20자 이내로 입력해주세요</Detail_Text>
+              </TextAlertBox>
+            )}
           </InfoContainer>
           <BottomSheetModal
             ref={bottomSheetModalRef}
@@ -263,4 +285,8 @@ const CodeBox = styled.View`
   flex-direction: row;
   align-items: center;
   gap: 10px;
+`
+const TextAlertBox = styled.View`
+  align-items: flex-end;
+  margin-right: 5px;
 `

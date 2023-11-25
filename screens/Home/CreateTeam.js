@@ -78,7 +78,13 @@ export default function CreateTeam({ route, navigation }) {
   }, [route.params])
 
   useEffect(() => {
-    const isEmpty = pamilyName === '' || pamilyCode === '' || pamilyIntro === '' || savedPets.length == 0
+    const isEmpty =
+      pamilyName === '' ||
+      pamilyCode === '' ||
+      pamilyIntro === '' ||
+      savedPets.length == 0 ||
+      pamilyName.length > 20 ||
+      pamilyIntro.length > 20
     setEnabled(!isEmpty)
   }, [pamilyName, pamilyCode, pamilyIntro, savedPets])
 
@@ -211,7 +217,12 @@ export default function CreateTeam({ route, navigation }) {
                 </CodeBox>
               )}
             </InputBox>
-            <InputBox style={{ borderWidth: onName ? 1 : 0, borderColor: onName ? 'rgba(0, 0, 0, 0.12)' : '' }}>
+            <InputBox
+              style={{
+                borderWidth: onName ? 1 : 0,
+                borderColor: onName ? (pamilyName.length > 20 ? colors.primary_outline : 'rgba(0, 0, 0, 0.12)') : '',
+              }}
+            >
               <Detail_Text color={colors.grey_800}> Pamily 이름</Detail_Text>
               <InputBlock
                 editable
@@ -221,9 +232,20 @@ export default function CreateTeam({ route, navigation }) {
                 returnKeyType="done"
                 onFocus={() => setOnName(true)}
                 onBlur={() => setOnName(false)}
+                maxLength={23}
               />
             </InputBox>
-            <InputBox style={{ borderWidth: onIntro ? 1 : 0, borderColor: onIntro ? 'rgba(0, 0, 0, 0.12)' : '' }}>
+            {pamilyName.length > 20 && (
+              <TextAlertBox>
+                <Detail_Text color={colors.primary_outline}>20자 이내로 입력해주세요</Detail_Text>
+              </TextAlertBox>
+            )}
+            <InputBox
+              style={{
+                borderWidth: onIntro ? 1 : 0,
+                borderColor: onIntro ? (pamilyIntro.length > 20 ? colors.primary_outline : 'rgba(0, 0, 0, 0.12)') : '',
+              }}
+            >
               <Detail_Text color={colors.grey_800}>한줄소개</Detail_Text>
               <InputBlock
                 editable
@@ -234,8 +256,14 @@ export default function CreateTeam({ route, navigation }) {
                 returnKeyType="done"
                 onFocus={() => setOnIntro(true)}
                 onBlur={() => setOnIntro(false)}
+                maxLength={25}
               />
             </InputBox>
+            {pamilyIntro.length > 20 && (
+              <TextAlertBox>
+                <Detail_Text color={colors.primary_outline}>20자 이내로 입력해주세요</Detail_Text>
+              </TextAlertBox>
+            )}
             <Block
               onPress={() => navigation.navigate('AddPetProfile')}
               style={
@@ -535,4 +563,8 @@ const AlertBox = styled.View`
   align-items: center;
   margin-left: 12px;
   margin-top: 6px;
+`
+const TextAlertBox = styled.View`
+  align-items: flex-end;
+  margin-right: 5px;
 `

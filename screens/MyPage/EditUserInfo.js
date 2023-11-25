@@ -48,7 +48,7 @@ export default function EditUserInfo({ route, navigation }) {
   }, [isFocused])
 
   useEffect(() => {
-    const isEmpty = name === ''
+    const isEmpty = name === '' || name.length > 10
     setEnabled(!isEmpty)
 
     navigation.setOptions({
@@ -72,7 +72,7 @@ export default function EditUserInfo({ route, navigation }) {
         </TouchableOpacity>
       ),
     })
-  }, [name, profileUrl, profileFile])
+  }, [enabled, name, profileUrl, profileFile])
 
   const bottomSheetModalRef = useRef(null)
   const snapPoints = ['40%']
@@ -123,7 +123,12 @@ export default function EditUserInfo({ route, navigation }) {
                 </TouchableOpacity>
               </ProfileContainer>
               <InfoContainer>
-                <InputBox style={{ borderWidth: onName ? 1 : 0, borderColor: onName ? 'rgba(0, 0, 0, 0.12)' : '' }}>
+                <InputBox
+                  style={{
+                    borderWidth: onName ? 1 : 0,
+                    borderColor: onName ? (name.length > 10 ? colors.primary_outline : 'rgba(0, 0, 0, 0.12)') : '',
+                  }}
+                >
                   <Detail_Text color={colors.grey_800}>닉네임</Detail_Text>
                   <InputBlock
                     editable
@@ -132,8 +137,14 @@ export default function EditUserInfo({ route, navigation }) {
                     returnKeyType="done"
                     onFocus={() => setOnName(true)}
                     onBlur={() => setOnName(false)}
+                    maxLength={13}
                   />
                 </InputBox>
+                {name.length > 10 && (
+                  <TextAlertBox>
+                    <Detail_Text color={colors.primary_outline}>10자 이내로 입력해주세요</Detail_Text>
+                  </TextAlertBox>
+                )}
                 <InputBox style={{ padding: 12 }}>
                   <Detail_Text color={colors.grey_800}>이메일</Detail_Text>
 
@@ -220,4 +231,8 @@ const BottomTitleText = styled.Text`
   font-size: 16px;
   line-height: 22px;
   color: ${colors.grey_800};
+`
+const TextAlertBox = styled.View`
+  align-items: flex-end;
+  margin-right: 5px;
 `
