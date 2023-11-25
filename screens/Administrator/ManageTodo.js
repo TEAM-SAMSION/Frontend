@@ -36,6 +36,7 @@ export default function ManageTodo({ navigation, route }) {
   const [isCreate, setIsCreate] = useState(false)
   const [name, setName] = useState(null)
   const [isVisible, setIsVisible] = useState(false)
+  const [isErrorID, setIsErrorID] = useState(null)
   const [selectedCategory, setSelectedCategory] = useState(null)
 
   const teamId = route.params.teamId
@@ -87,18 +88,24 @@ export default function ManageTodo({ navigation, route }) {
       }
     })
   }
-  const finishCategoryEdit = (data, categoryId) => {
-    setIsLoading(true)
-    EditCategoryName(categoryId, data).then((status) => {
-      if (status == 200) {
-        refreshData()
-        setIsLoading(false)
-        setSelectedLocalId(null)
-      } else {
-        console.log(status)
-      }
-    })
-    setIsEditable(isEditable.map((item) => (item = false)))
+  const finishCategoryEdit = (data, categoryId, localId) => {
+    if (data.length < 1 || data.length > 10) {
+      setIsErrorID(localId)
+      inputRefs.current[localId].current.focus()
+    } else {
+      setIsErrorID(null)
+      setIsLoading(true)
+      EditCategoryName(categoryId, data).then((status) => {
+        if (status == 200) {
+          refreshData()
+          setIsLoading(false)
+          setSelectedLocalId(null)
+        } else {
+          console.log(status)
+        }
+      })
+      setIsEditable(isEditable.map((item) => (item = false)))
+    }
   }
 
   const deleteCategory = (categoryId) => {
@@ -166,7 +173,7 @@ export default function ManageTodo({ navigation, route }) {
                         ref={inputRefs.current[index]}
                         style={{ fontFamily: 'Spoqa-Medium', color: colors.grey_600, width: this.state?.inputWidth }}
                         placeholderTextColor={colors.grey_600}
-                        onSubmitEditing={(data) => finishCategoryEdit(data.nativeEvent.text, category.categoryId)}
+                        onSubmitEditing={(data) => finishCategoryEdit(name, category.categoryId, index)}
                         placeholder={category.categoryName}
                         value={index == selectedLocalId && name}
                         onChange={(data) => setName(data.nativeEvent.text)}
@@ -183,11 +190,22 @@ export default function ManageTodo({ navigation, route }) {
                       )}
                     </ButtonBase>
                   </Base>
+                  {isErrorID == index && (
+                    <Detail_Text color={colors.red_300}>글자 수가 1에서 10 사이여야합니다</Detail_Text>
+                  )}
                   <Base style={{ gap: 8, marginTop: 12 }}>
-                    <ButtonBox onPress={() => editCategoryName(index)}>
+                    <ButtonBox
+                      onPress={() =>
+                        selectedLocalId == index
+                          ? finishCategoryEdit(name, category.categoryId, index)
+                          : editCategoryName(index)
+                      }
+                    >
                       {/*Index는 TextInput 활성화 컨트롤 위함 */}
                       <Edit width={16} height={16} color={colors.secondary} />
-                      <Detail_Text color={colors.grey_600}>편집하기</Detail_Text>
+                      <Detail_Text color={colors.grey_600}>
+                        {selectedLocalId == index ? `편집완료` : `편집하기`}
+                      </Detail_Text>
                     </ButtonBox>
                     <ButtonBox onPress={() => startDeleteCategory(category)}>
                       <Trash width={16} height={16} color={colors.red_350} />

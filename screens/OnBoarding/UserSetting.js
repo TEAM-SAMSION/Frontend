@@ -17,9 +17,9 @@ export const UserSetting = ({ navigation, route }) => {
   const [detailRoute, setDetailRoute] = useState('')
   const [nickname, setNickname] = useState('')
 
-  // let { accessToken, refreshToken, provider } = route?.params
-  let { accessToken, refreshToken, provider } = ['asdf', 'fdas', 'Navaer']
-  // console.log(accessToken, refreshToken, provider)
+  let { accessToken, refreshToken, provider } = route?.params
+  // let { accessToken, refreshToken, provider } = ['asdf', 'fdas', 'Navaer']
+  console.log(accessToken, refreshToken, provider)
   Platform.OS == 'ios'
     ? StatusBarManager.getHeight((statusBarFrameData) => {
         setStatusBarHeight(statusBarFrameData.height)

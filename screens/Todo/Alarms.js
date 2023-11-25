@@ -27,7 +27,7 @@ export const Alarms = ({ navigation }) => {
     getAlarms().then((data) => {
       console.log('getAlarmList:', data)
       if (data.length > 0) {
-        setAlarmList(data)
+        setAlarmList(data.reverse())
       } else {
         setAlarmList(null)
       }

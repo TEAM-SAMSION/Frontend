@@ -56,7 +56,6 @@ export default function Auth({ navigation }) {
         'Content-Type': `application/json; charset=UTF-8`,
       },
     })
-    console.log('CheckAuthority Res:', response)
     return response.data
   }
 
@@ -141,7 +140,6 @@ export default function Auth({ navigation }) {
   }
   useEffect(() => {
     // logoutNaver()
-    // AsyncStorage.clear()
     if (!appleAuth.isSupported) return
     return appleAuth.onCredentialRevoked(async () => {
       console.warn('If this function executes, User Credentials have been Revoked')

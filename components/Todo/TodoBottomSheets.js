@@ -311,6 +311,9 @@ const TodoDataEditing = ({
 const TodoDateSetting = ({ navigation, selectedTodo, selectedDate, getInitDatas, handleBottomSheetHeight }) => {
   const [isLoading, setIsLoading] = useState(false)
   const initDay = new Date()
+  const lastDay = new Date()
+  lastDay.setFullYear(lastDay.getFullYear() + 1)
+
   const [date, setDate] = useState(new Date())
   function dateFormat(date) {
     let dateFormat2 =
@@ -350,6 +353,7 @@ const TodoDateSetting = ({ navigation, selectedTodo, selectedDate, getInitDatas,
       <DatePicker
         date={date}
         minimumDate={initDay}
+        maximumDate={lastDay}
         onDateChange={setDate} //이거 양식 안 지키면, 리렌더 이상하게 나서 계속 피커 초기값으로 리턴됨**
         fadeToColor="none"
         locale="ko"
@@ -496,7 +500,13 @@ export const TodoCreateBottomSheet = ({
           onChangeText={(text) => setName(text)}
           onFocus={() => handleBottomSheetHeight(3)}
         />
+        {name?.length > 20 && (
+          <Detail_Text style={{ marginTop: 4 }} color={colors.red_300}>
+            글자 수가 1에서 20 사이여야합니다
+          </Detail_Text>
+        )}
       </InputContainer>
+
       <BodyBoldSm_Text style={{ marginBottom: 10 }}>담당자 지정</BodyBoldSm_Text>
       <UserContainer>
         <UserItem
@@ -525,7 +535,7 @@ export const TodoCreateBottomSheet = ({
       </UserContainer>
       <Button_PinkBg
         isLoading={isLoading}
-        isEnabled={selectedUser.length > 0 && name}
+        isEnabled={selectedUser.length > 0 && name.length > 0 && name.length < 21}
         text="완료"
         func={() => handleSubmit()}
       />

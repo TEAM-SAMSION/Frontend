@@ -23,13 +23,9 @@ export default Todo = ({ navigation }) => {
   const setIsTabVisible = useSetRecoilState(TabBarAtom)
   const [selectedTeam, setSelectedTeam] = useRecoilState(SelectedTeamAtom)
 
-  const { StatusBarManager } = NativeModules
   const tempDate = new Date()
   //** new Date()를 새벽에 호출하면 ISOString으로 가져올때 하루 전으로 반환하는 문제가 있다. getDate()를 직접 호출하여 정확한 날짜정보를 가져와야함 */
   const today = `${tempDate.getFullYear()}-${tempDate.getMonth() + 1}-${tempDate.getDate()}`
-
-  const [statusBarHeight, setStatusBarHeight] = useState(0)
-
   const [todosByCategory, setTodosByCategory] = useState(null)
 
   const [todoTeamList, setTodoTeamList] = useState(null)
@@ -48,8 +44,6 @@ export default Todo = ({ navigation }) => {
 
   const bottomModal = useRef()
 
-  //prettier-ignore
-  Platform.OS == 'ios'? StatusBarManager.getHeight((statusBarFrameData) => {setStatusBarHeight(statusBarFrameData.height)}): null //KeyboardAwareView가 정상 작동하기 위해서 StatusBar의 높이값을 초기에 구해야함.
   //prettier-ignore
   const renderBackdrop = useCallback((props) => <BottomSheetBackdrop {...props} pressBehavior="close" appearsOnIndex={0} disappearsOnIndex={-1} ><Pressable onPress={()=>Keyboard.dismiss()} style={{flex:1}}/></BottomSheetBackdrop>,[],)
 
@@ -229,15 +223,15 @@ export default Todo = ({ navigation }) => {
                   })}
                 </TodoItemBase>
               )}
-              <PetModalPopUp
-                navigation={navigation}
-                petIcon={true}
-                visible={isCreateVisible}
-                height={211}
-                setIsVisible={setIsCreateVisible}
-                setIsOpen={() => console.log('setIsOpen')}
-              />
             </ScrollView>
+            <PetModalPopUp
+              navigation={navigation}
+              petIcon={true}
+              visible={isCreateVisible}
+              height={211}
+              setIsVisible={setIsCreateVisible}
+              setIsOpen={() => console.log('setIsOpen')}
+            />
           </ScrollViewContainer>
         </ContentLayout>
         <BottomSheetModal
