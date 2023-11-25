@@ -64,24 +64,14 @@ export const TeamSearchBox = (props) => {
         <TeamContentBox>
           <TeamImage source={{ uri: teamImageUrl }} />
           <TeamInfoBox>
-            <TeamInfoDetailBox>
-              <Box>
-                <BodyBoldSm_Text color={colors.grey_600}>Pamily 이름</BodyBoldSm_Text>
-              </Box>
-              <BodySm_Text color={colors.grey_450}>{teamName}</BodySm_Text>
-            </TeamInfoDetailBox>
-            <TeamInfoDetailBox>
-              <Box>
-                <BodyBoldSm_Text color={colors.grey_600}>Pamily 대표</BodyBoldSm_Text>
-              </Box>
-              <BodySm_Text color={colors.grey_450}>{teamLeader}</BodySm_Text>
-            </TeamInfoDetailBox>
-            <TeamInfoDetailBox>
-              <Box>
-                <BodyBoldSm_Text color={colors.grey_600}>참여 멤버 수</BodyBoldSm_Text>
-              </Box>
-              <BodySm_Text color={colors.grey_450}>{teamNumber}명</BodySm_Text>
-            </TeamInfoDetailBox>
+            <BodyBoldSm_Text color={colors.grey_600}>Pamily 이름</BodyBoldSm_Text>
+            <BodyBoldSm_Text color={colors.grey_600}>Pamily 대표</BodyBoldSm_Text>
+            <BodyBoldSm_Text color={colors.grey_600}>참여 멤버 수</BodyBoldSm_Text>
+          </TeamInfoBox>
+          <TeamInfoBox>
+            <BodySm_Text color={colors.grey_450}>{teamName}</BodySm_Text>
+            <BodySm_Text color={colors.grey_450}>{teamLeader}</BodySm_Text>
+            <BodySm_Text color={colors.grey_450}>{teamNumber}명</BodySm_Text>
           </TeamInfoBox>
         </TeamContentBox>
         <TeamIntroBox>
@@ -156,7 +146,7 @@ const TeamCodeBox = styled.View``
 const TeamContentBox = styled.View`
   flex-direction: row;
   align-items: center;
-  gap: 16px;
+  gap: 12px;
   padding-bottom: 16px;
   border-bottom-width: 2px;
   border-color: rgba(0, 0, 0, 0.12);
@@ -165,17 +155,10 @@ const TeamImage = styled.Image`
   width: 80px;
   height: 80px;
   border-radius: 16px;
+  margin-right: 4px;
 `
 const TeamInfoBox = styled.View`
   gap: 6px;
-`
-const TeamInfoDetailBox = styled.View`
-  flex-direction: row;
-  gap: 16px;
-`
-const Box = styled.View`
-  justify-content: center;
-  width: 76px;
 `
 const TeamIntroBox = styled.View``
 const JoinButton = styled.TouchableOpacity`
