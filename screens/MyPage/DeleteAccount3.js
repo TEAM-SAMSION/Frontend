@@ -28,7 +28,6 @@ export default function DeleteAccount3({ route, navigation }) {
   const [isChecked, setIsChecked] = useState(false)
   const [loggedIn, setLoggedIn] = useRecoilState(loggedInState)
   const [visible, setVisible] = useState(false)
-  const [isRejectVisible, setIsRejectVisible] = useState(false)
 
   const finishWithDraw = async () => {
     try {
@@ -52,11 +51,8 @@ export default function DeleteAccount3({ route, navigation }) {
 
   const withDraw = async () => {
     await postReason(ACCESSTOKEN, reason)
-    await deleteAccount(ACCESSTOKEN).then((result) => {
-      Alert.alert('탈퇴 구현 중')
-    })
-    //logOut()
-    //setIsRejectVisible(true)
+    await deleteAccount(ACCESSTOKEN)
+    logOut()
   }
 
   return (
@@ -150,36 +146,6 @@ export default function DeleteAccount3({ route, navigation }) {
             }}
           >
             <PopButtonText>아니오</PopButtonText>
-          </PopButton>
-        </PopButtonContainer>
-      </ModalPopUp>
-      <ModalPopUp visible={isRejectVisible} petIcon={false} height={258}>
-        <PopUpContainer style={{ marginTop: 18, marginBottom: 33 }}>
-          <ErrorBox>
-            <ErrorIcon width={48} height={48} color={colors.grey_100} />
-          </ErrorBox>
-          <MessageBox>
-            <TextBox>
-              <BodyBold_Text>관리자 권한을 위임해야 탈퇴할 수 있습니다</BodyBold_Text>
-            </TextBox>
-            <BodySm_Text color={colors.grey_450}>다른 회원에게 위임 후 다시 시도해주세요</BodySm_Text>
-          </MessageBox>
-        </PopUpContainer>
-        <PopButtonContainer>
-          <PopButton
-            onPress={() => {
-              setIsRejectVisible(false)
-            }}
-            style={{ backgroundColor: colors.grey_100, borderColor: colors.grey_150, borderWidth: 2 }}
-          >
-            <PopButtonText>취소</PopButtonText>
-          </PopButton>
-          <PopButton
-            onPress={() => {
-              setIsRejectVisible(false)
-            }}
-          >
-            <PopButtonText>확인</PopButtonText>
           </PopButton>
         </PopButtonContainer>
       </ModalPopUp>

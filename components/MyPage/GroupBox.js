@@ -4,6 +4,7 @@ import { styled } from 'styled-components/native'
 import { Swipeable } from 'react-native-gesture-handler'
 import { colors } from '../../colors'
 import CrownIcon from '../../assets/Svgs/Crown.svg'
+import PinkCrownIcon from '../../assets/Svgs/Crown_pink.svg'
 import { BodyBoldSm_Text, BodySm_Text } from '../Fonts'
 import { Platform } from 'react-native'
 
@@ -51,13 +52,21 @@ const GroupBox = (props) => {
         </GroupInfoBox>
         {props.data.authority == 'MEMBER' ? (
           <View width={34} height={34} />
-        ) : (
+        ) : props.data.authority == 'PRESIDENT' ? (
           <CrownButton
             onPress={() => {
               props.gotoAdminNav()
             }}
           >
             <CrownIcon width={34} height={34} />
+          </CrownButton>
+        ) : (
+          <CrownButton
+            onPress={() => {
+              props.gotoAdminNav()
+            }}
+          >
+            <PinkCrownIcon width={34} height={34} />
           </CrownButton>
         )}
       </GroupBoxContainer>

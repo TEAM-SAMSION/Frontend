@@ -59,6 +59,11 @@ export const getTodoNum = async (accessToken, teamId) => {
   return response.data.todoCount
 }
 
+export const getDeleteValidation = async (teamId) => {
+  let API = `/teams/${teamId}/registers/validate`
+  const response = await axiosInstance.post(url + API)
+}
+
 ////// 계정 탈퇴 //////
 export const getAllTeams = async (accessToken) => {
   let API = `/teams/withdraw`
@@ -85,11 +90,8 @@ export const getAllTodoNum = async (accessToken) => {
 
 export const deleteAccount = async (accessToken) => {
   let API = `/user`
-  const response = await axiosInstance.delete(url + API).catch(function (error) {
-    if (error.response) {
-      return error.response.status
-    }
-  })
+  const response = await axiosInstance.delete(url + API)
+  return response.status
 }
 
 export const postReason = async (accessToken, data) => {

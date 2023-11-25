@@ -31,7 +31,7 @@ export default function AdministratorNav() {
         name="AdminHome"
         component={AdminHome}
         options={({ navigation }) => ({
-          headerTitle: '관리자 설정',
+          headerTitle: 'Pamily 관리',
           headerLeft: () => (
             <TouchableOpacity
               onPress={() => navigation.goBack()}
@@ -50,7 +50,7 @@ export default function AdministratorNav() {
         name="EditPamily"
         component={EditPamily}
         options={({ navigation }) => ({
-          headerTitle: 'Pamily 정보 수정',
+          headerTitle: 'Pamily 수정',
           headerLeft: () => (
             <TouchableOpacity
               onPress={() => navigation.goBack()}

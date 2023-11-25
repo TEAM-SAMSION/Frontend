@@ -84,7 +84,7 @@ export default function AdminHome({ route, navigation }) {
       </UserContainer>
       <GroupInfoContainer>
         <GroupInfoBox>
-          <Body_Text color={colors.grey_500}>총 회원</Body_Text>
+          <Body_Text color={colors.grey_500}>함께하는 Pamily</Body_Text>
           <BodyBold_Text color={colors.grey_700}>{memberNum}명</BodyBold_Text>
         </GroupInfoBox>
         <Bar />
@@ -95,7 +95,7 @@ export default function AdminHome({ route, navigation }) {
       </GroupInfoContainer>
       <GroupContainer>
         <TitleBox>
-          <BodyBold_Text>관리자 권한 기능</BodyBold_Text>
+          <BodyBold_Text>Pamily 관리 권한</BodyBold_Text>
           <TouchableOpacity
             onPress={() => {
               setIsInfoVisible(true)
@@ -140,9 +140,9 @@ export default function AdminHome({ route, navigation }) {
           </CloseButton>
         </ModalHeader>
         <PopContent>
-          <Body_Text color={colors.grey_700}>현재 공지 등록 기능은</Body_Text>
+          <Body_Text color={colors.grey_700}>현재 공지 등록은</Body_Text>
           <TextBase>
-            <BodyBold_Text color={colors.red_300}>준비중</BodyBold_Text>
+            <BodyBold_Text color={colors.red_300}>기능 준비중</BodyBold_Text>
             <Body_Text color={colors.grey_700}>에 있습니다!</Body_Text>
           </TextBase>
         </PopContent>
@@ -157,17 +157,20 @@ export default function AdminHome({ route, navigation }) {
           <TopBox>
             <CrownTitle>
               <CrownIcon width={34} height={34} />
-              <BodyBold_Text>관리자 권한</BodyBold_Text>
+              <BodyBold_Text color={colors.grey_700}>관리자 권한</BodyBold_Text>
             </CrownTitle>
-            <Detail_Text color={colors.secondary}>아래 내용은 Pamily의 관리자에게만 부여되는 권한입니다.</Detail_Text>
+            <TextBox>
+              <Detail_Text color={colors.secondary}>아래 내용은 Pamily의 관리자에게만</Detail_Text>
+              <Detail_Text color={colors.secondary}>부여되는 권한입니다</Detail_Text>
+            </TextBox>
           </TopBox>
           <InfoBox>
             <NumBox>
               <Detail_Text color={colors.grey_100}>1</Detail_Text>
             </NumBox>
             <Contents>
-              <Label_Text>회원 관리</Label_Text>
-              <Detail_Text color={colors.grey_500}>관리자는 회원의 탈퇴 여부를 결정지을 수 있습니다.</Detail_Text>
+              <Label_Text color={colors.grey_700}>회원 관리</Label_Text>
+              <Detail_Text color={colors.grey_500}>회원의 탈퇴 여부를 결정지을 수 있습니다</Detail_Text>
             </Contents>
           </InfoBox>
 
@@ -176,8 +179,8 @@ export default function AdminHome({ route, navigation }) {
               <Detail_Text color={colors.grey_100}>2</Detail_Text>
             </NumBox>
             <Contents>
-              <Label_Text>펫 관리</Label_Text>
-              <Detail_Text color={colors.grey_500}>관리자는 펫의 등록 및 삭제가 가능합니다.</Detail_Text>
+              <Label_Text color={colors.grey_700}>펫 관리</Label_Text>
+              <Detail_Text color={colors.grey_500}>펫의 등록 및 삭제가 가능합니다</Detail_Text>
             </Contents>
           </InfoBox>
           <InfoBox>
@@ -185,8 +188,8 @@ export default function AdminHome({ route, navigation }) {
               <Detail_Text color={colors.grey_100}>3</Detail_Text>
             </NumBox>
             <Contents>
-              <Label_Text>카테고리 관리</Label_Text>
-              <Detail_Text color={colors.grey_500}>관리자는 TODO의 카테고리를 설정할 수 있습니다.</Detail_Text>
+              <Label_Text color={colors.grey_700}>카테고리 관리</Label_Text>
+              <Detail_Text color={colors.grey_500}>TODO의 카테고리를 설정할 수 있습니다</Detail_Text>
             </Contents>
           </InfoBox>
           <InfoBox>
@@ -194,8 +197,8 @@ export default function AdminHome({ route, navigation }) {
               <Detail_Text color={colors.grey_100}>4</Detail_Text>
             </NumBox>
             <Contents>
-              <Label_Text>공지 등록</Label_Text>
-              <Detail_Text color={colors.grey_500}>관리자는 모임의 전체 공지를 등록/관리할 수 있습니다.</Detail_Text>
+              <Label_Text color={colors.grey_700}>공지 등록</Label_Text>
+              <Detail_Text color={colors.grey_500}>모임의 전체 공지를 등록/관리할 수 있습니다</Detail_Text>
             </Contents>
           </InfoBox>
         </PopContent>
@@ -204,10 +207,13 @@ export default function AdminHome({ route, navigation }) {
   )
 }
 const ModalHeader = styled.View`
+  position: absolute;
+  top: 16px;
+  right: 16px;
   width: '100%';
   align-items: flex-end;
   justify-content: center;
-  margin-bottom: 24px;
+  z-index: 100;
 `
 const TextBase = styled.View`
   flex-direction: row;
@@ -215,6 +221,7 @@ const TextBase = styled.View`
 const PopContent = styled.View`
   justify-content: center;
   align-items: center;
+  margin-top: 40px;
   margin-bottom: 40px;
 `
 const CloseButton = styled.TouchableOpacity``
@@ -296,6 +303,7 @@ const TopBox = styled.View`
   width: 100%;
   justify-content: center;
   align-items: center;
+  margin-top: 4px;
   margin-bottom: 4px;
   gap: 8px;
 `
@@ -314,5 +322,8 @@ const NumBox = styled.View`
 `
 const Contents = styled.View``
 const CrownTitle = styled.View`
+  align-items: center;
+`
+const TextBox = styled.View`
   align-items: center;
 `
