@@ -101,83 +101,83 @@ export default function EditUserInfo({ route, navigation }) {
   }
 
   return (
-    <>
-      <BottomSheetModalProvider>
-        <ScreenLayout>
-          <TouchableWithoutFeedback
-            onPress={() => {
-              Keyboard.dismiss()
-            }}
-          >
-            <>
-              <ProfileContainer>
-                <TouchableOpacity onPress={handlePresentModal}>
-                  <ProfileImage
-                    source={{
-                      uri: `${profileUrl}`,
-                    }}
-                  />
-                  <IconCover>
-                    <EditIcon width={16} height={16} color={'#4D4D4D'} />
-                  </IconCover>
-                </TouchableOpacity>
-              </ProfileContainer>
-              <InfoContainer>
-                <InputBox
-                  style={{
-                    borderWidth: onName ? 1 : 0,
-                    borderColor: onName ? (name.length > 10 ? colors.primary_outline : 'rgba(0, 0, 0, 0.12)') : '',
-                  }}
-                >
-                  <Detail_Text color={colors.grey_800}>닉네임</Detail_Text>
-                  <InputBlock
-                    editable
-                    onChangeText={(text) => setName(text)}
-                    value={name}
-                    returnKeyType="done"
-                    onFocus={() => setOnName(true)}
-                    onBlur={() => setOnName(false)}
-                    maxLength={13}
-                  />
-                </InputBox>
-                {name.length > 10 && (
-                  <TextAlertBox>
-                    <Detail_Text color={colors.primary_outline}>10자 이내로 입력해주세요</Detail_Text>
-                  </TextAlertBox>
-                )}
-                <InputBox style={{ padding: 12 }}>
-                  <Detail_Text color={colors.grey_800}>이메일</Detail_Text>
+    <BottomSheetModalProvider>
+      <TouchableWithoutFeedback
+        onPress={() => {
+          Keyboard.dismiss()
+        }}
+      >
+        <Layout>
+          <ProfileContainer>
+            <TouchableOpacity onPress={handlePresentModal}>
+              <ProfileImage
+                source={{
+                  uri: `${profileUrl}`,
+                }}
+              />
+              <IconCover>
+                <EditIcon width={16} height={16} color={'#4D4D4D'} />
+              </IconCover>
+            </TouchableOpacity>
+          </ProfileContainer>
+          <InfoContainer>
+            <InputBox
+              style={{
+                borderWidth: onName ? 1 : 0,
+                borderColor: onName ? (name.length > 10 ? colors.primary_outline : 'rgba(0, 0, 0, 0.12)') : '',
+              }}
+            >
+              <Detail_Text color={colors.grey_800}>닉네임</Detail_Text>
+              <InputBlock
+                editable
+                onChangeText={(text) => setName(text)}
+                value={name}
+                returnKeyType="done"
+                onFocus={() => setOnName(true)}
+                onBlur={() => setOnName(false)}
+                maxLength={13}
+              />
+            </InputBox>
+            {name.length > 10 && (
+              <TextAlertBox>
+                <Detail_Text color={colors.primary_outline}>10자 이내로 입력해주세요</Detail_Text>
+              </TextAlertBox>
+            )}
+            <InputBox style={{ padding: 12 }}>
+              <Detail_Text color={colors.grey_800}>이메일</Detail_Text>
 
-                  <Detail_Text color={colors.grey_400}>{email}</Detail_Text>
-                </InputBox>
-              </InfoContainer>
-            </>
-          </TouchableWithoutFeedback>
-          <BottomSheetModal
-            ref={bottomSheetModalRef}
-            index={0}
-            snapPoints={snapPoints}
-            backdropComponent={renderBackdrop}
-            backgroundStyle={{
-              borderRadius: 24,
-            }}
-          >
-            <BottomTitle>
-              <BottomTitleText>회원 프로필 등록</BottomTitleText>
-            </BottomTitle>
-            <ProfileImageModal
-              profileUrl={profileUrl}
-              setProfileUrl={setProfileUrl}
-              setProfileFile={setProfileFile}
-              accessToken={ACCESSTOKEN}
-            />
-          </BottomSheetModal>
-        </ScreenLayout>
-      </BottomSheetModalProvider>
-    </>
+              <Detail_Text color={colors.grey_400}>{email}</Detail_Text>
+            </InputBox>
+          </InfoContainer>
+        </Layout>
+      </TouchableWithoutFeedback>
+      <BottomSheetModal
+        ref={bottomSheetModalRef}
+        index={0}
+        snapPoints={snapPoints}
+        backdropComponent={renderBackdrop}
+        backgroundStyle={{
+          borderRadius: 24,
+        }}
+      >
+        <BottomTitle>
+          <BottomTitleText>회원 프로필 등록</BottomTitleText>
+        </BottomTitle>
+        <ProfileImageModal
+          profileUrl={profileUrl}
+          setProfileUrl={setProfileUrl}
+          setProfileFile={setProfileFile}
+          accessToken={ACCESSTOKEN}
+        />
+      </BottomSheetModal>
+    </BottomSheetModalProvider>
   )
 }
 
+const Layout = styled.View`
+  flex: 1;
+  background-color: ${colors.grey_100};
+`
 const ProfileContainer = styled.View`
   justify-content: center;
   align-items: center;

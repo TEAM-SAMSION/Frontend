@@ -108,9 +108,9 @@ export default function AddPet({ route, navigation }) {
   }
 
   return (
-    <>
-      <BottomSheetModalProvider>
-        <ScreenLayout>
+    <BottomSheetModalProvider>
+      <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+        <Layout>
           <ProfileContainer>
             <TouchableOpacity onPress={handlePresentModal}>
               <ProfileImage
@@ -258,26 +258,30 @@ export default function AddPet({ route, navigation }) {
               </TextAlertBox>
             )}
           </InfoContainer>
-          <BottomSheetModal
-            ref={bottomSheetModalRef}
-            index={0}
-            snapPoints={snapPoints}
-            backdropComponent={renderBackdrop}
-            backgroundStyle={{
-              borderRadius: 22,
-            }}
-          >
-            <BottomTitle>
-              <BottomTitleText>펫 프로필 등록</BottomTitleText>
-            </BottomTitle>
-            <PetImageModal profileUrl={petImageUrl} setProfileUrl={setPetImageUrl} setPetFile={setPetFile} />
-          </BottomSheetModal>
-        </ScreenLayout>
-      </BottomSheetModalProvider>
-    </>
+        </Layout>
+      </TouchableWithoutFeedback>
+      <BottomSheetModal
+        ref={bottomSheetModalRef}
+        index={0}
+        snapPoints={snapPoints}
+        backdropComponent={renderBackdrop}
+        backgroundStyle={{
+          borderRadius: 22,
+        }}
+      >
+        <BottomTitle>
+          <BottomTitleText>펫 프로필 등록</BottomTitleText>
+        </BottomTitle>
+        <PetImageModal profileUrl={petImageUrl} setProfileUrl={setPetImageUrl} setPetFile={setPetFile} />
+      </BottomSheetModal>
+    </BottomSheetModalProvider>
   )
 }
 
+const Layout = styled.View`
+  flex: 1;
+  background-color: ${colors.grey_100};
+`
 const ProfileContainer = styled.View`
   justify-content: center;
   align-items: center;

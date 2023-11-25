@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { FlatList } from 'react-native'
+import { FlatList, Keyboard, TouchableWithoutFeedback } from 'react-native'
 import styled from 'styled-components/native'
 import { colors } from '../../colors'
 import { useRecoilState, useRecoilValue } from 'recoil'
@@ -19,35 +19,46 @@ export default function DeleteAccount2({ route, navigation }) {
 
   return (
     <ScreenLayout>
-      <Container>
-        <TitleBox>
-          <SubHead_Text>정말 포잇을 그만하시겠습니까?</SubHead_Text>
-          <OneLine>
-            <SubHead_Text color={colors.primary}>탈퇴이유</SubHead_Text>
-            <SubHead_Text>를 알려주세요</SubHead_Text>
-          </OneLine>
-        </TitleBox>
-        <DeleteReasonToggle setReason={setReason} setPersonalReason={setPersonalReason} setIsEnabled={setIsEnabled} />
-      </Container>
-      <DeleteButton
-        disabled={isEnabled ? false : true}
-        onPress={() => {
-          console.log(reason)
-          console.log(personalReason)
-          if (reason == '기타') {
-            navigation.navigate('DeleteAccount3', { personalReason })
-          } else {
-            navigation.navigate('DeleteAccount3', { reason })
-          }
-        }}
-        style={{ backgroundColor: isEnabled ? colors.primary_container : colors.grey_150 }}
-      >
-        <ButtonText style={{ color: isEnabled ? colors.primary : colors.grey_500 }}>다음</ButtonText>
-      </DeleteButton>
+      <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+        <Layout>
+          <Container>
+            <TitleBox>
+              <SubHead_Text>정말 포잇을 그만하시겠습니까?</SubHead_Text>
+              <OneLine>
+                <SubHead_Text color={colors.primary}>탈퇴이유</SubHead_Text>
+                <SubHead_Text>를 알려주세요</SubHead_Text>
+              </OneLine>
+            </TitleBox>
+            <DeleteReasonToggle
+              setReason={setReason}
+              setPersonalReason={setPersonalReason}
+              setIsEnabled={setIsEnabled}
+            />
+          </Container>
+          <DeleteButton
+            disabled={isEnabled ? false : true}
+            onPress={() => {
+              console.log(reason)
+              console.log(personalReason)
+              if (reason == '기타') {
+                navigation.navigate('DeleteAccount3', { personalReason })
+              } else {
+                navigation.navigate('DeleteAccount3', { reason })
+              }
+            }}
+            style={{ backgroundColor: isEnabled ? colors.primary_container : colors.grey_150 }}
+          >
+            <ButtonText style={{ color: isEnabled ? colors.primary : colors.grey_500 }}>다음</ButtonText>
+          </DeleteButton>
+        </Layout>
+      </TouchableWithoutFeedback>
     </ScreenLayout>
   )
 }
 
+const Layout = styled.View`
+  flex: 1;
+`
 const Container = styled.View`
   margin: 16px;
 `
@@ -59,7 +70,7 @@ const OneLine = styled.View`
 `
 const DeleteButton = styled.TouchableOpacity`
   position: absolute;
-  bottom: 34px;
+  bottom: 0px;
   left: 16px;
   right: 16px;
   background-color: ${colors.red_200};

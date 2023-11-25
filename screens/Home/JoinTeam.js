@@ -42,7 +42,7 @@ export default function JoinTeam({ navigation }) {
   }
 
   return (
-    <ScreenLayout>
+    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <Container>
         <Block style={{ borderWidth: onName ? 1 : 0, borderColor: onName ? 'rgba(0, 0, 0, 0.12)' : '' }}>
           <InputBlock
@@ -72,12 +72,14 @@ export default function JoinTeam({ navigation }) {
           ''
         )}
       </Container>
-    </ScreenLayout>
+    </TouchableWithoutFeedback>
   )
 }
 
 const Container = styled.View`
+  flex: 1;
   padding-top: 16px;
+  background-color: ${colors.grey_100};
 `
 const InputBlock = styled.TextInput`
   width: 85%;
