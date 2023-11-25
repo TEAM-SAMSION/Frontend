@@ -56,6 +56,7 @@ export default function Auth({ navigation }) {
         'Content-Type': `application/json; charset=UTF-8`,
       },
     })
+    console.log('CheckAuthority Res:', response)
     return response.data
   }
 
@@ -134,10 +135,12 @@ export default function Auth({ navigation }) {
       // setFailureResponse(undefined);
       // setGetProfileRes(undefined);
     } catch (e) {
+      ㅋ
       console.error(e)
     }
   }
   useEffect(() => {
+    // logoutNaver()
     // AsyncStorage.clear()
     if (!appleAuth.isSupported) return
     return appleAuth.onCredentialRevoked(async () => {

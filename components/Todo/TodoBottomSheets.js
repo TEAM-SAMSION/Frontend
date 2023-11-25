@@ -85,6 +85,7 @@ export const TodoEditBottomSheet = ({
           {(props) => (
             <TodoDateSetting
               {...props}
+              handleBottomSheetHeight={handleBottomSheetHeight}
               getInitDatas={getInitDatas}
               selectedDate={selectedDate}
               selectedTodo={selectedTodo}
@@ -307,15 +308,27 @@ const TodoDataEditing = ({
     </BottomSheetBase>
   )
 }
-const TodoDateSetting = ({ navigation, selectedTodo, selectedDate, getInitDatas }) => {
+const TodoDateSetting = ({ navigation, selectedTodo, selectedDate, getInitDatas, handleBottomSheetHeight }) => {
   const [isLoading, setIsLoading] = useState(false)
   const initDay = new Date()
   const [date, setDate] = useState(new Date())
+  function dateFormat(date) {
+    let dateFormat2 =
+      date.getFullYear() +
+      '-' +
+      (date.getMonth() + 1 < 9 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) +
+      '-' +
+      (date.getDate() < 9 ? '0' + date.getDate() : date.getDate())
+    return dateFormat2
+  }
   const handleSubmit = () => {
     setIsLoading(true)
     // date.setDate(date.getDate() + 1) //이거 왜 date 하루 전으로 최종결정되는거죠? 이거 에러 나중에 탐구해봐야할듯 **
-    editTodoDate(selectedTodo.todoId, date.toLocaleString().substring(0, 10)).then((res) => {
+
+    editTodoDate(selectedTodo.todoId, dateFormat(date)).then((res) => {
+      console.log(res)
       setIsLoading(false)
+      handleBottomSheetHeight(0)
       getInitDatas(selectedDate)
       navigation.goBack()
     })
@@ -400,7 +413,6 @@ export const TodoCreateBottomSheet = ({
 }) => {
   const [users, setUsers] = useState(teamUserList?.map((users) => ({ ...users, selected: false })))
   const [name, setName] = useState(null)
-  console.log(name)
   const [isLoading, setIsLoading] = useState(false)
   const selectedUser = users.reduce((acc, user) => {
     if (user.selected) {
@@ -411,10 +423,18 @@ export const TodoCreateBottomSheet = ({
 
   const selectAll = () => {
     const tempArr = JSON.parse(JSON.stringify(users))
-    tempArr.map((e) => {
-      e.selected = true
-      return e
-    })
+    if (tempArr.filter((item) => item.selected == false).length > 0) {
+      //선택되지 않은 담당자가 한명이라도 있으면
+      tempArr.map((e) => {
+        e.selected = true
+        return e
+      })
+    } else {
+      tempArr.map((e) => {
+        e.selected = false
+        return e
+      })
+    }
     setUsers(tempArr)
   }
 

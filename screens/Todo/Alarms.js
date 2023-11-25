@@ -1,8 +1,8 @@
 import React, { useCallback, useEffect, useState } from 'react'
-import { RefreshControl, ScrollView, Text, View } from 'react-native'
+import { RefreshControl, ScrollView, StatusBar, Text, View } from 'react-native'
 import styled from 'styled-components/native'
 import { colors } from '../../colors'
-import { HeaderWithBack, ScreenLayout } from '../../components/Shared'
+import { HeaderWithBack, ScreenHeight, ScreenLayout } from '../../components/Shared'
 
 import Alarm from '../../assets/Svgs/Alarm'
 import NoAlarm from '../../assets/Imgs/NoAlarm.png'
@@ -50,7 +50,8 @@ export const Alarms = ({ navigation }) => {
   }
   return (
     //** ScrollView는 직접 Height 조정 불가능하기에, 바깥 부모를 통해 조정해야한다. */
-    <ScreenLayout color={colors.grey_100}>
+    <ScreenContainer>
+      <StatusBar />
       <HeaderWithBack navigation={navigation} title="알림" />
       {/* <FilterBase>
         <ScrollView horizontal contentContainerStyle={{ marginLeft: 24 }}>
@@ -69,7 +70,8 @@ export const Alarms = ({ navigation }) => {
       </FilterBase> */}
       <ContentBase>
         <ScrollView
-          style={{ flex: 1, width: '100%' }}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{ width: '100%', justifyContent: 'start', flex: 1 }}
           refreshControl={<RefreshControl refreshing={refreshing} onRefresh={() => onRefresh()} />}
         >
           {alarmList ? (
@@ -91,7 +93,7 @@ export const Alarms = ({ navigation }) => {
               )
             })
           ) : (
-            <ContentBase style={{ marginTop: 64 }}>
+            <ContentBase>
               <NoAlarmImg source={NoAlarm} />
               <SubHead_Text color={colors.grey_400}>알림이 없습니다</SubHead_Text>
               <BodySm_Text color={colors.primary_outline}>당겨서 새로고침</BodySm_Text>
@@ -99,21 +101,18 @@ export const Alarms = ({ navigation }) => {
           )}
         </ScrollView>
       </ContentBase>
-    </ScreenLayout>
+    </ScreenContainer>
   )
 }
-
+const ScreenContainer = styled.SafeAreaView`
+  flex: 1;
+  background-color: ${colors.grey_100};
+`
 const MateItem = styled.TouchableOpacity`
   margin-right: 4px;
   padding: 10px 16px;
   border-radius: 99px;
   height: 35px;
-`
-const HeaderContainer = styled.View`
-  width: 100%;
-  height: 52px;
-  align-items: center;
-  justify-content: center;
 `
 const FilterBase = styled.View`
   padding-top: 8px;
@@ -139,7 +138,6 @@ const ContentBase = styled.View`
   align-items: center;
   background-color: ${colors.grey_150};
   flex: 1;
-  flex-direction: column;
 `
 const AlarmBase = styled.View`
   flex-direction: row;
@@ -154,4 +152,3 @@ const AlarmTextContainer = styled.View`
   margin-left: 16px;
   flex: 1;
 `
-const RefreshButton = styled.TouchableOpacity``

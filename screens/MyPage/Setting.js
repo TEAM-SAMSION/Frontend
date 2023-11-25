@@ -21,10 +21,10 @@ export default function Setting({ navigation }) {
     isFocused && setIsTabVisible(false)
   }, [isFocused, isTabVisible])
   const finishLogout = async () => {
-    if (platform == 'NAVER') {
-      console.log('Naver Logout')
-      await NaverLogin.logout()
-    }
+    // if (platform == 'NAVER') {
+    console.log('Naver Logout')
+    await NaverLogin.logout()
+    // }
     await AsyncStorage.removeItem('accessToken')
     await AsyncStorage.removeItem('refreshToken').then(setLoggedIn(false))
   }
