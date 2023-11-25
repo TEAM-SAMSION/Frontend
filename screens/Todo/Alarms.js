@@ -96,7 +96,9 @@ export const Alarms = ({ navigation }) => {
             <ContentBase>
               <NoAlarmImg source={NoAlarm} />
               <SubHead_Text color={colors.grey_400}>알림이 없습니다</SubHead_Text>
-              <BodySm_Text color={colors.primary_outline}>당겨서 새로고침</BodySm_Text>
+              <RefreshButton onPress={() => getAlarmList()}>
+                <BodySm_Text color={colors.primary_outline}>새로고침</BodySm_Text>
+              </RefreshButton>
             </ContentBase>
           )}
         </ScrollView>
@@ -108,6 +110,7 @@ const ScreenContainer = styled.SafeAreaView`
   flex: 1;
   background-color: ${colors.grey_100};
 `
+const RefreshButton = styled.TouchableOpacity``
 const MateItem = styled.TouchableOpacity`
   margin-right: 4px;
   padding: 10px 16px;

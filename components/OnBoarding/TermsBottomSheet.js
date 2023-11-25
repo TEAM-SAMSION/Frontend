@@ -85,8 +85,10 @@ export const TermsBottomSheet = ({ nickname, selectedRoute, detailRoute, accessT
     >
       <BottomSheetHeader>
         <BodyBold_Text color={colors.grey_800}>포잇 접근 권한 안내</BodyBold_Text>
-        <TermSubTitle>{`권한을 허용하지 않아도 포잇 이용은 가능하지만
-일부서비스 제한될 수 있습니다.`}</TermSubTitle>
+        <Detail_Text
+          color={colors.grey_400}
+          style={{ marginTop: 8 }}
+        >{`권한을 허용하지 않으면 일부서비스가 제한될 수 있습니다`}</Detail_Text>
       </BottomSheetHeader>
       <BottomContainer>
         <TermItemBase onPress={() => handleTermAllPress()}>
@@ -103,17 +105,13 @@ export const TermsBottomSheet = ({ nickname, selectedRoute, detailRoute, accessT
         <TermContainer>
           <TermItem id={0} mandatory={true} title="기기 및 앱 기록" subtitle="서비스 개선 및 오류 확인" />
           <TermItem id={1} mandatory={false} title="알림" subtitle="푸시 알림 및 메시지 수신 안내" />
-          <TermItem id={2} mandatory={false} title="사진" subtitle="유저 및 펫 프로필 사진, Pamily 대표 사진 업로드" />
+          <TermItem id={2} mandatory={false} title="사진" subtitle="회원 및 펫, Pamily 프로필 사진 업로드 / 완료" />
         </TermContainer>
         <Button_PinkBg isLoading={isLoading} isEnabled={termState[0]} text="확인" func={() => handleSubmit()} />
       </BottomContainer>
     </BottomSheetBase>
   )
 }
-
-// const MyCheckBox = () => {
-//   return
-// }
 
 const Divider = styled.View`
   width: 100%;
@@ -123,13 +121,6 @@ const Divider = styled.View`
 `
 const BottomContainer = styled.View`
   width: 100%;
-`
-const TermSubTitle = styled.Text`
-  font-family: Spoqa-Medium;
-  margin-top: 8px;
-  color: ${colors.grey_400};
-  font-size: 12px;
-  line-height: 15px;
 `
 const BottomSheetBase = styled.View`
   width: 100%;
@@ -141,7 +132,7 @@ const BottomSheetBase = styled.View`
 const BottomSheetHeader = styled.View`
   flex-direction: column;
   justify-content: flex-start;
-  height: 56px;
+  /* height: 56px; */
   margin-bottom: 32px;
 `
 const TermItemBase = styled.TouchableOpacity`

@@ -257,7 +257,7 @@ const TodoDataEditing = ({
           <Back width={24} height={24} />
         </BackButton>
         <Body_Text style={{ width: '100%', textAlign: 'center' }} color={colors.grey_800}>
-          TODO 수정하기
+          TODO 수정
         </Body_Text>
       </HeaderWithBackButton>
       <InputContainer>
@@ -277,6 +277,11 @@ const TodoDataEditing = ({
         >
           {selectedTodo.task}
         </Input>
+        {name?.length > 20 && (
+          <Detail_Text style={{ marginTop: 4 }} color={colors.red_300}>
+            글자 수가 1에서 20 사이여야합니다
+          </Detail_Text>
+        )}
       </InputContainer>
       {/* <BodyBoldSm_Text style={{ marginBottom: 10 }}>담당자 지정</BodyBoldSm_Text>
       <UserContainer>
@@ -304,7 +309,12 @@ const TodoDataEditing = ({
           )
         })}
       </UserContainer> */}
-      <Button_PinkBg isLoading={isLoading} isEnabled={name} text="완료" func={() => handleSubmit()} />
+      <Button_PinkBg
+        isLoading={isLoading}
+        isEnabled={name.length > 0 && name.length < 21}
+        text="완료"
+        func={() => handleSubmit()}
+      />
     </BottomSheetBase>
   )
 }
@@ -348,7 +358,7 @@ const TodoDateSetting = ({ navigation, selectedTodo, selectedDate, getInitDatas,
         <BackButton style={{ position: 'absolute', top: 12 }} onPress={() => navigation.goBack()}>
           <Back width={24} height={24} />
         </BackButton>
-        <Body_Text style={{ width: '100%', textAlign: 'center' }}>날짜 이동</Body_Text>
+        <Body_Text style={{ width: '100%', textAlign: 'center' }}>날짜이동</Body_Text>
       </HeaderWithBackButton>
       <DatePicker
         date={date}
@@ -535,7 +545,7 @@ export const TodoCreateBottomSheet = ({
       </UserContainer>
       <Button_PinkBg
         isLoading={isLoading}
-        isEnabled={selectedUser.length > 0 && name.length > 0 && name.length < 21}
+        isEnabled={selectedUser?.length > 0 && name?.length > 0 && name?.length < 21}
         text="완료"
         func={() => handleSubmit()}
       />

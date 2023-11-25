@@ -65,13 +65,18 @@ export default function ManageTodo({ navigation, route }) {
   }
   const createCategory = (text) => {
     // setIsLoading(true)
-    CreateCategory(text, teamId).then((status) => {
-      if (status == 200) {
-        // setIsLoading(false)
-        setIsCreate(false)
-        refreshData()
-      }
-    })
+    if (text.length < 1) {
+      setIsErrorID(-1)
+      console.log('Error')
+    } else {
+      CreateCategory(text, teamId).then((status) => {
+        if (status == 200) {
+          // setIsLoading(false)
+          setIsCreate(false)
+          refreshData()
+        }
+      })
+    }
   }
   const toggleStatus = (index) => {
     // setIsLoading(true)
@@ -89,7 +94,7 @@ export default function ManageTodo({ navigation, route }) {
     })
   }
   const finishCategoryEdit = (data, categoryId, localId) => {
-    if (data.length < 1 || data.length > 10) {
+    if (data.length < 1) {
       setIsErrorID(localId)
       inputRefs.current[localId].current.focus()
     } else {
@@ -143,20 +148,23 @@ export default function ManageTodo({ navigation, route }) {
               </ButtonBase>
             </TopBase>
             {isCreate && (
-              <CategoryBox>
-                <Circle style={{ backgroundColor: categoryColors[0] }} />
-                <TextInput
-                  onEndEditing={() => setIsCreate(false)}
-                  autoFocus
-                  style={{ width: this.state?.inputWidth }}
-                  placeholderTextColor={colors.grey_900}
-                  onSubmitEditing={(data) => createCategory(data.nativeEvent.text)}
-                  placeholder="카테고리명을 입력해주세요."
-                  selectTextOnFocus={false}
-                  returnKeyType="done"
-                  inputMode="text"
-                />
-              </CategoryBox>
+              <>
+                <CategoryBox>
+                  <Circle style={{ backgroundColor: categoryColors[0] }} />
+                  <TextInput
+                    autoFocus
+                    style={{ width: this.state?.inputWidth }}
+                    placeholderTextColor={colors.grey_900}
+                    onSubmitEditing={(data) => createCategory(data.nativeEvent.text)}
+                    placeholder="카테고리명을 입력해주세요."
+                    selectTextOnFocus={false}
+                    returnKeyType="done"
+                    inputMode="text"
+                    maxLength={10}
+                  />
+                </CategoryBox>
+                {isErrorID == -1 && <Detail_Text color={colors.red_300}>글자 수가 1에서 10 사이여야합니다</Detail_Text>}
+              </>
             )}
 
             {isLoading ? (
@@ -180,6 +188,7 @@ export default function ManageTodo({ navigation, route }) {
                         returnKeyType="done"
                         inputMode="text"
                         editable={isEditable[index]}
+                        maxLength={10}
                       />
                     </CategoryBox>
                     <ButtonBase onPress={() => toggleStatus(index)}>
