@@ -338,7 +338,7 @@ export default function CreateTeam({ route, navigation }) {
             </PopButtonContainer>
           </ModalPopUp>
           <ModalPopUp visible={createVisible} petIcon={false} height={217}>
-            <PopContent style={{ flexDirection: 'column', marginTop: 59, marginBottom: 44 }}>
+            <PopContent style={{ flexDirection: 'column', marginTop: 43, marginBottom: 44 }}>
               <SubHead_Text color={colors.grey_700}>{pamilyName}</SubHead_Text>
               <HeadLineSm_Text color={colors.grey_500}>Pamily를 생성하시겠습니까?</HeadLineSm_Text>
             </PopContent>
