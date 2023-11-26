@@ -2,11 +2,11 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { RefreshControl, ScrollView, StatusBar, Text, View } from 'react-native'
 import styled from 'styled-components/native'
 import { colors } from '../../colors'
-import { HeaderWithBack } from '../../components/Shared'
+import { HeaderWithBack, ScreenHeight, ScreenLayout } from '../../components/Shared'
 
 import Alarm from '../../assets/Svgs/Alarm'
 import NoAlarm from '../../assets/Imgs/NoAlarm.png'
-import { BodySm_Text, DetailSm_Text, SubHead_Text } from '../../components/Fonts'
+import { BodySm_Text, DetailSm_Text, Detail_Text, SubHead_Text } from '../../components/Fonts'
 import { getAlarms } from '../../components/Todo/Apis'
 import { useRecoilState } from 'recoil'
 import { useIsFocused } from '@react-navigation/native'
@@ -22,94 +22,8 @@ export const Alarms = ({ navigation }) => {
 
   // let items = ['전체', 'TODO', '공지사항']
   const [refreshing, setRefreshing] = useState(false)
-  const [alarmList, setAlarmList] = useState([
-    {
-      alarmId: 141,
-      createdAt: '2023-11-21T10:00:04.864994',
-      isRead: false,
-      message: '[Test test] test 시작까지 1시간 남았어요!',
-      title: 'TODO',
-    },
-    {
-      alarmId: 142,
-      createdAt: '2023-11-21T10:00:04.92989',
-      isRead: false,
-      message: '[Test test] test 시작까지 1시간 남았어요!',
-      title: 'TODO',
-    },
-    {
-      alarmId: 144,
-      createdAt: '2023-11-24T11:00:02.981862',
-      isRead: false,
-      message: '[ㅅㅏㄹㄹㅕㅈㅜㅓ] TestTestTest 시작까지 1시간 남았어요!',
-      title: 'TODO',
-    },
-    {
-      alarmId: 145,
-      createdAt: '2023-11-24T11:00:03.807695',
-      isRead: false,
-      message: '[ㅅㅏㄹㄹㅕㅈㅜㅓ] TestTestTest 시작까지 1시간 남았어요!',
-      title: 'TODO',
-    },
-    {
-      alarmId: 149,
-      createdAt: '2023-11-25T11:00:01.433145',
-      isRead: false,
-      message: '[Test test] afaf 시작까지 1시간 남았어요!',
-      title: 'TODO',
-    },
-    {
-      alarmId: 149,
-      createdAt: '2023-11-25T11:00:01.433145',
-      isRead: false,
-      message: '[Test test] afaf 시작까지 1시간 남았어요!',
-      title: 'TODO',
-    },
-    {
-      alarmId: 149,
-      createdAt: '2023-11-25T11:00:01.433145',
-      isRead: false,
-      message: '[Test test] afaf 시작까지 1시간 남았어요!',
-      title: 'TODO',
-    },
-    {
-      alarmId: 149,
-      createdAt: '2023-11-25T11:00:01.433145',
-      isRead: false,
-      message: '[Test test] afaf 시작까지 1시간 남았어요!',
-      title: 'TODO',
-    },
-    {
-      alarmId: 149,
-      createdAt: '2023-11-25T11:00:01.433145',
-      isRead: false,
-      message: '[Test test] afaf 시작까지 1시간 남았어요!',
-      title: 'TODO',
-    },
-    {
-      alarmId: 149,
-      createdAt: '2023-11-25T11:00:01.433145',
-      isRead: false,
-      message: '[Test test] afaf 시작까지 1시간 남았어요!',
-      title: 'TODO',
-    },
-    {
-      alarmId: 149,
-      createdAt: '2023-11-25T11:00:01.433145',
-      isRead: false,
-      message: '[Test test] afaf 시작까지 1시간 남았어요!',
-      title: 'TODO',
-    },
-    {
-      alarmId: 149,
-      createdAt: '2023-11-25T11:00:01.433145',
-      isRead: false,
-      message: '[Test test] afaf 시작까지 1시간 남았어요!',
-      title: 'TODO',
-    },
-  ])
+  const [alarmList, setAlarmList] = useState(null)
 
-  // const [alarmList, setAlarmList] = useState(null)
   const onRefresh = useCallback(() => {
     setRefreshing(true)
     getAlarmList()
@@ -119,17 +33,15 @@ export const Alarms = ({ navigation }) => {
   }, [])
   const getAlarmList = async () => {
     getAlarms().then((data) => {
-      console.log('getAlarmList:', data)
       if (data.length > 0) {
-        setAlarmList(data.reverse())
-        console.log(data.reverse())
+        setAlarmList(data)
       } else {
         setAlarmList(null)
       }
     })
   }
   useEffect(() => {
-    // getAlarmList()
+    getAlarmList()
   }, [])
 
   const elapsedTime = (date) => {
@@ -165,7 +77,7 @@ export const Alarms = ({ navigation }) => {
       </FilterBase> */}
       <ContentBase>
         <ScrollView
-          showsVerticalScrollIndicator={true}
+          showsVerticalScrollIndicator={false}
           contentContainerStyle={{ width: '100%', justifyContent: 'start', flex: 1 }}
           refreshControl={<RefreshControl refreshing={refreshing} onRefresh={() => onRefresh()} />}
         >
@@ -234,15 +146,12 @@ const AlarmIcon = styled.View`
 const ContentBase = styled.View`
   justify-content: center;
   align-items: center;
-  /* background-color: ${colors.grey_150}; */
-  /* background-color: chartreuse; */
+  background-color: ${colors.grey_150};
   flex: 1;
-  width: 100%;
 `
 const AlarmBase = styled.View`
   flex-direction: row;
   width: 100%;
-
   padding: 16px 24px;
   justify-content: space-between;
   background-color: ${colors.grey_100};
