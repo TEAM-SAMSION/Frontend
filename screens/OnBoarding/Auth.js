@@ -53,9 +53,6 @@ export default function Auth({ navigation }) {
       })
     } catch (e) {
       console.log('Error:', e)
-      if (e.response.errorCode == 2002) {
-        setIsPopupVisible(true)
-      }
     }
   }
 
@@ -144,6 +141,7 @@ export default function Auth({ navigation }) {
       finishLogin(response.data.accessToken, response.data.refreshToken, provider)
     } catch (e) {
       console.log('Failed To get Token:,', e)
+      setIsPopupVisible(true)
     }
   }
   useEffect(() => {

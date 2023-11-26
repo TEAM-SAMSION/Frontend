@@ -42,13 +42,7 @@ export default Todo = ({ navigation }) => {
   const [isCreateMode, setIsCreateMode] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [refreshing, setRefreshing] = useState(false)
-  const onRefresh = useCallback(() => {
-    setRefreshing(true)
-    refreshData(selectedDate)
-    setTimeout(() => {
-      setRefreshing(false)
-    }, 1000)
-  }, [])
+
   const bottomModal = useRef()
 
   //prettier-ignore
@@ -78,6 +72,13 @@ export default Todo = ({ navigation }) => {
     setIsHeaderOpen(false)
     setSelectedTeam({ name: team.name, id: team.id, auth: team.auth })
   }
+  const onRefresh = useCallback(() => {
+    setRefreshing(true)
+    refreshData(selectedDate)
+    setTimeout(() => {
+      setRefreshing(false)
+    }, 1000)
+  }, [])
   const refreshData = async (date = today) => {
     console.log('RefreshData', date)
     // setIsLoading(true)
