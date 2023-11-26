@@ -94,7 +94,10 @@ export default Todo = ({ navigation }) => {
         if (data.length == 0) {
           console.log('***. TodoTeam없으므로 getAllData 스킵')
           setIsLoading(false)
-          return null
+          setTodoTeamList(null)
+          setSelectedTeam(null)
+          setTeamUserList([])
+          return false
         }
         let tempTeamList = []
         data.map((team) => tempTeamList.push({ id: team.teamId, name: team.teamName, auth: team.authority }))
@@ -127,6 +130,8 @@ export default Todo = ({ navigation }) => {
             console.log('3. 선택된 팀의 사용자들 state로 저장', tempTeamUserList.toString().substring(0, 10))
             setTeamUserList(tempTeamUserList) //나중에 Team 변경하면 해당 변수 대체됨
           })
+        } else {
+          setTodosByCategory(null)
         }
       })
   }
@@ -134,7 +139,7 @@ export default Todo = ({ navigation }) => {
     let timer
     timer = setInterval(() => {
       const sec = new Date().getSeconds()
-      if (sec) return
+      if (sec && selectedTeam) return
       console.log('*********************자동갱신****************************')
       refreshData(selectedDate)
     }, 1000)

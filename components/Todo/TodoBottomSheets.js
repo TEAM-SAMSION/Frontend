@@ -6,7 +6,7 @@ import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator, TransitionPresets } from '@react-navigation/stack'
 import { colors } from '../../colors'
 import { Input, ModalPopUp, ScreenWidth, url } from '../Shared'
-import { BodyBoldSm_Text, BodyBold_Text, Body_Text, Detail_Text } from '../Fonts'
+import { BodyBoldSm_Text, Body_Text, Detail_Text } from '../Fonts'
 import { Button_PinkBg } from '../Buttons'
 
 import Caution from '../../assets/Svgs/Caution.svg'

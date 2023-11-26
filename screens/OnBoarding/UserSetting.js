@@ -119,7 +119,7 @@ export const UserSetting = ({ navigation, route }) => {
           ref={bottomModal}
           backdropComponent={renderBackdrop}
           index={-1}
-          snapPoints={['50%', '64%']}
+          snapPoints={['56%', '64%']}
           enablePanDownToClose={false}
           enableHandlePanningGesture={false}
           enableContentPanningGesture={false}

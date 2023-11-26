@@ -50,6 +50,7 @@ export default function Auth({ navigation }) {
         }
       })
     } catch (e) {
+      console.log(e)
       if (e.response.status == 2002) {
         setIsPopupVisible(true)
       }
@@ -67,11 +68,18 @@ export default function Auth({ navigation }) {
     return response.data
   }
 
+  function replace(url) {
+    url = url.replace(/&/g, '%26')
+    url = url.replace(/\+/g, '%2B')
+    url = url.replace(/=/g, '%3D')
+    return url
+  }
+
   const loginKakao = () => {
     KakaoLogin.login()
       .then((result) => {
         try {
-          getToken(JSON.stringify(result.accessToken), 'KAKAO')
+          getToken(replace(result.accessToken), 'KAKAO')
         } catch (error) {
           console.error('Failed to fetch data:', error)
         }
@@ -93,11 +101,11 @@ export default function Auth({ navigation }) {
     })
     console.log(failureResponse, successResponse)
     try {
-      getToken(successResponse.accessToken, 'NAVER')
+      // console.log(JSON.stringify(successResponse.accessToken))
+      getToken(replace(successResponse.accessToken), 'NAVER')
     } catch (error) {
       console.error('Failed to fetch data-Naver:', error)
     }
-    // })
   }
   const loginApple = async () => {
     const appleAuthRequestResponse = await appleAuth.performRequest({
@@ -106,7 +114,7 @@ export default function Auth({ navigation }) {
     })
     const { user: newUser, email, nonce, identityToken, realUserStatus /* etc */ } = appleAuthRequestResponse
     try {
-      getToken(identityToken, 'APPLE')
+      getToken(replace(identityToken), 'APPLE')
     } catch (error) {
       console.error('Failed to fetch data-Apple:', error)
     }
@@ -121,7 +129,8 @@ export default function Auth({ navigation }) {
   }
 
   const getToken = async (accessToken, provider) => {
-    let API = `/oauth/${provider}?accessToken=${accessToken}` //500
+    console.log('GetToken Ready:', accessToken, provider)
+    let API = `/oauth/${provider}` //500
     try {
       const response = await axios.get(url + API, {
         headers: {
@@ -133,18 +142,6 @@ export default function Auth({ navigation }) {
       finishLogin(response.data.accessToken, response.data.refreshToken, provider)
     } catch (e) {
       console.log('Failed To get Token:,', e)
-    }
-  }
-
-  const logoutNaver = async () => {
-    try {
-      await NaverLogin.logout()
-      console.log('Naver Logout')
-      // setSuccessResponse(undefined);
-      // setFailureResponse(undefined);
-      // setGetProfileRes(undefined);
-    } catch (e) {
-      console.error(e)
     }
   }
   useEffect(() => {
