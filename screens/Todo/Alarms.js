@@ -96,23 +96,24 @@ export const Alarms = ({ navigation }) => {
         </ScrollView>
       </FilterBase> */}
       <ContentBase>
-        <FlatList
-          style={{ flexDirection: 'column', width: ScreenWidth }}
-          contentContainerStyle={{ justifyContent: 'start', flex: 1 }}
-          data={alarmList}
-          renderItem={renderItem}
-          onRefresh={() => onRefresh()}
-          refreshing={refreshing}
-          onEndReached={() => loadMore()}
-          onEndReachedThreshold={1}
-          showsVerticalScrollIndicator={false}
-        />
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={{ width: '100%', justifyContent: 'start', flex: 1 }}
-          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={() => onRefresh()} />}
-        >
-          {alarmList.length == 0 && (
+        {alarmList.length > 0 ? (
+          <FlatList
+            style={{ flexDirection: 'column', width: ScreenWidth }}
+            contentContainerStyle={{ justifyContent: 'start', flex: 1 }}
+            data={alarmList}
+            renderItem={renderItem}
+            onRefresh={() => onRefresh()}
+            refreshing={refreshing}
+            onEndReached={() => loadMore()}
+            onEndReachedThreshold={1}
+            showsVerticalScrollIndicator={false}
+          />
+        ) : (
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={{ width: '100%', justifyContent: 'start', flex: 1 }}
+            refreshControl={<RefreshControl refreshing={refreshing} onRefresh={() => onRefresh()} />}
+          >
             <ContentBase>
               <NoAlarmImg source={NoAlarm} />
               <SubHead_Text color={colors.grey_400}>알림이 없습니다</SubHead_Text>
@@ -130,8 +131,8 @@ export const Alarms = ({ navigation }) => {
                 <BodySm_Text color={colors.primary_outline}>새로고침</BodySm_Text>
               </RefreshButton>
             </ContentBase>
-          )}
-        </ScrollView>
+          </ScrollView>
+        )}
       </ContentBase>
     </ScreenContainer>
   )
