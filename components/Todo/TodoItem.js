@@ -56,7 +56,7 @@ const TodoItem = ({ editTodo, categoryId, todo, todoLocalId, refreshData, select
           ? { backgroundColor: colors.grey_150, borderColor: colors.grey_250, borderWidth: 1 }
           : { backgroundColor: colors.grey_100, borderColor: colors.outline, borderWidth: 1 }
       }
-      onPress={() => editTodo(categoryId, todoLocalId)}
+      onPress={() => (todo.isAssigned ? editTodo(categoryId, todoLocalId) : setIsDeleteVisible(true))}
     >
       <LeftContainer>
         <Label_Text style={{ padding: 4 }} color={Done ? colors.grey_400 : colors.grey_800}>

@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import axios from 'axios'
-import { ActivityIndicator, Alert, Keyboard, Platform } from 'react-native'
+import { ActivityIndicator, Alert, Keyboard, Platform, ScrollView } from 'react-native'
 import styled from 'styled-components/native'
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator, TransitionPresets } from '@react-navigation/stack'
@@ -458,7 +458,6 @@ export const TodoCreateBottomSheet = ({
     setUsers(tempArr)
   }
   const createTodo = async () => {
-    setIsLoading(true)
     let data = {
       categoryId: selectedCategoryID,
       description: name,
@@ -474,6 +473,7 @@ export const TodoCreateBottomSheet = ({
     }
   }
   const handleSubmit = () => {
+    setIsLoading(true)
     createTodo().then(() => {
       //추가된 todo아이템이 서버에 등록되는 데에 소요되는 시간이 길어서, 바로 fetch하면 의도치 않은 실행이 되는 문제 발생
       //그게 아니고, updateTodo()에서 실행되는 함수만으로는 모든 요소가 반영되지 않는듯함,
@@ -519,33 +519,38 @@ export const TodoCreateBottomSheet = ({
 
       <BodyBoldSm_Text style={{ marginBottom: 10 }}>담당자 지정</BodyBoldSm_Text>
       <UserContainer>
-        <UserItem
-          style={{
-            backgroundColor:
-              users.filter((item) => item.selected == false).length == 0 ? colors.red_200 : colors.grey_150,
-          }}
-          key={0}
-          onPress={() => selectAll()}
+        <ScrollView
+          contentContainerStyle={{ flexWrap: 'wrap', flexDirection: 'row' }}
+          showsVerticalScrollIndicator={false}
         >
-          <Detail_Text color={colors.grey_700}>모두</Detail_Text>
-        </UserItem>
-        {users?.map((user, id) => {
-          return (
-            <UserItem
-              key={id + 1}
-              onPress={() => selectUser(id)}
-              style={{ backgroundColor: user?.selected ? colors.red_200 : colors.grey_150 }}
-            >
-              <Detail_Text key={id} color={user?.selected ? colors.grey_700 : colors.grey_600}>
-                {user.name}
-              </Detail_Text>
-            </UserItem>
-          )
-        })}
+          <UserItem
+            style={{
+              backgroundColor:
+                users.filter((item) => item.selected == false).length == 0 ? colors.red_200 : colors.grey_150,
+            }}
+            key={0}
+            onPress={() => selectAll()}
+          >
+            <Detail_Text color={colors.grey_700}>모두</Detail_Text>
+          </UserItem>
+          {users?.map((user, id) => {
+            return (
+              <UserItem
+                key={id + 1}
+                onPress={() => selectUser(id)}
+                style={{ backgroundColor: user?.selected ? colors.red_200 : colors.grey_150 }}
+              >
+                <Detail_Text key={id} color={user?.selected ? colors.grey_700 : colors.grey_600}>
+                  {user.name}
+                </Detail_Text>
+              </UserItem>
+            )
+          })}
+        </ScrollView>
       </UserContainer>
       <Button_PinkBg
         isLoading={isLoading}
-        isEnabled={selectedUser?.length > 0 && name?.length > 0 && name?.length < 21}
+        isEnabled={!isLoading && selectedUser?.length > 0 && name?.length > 0 && name?.length < 21}
         text="완료"
         func={() => handleSubmit()}
       />
@@ -566,6 +571,7 @@ const UserContainer = styled.View`
   flex-direction: row;
   flex-wrap: wrap;
   flex: 1;
+  /* width: 100%; */
 `
 const ContentContainer = styled.View`
   flex-direction: column;

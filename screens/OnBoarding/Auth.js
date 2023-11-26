@@ -15,6 +15,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import Caution from '../../assets/Svgs/Caution.svg'
 import Close from '../../assets/Svgs/Close.svg'
 import { BodySm_Text, Body_Text, SubHeadSm_Text } from '../../components/Fonts'
+import { checkFCMToken } from '../../AppBase'
 WebBrowser.maybeCompleteAuthSession()
 
 export default function Auth({ navigation }) {
@@ -26,7 +27,6 @@ export default function Auth({ navigation }) {
   })
   const setLoggedIn = useSetRecoilState(loggedInState)
   const [isPopupVisible, setIsPopupVisible] = useState(false)
-  const setPlatform = useSetRecoilState(platformState)
   const finishLogin = (accessToken, refreshToken, provider) => {
     console.log('???:', accessToken, refreshToken, provider) //잘 뜬다
     //권한확인 API 통해서 닉네임 변경 거치는지 or 홈화면 바로 가는지
@@ -40,6 +40,7 @@ export default function Auth({ navigation }) {
           console.log('권한 User라서 홈화면으로 넘어감 , AsyncStorage에 토큰 저장')
           setPlatform(provider)
           console.log('로그인 수단 Recoil에 저장하였음:', provider)
+          checkFCMToken()
           setLoggedIn(true)
         } else if (res.authority == 'GUEST') {
           //닉네임 설정전까지는 앱 내부로 들여오게 해서는 안되기 때문에, 캐시에 저장아직 안함
@@ -101,7 +102,7 @@ export default function Auth({ navigation }) {
     })
     console.log(failureResponse, successResponse)
     try {
-      // console.log(JSON.stringify(successResponse.accessToken))
+      console.log(replace(successResponse.accessToken))
       getToken(replace(successResponse.accessToken), 'NAVER')
     } catch (error) {
       console.error('Failed to fetch data-Naver:', error)
@@ -165,7 +166,7 @@ export default function Auth({ navigation }) {
 
   return (
     <Container>
-      <SymbolContainer style={ScreenWidth > 380 && { marginTop: 76 }}>
+      <SymbolContainer>
         <SymbolIcon source={require('../../assets/Imgs/LOGO_Symbol.png')} />
       </SymbolContainer>
       <LoginButton loginFunc={() => GooglepromptAsync()} id={0} />
@@ -224,7 +225,7 @@ const Container = styled.View`
 `
 const SymbolContainer = styled.View`
   margin-bottom: 90px;
-
+  margin-top: 76px;
   justify-content: center;
   align-items: center;
 `

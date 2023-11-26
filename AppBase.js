@@ -13,6 +13,12 @@ import messaging from '@react-native-firebase/messaging'
 import PushNotificationIOS from '@react-native-community/push-notification-ios'
 import { postDeviceToken } from './components/OnBoarding/Apis'
 
+export const checkFCMToken = async () => {
+  const fcmToken = await messaging().getToken()
+  if (fcmToken) {
+    postDeviceToken(fcmToken)
+  }
+}
 export default function AppBase() {
   const [appIsReady, setAppIsReady] = useState(false)
 
@@ -34,13 +40,6 @@ export default function AppBase() {
   }, [])
   const setLoggedIn = useSetRecoilState(loggedInState)
   const setOnboarded = useSetRecoilState(onboardedState)
-
-  const checkFCMToken = async () => {
-    const fcmToken = await messaging().getToken()
-    if (fcmToken) {
-      postDeviceToken(fcmToken)
-    }
-  }
 
   const onRemoteNotification = (notification) => {
     const isClicked = notification.getData().userInteraction === 1

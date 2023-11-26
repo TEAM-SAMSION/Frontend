@@ -19,6 +19,15 @@ export const NoPamily = () => {
     </NoTodoContainer>
   )
 }
+export const NoCategory = () => {
+  return (
+    <NoTodoContainer>
+      <BodySm_Text color={colors.grey_600}>TODO 카테고리가 없어요</BodySm_Text>
+      <DetailSm_Text color={colors.grey_400}>{`아직 세팅된 카테고리가 없군요!
+TODO 관리 아이콘을 눌러 카테고리를 추가해보세요!`}</DetailSm_Text>
+    </NoTodoContainer>
+  )
+}
 
 const NoTodoContainer = styled.View`
   padding: 20px 16px;

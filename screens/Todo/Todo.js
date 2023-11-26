@@ -1,14 +1,14 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { ModalPopUp, PetModalPopUp, ScreenLayout } from '../../components/Shared'
+import { ModalPopUp, PetModalPopUp } from '../../components/Shared'
 import { colors } from '../../colors'
 import styled from 'styled-components/native'
 import { TodoHeader } from '../../components/Todo/TodoHeader'
 import { Body_Text } from '../../components/Fonts'
-import { ActivityIndicator, Keyboard, Pressable, ScrollView, StatusBar } from 'react-native'
+import { ActivityIndicator, Keyboard, Pressable, RefreshControl, ScrollView, StatusBar } from 'react-native'
 import Caution from '../../assets/Svgs/Caution.svg'
 import { useRecoilState, useSetRecoilState } from 'recoil'
 import Close from '../../assets/Svgs/Close.svg'
-import { NoPamily, NoTodo } from '../../components/Todo/NoToDoBox'
+import { NoCategory, NoPamily, NoTodo } from '../../components/Todo/NoToDoBox'
 import { BottomSheetBackdrop, BottomSheetModal } from '@gorhom/bottom-sheet'
 import { TodoCreateBottomSheet, TodoEditBottomSheet } from '../../components/Todo/TodoBottomSheets'
 
@@ -41,7 +41,14 @@ export default Todo = ({ navigation }) => {
   const [isHeaderOpen, setIsHeaderOpen] = useState(false)
   const [isCreateMode, setIsCreateMode] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
-
+  const [refreshing, setRefreshing] = useState(false)
+  const onRefresh = useCallback(() => {
+    setRefreshing(true)
+    refreshData(selectedDate)
+    setTimeout(() => {
+      setRefreshing(false)
+    }, 1000)
+  }, [])
   const bottomModal = useRef()
 
   //prettier-ignore
@@ -74,16 +81,20 @@ export default Todo = ({ navigation }) => {
   const refreshData = async (date = today) => {
     console.log('RefreshData', date)
     // setIsLoading(true)
-    await getCategoryList(selectedTeam.id).then((categories) => {
-      // console.log('2. 카테고리로 Todo 불러와서 저장', categories.toString().substring(0, 10))
-      getTodosByCategory(categories, date)
-    })
-    await getTeamUser(selectedTeam.id).then((res) => {
-      let tempTeamUserList = []
-      res.map((user) => tempTeamUserList.push({ id: user.registerId, name: user.registerName }))
-      console.log('3. 선택된 팀의 사용자들 state로 저장', tempTeamUserList.toString().substring(0, 10))
-      setTeamUserList(tempTeamUserList) //나중에 Team 변경하면 해당 변수 대체됨
-    })
+    if (selectedTeam) {
+      await getCategoryList(selectedTeam.id).then((categories) => {
+        // console.log('2. 카테고리로 Todo 불러와서 저장', categories.toString().substring(0, 10))
+        getTodosByCategory(categories, date)
+      })
+      await getTeamUser(selectedTeam.id).then((res) => {
+        let tempTeamUserList = []
+        res.map((user) => tempTeamUserList.push({ id: user.registerId, name: user.registerName }))
+        console.log('3. 선택된 팀의 사용자들 state로 저장', tempTeamUserList.toString().substring(0, 10))
+        setTeamUserList(tempTeamUserList) //나중에 Team 변경하면 해당 변수 대체됨
+      })
+    } else {
+      console.log('선택된 Team없어서, Refresh안함')
+    }
   }
 
   const getAllData = (date = today) => {
@@ -192,10 +203,19 @@ export default Todo = ({ navigation }) => {
             setIsHeaderOpen={setIsHeaderOpen}
           />
           <ScrollViewContainer>
-            <ScrollView showsVerticalScrollIndicator={false}>
+            <ScrollView
+              refreshControl={<RefreshControl refreshing={refreshing} onRefresh={() => onRefresh()} />}
+              showsVerticalScrollIndicator={false}
+            >
               <MyCalendarStrip selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
               {/* prettier-ignore */}
-              {!todosByCategory && (todoTeamList ? <NoTodo /> : <NoPamily />)}
+              {!todoTeamList ? (
+                <NoPamily />
+              ) : !todosByCategory ? (
+                <NoCategory />
+              ) : (
+                todosByCategory?.filter((item) => item[1][2].length > 0).length == 0 && <NoTodo />
+              )}
               {isLoading ? (
                 <LoadingContainer>
                   <ActivityIndicator />
@@ -230,14 +250,6 @@ export default Todo = ({ navigation }) => {
                 </TodoItemBase>
               )}
             </ScrollView>
-            <PetModalPopUp
-              navigation={navigation}
-              petIcon={true}
-              visible={isCreateVisible}
-              height={211}
-              setIsVisible={setIsCreateVisible}
-              setIsOpen={() => console.log('setIsOpen')}
-            />
           </ScrollViewContainer>
         </ContentLayout>
         <BottomSheetModal
@@ -282,7 +294,13 @@ export default Todo = ({ navigation }) => {
             <Body_Text color={colors.grey_700}>나에게 할당된 TODO가 아닙니다.</Body_Text>
           </PopContent>
         </ModalPopUp>
-        <PetModalPopUp navigation={navigation} setIsVisible={setIsCreateVisible} visible={isCreateVisible} />
+        <PetModalPopUp
+          petIcon={true}
+          height={211}
+          navigation={navigation}
+          setIsVisible={setIsCreateVisible}
+          visible={isCreateVisible}
+        />
       </Pressable>
     </ScreenContainer>
   )

@@ -16,10 +16,9 @@ export const UserSetting = ({ navigation, route }) => {
   const [selectedRoute, setSelectedRoute] = useState(null)
   const [detailRoute, setDetailRoute] = useState('')
   const [nickname, setNickname] = useState('')
-
   let { accessToken, refreshToken, provider } = route?.params
   // let { accessToken, refreshToken, provider } = ['asdf', 'fdas', 'Navaer'] //** */
-  // console.log(accessToken, refreshToken, provider)
+
   Platform.OS == 'ios'
     ? StatusBarManager.getHeight((statusBarFrameData) => {
         setStatusBarHeight(statusBarFrameData.height)
@@ -41,7 +40,6 @@ export const UserSetting = ({ navigation, route }) => {
     } else {
     }
     setSelectedRoute(id + 1)
-    console.log(selectedRoute)
   }
 
   const isEnabled =

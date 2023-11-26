@@ -9,6 +9,7 @@ import { loggedInState, platformState, userInfoState } from '../../recoil/AuthAt
 import { BodyBoldSm_Text, BodyBold_Text, Detail_Text } from '../Fonts'
 import { registerNickname, registerRoute } from './Apis'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import { checkFCMToken } from '../../AppBase'
 
 export const TermsBottomSheet = ({ nickname, selectedRoute, detailRoute, accessToken, refreshToken, provider }) => {
   const [termState, setTermState] = useState({ 0: false, 1: false, 2: false })
@@ -32,17 +33,13 @@ export const TermsBottomSheet = ({ nickname, selectedRoute, detailRoute, accessT
     setIsLoading(true)
     let paths = ['인스타', '지인추천', '반려동물 커뮤니티', '검색']
     let path = selectedRoute == 5 ? detailRoute : paths[selectedRoute - 1]
-    console.log(nickname)
     registerNickname(nickname, accessToken).then((result) => {
       console.log('registerNick', result)
       if (result == 200) {
         console.log('회원가입완료하였으므로, AsyncStorage에 토큰 저장하고 Login')
         AsyncStorage.setItem('refreshToken', refreshToken)
-        AsyncStorage.setItem('accessToken', accessToken).then(() =>
-          registerRoute(path).then((res) => {
-            console.log('registerRoute api 반환값:,', res)
-          }),
-        )
+        AsyncStorage.setItem('accessToken', accessToken).then(() => registerRoute(path).then((res) => {}))
+        checkFCMToken()
         setPlatform(provider)
         setLoggedIn(true)
       } else {
@@ -132,7 +129,7 @@ const BottomSheetBase = styled.View`
 const BottomSheetHeader = styled.View`
   flex-direction: column;
   justify-content: flex-start;
-  /* height: 56px; */
+
   margin-bottom: 32px;
 `
 const TermItemBase = styled.TouchableOpacity`

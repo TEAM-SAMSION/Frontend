@@ -2,6 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import axios from 'axios'
 import { useRecoilState, useSetRecoilState } from 'recoil'
 import { loggedInState } from '../recoil/AuthAtom'
+import { checkFCMToken } from '../AppBase'
 
 const updateToken = async () => {
   const refreshToken = await AsyncStorage.getItem('refreshToken')
@@ -58,6 +59,7 @@ axiosInstance.interceptors.response.use(
         AsyncStorage.setItem('accessToken', data.accessToken) // 새로운 토큰 localStorage 저장
         AsyncStorage.setItem('refreshToken', data.refreshToken)
         error.config.headers['Authorization'] = data.accessToken // 원래 api 요청의 headers의 accessToken도 변경
+        checkFCMToken()
         const originalResponse = await axios.request(error.config) // 원래 api 요청하기
         return originalResponse // 원래 api 요청의 response return
       }

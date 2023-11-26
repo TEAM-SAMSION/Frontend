@@ -1,12 +1,11 @@
 import styled from 'styled-components/native'
 import { categoryColors, colors } from '../../colors'
 import { HeaderWithBack, ModalPopUp, ScreenKeyboardLayout } from '../../components/Shared'
-import { BodyBold_Text, BodySm_Text, Body_Text, Detail_Text, Label_Text, SubHead_Text } from '../../components/Fonts'
+import { BodyBold_Text, BodySm_Text, Body_Text, Detail_Text, SubHead_Text } from '../../components/Fonts'
 import Plus from '../../assets/Svgs/miniPlus.svg'
 import { Circle } from '../../components/Todo/CategoryIndicator'
 import Trash from '../../assets/Svgs/delete.svg'
 import Edit from '../../assets/Svgs/Edit.svg'
-import Add from '../../assets/Svgs/add.svg'
 import Switch_false from '../../assets/Svgs/switch_false.svg'
 import Switch_true from '../../assets/Svgs/switch_true.svg'
 import { createRef, useEffect, useRef, useState } from 'react'
@@ -79,10 +78,8 @@ export default function ManageTodo({ navigation, route }) {
     }
   }
   const toggleStatus = (index) => {
-    // setIsLoading(true)
     ToggleCategory(categoryList[index].categoryId).then((status) => {
       if (status == 200) {
-        // setIsLoading(false)
         let tempArr = JSON.parse(JSON.stringify(categoryList))
         if (tempArr[index].categoryStatus == 'OFF') {
           tempArr[index].categoryStatus = 'ON'
@@ -150,7 +147,7 @@ export default function ManageTodo({ navigation, route }) {
             {isCreate && (
               <>
                 <CategoryBox>
-                  <Circle style={{ backgroundColor: categoryColors[0] }} />
+                  <Circle style={{ backgroundColor: colors.grey_400 }} />
                   <TextInput
                     autoFocus
                     style={{ width: this.state?.inputWidth }}
