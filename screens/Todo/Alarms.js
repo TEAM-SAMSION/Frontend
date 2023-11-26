@@ -166,7 +166,7 @@ export const Alarms = ({ navigation }) => {
       <ContentBase>
         <ScrollView
           showsVerticalScrollIndicator={true}
-          contentContainerStyle={{ width: '50%', justifyContent: 'start', flex: 1 }}
+          contentContainerStyle={{ width: '100%', justifyContent: 'start', flex: 1 }}
           refreshControl={<RefreshControl refreshing={refreshing} onRefresh={() => onRefresh()} />}
         >
           {alarmList ? (
@@ -235,7 +235,7 @@ const ContentBase = styled.View`
   justify-content: center;
   align-items: center;
   /* background-color: ${colors.grey_150}; */
-  background-color: chartreuse;
+  /* background-color: chartreuse; */
   flex: 1;
   width: 100%;
 `
