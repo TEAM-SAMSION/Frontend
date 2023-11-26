@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { ScreenLayout } from '../../components/Shared'
 import { styled } from 'styled-components/native'
 import { TopHeader } from '../../components/MyPage/TopHeader'
-import { FlatList, TouchableWithoutFeedback } from 'react-native'
+import { FlatList, RefreshControl, TouchableWithoutFeedback } from 'react-native'
 import GroupBox from '../../components/MyPage/GroupBox'
 import { Alert, ScrollView, TouchableOpacity, View } from 'react-native'
 import EditIcon from '../../assets/Svgs/Edit.svg'
@@ -77,11 +77,25 @@ export default function MyPage({ navigation }) {
     }
   }
 
+  const [refreshing, setRefreshing] = useState(false)
+
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true)
+    fetchTeamList()
+    fetchUserInfo()
+    setTimeout(() => {
+      setRefreshing(false)
+    }, 1000)
+  }, [])
+
   return (
     <BottomSheetModalProvider>
       <ScreenLayout>
         <TopHeader navigation={navigation} />
-        <ScrollView showsVerticalScrollIndicator={false}>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+        >
           <TouchableWithoutFeedback
             onPress={() => {
               swipeableRefs.current?.close()
