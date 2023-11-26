@@ -35,7 +35,7 @@ export const Alarms = ({ navigation }) => {
       if (data.length > 0) {
         setAlarmList(data)
       } else {
-        setAlarmList(null)
+        setAlarmList([])
       }
     })
     setTimeout(() => {
@@ -48,7 +48,7 @@ export const Alarms = ({ navigation }) => {
       if (data.length > 0) {
         setAlarmList(data)
       } else {
-        setAlarmList(null)
+        setAlarmList([])
       }
     })
   }, [])
@@ -103,43 +103,35 @@ export const Alarms = ({ navigation }) => {
           renderItem={renderItem}
           onRefresh={() => onRefresh()}
           refreshing={refreshing}
-          onEndReached={loadMore}
+          onEndReached={() => loadMore()}
           onEndReachedThreshold={1}
           showsVerticalScrollIndicator={false}
         />
-        {/* <ScrollView
+        <ScrollView
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{ width: '100%', justifyContent: 'start', flex: 1 }}
           refreshControl={<RefreshControl refreshing={refreshing} onRefresh={() => onRefresh()} />}
         >
-          {alarmList ? (
-            alarmList.map((item, id) => {
-              return (
-                <AlarmBase style={{ borderBottomWidth: 1, borderBottomColor: colors.outline }}>
-                  <AlarmIcon>
-                    <Alarm
-                      width={28}
-                      height={28}
-                      color={item.type == 'TODO' ? colors.primary_outline : colors.secondary}
-                    />
-                  </AlarmIcon>
-                  <AlarmTextContainer>
-                    <BodySm_Text color={colors.grey_600}>{item.message}</BodySm_Text>
-                    <DetailSm_Text color={colors.grey_400}>{elapsedTime(item.createdAt)}</DetailSm_Text>
-                  </AlarmTextContainer>
-                </AlarmBase>
-              )
-            })
-          ) : (
+          {alarmList.length == 0 && (
             <ContentBase>
               <NoAlarmImg source={NoAlarm} />
               <SubHead_Text color={colors.grey_400}>알림이 없습니다</SubHead_Text>
-              <RefreshButton onPress={() => getAlarmList()}>
+              <RefreshButton
+                onPress={() =>
+                  getAlarms(0).then((data) => {
+                    if (data.length > 0) {
+                      setAlarmList(data)
+                    } else {
+                      setAlarmList([])
+                    }
+                  })
+                }
+              >
                 <BodySm_Text color={colors.primary_outline}>새로고침</BodySm_Text>
               </RefreshButton>
             </ContentBase>
           )}
-        </ScrollView> */}
+        </ScrollView>
       </ContentBase>
     </ScreenContainer>
   )
