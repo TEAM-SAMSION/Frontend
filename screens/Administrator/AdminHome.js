@@ -268,7 +268,7 @@ const GroupInfoContainer = styled.View`
 `
 const GroupInfoBox = styled.View`
   display: flex;
-  padding: 10px 29px;
+  padding: 10px 8px;
   align-items: center;
   gap: 4px;
   flex: 1 0 0;
