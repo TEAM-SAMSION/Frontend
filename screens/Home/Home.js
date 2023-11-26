@@ -152,10 +152,12 @@ export default function Home({ navigation }) {
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true)
-    await fetchTeamList()
-    await fetchMyTodo()
-    await fetchProgress()
-    setRefreshing(false)
+    fetchTeamList()
+    fetchMyTodo()
+    fetchProgress()
+    setTimeout(() => {
+      setRefreshing(false)
+    }, 1000)
   }, [])
 
   return (
