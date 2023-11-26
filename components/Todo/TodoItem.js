@@ -41,7 +41,9 @@ const TodoItem = ({ editTodo, categoryId, todo, todoLocalId, refreshData, select
   let notificationTime = ''
   if (tempTime) {
     notificationTime =
-      tempTime[0] < 12 ? '오전' : '오후' + ` ${tempTime[0] > 12 ? tempTime[0] - 12 : tempTime[0]}:${tempTime[1]}`
+      tempTime[0] < 12
+        ? '오전' + ` ${tempTime[0] > 12 ? tempTime[0] - 12 : tempTime[0]}:${tempTime[1]}`
+        : '오후' + ` ${tempTime[0] > 12 ? tempTime[0] - 12 : tempTime[0]}:${tempTime[1]}`
   }
   let Done = todo.completionStatus == 'COMPLETE'
 

@@ -106,12 +106,12 @@ export const getAssignedTodos = async (teamId, page = 0, size = 20) => {
   return response.data.content
 }
 
-export const getAlarms = async (page = 0, size = 20) => {
-  let API = `/alarms?page=${page}&size=${size}`
+export const getAlarms = async (page) => {
+  let API = `/alarms?page=${page}&size=10`
   const response = await axiosInstance.get(url + API, {
     params: {
       page,
-      size,
+      size: 10,
     },
   })
   return response.data.content

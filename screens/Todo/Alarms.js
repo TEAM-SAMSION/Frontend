@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { FlatList, RefreshControl, ScrollView, StatusBar, Text, View } from 'react-native'
 import styled from 'styled-components/native'
 import { colors } from '../../colors'
-import { HeaderWithBack, ScreenHeight, ScreenLayout } from '../../components/Shared'
+import { HeaderWithBack, ScreenHeight, ScreenLayout, ScreenWidth } from '../../components/Shared'
 
 import Alarm from '../../assets/Svgs/Alarm'
 import NoAlarm from '../../assets/Imgs/NoAlarm.png'
@@ -16,23 +16,34 @@ export const Alarms = ({ navigation }) => {
   const isFocused = useIsFocused()
   const [isTabVisible, setIsTabVisible] = useRecoilState(TabBarAtom)
   const [pageNum, setPageNum] = useState(0)
+  const [refreshing, setRefreshing] = useState(false)
+  const [alarmList, setAlarmList] = useState([])
+
+  const loadMore = async () => {
+    const newTodoList = await getAlarms(pageNum + 1)
+    setAlarmList((prevTodoList) => [...prevTodoList, ...newTodoList])
+    setPageNum((prevTodoPage) => prevTodoPage + 1)
+  }
 
   useEffect(() => {
     isFocused && setIsTabVisible(false)
   }, [isFocused, isTabVisible])
 
-  // let items = ['전체', 'TODO', '공지사항']
-  const [refreshing, setRefreshing] = useState(false)
-  const [alarmList, setAlarmList] = useState(null)
-
   const onRefresh = useCallback(() => {
     setRefreshing(true)
-    getAlarmList()
+    getAlarms(0).then((data) => {
+      if (data.length > 0) {
+        setAlarmList(data)
+      } else {
+        setAlarmList(null)
+      }
+    })
     setTimeout(() => {
       setRefreshing(false)
     }, 1000)
   }, [])
-  const getAlarmList = async () => {
+
+  useEffect(() => {
     getAlarms().then((data) => {
       if (data.length > 0) {
         setAlarmList(data)
@@ -40,10 +51,18 @@ export const Alarms = ({ navigation }) => {
         setAlarmList(null)
       }
     })
-  }
-  useEffect(() => {
-    getAlarmList()
   }, [])
+  const renderItem = ({ item }) => (
+    <AlarmBase style={{ borderBottomWidth: 1, borderBottomColor: colors.outline }}>
+      <AlarmIcon>
+        <Alarm width={28} height={28} color={item.type == 'TODO' ? colors.primary_outline : colors.secondary} />
+      </AlarmIcon>
+      <AlarmTextContainer>
+        <BodySm_Text color={colors.grey_600}>{item.message}</BodySm_Text>
+        <DetailSm_Text color={colors.grey_400}>{elapsedTime(item.createdAt)}</DetailSm_Text>
+      </AlarmTextContainer>
+    </AlarmBase>
+  )
 
   const elapsedTime = (date) => {
     const now = new Date()
@@ -77,7 +96,18 @@ export const Alarms = ({ navigation }) => {
         </ScrollView>
       </FilterBase> */}
       <ContentBase>
-        <ScrollView
+        <FlatList
+          style={{ flexDirection: 'column', width: ScreenWidth }}
+          contentContainerStyle={{ justifyContent: 'start', flex: 1 }}
+          data={alarmList}
+          renderItem={renderItem}
+          onRefresh={() => onRefresh()}
+          refreshing={refreshing}
+          onEndReached={loadMore}
+          onEndReachedThreshold={1}
+          showsVerticalScrollIndicator={false}
+        />
+        {/* <ScrollView
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{ width: '100%', justifyContent: 'start', flex: 1 }}
           refreshControl={<RefreshControl refreshing={refreshing} onRefresh={() => onRefresh()} />}
@@ -109,13 +139,14 @@ export const Alarms = ({ navigation }) => {
               </RefreshButton>
             </ContentBase>
           )}
-        </ScrollView>
+        </ScrollView> */}
       </ContentBase>
     </ScreenContainer>
   )
 }
 const ScreenContainer = styled.SafeAreaView`
   flex: 1;
+  width: 100%;
   background-color: ${colors.grey_100};
 `
 const RefreshButton = styled.TouchableOpacity``
