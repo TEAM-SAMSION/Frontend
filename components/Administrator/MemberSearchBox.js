@@ -333,7 +333,7 @@ const Box = styled.View`
   background-color: ${colors.grey_150};
   padding: 4px 6px;
   border-radius: 4px;
-  gap: 8px;
+  gap: 4px;
 `
 const MoreButton = styled.TouchableOpacity``
 ////////

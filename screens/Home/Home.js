@@ -65,23 +65,24 @@ export default function Home({ navigation }) {
 
         // 팀 목록 가져오기
         const teamList = await getTeamList(ACCESSTOKEN)
-        setSelectedTeam({
-          id: teamList[0]?.teamId,
-          name: teamList[0]?.teamName,
-          auth: teamList[0]?.authority,
-        })
+        selectedTeam == null &&
+          setSelectedTeam({
+            id: teamList[0]?.teamId,
+            name: teamList[0]?.teamName,
+            auth: teamList[0]?.authority,
+          })
         setPamilyList(teamList)
 
         if (teamList.length !== 0) {
           setPamilyNum(1)
 
           // Todo 데이터 가져오기
-          const todoList = await getMyTodoList(ACCESSTOKEN, teamList[0].teamId)
+          const todoList = await getMyTodoList(ACCESSTOKEN, teamList[selectedTeam.id].teamId)
           setResultArray(todoList)
           setMyTodo(todoList)
 
           // 진행 상황 가져오기
-          const progress = await getTodoProgress(ACCESSTOKEN, teamList[0].teamId)
+          const progress = await getTodoProgress(ACCESSTOKEN, teamList[selectedTeam.id].teamId)
           setProgress(progress)
         } else {
           setPamilyNum(0)
@@ -121,18 +122,18 @@ export default function Home({ navigation }) {
 
   useEffect(() => {
     fetchTeamList()
-    pamilyNum !== 0 && fetchMyTodo()
+    fetchMyTodo()
   }, [isFocused, updated, selectedTeam, pamilyNum])
 
   const [myTodo, setMyTodo] = useState([])
   const [todoPage, setTodoPage] = useState(0)
 
-  const fetchMyTodo = () => {
+  const fetchMyTodo = async () => {
     pamilyNum &&
-      getMyTodoList(ACCESSTOKEN, selectedTeam.id).then((result) => {
-        setResultArray(result)
-        setMyTodo(result)
-      })
+      (await getMyTodoList(ACCESSTOKEN, selectedTeam.id).then(async (result) => {
+        await setResultArray(result)
+        await setMyTodo(result)
+      }))
   }
 
   const setResultArray = (result) => {
@@ -155,6 +156,7 @@ export default function Home({ navigation }) {
     setRefreshing(true)
     await fetchTeamList()
     await fetchMyTodo()
+    await fetchProgress()
     setRefreshing(false)
   }, [])
 

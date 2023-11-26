@@ -153,7 +153,7 @@ export default function AdminHome({ route, navigation }) {
             <Close width={24} height={24} />
           </CloseButton>
         </ModalHeader>
-        <PopContent style={{ alignItems: 'flex-start', marginBottom: 20 }}>
+        <PopContent style={{ alignItems: 'flex-start', marginBottom: 20, marginTop: 4 }}>
           <TopBox>
             <CrownTitle>
               <CrownIcon width={34} height={34} />

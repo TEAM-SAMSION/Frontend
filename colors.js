@@ -41,3 +41,16 @@ export const categoryColors = [
   '#CE8282',
   '#FAA7D4',
 ]
+
+export const homeCategoryColors = [
+  '#FCB8AE',
+  '#FFE7C5',
+  '#FFF599',
+  '#DBF1CF',
+  '#D7F4EB',
+  '#C1DFF5',
+  '#D4D0FE',
+  '#E2D7F4',
+  '#ECCDCD',
+  '#FDDCEE',
+]
