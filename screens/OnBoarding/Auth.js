@@ -52,8 +52,8 @@ export default function Auth({ navigation }) {
         }
       })
     } catch (e) {
-      console.log(e)
-      if (e.response.status == 2002) {
+      console.log('Error:', e)
+      if (e.response.errorCode == 2002) {
         setIsPopupVisible(true)
       }
     }
@@ -173,7 +173,6 @@ export default function Auth({ navigation }) {
       <LoginButton loginFunc={() => GooglepromptAsync()} id={0} />
       <LoginButton loginFunc={() => loginKakao()} id={1} />
       <LoginButton loginFunc={() => loginNaver()} id={2} />
-
       {appleAuth.isSupported && (
         <AppleButton
           buttonStyle={AppleButton.Style.BLACK}
