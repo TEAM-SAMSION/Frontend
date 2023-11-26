@@ -150,9 +150,11 @@ export default Todo = ({ navigation }) => {
     let timer
     timer = setInterval(() => {
       const sec = new Date().getSeconds()
-      if (sec && selectedTeam) return
-      console.log('*********************자동갱신****************************')
-      refreshData(selectedDate)
+      if (sec) return
+      if (selectedTeam) {
+        console.log('*********************자동갱신****************************')
+        refreshData(selectedDate)
+      }
     }, 1000)
     return () => {
       clearInterval(timer)

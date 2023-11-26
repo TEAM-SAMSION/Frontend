@@ -22,7 +22,7 @@ const updateToken = async () => {
 }
 
 const axiosInstance = axios.create({
-  baseURL: 'https://dev.pawith.com',
+  baseURL: 'https://api.pawith.com',
   timeout: 5000,
 })
 
