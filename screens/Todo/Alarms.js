@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react'
-import { RefreshControl, ScrollView, StatusBar, Text, View } from 'react-native'
+import { FlatList, RefreshControl, ScrollView, StatusBar, Text, View } from 'react-native'
 import styled from 'styled-components/native'
 import { colors } from '../../colors'
 import { HeaderWithBack, ScreenHeight, ScreenLayout } from '../../components/Shared'
@@ -15,6 +15,7 @@ import { TabBarAtom } from '../../recoil/TabAtom'
 export const Alarms = ({ navigation }) => {
   const isFocused = useIsFocused()
   const [isTabVisible, setIsTabVisible] = useRecoilState(TabBarAtom)
+  const [pageNum, setPageNum] = useState(0)
 
   useEffect(() => {
     isFocused && setIsTabVisible(false)

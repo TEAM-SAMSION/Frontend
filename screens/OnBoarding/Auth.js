@@ -25,6 +25,7 @@ export default function Auth({ navigation }) {
     androidClientId: '317985927887-lk1mf2lb341hiu5kht8a4p1oeigg2f98.apps.googleusercontent.com',
     webClientId: '317985927887-jk1lb4tj27lvvb750v2pfs6ud7k1doaa.apps.googleusercontent.com',
   })
+  const setPlatform = useSetRecoilState(platformState)
   const setLoggedIn = useSetRecoilState(loggedInState)
   const [isPopupVisible, setIsPopupVisible] = useState(false)
   const finishLogin = (accessToken, refreshToken, provider) => {

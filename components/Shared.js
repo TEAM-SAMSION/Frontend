@@ -1,8 +1,8 @@
 import styled from 'styled-components/native'
-import { Dimensions, StatusBar, Platform, Pressable, TouchableWithoutFeedback, Keyboard } from 'react-native'
+import { Dimensions, StatusBar, Platform, Pressable } from 'react-native'
 import { colors } from '../colors'
 import { useEffect, useRef, useState } from 'react'
-import { Animated, Image, Modal } from 'react-native'
+import { Modal } from 'react-native'
 // import { Picker } from 'react-native-wheel-pick'
 // import WheelPickerExpo from 'react-native-wheel-picker-expo'
 
@@ -24,7 +24,7 @@ export const ScreenLayout = ({ children, backgroundColor = 'white' }) => {
   )
 }
 
-export const url = 'https://api.pawith.com'
+export const url = 'https://dev.pawith.com'
 
 //****************** Input  *******************************************************/
 const TitleText = styled.Text`
