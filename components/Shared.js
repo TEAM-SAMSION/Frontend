@@ -201,7 +201,7 @@ const PopImage = styled.Image`
 
 import Close from '../assets/Svgs/Close.svg'
 
-export const PetModalPopUp = ({ petIcon, visible, height, setIsVisible, setIsOpen, navigation }) => {
+export const PetModalPopUp = ({ petIcon, visible, height, setIsVisible, setIsOpen = null, navigation }) => {
   const [showModal, setShowModal] = useState(visible)
   useEffect(() => {
     toggleModal()
@@ -230,7 +230,7 @@ export const PetModalPopUp = ({ petIcon, visible, height, setIsVisible, setIsOpe
             <CloseButton
               onPress={() => {
                 setIsVisible(false)
-                setIsOpen(false)
+                setIsOpen && setIsOpen(false)
               }}
             >
               <Close width={24} height={24} />
@@ -245,7 +245,7 @@ export const PetModalPopUp = ({ petIcon, visible, height, setIsVisible, setIsOpe
               onPress={() => {
                 navigation.navigate('CreateTeam')
                 setIsVisible(false)
-                setIsOpen(false)
+                setIsOpen && setIsOpen(false)
               }}
             >
               <BodySm_Text color={colors.red_350}>Pamily 생성하기</BodySm_Text>
@@ -254,7 +254,7 @@ export const PetModalPopUp = ({ petIcon, visible, height, setIsVisible, setIsOpe
               onPress={() => {
                 navigation.navigate('JoinTeam')
                 setIsVisible(false)
-                setIsOpen(false)
+                setIsOpen && setIsOpen(false)
               }}
             >
               <BodySm_Text color={colors.red_350}>Pamily 참여하기</BodySm_Text>

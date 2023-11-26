@@ -117,6 +117,7 @@ export default Todo = ({ navigation }) => {
         if (selectedTeamID) {
           //null 반환받으면, TodoTeam 없다는 것을 의미하기에 api호출 스킵
           await getCategoryList(selectedTeamID).then((categories) => {
+            console.log(categories)
             // console.log('2. 카테고리로 Todo 불러와서 저장', categories.toString().substring(0, 10))
             getTodosByCategory(categories, date).then(setIsLoading(false))
           })
@@ -267,11 +268,7 @@ export default Todo = ({ navigation }) => {
         </BottomSheetModal>
         <ModalPopUp visible={isDeleteVisible} petIcon={false} height={204}>
           <ModalHeader>
-            <CloseButton
-              onPress={() => {
-                setIsDeleteVisible(false)
-              }}
-            >
+            <CloseButton onPress={() => setIsDeleteVisible(false)}>
               <Close width={24} height={24} />
             </CloseButton>
           </ModalHeader>
@@ -280,7 +277,7 @@ export default Todo = ({ navigation }) => {
             <Body_Text color={colors.grey_700}>나에게 할당된 TODO가 아닙니다.</Body_Text>
           </PopContent>
         </ModalPopUp>
-        <PetModalPopUp visible={isCreateVisible}></PetModalPopUp>
+        <PetModalPopUp navigation={navigation} setIsVisible={setIsCreateVisible} visible={isCreateVisible} />
       </Pressable>
     </ScreenContainer>
   )

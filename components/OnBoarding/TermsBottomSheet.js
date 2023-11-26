@@ -32,7 +32,7 @@ export const TermsBottomSheet = ({ nickname, selectedRoute, detailRoute, accessT
     setIsLoading(true)
     let paths = ['인스타', '지인추천', '반려동물 커뮤니티', '검색']
     let path = selectedRoute == 5 ? detailRoute : paths[selectedRoute - 1]
-    console.log('?')
+    console.log(nickname)
     registerNickname(nickname, accessToken).then((result) => {
       console.log('registerNick', result)
       if (result == 200) {

@@ -3,6 +3,7 @@ import axiosInstance from '../../utils/customAxios'
 import axios from 'axios'
 
 export const registerNickname = async (nickname, accessToken) => {
+  console.log(nickname, accessToken)
   let API = `/user/name`
   try {
     const response = await axios.put(

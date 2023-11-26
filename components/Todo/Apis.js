@@ -2,6 +2,7 @@ import axiosInstance from '../../utils/customAxios'
 import { url } from '../Shared'
 
 export const deleteTodo = async (todoId) => {
+  console.log(todoId)
   let API = `/teams/todos/${todoId}`
   const response = await axiosInstance.delete(url + API)
 }
