@@ -14,8 +14,6 @@ import { ScreenLayout, ScreenWidth } from '../../components/Shared'
 import { TopHeader } from '../../components/Home/TopHeader'
 import styled from 'styled-components/native'
 import { colors } from '../../colors'
-import Plus from '../../assets/Svgs/plus.svg'
-import Go from '../../assets/Svgs/go.svg'
 import { MainStat } from '../../components/Home/MainStat'
 import { PamilyChoiceToggle } from '../../components/Home/PamilyChoiceToggle'
 import { MainImage } from '../../components/Home/MainImage'
@@ -206,7 +204,7 @@ export default function Home({ navigation }) {
                 Pamily를 생성해 볼까요?
               </SubTitle>
               <StartIcon>
-                <Plus />
+                <Image source={require('../../assets/Imgs/joinPaw.png')} style={{ width: 70, height: 70 }} />
               </StartIcon>
             </StartTeamContainer>
             <StartTeamContainer
@@ -223,7 +221,7 @@ export default function Home({ navigation }) {
               <Title>Pamily 참여하기</Title>
               <SubTitle>TODO를 함께할{'\n'}Pamily에 참여해 볼까요?</SubTitle>
               <StartIcon>
-                <Go />
+                <Image source={require('../../assets/Imgs/CreatePaw.png')} style={{ width: 70, height: 70 }} />
               </StartIcon>
             </StartTeamContainer>
           </TeamContainer>
@@ -366,6 +364,7 @@ const StartTeamContainer = styled.TouchableOpacity`
   border-radius: 8px;
   background-color: ${colors.grey_100};
   padding: 16px 16px 0px 16px;
+  gap: 4px;
 `
 const Title = styled.Text`
   font-family: 'Spoqa-Bold';
@@ -380,7 +379,7 @@ const SubTitle = styled.Text`
 `
 const StartIcon = styled.View`
   position: absolute;
-  right: 0;
+  right: 12;
   bottom: 0;
 `
 const TodoTitle = styled.View`
