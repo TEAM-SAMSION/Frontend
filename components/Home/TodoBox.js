@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { Dimensions, TouchableOpacity, View } from 'react-native'
 import { styled } from 'styled-components/native'
-import { categoryColors, colors } from '../../colors'
+import { categoryColors, colors, homeCategoryColors } from '../../colors'
 import CheckOn from '../../assets/Svgs/Check-box.svg'
 import CheckOff from '../../assets/Svgs/Check-box_off.svg'
 import { completeTodo } from './Apis'
@@ -18,20 +18,29 @@ export const TodoBox = (props) => {
 
   useEffect(() => {
     todo.completionStatus == 'COMPLETE' && setIsChecked(true)
+    todo.completionStatus == 'INCOMPLETE' && setIsChecked(false)
   }, [])
 
   useEffect(() => {
     todo.completionStatus == 'COMPLETE' && setIsChecked(true)
+    todo.completionStatus == 'INCOMPLETE' && setIsChecked(false)
   }, [todo.completionStatus])
 
   return (
-    <TodoBoxContainer index={index}>
+    <TodoBoxContainer
+      index={index}
+      onPress={() => {
+        completeTodo(accessToken, todo.todoId)
+        setIsChecked(!isChecked)
+        props.setUpdated(!props.updated)
+      }}
+    >
       <TodoContent>
         <TodoTeam>
           <TeamText
             numberOfLines={1}
             ellipsizeMode="tail"
-            style={{ backgroundColor: categoryColors[todo.categoryId % 10] }}
+            style={{ backgroundColor: homeCategoryColors[todo.categoryId % 10] }}
           >
             {todo.categoryName}
           </TeamText>
@@ -42,13 +51,7 @@ export const TodoBox = (props) => {
           </ItemText>
         </TodoItem>
       </TodoContent>
-      <CheckBox
-        onPress={() => {
-          completeTodo(accessToken, todo.todoId)
-          setIsChecked(!isChecked)
-          props.setUpdated(!props.updated)
-        }}
-      >
+      <CheckBox>
         {isChecked ? (
           <CheckOn width={24} height={24} color={categoryColors[todo.categoryId % 10]} />
         ) : (
@@ -59,7 +62,7 @@ export const TodoBox = (props) => {
   )
 }
 
-const TodoBoxContainer = styled.View`
+const TodoBoxContainer = styled.TouchableOpacity`
   flex-direction: row;
   align-items: center;
   width: ${(ScreenWidth - 40) / 2}px;
@@ -94,4 +97,4 @@ const ItemText = styled.Text`
   color: ${colors.grey_600};
 `
 const TodoContent = styled.View``
-const CheckBox = styled.TouchableOpacity``
+const CheckBox = styled.View``
