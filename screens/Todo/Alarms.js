@@ -8,10 +8,19 @@ import Alarm from '../../assets/Svgs/Alarm'
 import NoAlarm from '../../assets/Imgs/NoAlarm.png'
 import { BodySm_Text, DetailSm_Text, Detail_Text, SubHead_Text } from '../../components/Fonts'
 import { getAlarms } from '../../components/Todo/Apis'
-import { useRecoilValue } from 'recoil'
+import { useRecoilState, useRecoilValue } from 'recoil'
 import { userInfoState } from '../../recoil/AuthAtom'
+import { useIsFocused } from '@react-navigation/native'
+import { TabBarAtom } from '../../recoil/TabAtom'
 
 export const Alarms = ({ navigation }) => {
+  const isFocused = useIsFocused()
+  const [isTabVisible, setIsTabVisible] = useRecoilState(TabBarAtom)
+
+  useEffect(() => {
+    isFocused && setIsTabVisible(false)
+  }, [isFocused, isTabVisible])
+
   // let items = ['전체', 'TODO', '공지사항']
   const [refreshing, setRefreshing] = useState(false)
   const [alarmList, setAlarmList] = useState(null)
