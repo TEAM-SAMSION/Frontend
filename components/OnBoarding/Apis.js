@@ -23,19 +23,3 @@ export const registerRoute = async (path) => {
   const response = await axiosInstance.post(url + API, { path: path })
   return response.status
 }
-
-export const postDeviceToken = async (accessToken, deviceToken) => {
-  let API = `/alarms/token`
-  try {
-    const response = await axios.post(
-      url + API,
-      { deviceToken },
-      {
-        headers: { Authorization: accessToken },
-      },
-    )
-    return response
-  } catch (e) {
-    console.log('deviceToken 저장 api 에러:', e)
-  }
-}

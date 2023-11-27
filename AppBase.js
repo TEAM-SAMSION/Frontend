@@ -11,19 +11,41 @@ import 'moment/locale/ko' // language must match config
 import { loggedInState, onboardedState, userInfoState } from './recoil/AuthAtom'
 import messaging from '@react-native-firebase/messaging'
 import PushNotificationIOS from '@react-native-community/push-notification-ios'
-import { postDeviceToken } from './components/OnBoarding/Apis'
+import { NavigationContainer } from '@react-navigation/native'
+import { navigationRef } from './navigators/RootNavigator'
+import axios from 'axios'
+import { url } from './components/Shared'
+
+const postDeviceToken = async (accessToken, deviceToken) => {
+  let API = `/alarms/token`
+  try {
+    const response = await axios.post(
+      url + API,
+      { deviceToken },
+      {
+        headers: { Authorization: accessToken },
+      },
+    )
+    return response
+  } catch (e) {
+    console.log('deviceToken 저장 api 에러:', e)
+  }
+}
 
 export const checkFCMToken = async (accessToken) => {
+  console.log('checkFCMToken:', accessToken)
   const fcmToken = await messaging().getToken()
   if (fcmToken) {
     postDeviceToken(accessToken, fcmToken)
   }
 }
+
 export default function AppBase() {
   const [appIsReady, setAppIsReady] = useState(false)
 
   const requestUserPermission = async () => {
     const authStatus = await messaging().requestPermission()
+
     const enabled =
       authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
       authStatus === messaging.AuthorizationStatus.PROVISIONAL
@@ -49,42 +71,36 @@ export default function AppBase() {
     const result = PushNotificationIOS.FetchResult.NoData
     notification.finish(result)
   }
-
-  useEffect(() => {
-    async function prepare() {
-      try {
-        await AsyncStorage.getItem('accessToken').then((accessToken) => {
-          if (accessToken != null) {
-            //RecoilState로 로그인여부 저장
-            setLoggedIn(true)
-            checkFCMToken(accessToken)
-          }
-        })
-        // setLoggedIn(true)
-        // await AsyncStorage.setItem(
-        //   'accessToken',
-        //   'Bearer eyJhbGciOiJIUzM4NCJ9.eyJ0b2tlbl90eXBlIjoiUkVGUkVTSF9UT0tFTiIsImVtYWlsIjoic3Jmc3JmMDEwM0BnbWFpbC5jb20iLCJpc3MiOiJwYXdpdGgiLCJpYXQiOjE3MDA5OTQ5NjAsImV4cCI6MTcwMTU5OTc2MH0.URymhwJUEoB-e8F50Yoky9Z4GPnvTy3iiBsKnPY_qmLiEE6SF_Xs--M1mXQDXrJ6',
-        // )
-        await AsyncStorage.getItem('onBoardingDone').then((onBoardingDone) => {
-          if (onBoardingDone) {
-            console.log('온보딩 이미 완료해서 넘어감')
-            setOnboarded(true)
-          }
-        })
-        await Font.loadAsync({
-          'Spoqa-Bold': require('./assets/Fonts/SpoqaHanSansNeo-Bold.otf'),
-          'Spoqa-Medium': require('./assets/Fonts/SpoqaHanSansNeo-Medium.otf'),
-          'Spoqa-Regular': require('./assets/Fonts/SpoqaHanSansNeo-Regular.otf'),
-          'Spoqa-Light': require('./assets/Fonts/SpoqaHanSansNeo-Light.otf'),
-          'Spoqa-Thin': require('./assets/Fonts/SpoqaHanSansNeo-Thin.otf'),
-        })
-      } catch (e) {
-        console.warn(e)
-      } finally {
-        console.log('앱 실행위해 필요한 모든 자원 및 준비 완료')
-        setAppIsReady(true)
-      }
+  const prepare = async () => {
+    try {
+      await AsyncStorage.getItem('accessToken').then((accessToken) => {
+        if (accessToken != null) {
+          //RecoilState로 로그인여부 저장
+          setLoggedIn(true)
+          checkFCMToken(accessToken)
+        }
+      })
+      await AsyncStorage.getItem('onBoardingDone').then((onBoardingDone) => {
+        if (onBoardingDone) {
+          console.log('온보딩 이미 완료해서 넘어감')
+          setOnboarded(true)
+        }
+      })
+      await Font.loadAsync({
+        'Spoqa-Bold': require('./assets/Fonts/SpoqaHanSansNeo-Bold.otf'),
+        'Spoqa-Medium': require('./assets/Fonts/SpoqaHanSansNeo-Medium.otf'),
+        'Spoqa-Regular': require('./assets/Fonts/SpoqaHanSansNeo-Regular.otf'),
+        'Spoqa-Light': require('./assets/Fonts/SpoqaHanSansNeo-Light.otf'),
+        'Spoqa-Thin': require('./assets/Fonts/SpoqaHanSansNeo-Thin.otf'),
+      })
+    } catch (e) {
+      console.warn(e)
+    } finally {
+      console.log('앱 실행위해 필요한 모든 자원 및 준비 완료')
+      setAppIsReady(true)
     }
+  }
+  useEffect(() => {
     foregroundListener()
     prepare()
     requestUserPermission()
@@ -106,8 +122,10 @@ export default function AppBase() {
   }
 
   return (
-    <View style={{ flex: 1 }} onLayout={onLayoutRootView}>
-      {loggedIn ? <LoggedInNav /> : <AuthNav />}
-    </View>
+    <NavigationContainer independent={true} ref={navigationRef}>
+      <View style={{ flex: 1 }} onLayout={onLayoutRootView}>
+        {loggedIn ? <LoggedInNav /> : <AuthNav />}
+      </View>
+    </NavigationContainer>
   )
 }

@@ -19,18 +19,18 @@ import { PamilyChoiceToggle } from '../../components/Home/PamilyChoiceToggle'
 import { MainImage } from '../../components/Home/MainImage'
 import { TodoBox } from '../../components/Home/TodoBox'
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
-import { accessTokenState } from '../../recoil/AuthAtom'
 import { getMyTodoList, getTeamList, getTodoProgress, getUserInfo } from '../../components/Home/Apis'
 import { StackActions, useIsFocused } from '@react-navigation/native'
 import { BodySm_Text, DetailSm_Text } from '../../components/Fonts'
 import { SelectedTeamAtom, TabBarAtom } from '../../recoil/TabAtom'
 import Swiper from 'react-native-swiper'
-import AsyncStorage from '@react-native-async-storage/async-storage'
 
 export default function Home({ navigation }) {
   const isFocused = useIsFocused()
-  const ACCESSTOKEN = useRecoilValue(accessTokenState)
   const setIsTabVisible = useSetRecoilState(TabBarAtom)
+  useEffect(() => {
+    isFocused && setIsTabVisible(true)
+  }, [isFocused])
 
   const [name, setName] = useState('')
   const now = new Date()
@@ -46,13 +46,13 @@ export default function Home({ navigation }) {
   const [selectedTeam, setSelectedTeam] = useRecoilState(SelectedTeamAtom)
 
   const getUserNickname = () => {
-    getUserInfo(ACCESSTOKEN).then((result) => {
+    getUserInfo().then((result) => {
       setName(result.nickname)
     })
   }
 
   const fetchTeamList = () => {
-    getTeamList(ACCESSTOKEN).then((result) => {
+    getTeamList().then((result) => {
       setPamilyList(result)
       console.log('fetchTeamList:', result)
       if (result.length !== 0) {
@@ -66,7 +66,7 @@ export default function Home({ navigation }) {
   }
 
   const fetchProgress = () => {
-    getTodoProgress(ACCESSTOKEN, selectedTeam.id).then((result) => {
+    getTodoProgress(selectedTeam.id).then((result) => {
       console.log('fetchProgress:', result)
       setProgress(result)
       //console.log(progress)
@@ -80,47 +80,41 @@ export default function Home({ navigation }) {
         getUserNickname()
 
         // 팀 목록 가져오기
-        const teamList = await getTeamList(ACCESSTOKEN)
-        selectedTeam == null &&
-          setSelectedTeam({
-            id: teamList[0]?.teamId,
-            name: teamList[0]?.teamName,
-            auth: teamList[0]?.authority,
-          })
-        setPamilyList(teamList)
-
-        if (selectedTeam) {
-          //selectedTeam이 null에서 변경되기 이전에 selectedTeam.id를 사용해 api호출하는 것을 막기 위해 if문으로 wait 시킴
-          if (teamList.length !== 0) {
-            setPamilyNum(1)
-            console.log('selectedTeam:', selectedTeam)
-            // Todo 데이터 가져오기
-            // const todoList = await getMyTodoList(ACCESSTOKEN, teamList[selectedTeam.id].teamId)  //selectedTeam.id는 로컬에 저장된 어레이의 위치값을 표시하는 것이 아닌, 서버 내에서의 team 위치를 파악하기 위한 인텍스이다
-            const todoList = await getMyTodoList(ACCESSTOKEN, selectedTeam.id) //selectedTeam.id 다이렉트로 전달
-            setResultArray(todoList)
-            setMyTodo(todoList)
-            // 진행 상황 가져오기
-            // const progress = await getTodoProgress(ACCESSTOKEN, teamList[selectedTeam.id].teamId)
-            const progress = await getTodoProgress(ACCESSTOKEN, selectedTeam.id)
-            setProgress(progress)
-          } else {
-            setPamilyNum(0)
-            setMyTodo([])
+        const teamList = await getTeamList()
+        if (teamList.length > 0) {
+          //teamList가 없을수도 있음
+          setPamilyList(teamList)
+          if (selectedTeam.auth == undefined || selectedTeam == null) {
+            //왜인지는 모르겠으나, 초기값이 null이 아닌 {"auth": undefined, "id": undefined, "name": undefined}임 ->이에 맞춰 조건 추가
+            setSelectedTeam({
+              id: teamList[0]?.teamId,
+              name: teamList[0]?.teamName,
+              auth: teamList[0]?.authority,
+            })
           }
+          console.log(selectedTeam)
+          setPamilyNum(1)
+          // const todoList = await getMyTodoList(ACCESSTOKEN, teamList[selectedTeam.id].teamId)  //selectedTeam.id는 로컬에 저장된 어레이의 위치값을 표시하는 것이 아닌, 서버 내에서의 team 위치를 파악하기 위한 인텍스이다
+          const todoList = await getMyTodoList(selectedTeam.id) //selectedTeam.id 다이렉트로 전달
+          setResultArray(todoList)
+          setMyTodo(todoList)
+          // const progress = await getTodoProgress(ACCESSTOKEN, teamList[selectedTeam.id].teamId)
+          const progress = await getTodoProgress(selectedTeam.id)
+          setProgress(progress)
+        } else {
+          setPamilyNum(0)
+          setMyTodo([])
         }
       } catch (error) {
         console.error('에러 발생:', error)
       }
     }
     getUserNickname()
-    fetchData() //문제없
+    fetchData()
   }, [])
 
   useEffect(() => {
-    isFocused && setIsTabVisible(true)
-  }, [isFocused])
-  useEffect(() => {
-    fetchMyTodo() //문제없
+    fetchMyTodo()
   }, [isFocused, pamilyList, todoPage])
 
   useEffect(() => {
@@ -133,7 +127,7 @@ export default function Home({ navigation }) {
 
   const fetchMyTodo = async () => {
     pamilyNum &&
-      (await getMyTodoList(ACCESSTOKEN, selectedTeam?.id).then(async (result) => {
+      (await getMyTodoList(selectedTeam?.id).then(async (result) => {
         console.log('fetMyTodo:', result)
         setResultArray(result)
         setMyTodo(result)
@@ -155,9 +149,9 @@ export default function Home({ navigation }) {
   const onRefresh = useCallback(() => {
     setRefreshing(true)
     try {
-      // fetchTeamList()
+      fetchTeamList()
       fetchMyTodo()
-      // fetchProgress()
+      fetchProgress()
     } catch (e) {
       console.log(e)
     }
@@ -253,15 +247,7 @@ export default function Home({ navigation }) {
                   style={{ marginBottom: 8 }}
                   data={myTodo}
                   renderItem={({ item, index }) => {
-                    return (
-                      <TodoBox
-                        data={item}
-                        index={index}
-                        accessToken={ACCESSTOKEN}
-                        updated={updated}
-                        setUpdated={setUpdated}
-                      />
-                    )
+                    return <TodoBox data={item} index={index} updated={updated} setUpdated={setUpdated} />
                   }}
                   showsHorizontalScrollIndicator={false}
                   numColumns={2}
@@ -279,15 +265,7 @@ export default function Home({ navigation }) {
                         data={page}
                         scrollEnabled={false}
                         renderItem={({ item, index }) => {
-                          return (
-                            <TodoBox
-                              data={item}
-                              index={index}
-                              accessToken={ACCESSTOKEN}
-                              updated={updated}
-                              setUpdated={setUpdated}
-                            />
-                          )
+                          return <TodoBox data={item} index={index} updated={updated} setUpdated={setUpdated} />
                         }}
                         showsHorizontalScrollIndicator={false}
                         numColumns={2}

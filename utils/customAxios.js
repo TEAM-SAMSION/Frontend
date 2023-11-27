@@ -5,6 +5,7 @@ import { loggedInState } from '../recoil/AuthAtom'
 import { checkFCMToken } from '../AppBase'
 import { url } from '../components/Shared'
 import { useNavigation } from '@react-navigation/native'
+import { navigate } from '../navigators/RootNavigator'
 
 const updateToken = async () => {
   const refreshToken = await AsyncStorage.getItem('refreshToken')
@@ -33,9 +34,11 @@ const axiosInstance = axios.create({
   timeout: 5000,
 })
 
-const Logout = () => {
-  AsyncStorage.removeItem('accessToken')
-  AsyncStorage.removeItem('refreshToken')
+const Logout = async () => {
+  console.log('로그아웃 실행')
+  await AsyncStorage.removeItem('refreshToken')
+  await AsyncStorage.removeItem('accessToken')
+  navigate('AuthBridge')
 }
 axiosInstance.interceptors.request.use(
   async (config) => {
@@ -45,6 +48,7 @@ axiosInstance.interceptors.request.use(
       return config
     } else {
       config.headers['Authorization'] = `${accessToken}`
+      // config.headers['Authorization'] = `Bearer XXXX`
       return config
     }
   },
@@ -54,7 +58,6 @@ axiosInstance.interceptors.request.use(
 axiosInstance.interceptors.response.use(
   (response) => response, // 응답이 성공적인 경우 아무것도 하지 않음
   async (error) => {
-    const navigation = useNavigation()
     console.log('axiosInstance에서 에러 감지', error.config.method, error.config.url, error.response.data.errorCode)
     // 액세스 토큰이 만료됐다면
     if (error.response.data.errorCode === 1001) {
@@ -67,17 +70,19 @@ axiosInstance.interceptors.response.use(
         AsyncStorage.setItem('accessToken', data.accessToken) // 새로운 토큰 localStorage 저장
         AsyncStorage.setItem('refreshToken', data.refreshToken)
         error.config.headers['Authorization'] = data.accessToken // 원래 api 요청의 headers의 accessToken도 변경
-        checkFCMToken(data.accessToken)
+        // checkFCMToken(data.accessToken)
         const originalResponse = await axios.request(error.config) // 원래 api 요청하기
         return originalResponse // 원래 api 요청의 response return
       } else {
         // 리프레시 토큰도 만료됐으면 로그인 페이지로 이동
-        navigation.navigate('AuthBridge')
         // Logout()
+        console.log('Else')
       }
+      // } else if (error.response.data.errorCode === 1004) {
     } else {
-      navigation.navigate('AuthBridge')
-      // Logout()
+      //1000 -> 유효한 토큰 아님
+      console.log('완전 Else')
+      Logout()
     }
     return Promise.reject(error)
   },

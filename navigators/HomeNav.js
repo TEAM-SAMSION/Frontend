@@ -9,8 +9,6 @@ import BackButton from '../assets/Svgs/chevron_back.svg'
 import AddPetProfile from '../screens/Home/AddPetProfile'
 import EditPetProfile from '../screens/Home/EditPetProfile'
 import AlarmNav from './AlarmNav'
-import Test from '../screens/Home/AuthBridge'
-import Logout from '../screens/Home/AuthBridge'
 import AuthBridge from '../screens/Home/AuthBridge'
 
 const Stack = createStackNavigator()

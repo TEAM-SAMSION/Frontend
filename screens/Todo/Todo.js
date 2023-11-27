@@ -18,6 +18,7 @@ import { CategoryIndicator } from '../../components/Todo/CategoryIndicator'
 import { useFocusEffect } from '@react-navigation/native'
 import { SelectedTeamAtom, TabBarAtom } from '../../recoil/TabAtom'
 import TodoItem from '../../components/Todo/TodoItem'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 export default Todo = ({ navigation }) => {
   const setIsTabVisible = useSetRecoilState(TabBarAtom)
@@ -161,6 +162,8 @@ export default Todo = ({ navigation }) => {
       clearInterval(timer)
     }
   }, [selectedTeam, selectedDate])
+  AsyncStorage.getItem('accessToken').then((res) => console.log(res))
+
   useFocusEffect(
     useCallback(() => {
       getAllData(selectedDate)
