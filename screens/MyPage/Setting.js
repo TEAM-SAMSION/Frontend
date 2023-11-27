@@ -4,38 +4,18 @@ import { ScreenLayout } from '../../components/Shared'
 import { styled } from 'styled-components/native'
 import ContentIcon from '../../assets/Svgs/chevron_right.svg'
 import { colors } from '../../colors'
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useRecoilState, useRecoilValue } from 'recoil'
-import { loggedInState, platformState } from '../../recoil/AuthAtom'
-import { CommonActions, useIsFocused } from '@react-navigation/native'
+import { useIsFocused } from '@react-navigation/native'
 import { TabBarAtom } from '../../recoil/TabAtom'
-import NaverLogin from '@react-native-seoul/naver-login'
+import { logOut } from '../../utils/customAxios'
 
 export default function Setting({ navigation }) {
   const isFocused = useIsFocused()
   const [isTabVisible, setIsTabVisible] = useRecoilState(TabBarAtom)
-  const [loggedIn, setLoggedIn] = useRecoilState(loggedInState)
-  const { platform } = useRecoilValue(platformState)
 
   useEffect(() => {
     isFocused && setIsTabVisible(false)
   }, [isFocused, isTabVisible])
-  const finishLogout = async () => {
-    // if (platform == 'NAVER') {
-    console.log('Naver Logout')
-    await NaverLogin.logout()
-    // }
-    await AsyncStorage.removeItem('accessToken')
-    await AsyncStorage.removeItem('refreshToken').then(setLoggedIn(false))
-  }
-  const logOut = async () => {
-    navigation.dispatch(
-      CommonActions.reset({
-        routes: [{ name: 'HomeNav' }],
-      }),
-    )
-    finishLogout()
-  }
 
   return (
     <ScreenLayout>

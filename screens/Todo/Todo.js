@@ -125,6 +125,15 @@ export default Todo = ({ navigation }) => {
           })
           return tempTeamList[tempTeamList.length - 1]?.id
         } else {
+          tempTeamList.map((team) => {
+            if (team.id == selectedTeam.id && team.auth != selectedTeam.auth) {
+              setSelectedTeam({
+                auth: team.authority,
+                name: team.name,
+                id: team.id,
+              })
+            }
+          })
           return selectedTeam.id
         }
       })
@@ -162,7 +171,6 @@ export default Todo = ({ navigation }) => {
       clearInterval(timer)
     }
   }, [selectedTeam, selectedDate])
-  AsyncStorage.getItem('accessToken').then((res) => console.log(res))
 
   useFocusEffect(
     useCallback(() => {

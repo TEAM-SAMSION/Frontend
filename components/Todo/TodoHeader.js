@@ -18,6 +18,7 @@ export const TodoHeader = ({
   const toggleDropdown = () => {
     setIsHeaderOpen(!isHeaderOpen)
   }
+
   return (
     <CustomHeader>
       <DropDownListContainer>

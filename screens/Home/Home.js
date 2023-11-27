@@ -55,7 +55,8 @@ export default function Home({ navigation }) {
     getTeamList().then((result) => {
       setPamilyList(result)
       console.log('fetchTeamList:', result)
-      if (result.length !== 0) {
+      if (result.length !== 0 && selectedTeam) {
+        //selectedTeam이 null인 극 초반에 실행돼서, fetchProgress에서 null의 id를 인자로 전달하는 경우 생김. -> selectedTeam이 null이 아닐때 fetchProgress()실행할 수 있도록함
         fetchProgress()
       }
       if (result.length == 0) {
@@ -69,46 +70,45 @@ export default function Home({ navigation }) {
     getTodoProgress(selectedTeam.id).then((result) => {
       console.log('fetchProgress:', result)
       setProgress(result)
-      //console.log(progress)
     })
   }
+  const fetchData = async () => {
+    try {
+      // 닉네임 가져오기
+      getUserNickname()
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        // 닉네임 가져오기
-        getUserNickname()
-
-        // 팀 목록 가져오기
-        const teamList = await getTeamList()
-        if (teamList.length > 0) {
-          //teamList가 없을수도 있음
-          setPamilyList(teamList)
-          if (selectedTeam.auth == undefined || selectedTeam == null) {
-            //왜인지는 모르겠으나, 초기값이 null이 아닌 {"auth": undefined, "id": undefined, "name": undefined}임 ->이에 맞춰 조건 추가
-            setSelectedTeam({
-              id: teamList[0]?.teamId,
-              name: teamList[0]?.teamName,
-              auth: teamList[0]?.authority,
-            })
-          }
-          console.log(selectedTeam)
-          setPamilyNum(1)
-          // const todoList = await getMyTodoList(ACCESSTOKEN, teamList[selectedTeam.id].teamId)  //selectedTeam.id는 로컬에 저장된 어레이의 위치값을 표시하는 것이 아닌, 서버 내에서의 team 위치를 파악하기 위한 인텍스이다
+      // 팀 목록 가져오기
+      const teamList = await getTeamList()
+      if (teamList.length > 0) {
+        //teamList가 없을수도 있음
+        setPamilyList(teamList)
+        if (selectedTeam?.auth == undefined || selectedTeam == null) {
+          //왜인지는 모르겠으나, 초기값이 null이 아닌 {"auth": undefined, "id": undefined, "name": undefined}임 ->이에 맞춰 조건 추가
+          setSelectedTeam({
+            id: teamList[0]?.teamId,
+            name: teamList[0]?.teamName,
+            auth: teamList[0]?.authority,
+          })
+        }
+        setPamilyNum(1)
+        if (selectedTeam) {
           const todoList = await getMyTodoList(selectedTeam.id) //selectedTeam.id 다이렉트로 전달
           setResultArray(todoList)
           setMyTodo(todoList)
           // const progress = await getTodoProgress(ACCESSTOKEN, teamList[selectedTeam.id].teamId)
           const progress = await getTodoProgress(selectedTeam.id)
           setProgress(progress)
-        } else {
-          setPamilyNum(0)
-          setMyTodo([])
         }
-      } catch (error) {
-        console.error('에러 발생:', error)
+        // const todoList = await getMyTodoList(ACCESSTOKEN, teamList[selectedTeam.id].teamId)  //selectedTeam.id는 로컬에 저장된 어레이의 위치값을 표시하는 것이 아닌, 서버 내에서의 team 위치를 파악하기 위한 인텍스이다
+      } else {
+        setPamilyNum(0)
+        setMyTodo([])
       }
+    } catch (error) {
+      console.error('에러 발생:', error)
     }
+  }
+  useEffect(() => {
     getUserNickname()
     fetchData()
   }, [])
@@ -118,7 +118,7 @@ export default function Home({ navigation }) {
   }, [isFocused, pamilyList, todoPage])
 
   useEffect(() => {
-    fetchTeamList() //문제있
+    fetchTeamList() //너무 빨리 실행됨
     fetchMyTodo()
   }, [isFocused, updated, selectedTeam, pamilyNum])
 
@@ -128,7 +128,6 @@ export default function Home({ navigation }) {
   const fetchMyTodo = async () => {
     pamilyNum &&
       (await getMyTodoList(selectedTeam?.id).then(async (result) => {
-        console.log('fetMyTodo:', result)
         setResultArray(result)
         setMyTodo(result)
       }))
@@ -148,13 +147,10 @@ export default function Home({ navigation }) {
 
   const onRefresh = useCallback(() => {
     setRefreshing(true)
-    try {
-      fetchTeamList()
-      fetchMyTodo()
-      fetchProgress()
-    } catch (e) {
-      console.log(e)
-    }
+    fetchData()
+    // fetchTeamList()//내가 다 이해를 못해서 그런걸수도 있는데, 기존 3개 함수가 동시에 실행되면서 함수간에 공유하는 변수가 일치하지 않거나 null값을 성급하게 받아서 중간에 에러가 터지는거 같음, 이거 처음에 다 받는 fetchData()함수로 통일했는데, 맘에 안들면 밑에 3개 주석 풀면됨
+    // fetchMyTodo()
+    // fetchProgress()
     setTimeout(() => {
       setRefreshing(false)
     }, 1000)

@@ -1,11 +1,9 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import axios from 'axios'
-import { useSetRecoilState } from 'recoil'
-import { loggedInState } from '../recoil/AuthAtom'
 import { checkFCMToken } from '../AppBase'
 import { url } from '../components/Shared'
-import { useNavigation } from '@react-navigation/native'
 import { navigate } from '../navigators/RootNavigator'
+import NaverLogin from '@react-native-seoul/naver-login'
 
 const updateToken = async () => {
   const refreshToken = await AsyncStorage.getItem('refreshToken')
@@ -29,6 +27,13 @@ const updateToken = async () => {
   }
 }
 
+export const logOut = async () => {
+  NaverLogin.logout()
+  console.log('Naver Logout')
+  await AsyncStorage.removeItem('accessToken')
+  await AsyncStorage.removeItem('refreshToken')
+  navigate('AuthBridge')
+}
 const axiosInstance = axios.create({
   baseURL: 'https://api.pawith.com',
   timeout: 5000,
@@ -70,7 +75,7 @@ axiosInstance.interceptors.response.use(
         AsyncStorage.setItem('accessToken', data.accessToken) // 새로운 토큰 localStorage 저장
         AsyncStorage.setItem('refreshToken', data.refreshToken)
         error.config.headers['Authorization'] = data.accessToken // 원래 api 요청의 headers의 accessToken도 변경
-        // checkFCMToken(data.accessToken)
+        checkFCMToken(data.accessToken)
         const originalResponse = await axios.request(error.config) // 원래 api 요청하기
         return originalResponse // 원래 api 요청의 response return
       } else {

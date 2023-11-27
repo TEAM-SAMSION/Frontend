@@ -12,7 +12,6 @@ import { ScreenLayout } from '../../components/Shared'
 import { DeleteReasonToggle } from '../../components/MyPage/DeleteReasonToggle'
 
 export default function DeleteAccount2({ route, navigation }) {
-  const ACCESSTOKEN = useRecoilValue(accessTokenState)
   const [reason, setReason] = useState('')
   const [personalReason, setPersonalReason] = useState('')
   const [isEnabled, setIsEnabled] = useState(false)

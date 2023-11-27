@@ -20,6 +20,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import { CommonActions } from '@react-navigation/native'
 import { Alert, ScrollView } from 'react-native'
 import ErrorIcon from '../../assets/Svgs/error.svg'
+import { logOut } from '../../utils/customAxios'
 
 export default function DeleteAccount3({ route, navigation }) {
   const ACCESSTOKEN = useRecoilValue(accessTokenState)
@@ -28,26 +29,6 @@ export default function DeleteAccount3({ route, navigation }) {
   const [isChecked, setIsChecked] = useState(false)
   const [loggedIn, setLoggedIn] = useRecoilState(loggedInState)
   const [visible, setVisible] = useState(false)
-
-  const finishWithDraw = async () => {
-    try {
-      console.log('Naver Logout')
-      await NaverLogin.logout()
-    } catch (e) {
-      console.log(e)
-    }
-
-    await AsyncStorage.removeItem('accessToken')
-    await AsyncStorage.removeItem('refreshToken').then(setLoggedIn(false))
-  }
-  const logOut = async () => {
-    navigation.dispatch(
-      CommonActions.reset({
-        routes: [{ name: 'HomeNav' }],
-      }),
-    )
-    finishWithDraw()
-  }
 
   const withDraw = async () => {
     await postReason(ACCESSTOKEN, reason)
