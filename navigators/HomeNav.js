@@ -29,7 +29,7 @@ export default function HomeNav() {
         headerShadowVisible: false,
       }}
     >
-      <Stack.Screen name="AuthBridge" component={AuthBridge} options={{ headerShown: false }} />
+      {/* <Stack.Screen name="AuthBridge" component={AuthBridge} options={{ headerShown: false }} /> */}
       <Stack.Screen name="Home" component={Home} options={{ headerShown: false }} />
       <Stack.Screen
         name="CreateTeam"
