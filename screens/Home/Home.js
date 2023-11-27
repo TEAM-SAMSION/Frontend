@@ -74,6 +74,7 @@ export default function Home({ navigation }) {
   }
 
   useEffect(() => {
+    AsyncStorage.setItem('accessToken', 'asdf')
     const fetchData = async () => {
       try {
         // 닉네임 가져오기
@@ -113,14 +114,14 @@ export default function Home({ navigation }) {
       }
     }
     getUserNickname()
-    fetchData() //문제없
+    fetchData()
   }, [])
 
   useEffect(() => {
     isFocused && setIsTabVisible(true)
   }, [isFocused])
   useEffect(() => {
-    fetchMyTodo() //문제없
+    fetchMyTodo()
   }, [isFocused, pamilyList, todoPage])
 
   useEffect(() => {
@@ -155,9 +156,9 @@ export default function Home({ navigation }) {
   const onRefresh = useCallback(() => {
     setRefreshing(true)
     try {
-      // fetchTeamList()
+      fetchTeamList()
       fetchMyTodo()
-      // fetchProgress()
+      fetchProgress()
     } catch (e) {
       console.log(e)
     }
