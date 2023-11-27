@@ -38,7 +38,7 @@ export default function Auth({ navigation }) {
           //향후 앱을 껐다가 켜도 유효한 사용자가 앱을 접속하는 것이기 때문에, 캐시에 토큰 저장
           await AsyncStorage.setItem('accessToken', accessToken)
           await AsyncStorage.setItem('refreshToken', refreshToken)
-          console.log('권한 User라서 홈화면으로 넘어감 , AsyncStorage에 토큰 저장')
+          console.log('권한 User라서 홈화면으로 넘어감 , AsyncStorage에 AT,RT 저장')
           setPlatform(provider)
           console.log('로그인 수단 Recoil에 저장하였음:', provider)
           checkFCMToken()

@@ -32,10 +32,6 @@ export default function Home({ navigation }) {
   const ACCESSTOKEN = useRecoilValue(accessTokenState)
   const setIsTabVisible = useSetRecoilState(TabBarAtom)
 
-  useEffect(() => {
-    isFocused && setIsTabVisible(true)
-  }, [isFocused])
-
   const [name, setName] = useState('')
   const now = new Date()
   const date = now.getDate()
@@ -55,6 +51,28 @@ export default function Home({ navigation }) {
     })
   }
 
+  const fetchTeamList = () => {
+    getTeamList(ACCESSTOKEN).then((result) => {
+      setPamilyList(result)
+      console.log('fetchTeamList:', result)
+      if (result.length !== 0) {
+        fetchProgress()
+      }
+      if (result.length == 0) {
+        setPamilyNum(0)
+        setMyTodo([])
+      }
+    })
+  }
+
+  const fetchProgress = () => {
+    getTodoProgress(ACCESSTOKEN, selectedTeam.id).then((result) => {
+      console.log('fetchProgress:', result)
+      setProgress(result)
+      //console.log(progress)
+    })
+  }
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -71,55 +89,42 @@ export default function Home({ navigation }) {
           })
         setPamilyList(teamList)
 
-        if (teamList.length !== 0) {
-          setPamilyNum(1)
-
-          // Todo 데이터 가져오기
-          const todoList = await getMyTodoList(ACCESSTOKEN, teamList[selectedTeam.id].teamId)
-          setResultArray(todoList)
-          setMyTodo(todoList)
-
-          // 진행 상황 가져오기
-          const progress = await getTodoProgress(ACCESSTOKEN, teamList[selectedTeam.id].teamId)
-          setProgress(progress)
-        } else {
-          setPamilyNum(0)
-          setMyTodo([])
+        if (selectedTeam) {
+          //selectedTeam이 null에서 변경되기 이전에 selectedTeam.id를 사용해 api호출하는 것을 막기 위해 if문으로 wait 시킴
+          if (teamList.length !== 0) {
+            setPamilyNum(1)
+            console.log('selectedTeam:', selectedTeam)
+            // Todo 데이터 가져오기
+            // const todoList = await getMyTodoList(ACCESSTOKEN, teamList[selectedTeam.id].teamId)  //selectedTeam.id는 로컬에 저장된 어레이의 위치값을 표시하는 것이 아닌, 서버 내에서의 team 위치를 파악하기 위한 인텍스이다
+            const todoList = await getMyTodoList(ACCESSTOKEN, selectedTeam.id) //selectedTeam.id 다이렉트로 전달
+            setResultArray(todoList)
+            setMyTodo(todoList)
+            // 진행 상황 가져오기
+            // const progress = await getTodoProgress(ACCESSTOKEN, teamList[selectedTeam.id].teamId)
+            const progress = await getTodoProgress(ACCESSTOKEN, selectedTeam.id)
+            setProgress(progress)
+          } else {
+            setPamilyNum(0)
+            setMyTodo([])
+          }
         }
       } catch (error) {
         console.error('에러 발생:', error)
       }
     }
-
-    fetchData()
+    getUserNickname()
+    fetchData() //문제없
   }, [])
 
-  const fetchTeamList = () => {
-    getTeamList(ACCESSTOKEN).then((result) => {
-      setPamilyList(result)
-      if (result.length !== 0) {
-        fetchProgress()
-      }
-      if (result.length == 0) {
-        setPamilyNum(0)
-        setMyTodo([])
-      }
-    })
-  }
-
-  const fetchProgress = () => {
-    getTodoProgress(ACCESSTOKEN, selectedTeam.id).then((result) => {
-      setProgress(result)
-      //console.log(progress)
-    })
-  }
-
   useEffect(() => {
-    getUserNickname()
+    isFocused && setIsTabVisible(true)
   }, [isFocused])
+  useEffect(() => {
+    fetchMyTodo() //문제없
+  }, [isFocused, pamilyList, todoPage])
 
   useEffect(() => {
-    fetchTeamList()
+    fetchTeamList() //문제있
     fetchMyTodo()
   }, [isFocused, updated, selectedTeam, pamilyNum])
 
@@ -128,9 +133,10 @@ export default function Home({ navigation }) {
 
   const fetchMyTodo = async () => {
     pamilyNum &&
-      (await getMyTodoList(ACCESSTOKEN, selectedTeam.id).then(async (result) => {
-        await setResultArray(result)
-        await setMyTodo(result)
+      (await getMyTodoList(ACCESSTOKEN, selectedTeam?.id).then(async (result) => {
+        console.log('fetMyTodo:', result)
+        setResultArray(result)
+        setMyTodo(result)
       }))
   }
 
@@ -144,17 +150,17 @@ export default function Home({ navigation }) {
     setTodoList(resultArray)
   }
 
-  useEffect(() => {
-    fetchMyTodo()
-  }, [isFocused, pamilyList, todoPage])
-
   const [refreshing, setRefreshing] = useState(false)
 
-  const onRefresh = useCallback(async () => {
+  const onRefresh = useCallback(() => {
     setRefreshing(true)
-    fetchTeamList()
-    fetchMyTodo()
-    fetchProgress()
+    try {
+      // fetchTeamList()
+      fetchMyTodo()
+      // fetchProgress()
+    } catch (e) {
+      console.log(e)
+    }
     setTimeout(() => {
       setRefreshing(false)
     }, 1000)
@@ -165,7 +171,7 @@ export default function Home({ navigation }) {
       <TopHeader navigation={navigation} />
       <ScrollView
         showsVerticalScrollIndicator={false}
-        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={() => onRefresh()} />}
       >
         <BannerContainer>
           <NickBox>
@@ -381,7 +387,7 @@ const SubTitle = styled.Text`
 `
 const StartIcon = styled.View`
   position: absolute;
-  right: 12;
+  right: 12px;
   bottom: 0;
 `
 const TodoTitle = styled.View`

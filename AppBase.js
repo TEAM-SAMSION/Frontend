@@ -13,10 +13,10 @@ import messaging from '@react-native-firebase/messaging'
 import PushNotificationIOS from '@react-native-community/push-notification-ios'
 import { postDeviceToken } from './components/OnBoarding/Apis'
 
-export const checkFCMToken = async () => {
+export const checkFCMToken = async (accessToken) => {
   const fcmToken = await messaging().getToken()
   if (fcmToken) {
-    postDeviceToken(fcmToken)
+    postDeviceToken(accessToken, fcmToken)
   }
 }
 export default function AppBase() {
@@ -57,10 +57,14 @@ export default function AppBase() {
           if (accessToken != null) {
             //RecoilState로 로그인여부 저장
             setLoggedIn(true)
-            checkFCMToken()
+            checkFCMToken(accessToken)
           }
         })
-
+        // setLoggedIn(true)
+        // await AsyncStorage.setItem(
+        //   'accessToken',
+        //   'Bearer eyJhbGciOiJIUzM4NCJ9.eyJ0b2tlbl90eXBlIjoiUkVGUkVTSF9UT0tFTiIsImVtYWlsIjoic3Jmc3JmMDEwM0BnbWFpbC5jb20iLCJpc3MiOiJwYXdpdGgiLCJpYXQiOjE3MDA5OTQ5NjAsImV4cCI6MTcwMTU5OTc2MH0.URymhwJUEoB-e8F50Yoky9Z4GPnvTy3iiBsKnPY_qmLiEE6SF_Xs--M1mXQDXrJ6',
+        // )
         await AsyncStorage.getItem('onBoardingDone').then((onBoardingDone) => {
           if (onBoardingDone) {
             console.log('온보딩 이미 완료해서 넘어감')
