@@ -38,7 +38,7 @@ const Logout = async () => {
   console.log('로그아웃 실행')
   await AsyncStorage.removeItem('refreshToken')
   await AsyncStorage.removeItem('accessToken')
-  // navigate('AuthBridge')
+  navigate('AuthBridge')
 }
 axiosInstance.interceptors.request.use(
   async (config) => {
@@ -48,6 +48,7 @@ axiosInstance.interceptors.request.use(
       return config
     } else {
       config.headers['Authorization'] = `${accessToken}`
+      // config.headers['Authorization'] = `Bearer XXXX`
       return config
     }
   },
@@ -77,10 +78,11 @@ axiosInstance.interceptors.response.use(
         // Logout()
         console.log('Else')
       }
-    } else if (error.response.data.errorCode === 1004) {
+      // } else if (error.response.data.errorCode === 1004) {
     } else {
+      //1000 -> 유효한 토큰 아님
       console.log('완전 Else')
-      // Logout()
+      Logout()
     }
     return Promise.reject(error)
   },

@@ -3,31 +3,31 @@ import { url } from '../Shared'
 import axiosInstance from '../../utils/customAxios'
 
 //////////////////////// main 화면 ////////////////////////
-export const getUserInfo = async (accessToken) => {
+export const getUserInfo = async () => {
   let API = `/user`
   const response = await axiosInstance.get(url + API)
   return response.data
 }
 
-export const getTodoProgress = async (accessToken, teamId) => {
+export const getTodoProgress = async (teamId) => {
   let API = `/teams/${teamId}/todos/progress`
   const response = await axiosInstance.get(url + API)
   return response.data.progress
 }
 
-export const getTeamList = async (accessToken) => {
+export const getTeamList = async () => {
   let API = `/teams/name`
   const response = await axiosInstance.get(url + API)
   return response.data.content
 }
 
-export const getMyTodoList = async (accessToken, teamId) => {
+export const getMyTodoList = async (teamId) => {
   let API = `/teams/${teamId}/todos`
   const response = await axiosInstance.get(url + API)
   return response.data.content
 }
 
-export const completeTodo = async (accessToken, todoId) => {
+export const completeTodo = async (todoId) => {
   let API = `/teams/todos/${todoId}/assign/complete`
   let body = {}
   const response = await axiosInstance.put(url + API, body)

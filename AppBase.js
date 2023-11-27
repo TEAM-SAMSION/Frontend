@@ -11,11 +11,29 @@ import 'moment/locale/ko' // language must match config
 import { loggedInState, onboardedState, userInfoState } from './recoil/AuthAtom'
 import messaging from '@react-native-firebase/messaging'
 import PushNotificationIOS from '@react-native-community/push-notification-ios'
-import { postDeviceToken } from './components/OnBoarding/Apis'
 import { NavigationContainer } from '@react-navigation/native'
 import { navigationRef } from './navigators/RootNavigator'
+import axios from 'axios'
+import { url } from './components/Shared'
+
+const postDeviceToken = async (accessToken, deviceToken) => {
+  let API = `/alarms/token`
+  try {
+    const response = await axios.post(
+      url + API,
+      { deviceToken },
+      {
+        headers: { Authorization: accessToken },
+      },
+    )
+    return response
+  } catch (e) {
+    console.log('deviceToken 저장 api 에러:', e)
+  }
+}
 
 export const checkFCMToken = async (accessToken) => {
+  console.log('checkFCMToken:', accessToken)
   const fcmToken = await messaging().getToken()
   if (fcmToken) {
     postDeviceToken(accessToken, fcmToken)
