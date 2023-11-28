@@ -50,8 +50,8 @@ export const TeamSearchBox = (props) => {
       )
       navigation.navigate('ToDoNav', { screen: 'Todo' })
     } catch (error) {
-      setVisible(false)
-      setIsDuplicated(true)
+      error.response.data.errorCode == 3003 && setVisible(false)
+      error.response.data.errorCode == 3003 && setIsDuplicated(true)
     }
   }
 
