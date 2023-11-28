@@ -20,11 +20,13 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import { CommonActions } from '@react-navigation/native'
 import { Alert, ScrollView } from 'react-native'
 import ErrorIcon from '../../assets/Svgs/error.svg'
-import { logOut } from '../../utils/customAxios'
+import { LogOut } from '../../utils/customAxios'
+import { SelectedTeamAtom } from '../../recoil/TabAtom'
 
 export default function DeleteAccount3({ route, navigation }) {
   const ACCESSTOKEN = useRecoilValue(accessTokenState)
   const data = route.params
+  const [selectedTeam, setSelectedTeam] = useRecoilState(SelectedTeamAtom)
   const reason = data.reason
   const [isChecked, setIsChecked] = useState(false)
   const [loggedIn, setLoggedIn] = useRecoilState(loggedInState)
@@ -33,7 +35,8 @@ export default function DeleteAccount3({ route, navigation }) {
   const withDraw = async () => {
     await postReason(ACCESSTOKEN, reason)
     await deleteAccount(ACCESSTOKEN)
-    logOut()
+    setSelectedTeam(null)
+    LogOut()
   }
 
   return (

@@ -6,13 +6,18 @@ import ContentIcon from '../../assets/Svgs/chevron_right.svg'
 import { colors } from '../../colors'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import { useIsFocused } from '@react-navigation/native'
-import { TabBarAtom } from '../../recoil/TabAtom'
-import { logOut } from '../../utils/customAxios'
+import { SelectedTeamAtom, TabBarAtom } from '../../recoil/TabAtom'
+import { LogOut } from '../../utils/customAxios'
 
 export default function Setting({ navigation }) {
   const isFocused = useIsFocused()
   const [isTabVisible, setIsTabVisible] = useRecoilState(TabBarAtom)
+  const [selectedTeam, setSelectedTeam] = useRecoilState(SelectedTeamAtom)
 
+  const handleLogout = () => {
+    setSelectedTeam(null)
+    LogOut()
+  }
   useEffect(() => {
     isFocused && setIsTabVisible(false)
   }, [isFocused, isTabVisible])
@@ -50,7 +55,7 @@ export default function Setting({ navigation }) {
         <ContentText>앱 정보</ContentText>
         <ContentText2>ver 1.0.0</ContentText2>
       </ContentContainer>
-      <ContentContainer onPress={() => logOut()}>
+      <ContentContainer onPress={() => handleLogout()}>
         <ContentText style={{ color: colors.primary_outline }}>로그아웃</ContentText>
       </ContentContainer>
     </ScreenLayout>

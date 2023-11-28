@@ -28,7 +28,7 @@ const updateToken = async () => {
   }
 }
 
-export const logOut = async () => {
+export const LogOut = async () => {
   NaverLogin.logout()
   console.log('Naver Logout')
   await AsyncStorage.removeItem('accessToken')
@@ -39,13 +39,6 @@ const axiosInstance = axios.create({
   baseURL: 'https://api.pawith.com',
   timeout: 5000,
 })
-
-const Logout = async () => {
-  console.log('로그아웃 실행')
-  await AsyncStorage.removeItem('refreshToken')
-  await AsyncStorage.removeItem('accessToken')
-  navigate('AuthBridge')
-}
 axiosInstance.interceptors.request.use(
   async (config) => {
     const accessToken = await AsyncStorage.getItem('accessToken')
@@ -84,7 +77,7 @@ axiosInstance.interceptors.response.use(
         return originalResponse // 원래 api 요청의 response return
       } else {
         // 리프레시 토큰도 만료됐으면 로그인 페이지로 이동
-        Logout()
+        LogOut()
         console.log('Else')
       }
     } else {
