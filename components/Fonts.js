@@ -8,7 +8,7 @@ export const BodyBold_Text = ({ color, children, style = null }) => {
   )
 }
 
-export const Detail_Text = ({ color, children, style = null }) => {
+export const Detail_Text = ({ color, children, style = null, props = null }) => {
   return (
     <Text style={[{ fontFamily: 'Spoqa-Medium', fontSize: 12, lineHeight: 15, color: color }, { ...style }]}>
       {children}

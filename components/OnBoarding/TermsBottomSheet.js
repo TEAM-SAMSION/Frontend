@@ -39,7 +39,7 @@ export const TermsBottomSheet = ({ nickname, selectedRoute, detailRoute, accessT
         console.log('회원가입완료하였으므로, AsyncStorage에 토큰 저장하고 Login')
         AsyncStorage.setItem('refreshToken', refreshToken)
         AsyncStorage.setItem('accessToken', accessToken).then(() => registerRoute(path).then((res) => {}))
-        checkFCMToken()
+        checkFCMToken(accessToken)
         setPlatform(provider)
         setLoggedIn(true)
       } else {

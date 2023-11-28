@@ -503,6 +503,7 @@ export const TodoCreateBottomSheet = ({
             Keyboard.dismiss()
             handleBottomSheetHeight(2)
           }}
+          maxLength={20}
           placeholder="할 일을 입력해주세요"
           returnKeyType="done"
           inputMode="text"

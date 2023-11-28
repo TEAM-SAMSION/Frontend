@@ -6,6 +6,7 @@ import { colors } from '../../colors'
 import DownIcon from '../../assets/Svgs/arrow_down.svg'
 import UpIcon from '../../assets/Svgs/arrow_up.svg'
 import { Detail_Text } from '../Fonts'
+import { Text } from 'react-native'
 export const TodoHeader = ({
   isHeaderOpen,
   setIsHeaderOpen,
@@ -23,10 +24,19 @@ export const TodoHeader = ({
     <CustomHeader>
       <DropDownListContainer>
         <DropdownContainer isHeaderOpen={isHeaderOpen} onPress={toggleDropdown}>
-          <Detail_Text color={todoTeamList ? colors.grey_600 : colors.grey_400}>
+          <Text
+            numberOfLines={1}
+            style={{
+              fontFamily: 'Spoqa-Medium',
+              fontSize: 12,
+              lineHeight: 15,
+              color: todoTeamList ? colors.grey_600 : colors.grey_400,
+              width: '70%',
+            }}
+          >
             {/* TodoTeamList가 Null이면, 자연스레 TodoTeamList의 끝요소인 SelectedTeam도 없으며, Home화면에서 선택되는 TodoTeam또한 없기에, Null을 반환받는다 */}
             {selectedTeam?.name || '패밀리 없음'}
-          </Detail_Text>
+          </Text>
           {isHeaderOpen ? (
             <UpIcon width={16} height={16} style={{ position: 'absolute', right: 10 }} />
           ) : (

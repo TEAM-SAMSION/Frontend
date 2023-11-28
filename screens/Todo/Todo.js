@@ -79,7 +79,7 @@ export default Todo = ({ navigation }) => {
     setTimeout(() => {
       setRefreshing(false)
     }, 1000)
-  }, [])
+  }, [selectedDate, selectedTeam])
   const refreshData = async (date = today) => {
     console.log('RefreshData', date)
     // setIsLoading(true)
