@@ -25,7 +25,7 @@ export default function Account({ navigation }) {
         navigation.navigate('DeleteAccount')
       })
     } catch (error) {
-      setIsRejectVisible(true)
+      error.response.data.errorCode == 3007 && setIsRejectVisible(true)
     }
   }
 
