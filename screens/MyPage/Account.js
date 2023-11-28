@@ -3,21 +3,16 @@ import { Text, View } from 'react-native'
 import { ModalPopUp, ScreenLayout } from '../../components/Shared'
 import styled from 'styled-components/native'
 import { colors } from '../../colors'
-import { useRecoilValue } from 'recoil'
-import { platformState } from '../../recoil/AuthAtom'
+
 import ErrorIcon from '../../assets/Svgs/error.svg'
 import { BodyBold_Text, BodySm_Text } from '../../components/Fonts'
 import { getUserDeleteValidation } from '../../components/MyPage/Apis'
 import MyPageNav from '../../navigators/MyPageNav'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 export default function Account({ navigation }) {
-  const SocialAccount = useRecoilValue(platformState)
   const [isRejectVisible, setIsRejectVisible] = useState(false)
-
-  const [socialAccount, setSocialAccount] = useState('카카오톡')
-  useEffect(() => {
-    SocialAccount !== '' && setSocialAccount(SocialAccount)
-  }, [])
+  const [platform, setPlatform] = useState('-')
 
   const deleteValidation = async () => {
     try {
@@ -28,12 +23,19 @@ export default function Account({ navigation }) {
       error.response.data.errorCode == 3007 && setIsRejectVisible(true)
     }
   }
+  const checkPlatform = async () => {
+    let platform = await AsyncStorage.getItem('platform')
+    setPlatform(platform)
+  }
+  useEffect(() => {
+    checkPlatform()
+  }, [])
 
   return (
     <ScreenLayout>
       <ContentContainer>
         <ContentText>연결된 계정</ContentText>
-        <AccountText>{socialAccount}</AccountText>
+        <AccountText>{platform}</AccountText>
       </ContentContainer>
       <ContentContainer onPress={() => deleteValidation()}>
         <ContentText style={{ color: colors.primary_outline }}>계정 탈퇴</ContentText>

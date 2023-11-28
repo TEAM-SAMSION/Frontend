@@ -147,10 +147,12 @@ export default function Home({ navigation }) {
 
   const onRefresh = useCallback(() => {
     setRefreshing(true)
-    fetchData()
+    if (selectedTeam) {
+      fetchData()
+      fetchProgress()
+    }
     // fetchTeamList()//내가 다 이해를 못해서 그런걸수도 있는데, 기존 3개 함수가 동시에 실행되면서 함수간에 공유하는 변수가 일치하지 않거나 null값을 성급하게 받아서 중간에 에러가 터지는거 같음, 이거 처음에 다 받는 fetchData()함수로 통일했는데, 맘에 안들면 밑에 3개 주석 풀면됨
     // fetchMyTodo()
-    fetchProgress()
     setTimeout(() => {
       setRefreshing(false)
     }, 1000)
