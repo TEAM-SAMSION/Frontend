@@ -5,7 +5,7 @@ import { colors } from '../../colors'
 import { useState } from 'react'
 import { Button_PinkBg } from '../Buttons'
 import { useRecoilValue, useSetRecoilState } from 'recoil'
-import { loggedInState, platformState, userInfoState } from '../../recoil/AuthAtom'
+import { loggedInState } from '../../recoil/AuthAtom'
 import { BodyBoldSm_Text, BodyBold_Text, Detail_Text } from '../Fonts'
 import { registerNickname, registerRoute } from './Apis'
 import AsyncStorage from '@react-native-async-storage/async-storage'
@@ -15,7 +15,6 @@ export const TermsBottomSheet = ({ nickname, selectedRoute, detailRoute, accessT
   const [termState, setTermState] = useState({ 0: false, 1: false, 2: false })
   const [isLoading, setIsLoading] = useState(false)
   const setLoggedIn = useSetRecoilState(loggedInState)
-  const setPlatform = useSetRecoilState(platformState)
   const handleTermPress = (id) => {
     let tempTermState = JSON.parse(JSON.stringify(termState))
     tempTermState[id] = !tempTermState[id]
@@ -38,10 +37,9 @@ export const TermsBottomSheet = ({ nickname, selectedRoute, detailRoute, accessT
       if (result == 200) {
         console.log('회원가입완료하였으므로, AsyncStorage에 토큰 저장하고 Login')
         AsyncStorage.setItem('refreshToken', refreshToken)
-        AsyncStorage.setItem('accessToken', accessToken).then(() => registerRoute(path).then((res) => {}))
-        setPlatform(provider)
+        AsyncStorage.setItem('accessToken', accessToken).then(() => registerRoute(path))
+        AsyncStorage.setItem('platform', provider)
         checkFCMToken(accessToken)
-        setPlatform(provider)
         setLoggedIn(true)
       } else {
         console.log('닉네임등록이 잘 안되었는뎁쇼')

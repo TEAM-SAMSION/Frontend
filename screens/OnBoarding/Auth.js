@@ -9,7 +9,7 @@ import { appleAuth, AppleButton } from '@invertase/react-native-apple-authentica
 import LoginButton from '../../components/OnBoarding/LoginButton'
 import { colors } from '../../colors'
 import { useSetRecoilState } from 'recoil'
-import { loggedInState, platformState } from '../../recoil/AuthAtom'
+import { loggedInState } from '../../recoil/AuthAtom'
 import { ModalPopUp, ScreenWidth, url } from '../../components/Shared'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import Caution from '../../assets/Svgs/Caution.svg'
@@ -25,7 +25,7 @@ export default function Auth({ navigation }) {
     androidClientId: '317985927887-lk1mf2lb341hiu5kht8a4p1oeigg2f98.apps.googleusercontent.com',
     webClientId: '317985927887-jk1lb4tj27lvvb750v2pfs6ud7k1doaa.apps.googleusercontent.com',
   })
-  const setPlatform = useSetRecoilState(platformState)
+
   const setLoggedIn = useSetRecoilState(loggedInState)
   const [isPopupVisible, setIsPopupVisible] = useState(false)
   const finishLogin = (accessToken, refreshToken, provider) => {
@@ -38,9 +38,9 @@ export default function Auth({ navigation }) {
           //향후 앱을 껐다가 켜도 유효한 사용자가 앱을 접속하는 것이기 때문에, 캐시에 토큰 저장
           await AsyncStorage.setItem('accessToken', accessToken)
           await AsyncStorage.setItem('refreshToken', refreshToken)
+          await AsyncStorage.setItem('platform', provider)
           console.log('권한 User라서 홈화면으로 넘어감 , AsyncStorage에 AT,RT 저장')
-          setPlatform(provider)
-          console.log('로그인 수단 Recoil에 저장하였음:', provider)
+          console.log('로그인 수단 캐시에 저장하였음:', provider)
           checkFCMToken(accessToken)
           setLoggedIn(true)
         } else if (res.authority == 'GUEST') {
