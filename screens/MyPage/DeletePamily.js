@@ -131,7 +131,7 @@ export default function DeletePamily({ route, navigation }) {
             getLatestTeam().then((result) => {
               if (result.teamId == deleteTeamId) {
                 console.log('여기 수정 필요')
-                setSelectedTeam('')
+                setSelectedTeam(null)
               } else {
                 let tempArr = { id: result.teamId, name: result.teamName, auth: result.authority }
                 console.log('topTeam Changed', tempArr)
