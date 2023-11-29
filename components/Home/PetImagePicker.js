@@ -17,7 +17,7 @@ export const PetImagePicker = (props) => {
     }
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: false,
+      allowsEditing: true,
       quality: 0.7,
       aspect: [1, 1],
     })
