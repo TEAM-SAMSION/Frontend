@@ -30,12 +30,12 @@ export default function Setting({ navigation }) {
           <ContentIcon width={16} height={16} color={colors.grey_450} />
         </TouchableIcon>
       </ContentContainer>
-      {/* <ContentContainer>
+      <ContentContainer onPress={() => navigation.navigate('Guide')}>
         <ContentText>포잇가이드</ContentText>
         <TouchableIcon>
           <ContentIcon width={16} height={16} color={colors.grey_450} />
         </TouchableIcon>
-      </ContentContainer> */}
+      </ContentContainer>
       <ContentContainer onPress={() => navigation.navigate('PrivacyTerms')}>
         <ContentText>개인정보처리방침</ContentText>
         <TouchableIcon>
