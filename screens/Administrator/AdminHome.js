@@ -4,6 +4,7 @@ import { ModalPopUp, ScreenLayout } from '../../components/Shared'
 import {
   BodyBoldSm_Text,
   BodyBold_Text,
+  BodySm_Text,
   Body_Text,
   Detail_Text,
   Label_Text,
@@ -67,7 +68,7 @@ export default function AdminHome({ route, navigation }) {
           />
           <UserBox>
             <SubHead_Text>{name}</SubHead_Text>
-            <Detail_Text color={colors.grey_600}>{intro}</Detail_Text>
+            <BodySm_Text color={colors.grey_450}>{intro}</BodySm_Text>
           </UserBox>
         </UserDetailContainer>
         {myAuthority == 'PRESIDENT' ? (
@@ -76,7 +77,7 @@ export default function AdminHome({ route, navigation }) {
               navigation.navigate('EditPamily', { name, intro, profileUrl, teamCode, teamId, myAuthority, period })
             }
           >
-            <EditIcon width={16} height={16} color={'#4D4D4D'} />
+            <EditIcon width={20} height={20} color={'#4D4D4D'} />
           </EditBox>
         ) : (
           ''
@@ -247,8 +248,8 @@ const UserBox = styled.View`
   gap: 4px;
 `
 const EditBox = styled.TouchableOpacity`
-  width: 24px;
-  height: 24px;
+  width: 32px;
+  height: 32px;
   background-color: ${colors.grey_150};
   border-radius: 99px;
   justify-content: center;
