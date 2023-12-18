@@ -11,10 +11,12 @@ import { accessTokenState } from '../../recoil/AuthAtom'
 import { getMember, searchMember } from '../../components/Administrator/Apis'
 import { Keyboard, ScrollView, TouchableWithoutFeedback, View } from 'react-native'
 import { useIsFocused } from '@react-navigation/native'
+import { getUserInfo } from '../../components/MyPage/Apis'
 
 export default function ManageMember({ route, navigation }) {
   const ACCESSTOKEN = useRecoilValue(accessTokenState)
   const isFocused = useIsFocused()
+  const [email, setEmail] = useState('')
   const data = route.params
   const teamId = data.teamId
   const pamilyCode = data.teamCode
@@ -24,6 +26,16 @@ export default function ManageMember({ route, navigation }) {
 
   // onFocus
   const [onName, setOnName] = useState(false)
+
+  const fetchUserInfo = () => {
+    getUserInfo().then((result) => {
+      setEmail(result.email)
+    })
+  }
+
+  useEffect(() => {
+    fetchUserInfo()
+  }, [isFocused])
 
   useEffect(() => {
     getMember(ACCESSTOKEN, teamId).then((result) => {
@@ -101,6 +113,7 @@ export default function ManageMember({ route, navigation }) {
                     teamId={teamId}
                     myAuthority={data.myAuthority}
                     changeFunction={() => reloadMember()}
+                    email={email}
                   />
                 ))}
               </MemberBox>
@@ -115,6 +128,7 @@ export default function ManageMember({ route, navigation }) {
                   teamId={teamId}
                   myAuthority={data.myAuthority}
                   changeFunction={() => reloadMember()}
+                  email={email}
                 />
               ))}
             </MemberBox>
