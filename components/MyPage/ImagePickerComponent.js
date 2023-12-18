@@ -38,6 +38,7 @@ export const ImagePickerComponent = (props) => {
 
     props.setImageUrl(localUri)
     props.setImageFile(compressedImageUri.uri)
+    props.closeFunction()
   }
 
   return (

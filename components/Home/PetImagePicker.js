@@ -34,6 +34,7 @@ export const PetImagePicker = (props) => {
 
     props.setImageUrl(localUri)
     props.setPetFile(compressedImageUri.uri)
+    props.closeFunction()
   }
 
   return (

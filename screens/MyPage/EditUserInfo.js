@@ -168,6 +168,7 @@ export default function EditUserInfo({ route, navigation }) {
           setProfileUrl={setProfileUrl}
           setProfileFile={setProfileFile}
           accessToken={ACCESSTOKEN}
+          closeFunction={() => bottomSheetModalRef.current?.dismiss()}
         />
       </BottomSheetModal>
     </BottomSheetModalProvider>
