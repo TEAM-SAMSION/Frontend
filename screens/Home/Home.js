@@ -245,9 +245,9 @@ export default function Home({ navigation }) {
                       TODO 담당자를 수정하거나, 새로운 TODO를 생성해보세요!
                     </DetailSm_Text>
                   </NoneTodoContainer>
-                  <AllTodoButton onPress={() => navigation.navigate('ToDoNav', { screen: 'Todo' })}>
+                  {/* <AllTodoButton onPress={() => navigation.navigate('ToDoNav', { screen: 'Todo' })}>
                     <ButtonText>전체 TODO 확인하기</ButtonText>
-                  </AllTodoButton>
+                  </AllTodoButton> */}
                 </>
               ) : myTodo.length < 5 ? (
                 <FlatList
@@ -282,9 +282,6 @@ export default function Home({ navigation }) {
                 </View>
               )}
             </TodoContainer>
-            {/* <AllTodoButton onPress={() => navigation.navigate('ToDoNav', { screen: 'Todo' })}>
-              <ButtonText>전체 TODO 확인하기</ButtonText>
-            </AllTodoButton> */}
           </>
         )}
       </ScrollView>

@@ -16,6 +16,7 @@ import DeleteAccount3 from '../screens/MyPage/DeleteAccount3'
 import ServiceTerms from '../screens/MyPage/ServiceTerms'
 import PrivacyTerms from '../screens/MyPage/PrivacyTerms'
 import AlarmNav from './AlarmNav'
+import Guide from '../screens/MyPage/Guide'
 
 const Stack = createStackNavigator()
 
@@ -200,6 +201,25 @@ export default function MyPageNav() {
         component={PrivacyTerms}
         options={({ navigation }) => ({
           headerTitle: '개인정보처리방침',
+          headerLeft: () => (
+            <TouchableOpacity
+              onPress={() => navigation.goBack()}
+              style={{
+                justifyContent: 'center',
+                alignItems: 'center',
+                marginLeft: 16,
+              }}
+            >
+              <BackButton width={24} height={24} />
+            </TouchableOpacity>
+          ),
+        })}
+      />
+      <Stack.Screen
+        name="Guide"
+        component={Guide}
+        options={({ navigation }) => ({
+          headerTitle: '포잇 가이드',
           headerLeft: () => (
             <TouchableOpacity
               onPress={() => navigation.goBack()}
