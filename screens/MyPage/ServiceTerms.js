@@ -282,12 +282,12 @@ const TitleText = styled.Text`
   font-size: 12px;
   margin-top: 8px;
   font-style: normal;
-  line-height: 15px;
+  line-height: 21.6px;
 `
 const Contents = styled.Text`
   font-family: 'Spoqa-Regular';
   color: ${colors.grey_700};
   font-size: 12px;
   font-style: normal;
-  line-height: 15px;
+  line-height: 21.6px;
 `
