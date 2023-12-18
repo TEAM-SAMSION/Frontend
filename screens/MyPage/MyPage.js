@@ -111,11 +111,11 @@ export default function MyPage({ navigation }) {
                   />
                   <UserBox>
                     <SubHead_Text>{name}</SubHead_Text>
-                    <Detail_Text color={colors.grey_600}>{email}</Detail_Text>
+                    <BodySm_Text color={colors.grey_450}>{email}</BodySm_Text>
                   </UserBox>
                 </UserDetailContainer>
                 <EditBox onPress={() => navigation.navigate('EditUserInfo', { profileUrl, name, email })}>
-                  <EditIcon width={16} height={16} color={'#4D4D4D'} />
+                  <EditIcon width={20} height={20} color={'#4D4D4D'} />
                 </EditBox>
               </UserContainer>
               <GroupContainer>
@@ -265,8 +265,8 @@ const UserBox = styled.View`
   gap: 4px;
 `
 const EditBox = styled.TouchableOpacity`
-  width: 24px;
-  height: 24px;
+  width: 32px;
+  height: 32px;
   background-color: ${colors.grey_150};
   border-radius: 99px;
   justify-content: center;

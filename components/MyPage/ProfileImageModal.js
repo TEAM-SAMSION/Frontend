@@ -10,6 +10,7 @@ export const ProfileImageModal = (props) => {
   const uploadDefaultImage = async () => {
     props.setProfileUrl('https://pawith.s3.ap-northeast-2.amazonaws.com/base-image/default_user.png')
     props.setProfileFile('file://' + RNFS.MainBundlePath + '/default_user.png')
+    props.closeFunction()
   }
 
   return (
@@ -22,7 +23,11 @@ export const ProfileImageModal = (props) => {
           <DefaultBox onPress={() => uploadDefaultImage()}>
             <BodySm_Text color={colors.red_350}>기본 프로필로 선택</BodySm_Text>
           </DefaultBox>
-          <ImagePickerComponent setImageUrl={props.setProfileUrl} setImageFile={props.setProfileFile} />
+          <ImagePickerComponent
+            setImageUrl={props.setProfileUrl}
+            setImageFile={props.setProfileFile}
+            closeFunction={props.closeFunction()}
+          />
         </BoxContainer>
       </ModalContainer>
     </>

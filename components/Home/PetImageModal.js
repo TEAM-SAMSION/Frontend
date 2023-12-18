@@ -8,6 +8,7 @@ export const PetImageModal = (props) => {
   const changeSampleImage = async (file) => {
     props.setProfileUrl(`https://pawith.s3.ap-northeast-2.amazonaws.com/base-image/profileDefault.png`)
     props.setPetFile('file://' + RNFS.MainBundlePath + '/default_pet.png')
+    props.closeFunction()
   }
 
   return (
@@ -20,7 +21,11 @@ export const PetImageModal = (props) => {
           <DefaultBox onPress={() => changeSampleImage()}>
             <BodySm_Text color={colors.red_350}>기본 프로필로 선택</BodySm_Text>
           </DefaultBox>
-          <PetImagePicker setImageUrl={props.setProfileUrl} setPetFile={props.setPetFile} />
+          <PetImagePicker
+            setImageUrl={props.setProfileUrl}
+            setPetFile={props.setPetFile}
+            closeFunction={props.closeFunction()}
+          />
         </BoxContainer>
       </ModalContainer>
     </>

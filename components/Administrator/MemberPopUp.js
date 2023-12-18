@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { Modal, Text, View } from 'react-native'
 import { BodySm_Text } from '../Fonts'
 
-export const MemberPopUp = ({ visible, setVisible, setChangeVisible, setDeleteVisible }) => {
+export const MemberPopUp = ({ visible, setVisible, setChangeVisible, setDeleteVisible, registerEmail, myEmail }) => {
   const [showModal, setShowModal] = useState(visible)
 
   useEffect(() => {
@@ -33,14 +33,18 @@ export const MemberPopUp = ({ visible, setVisible, setChangeVisible, setDeleteVi
         >
           <BodySm_Text color={colors.secondary}>권한변경</BodySm_Text>
         </ModalContainer>
-        <ModalContainer
-          onPress={() => {
-            setVisible(false)
-            setDeleteVisible(true)
-          }}
-        >
-          <BodySm_Text color={colors.primary}>내보내기</BodySm_Text>
-        </ModalContainer>
+        {registerEmail == myEmail ? (
+          ''
+        ) : (
+          <ModalContainer
+            onPress={() => {
+              setVisible(false)
+              setDeleteVisible(true)
+            }}
+          >
+            <BodySm_Text color={colors.primary}>내보내기</BodySm_Text>
+          </ModalContainer>
+        )}
       </ModalBackground>
     </Modal>
   )

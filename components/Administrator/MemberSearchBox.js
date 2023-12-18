@@ -24,6 +24,7 @@ export const MemberSearchBox = (props) => {
   const ACCESSTOKEN = props.accessToken
   const teamId = props.teamId
   const myAuthority = props.myAuthority
+  const myEmail = props.email
   const navigation = useNavigation()
 
   const [nickname, setNickname] = useState('')
@@ -116,6 +117,8 @@ export const MemberSearchBox = (props) => {
         setDeleteVisible={setDeleteVisible}
         setChangeVisible={setChangeVisible}
         authority={authority}
+        registerEmail={registerEmail}
+        myEmail={myEmail}
       />
       <ModalPopUp visible={deleteVisible} petIcon={false} height={217}>
         <DeleteContent>

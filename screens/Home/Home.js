@@ -24,6 +24,7 @@ import { StackActions, useIsFocused } from '@react-navigation/native'
 import { BodySm_Text, DetailSm_Text } from '../../components/Fonts'
 import { SelectedTeamAtom, TabBarAtom } from '../../recoil/TabAtom'
 import Swiper from 'react-native-swiper'
+import RightIcon from '../../assets/Svgs/chevron_right.svg'
 
 export default function Home({ navigation }) {
   const isFocused = useIsFocused()
@@ -231,15 +232,23 @@ export default function Home({ navigation }) {
               <TitleText>
                 {month}월 {date}일, 나에게 할당된 TODO
               </TitleText>
+              <IconBox onPress={() => navigation.navigate('ToDoNav', { screen: 'Todo' })}>
+                <RightIcon width={24} height={24} color={colors.grey_450} />
+              </IconBox>
             </TodoTitle>
             <TodoContainer>
               {myTodo.length == 0 ? (
-                <NoneTodoContainer>
-                  <BodySm_Text color={colors.grey_600}>아직 나에게 할당된 TODO가 없어요!</BodySm_Text>
-                  <DetailSm_Text color={colors.grey_400}>
-                    TODO 담당자를 수정하거나, 새로운 TODO를 생성해보세요!
-                  </DetailSm_Text>
-                </NoneTodoContainer>
+                <>
+                  <NoneTodoContainer>
+                    <BodySm_Text color={colors.grey_600}>아직 나에게 할당된 TODO가 없어요!</BodySm_Text>
+                    <DetailSm_Text color={colors.grey_400}>
+                      TODO 담당자를 수정하거나, 새로운 TODO를 생성해보세요!
+                    </DetailSm_Text>
+                  </NoneTodoContainer>
+                  <AllTodoButton onPress={() => navigation.navigate('ToDoNav', { screen: 'Todo' })}>
+                    <ButtonText>전체 TODO 확인하기</ButtonText>
+                  </AllTodoButton>
+                </>
               ) : myTodo.length < 5 ? (
                 <FlatList
                   style={{ marginBottom: 8 }}
@@ -251,7 +260,7 @@ export default function Home({ navigation }) {
                   numColumns={2}
                 />
               ) : (
-                <View style={{ height: 200 }}>
+                <View height={376}>
                   <Swiper
                     loop={false}
                     showsPagination={true}
@@ -266,16 +275,16 @@ export default function Home({ navigation }) {
                           return <TodoBox data={item} index={index} updated={updated} setUpdated={setUpdated} />
                         }}
                         showsHorizontalScrollIndicator={false}
-                        numColumns={2}
+                        numColumns={1}
                       />
                     ))}
                   </Swiper>
                 </View>
               )}
             </TodoContainer>
-            <AllTodoButton onPress={() => navigation.navigate('ToDoNav', { screen: 'Todo' })}>
+            {/* <AllTodoButton onPress={() => navigation.navigate('ToDoNav', { screen: 'Todo' })}>
               <ButtonText>전체 TODO 확인하기</ButtonText>
-            </AllTodoButton>
+            </AllTodoButton> */}
           </>
         )}
       </ScrollView>
@@ -367,7 +376,10 @@ const StartIcon = styled.View`
   bottom: 0;
 `
 const TodoTitle = styled.View`
+  flex-direction: row;
   padding: 24px 16px 0px 16px;
+  justify-content: space-between;
+  align-items: center;
 `
 const TitleText = styled.Text`
   font-family: 'Spoqa-Bold';
@@ -384,7 +396,6 @@ const TodoContainer = styled.View`
 `
 const AllTodoButton = styled.TouchableOpacity`
   height: 44px;
-  margin: 0px 16px;
   padding: 12px 16px;
   justify-content: center;
   align-items: center;
@@ -409,7 +420,7 @@ const NoneTodoContainer = styled.View`
   margin-bottom: 16px;
 `
 const PaginationDot = styled.View`
-  background-color: ${colors.primary_container};
+  background-color: ${colors.grey_200};
   width: 8px;
   height: 8px;
   border-radius: 4px;
@@ -417,9 +428,10 @@ const PaginationDot = styled.View`
 `
 
 const PaginationActiveDot = styled.View`
-  background-color: ${colors.primary};
+  background-color: ${colors.grey_450};
   width: 8px;
   height: 8px;
   border-radius: 4px;
   margin: 0 4px;
 `
+const IconBox = styled.TouchableOpacity``
