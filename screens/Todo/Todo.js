@@ -18,7 +18,7 @@ import { CategoryIndicator } from '../../components/Todo/CategoryIndicator'
 import { useFocusEffect } from '@react-navigation/native'
 import { SelectedTeamAtom, TabBarAtom } from '../../recoil/TabAtom'
 import TodoItem from '../../components/Todo/TodoItem'
-import MyMenu from '../../components/Todo/MyMenu'
+import { TodoModal } from '../../components/Todo/TodoModal'
 
 export default Todo = ({ navigation }) => {
   const setIsTabVisible = useSetRecoilState(TabBarAtom)
@@ -29,11 +29,13 @@ export default Todo = ({ navigation }) => {
   const today = `${tempDate.getFullYear()}-${tempDate.getMonth() + 1}-${
     tempDate.getDate() < 10 ? `0${tempDate.getDate()}` : tempDate.getDate()
   }`
+
+  const [isTutorialVisible, setIsTutorialVisible] = useState(true)
+  const buttonRef = useRef(null)
   const [todosByCategory, setTodosByCategory] = useState(null)
 
   const [todoTeamList, setTodoTeamList] = useState(null)
   const [teamUserList, setTeamUserList] = useState([])
-  const [snappoints, setSnappoints] = useState([])
   const [isDeleteVisible, setIsDeleteVisible] = useState(false)
   const [isCreateVisible, setIsCreateVisible] = useState(false)
 
@@ -43,6 +45,7 @@ export default Todo = ({ navigation }) => {
 
   const [isHeaderOpen, setIsHeaderOpen] = useState(false)
   const [isCreateMode, setIsCreateMode] = useState(false)
+
   const [isLoading, setIsLoading] = useState(false)
   const [refreshing, setRefreshing] = useState(false)
 
@@ -184,11 +187,11 @@ export default Todo = ({ navigation }) => {
     if (status == 0) {
       bottomModal.current?.dismiss()
     } else if (status == 1) {
-      setSnappoints(['42%'])
+      bottomModal.current?.snapToIndex(0)
     } else if (status == 2) {
-      setSnappoints(['55%'])
+      bottomModal.current?.snapToIndex(1)
     } else {
-      setSnappoints(['90%'])
+      bottomModal.current?.snapToIndex(2)
     }
   }
   const startCreateTodo = (index) => {
@@ -210,6 +213,7 @@ export default Todo = ({ navigation }) => {
       <Pressable disabled={!isHeaderOpen} style={{ flex: 1, width: '100%' }} onPress={() => setIsHeaderOpen(false)}>
         <ContentLayout>
           <TodoHeader
+            buttonRef={buttonRef}
             isHeaderOpen={isHeaderOpen}
             handleTeamChange={handleTeamChange}
             setIsCreateVisible={setIsCreateVisible}
@@ -270,7 +274,7 @@ export default Todo = ({ navigation }) => {
         <BottomSheetModal
           ref={bottomModal}
           backdropComponent={renderBackdrop}
-          snapPoints={snappoints}
+          snapPoints={['44%', '55%', '90%']}
           enablePanDownToClose={false}
           enableHandlePanningGesture={false}
           enableContentPanningGesture={false}
@@ -298,7 +302,8 @@ export default Todo = ({ navigation }) => {
             />
           )}
         </BottomSheetModal>
-        {/*  */}
+        {/* ModalPopup 컴퍼넌트를 하나로 쓰되, 할당된 Todo가 아닙니다랑 페밀리 선택 Todo를 둘다 포함하게끔*/}
+
         <ModalPopUp visible={isDeleteVisible} petIcon={false} height={204}>
           <ModalHeader>
             <CloseButton onPress={() => setIsDeleteVisible(false)}>
@@ -317,7 +322,12 @@ export default Todo = ({ navigation }) => {
           setIsVisible={setIsCreateVisible}
           visible={isCreateVisible}
         />
-        <MyMenu isOpen={isHeaderOpen} onClose={() => setIsHeaderOpen(false)} />
+        <TodoModal
+          isVisible={isHeaderOpen}
+          onClose={() => setIsHeaderOpen(false)}
+          todoTeamList={todoTeamList}
+          handleTeamChange={handleTeamChange}
+        />
       </Pressable>
     </ScreenContainer>
   )

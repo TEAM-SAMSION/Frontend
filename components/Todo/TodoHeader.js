@@ -7,59 +7,30 @@ import DownIcon from '../../assets/Svgs/arrow_down.svg'
 import UpIcon from '../../assets/Svgs/arrow_up.svg'
 import { Detail_Text } from '../Fonts'
 import { Text } from 'react-native'
-export const TodoHeader = ({
-  isHeaderOpen,
-  setIsHeaderOpen,
-  navigation,
-  selectedTeam,
-  todoTeamList,
-  setIsCreateVisible,
-  handleTeamChange,
-}) => {
+export const TodoHeader = ({ isHeaderOpen, setIsHeaderOpen, navigation, selectedTeam, todoTeamList }) => {
   const toggleDropdown = () => {
     setIsHeaderOpen(!isHeaderOpen)
   }
 
   return (
     <CustomHeader>
-      <DropDownListContainer>
-        <DropdownContainer isHeaderOpen={isHeaderOpen} onPress={toggleDropdown}>
-          <Text
-            numberOfLines={1}
-            style={{
-              fontFamily: 'Spoqa-Medium',
-              fontSize: 12,
-              lineHeight: 15,
-              color: todoTeamList ? colors.grey_600 : colors.grey_400,
-              width: '70%',
-            }}
-          >
-            {/* TodoTeamList가 Null이면, 자연스레 TodoTeamList의 끝요소인 SelectedTeam도 없으며, Home화면에서 선택되는 TodoTeam또한 없기에, Null을 반환받는다 */}
-            {selectedTeam?.name || '패밀리 없음'}
-          </Text>
-          {isHeaderOpen ? (
-            <UpIcon width={16} height={16} style={{ position: 'absolute', right: 10 }} />
-          ) : (
-            <DownIcon width={16} height={16} style={{ position: 'absolute', right: 10 }} />
-          )}
-        </DropdownContainer>
+      <DropdownContainer isHeaderOpen={isHeaderOpen} onPress={toggleDropdown}>
+        <Text
+          numberOfLines={1}
+          style={{
+            fontFamily: 'Spoqa-Medium',
+            fontSize: 16,
+            lineHeight: 22,
+            color: todoTeamList ? colors.grey_600 : colors.grey_400,
+            width: '80%',
+          }}
+        >
+          {/* TodoTeamList가 Null이면, 자연스레 TodoTeamList의 끝요소인 SelectedTeam도 없으며, Home화면에서 선택되는 TodoTeam또한 없기에, Null을 반환받는다 */}
+          {selectedTeam?.name || '패밀리 선택'}
+        </Text>
+        <DownIcon width={24} height={24} />
+      </DropdownContainer>
 
-        {isHeaderOpen && (
-          <>
-            {todoTeamList?.map((todoTeam, id) => (
-              <DropdownBox key={id} onPress={() => handleTeamChange(todoTeam)}>
-                <Detail_Text>{todoTeam.name}</Detail_Text>
-              </DropdownBox>
-            ))}
-            <DropdownBox
-              style={{ borderBottomLeftRadius: 8, borderBottomRightRadius: 8 }}
-              onPress={() => setIsCreateVisible(true)}
-            >
-              <Detail_Text color={colors.grey_600}>+</Detail_Text>
-            </DropdownBox>
-          </>
-        )}
-      </DropDownListContainer>
       <RightIcon>
         {selectedTeam && selectedTeam?.auth != 'MEMBER' && (
           <IconContainer onPress={() => navigation.navigate('ManageTodo', { teamId: selectedTeam.id })}>
@@ -78,21 +49,11 @@ export const TodoHeader = ({
   )
 }
 const DropdownContainer = styled.Pressable`
-  width: 109px;
-  height: ${({ isHeaderOpen }) => (isHeaderOpen ? '33px' : '32px')};
-  z-index: 1;
-  border-radius: ${({ isHeaderOpen }) => (isHeaderOpen ? '8px 8px 0px 0px' : '8px')};
-  border-bottom-width: ${({ isHeaderOpen }) => (isHeaderOpen ? '1px' : '0px')};
-  border-bottom-color: rgba(0, 0, 0, 0.12);
+  width: 110px;
+  height: 44px;
   align-items: center;
-  padding-left: 16px;
+  justify-content: space-between;
   flex-direction: row;
-  background-color: ${colors.grey_150};
-`
-const DropDownListContainer = styled.View`
-  position: absolute;
-  left: 0;
-  top: 6px;
 `
 const DropdownBox = styled.Pressable`
   width: 109px;
@@ -105,17 +66,10 @@ const DropdownBox = styled.Pressable`
 `
 const CustomHeader = styled.View`
   flex-direction: row;
-  justify-content: flex-end;
+  justify-content: space-between;
   align-items: center;
   height: 52px;
   padding: 8px 6px 8px 0px;
-`
-const DropDownText = styled.Text`
-  color: #4d4d4d;
-  font-family: 'Spoqa-Medium';
-  font-size: 12px;
-  padding-left: 6px;
-  line-height: 15px;
 `
 const IconContainer = styled.TouchableOpacity``
 const RightIcon = styled.View`

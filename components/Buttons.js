@@ -69,7 +69,6 @@ export const Button_PinkBg = ({ isEnabled, func, text, isLoading }) => {
   )
 }
 const MyButton = styled.TouchableOpacity`
-  width: 100%;
   flex-direction: row;
   height: 44px;
   border-radius: 8px;
