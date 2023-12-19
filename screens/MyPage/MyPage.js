@@ -17,7 +17,6 @@ import { BodyBoldSm_Text, BodyBold_Text, BodySm_Text, Detail_Text, SubHead_Text 
 import { TabBarAtom } from '../../recoil/TabAtom'
 import { useIsFocused } from '@react-navigation/native'
 import ErrorIcon from '../../assets/Svgs/error.svg'
-import AdministratorNav from '../../navigators/AdministratorNav'
 
 export default function MyPage({ navigation }) {
   const isFocused = useIsFocused()
@@ -39,6 +38,7 @@ export default function MyPage({ navigation }) {
   const fetchUserInfo = () => {
     getUserInfo(ACCESSTOKEN).then((result) => {
       setEmail(result.email)
+      setEmail('khs110500@naver.com')
       setName(result.nickname)
       setProfileUrl(result.profileImageUrl)
     })

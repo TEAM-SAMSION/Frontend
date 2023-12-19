@@ -112,6 +112,7 @@ export default function Home({ navigation }) {
   useEffect(() => {
     getUserNickname()
     fetchData()
+    // AsyncStorage.removeItem('onBoardingDone')
   }, [])
 
   useEffect(() => {

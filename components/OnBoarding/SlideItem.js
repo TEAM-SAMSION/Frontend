@@ -3,9 +3,10 @@ import { styled } from 'styled-components/native'
 import { ScreenWidth } from '../Shared'
 import { colors } from '../../colors'
 import LOGOTypo from '../../assets/Svgs/LOGOTypo.svg'
-import { Platform } from 'react-native'
+import { PixelRatio, Platform } from 'react-native'
 
 const SlideItem = ({ item }) => {
+  console.log('PixelRatio.get()', PixelRatio.getFontScale())
   return (
     //Android기기 ScreenWidth가 실제보다 살짝 작게 측정되어 나오기에, 전체적인 SlideItem의 너비를 늘려서?
     //ScreenWidth가 소수점으로 나오는 경우, SlideBase 컴퍼넌트에서의 너비로 넘어가면서 자연스레 소수점이 사라짐 ->
@@ -14,7 +15,9 @@ const SlideItem = ({ item }) => {
     <SlideBase style={{ width: Platform.OS == 'android' ? ScreenWidth.toFixed(1) : ScreenWidth }}>
       <TextContainer>
         {item.title ? <TitleText>{item.title}</TitleText> : <LOGOTypo width={157} height={35} />}
-        <ContentText style={{ marginTop: item.title ? 8 : 16 }}>{item.content}</ContentText>
+        <ContentText style={{ fontSize: 13 / PixelRatio.getFontScale(), marginTop: item.title ? 8 : 16 }}>
+          {item.content}
+        </ContentText>
       </TextContainer>
       <ImageContainer>
         <Image resizeMode="contain" source={item.image} />
@@ -24,6 +27,8 @@ const SlideItem = ({ item }) => {
 }
 
 export default SlideItem
+
+var FONT_BACK_LABEL = 18
 
 const SlideBase = styled.View`
   /* width: ${ScreenWidth + 2}px; */
@@ -44,7 +49,6 @@ const ContentText = styled.Text`
   flex-wrap: wrap;
   width: ${ScreenWidth - 48}px;
   color: ${colors.grey_600};
-  font-size: 14px;
   font-family: Spoqa-Medium;
   line-height: 19px;
 `
