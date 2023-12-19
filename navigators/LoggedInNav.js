@@ -6,13 +6,13 @@ import { BottomSheetModalProvider } from '@gorhom/bottom-sheet'
 import { colors } from '../colors'
 
 import Home from '../assets/Svgs/Home.svg'
-import Logo from '../assets/Svgs/LOGO_Symbol.svg'
+import Logo from '../assets/Svgs/Logo_bottom.svg'
 import MyPage from '../assets/Svgs/Mypage.svg'
 import { DetailSm_Text } from '../components/Fonts'
 import { Platform } from 'react-native'
 import { useRecoilValue } from 'recoil'
 import { TabBarAtom } from '../recoil/TabAtom'
-import { ScreenWidth, normalize } from '../components/Shared'
+import { normalize } from '../components/Shared'
 
 const Tabs = createBottomTabNavigator()
 

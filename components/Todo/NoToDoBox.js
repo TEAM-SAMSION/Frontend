@@ -31,8 +31,9 @@ TODO 관리 아이콘을 눌러 카테고리를 추가해보세요!`}</BodySm_Te
 
 const NoTodoContainer = styled.View`
   padding: 16px 16px;
+  margin-bottom: 8px;
   gap: 4px;
-  border-radius: 8px;
+  border-radius: 16px;
   display: inline-block;
   background-color: ${colors.grey_150};
 `
