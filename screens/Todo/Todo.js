@@ -18,6 +18,7 @@ import { CategoryIndicator } from '../../components/Todo/CategoryIndicator'
 import { useFocusEffect } from '@react-navigation/native'
 import { SelectedTeamAtom, TabBarAtom } from '../../recoil/TabAtom'
 import TodoItem from '../../components/Todo/TodoItem'
+import MyMenu from '../../components/Todo/MyMenu'
 
 export default Todo = ({ navigation }) => {
   const setIsTabVisible = useSetRecoilState(TabBarAtom)
@@ -223,7 +224,6 @@ export default Todo = ({ navigation }) => {
               showsVerticalScrollIndicator={false}
             >
               <MyCalendarStrip selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
-              {/* prettier-ignore */}
               {!todoTeamList ? (
                 <NoPamily />
               ) : !todosByCategory ? (
@@ -298,6 +298,7 @@ export default Todo = ({ navigation }) => {
             />
           )}
         </BottomSheetModal>
+        {/*  */}
         <ModalPopUp visible={isDeleteVisible} petIcon={false} height={204}>
           <ModalHeader>
             <CloseButton onPress={() => setIsDeleteVisible(false)}>
@@ -316,6 +317,7 @@ export default Todo = ({ navigation }) => {
           setIsVisible={setIsCreateVisible}
           visible={isCreateVisible}
         />
+        <MyMenu isOpen={isHeaderOpen} onClose={() => setIsHeaderOpen(false)} />
       </Pressable>
     </ScreenContainer>
   )
