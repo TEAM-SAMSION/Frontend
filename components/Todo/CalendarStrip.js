@@ -17,7 +17,7 @@ export const MyCalendarStrip = ({ selectedDate, setSelectedDate }) => {
   const locale = { name: 'ko', config: { weekdays: '화수목금토일월' } } // const markedDate = [{ date: today,dots: [ {color: 'red' },],} ]
   const weekdays = ['일', '월', '화', '수', '목', '금', '토']
   const calendarRef = useRef(null)
-
+  console.log(selectedDate)
   return (
     <>
       <CalendarHeader>

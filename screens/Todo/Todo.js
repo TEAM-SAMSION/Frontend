@@ -18,7 +18,6 @@ import { CategoryIndicator } from '../../components/Todo/CategoryIndicator'
 import { useFocusEffect } from '@react-navigation/native'
 import { SelectedTeamAtom, TabBarAtom } from '../../recoil/TabAtom'
 import TodoItem from '../../components/Todo/TodoItem'
-import AsyncStorage from '@react-native-async-storage/async-storage'
 
 export default Todo = ({ navigation }) => {
   const setIsTabVisible = useSetRecoilState(TabBarAtom)
@@ -26,7 +25,9 @@ export default Todo = ({ navigation }) => {
 
   const tempDate = new Date()
   //** new Date()를 새벽에 호출하면 ISOString으로 가져올때 하루 전으로 반환하는 문제가 있다. getDate()를 직접 호출하여 정확한 날짜정보를 가져와야함 */
-  const today = `${tempDate.getFullYear()}-${tempDate.getMonth() + 1}-${tempDate.getDate()}`
+  const today = `${tempDate.getFullYear()}-${tempDate.getMonth() + 1}-${
+    tempDate.getDate() < 10 ? `0${tempDate.getDate()}` : tempDate.getDate()
+  }`
   const [todosByCategory, setTodosByCategory] = useState(null)
 
   const [todoTeamList, setTodoTeamList] = useState(null)
