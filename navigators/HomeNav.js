@@ -9,7 +9,7 @@ import BackButton from '../assets/Svgs/chevron_back.svg'
 import AddPetProfile from '../screens/Home/AddPetProfile'
 import EditPetProfile from '../screens/Home/EditPetProfile'
 import AlarmNav from './AlarmNav'
-import AuthBridge from '../screens/Home/AuthBridge'
+import AuthBridge from '../screens/OnBoarding/AuthBridge'
 
 const Stack = createStackNavigator()
 
@@ -27,11 +27,6 @@ export default function HomeNav() {
         headerShadowVisible: false,
       }}
     >
-      <Stack.Screen
-        name="AuthBridge"
-        component={AuthBridge}
-        options={{ headerShown: false, animationEnabled: false }}
-      />
       <Stack.Screen name="Home" component={Home} options={{ headerShown: false, animationEnabled: false }} />
       <Stack.Screen
         name="CreateTeam"

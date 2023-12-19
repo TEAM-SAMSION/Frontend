@@ -4,9 +4,12 @@ import { checkFCMToken } from '../AppBase'
 import { url } from '../components/Shared'
 import { navigate } from '../navigators/RootNavigator'
 import NaverLogin from '@react-native-seoul/naver-login'
+import { useSetRecoilState } from 'recoil'
+import { loggedInState } from '../recoil/AuthAtom'
 
 const updateToken = async () => {
   const refreshToken = await AsyncStorage.getItem('refreshToken')
+
   let API = `/reissue`
   let body = {}
   if (refreshToken) {
@@ -28,12 +31,13 @@ const updateToken = async () => {
   }
 }
 
-export const LogOut = async () => {
+export const LogOut = async (setLoggedIn) => {
   NaverLogin.logout()
   console.log('Naver Logout')
   await AsyncStorage.removeItem('accessToken')
   await AsyncStorage.removeItem('refreshToken')
-  navigate('AuthBridge')
+  setLoggedIn(false)
+  // navigate('AuthBridge')
 }
 const axiosInstance = axios.create({
   baseURL: 'https://api.pawith.com',
