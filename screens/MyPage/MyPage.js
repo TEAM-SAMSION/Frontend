@@ -38,7 +38,6 @@ export default function MyPage({ navigation }) {
   const fetchUserInfo = () => {
     getUserInfo(ACCESSTOKEN).then((result) => {
       setEmail(result.email)
-      setEmail('khs110500@naver.com')
       setName(result.nickname)
       setProfileUrl(result.profileImageUrl)
     })

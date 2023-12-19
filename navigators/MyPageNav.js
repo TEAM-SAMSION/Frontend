@@ -17,6 +17,7 @@ import ServiceTerms from '../screens/MyPage/ServiceTerms'
 import PrivacyTerms from '../screens/MyPage/PrivacyTerms'
 import AlarmNav from './AlarmNav'
 import Guide from '../screens/MyPage/Guide'
+import TutorialNav from './TutorialNav'
 
 const Stack = createStackNavigator()
 
@@ -252,6 +253,16 @@ export default function MyPageNav() {
         }}
       >
         {() => <AlarmNav />}
+      </Stack.Screen>
+
+      <Stack.Screen
+        name="TutorialNav"
+        options={{
+          headerShown: false,
+          headerBackTitleVisible: false,
+        }}
+      >
+        {() => <TutorialNav />}
       </Stack.Screen>
     </Stack.Navigator>
   )
