@@ -13,7 +13,7 @@ export const NotificationBox = () => {
         <BodyBold_Text color={colors.grey_700}>{`지난주 보다 
   목표 달성률이 떨어졌어요!`}</BodyBold_Text>
         <CloseButton>
-          <Close width={16} height={16} />
+          <Close width={16} height={16} color={colors.grey_600} />
         </CloseButton>
       </TopContainer>
       <Detail_Text style={{ marginTop: 4, marginBottom: 24 }} color={colors.grey_500}>

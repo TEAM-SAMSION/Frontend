@@ -137,7 +137,7 @@ export default function AdminHome({ route, navigation }) {
       <ModalPopUp petIcon={false} visible={isVisible} height={160}>
         <ModalHeader>
           <CloseButton onPress={() => setIsVisible(false)}>
-            <Close width={24} height={24} />
+            <Close width={24} height={24} color={colors.grey_600} />
           </CloseButton>
         </ModalHeader>
         <PopContent>
@@ -151,7 +151,7 @@ export default function AdminHome({ route, navigation }) {
       <ModalPopUp petIcon={false} visible={isInfoVisible} height={160}>
         <ModalHeader style={{ marginBottom: 0 }}>
           <CloseButton onPress={() => setIsInfoVisible(false)}>
-            <Close width={24} height={24} />
+            <Close width={24} height={24} color={colors.grey_600} />
           </CloseButton>
         </ModalHeader>
         <PopContent style={{ alignItems: 'flex-start', marginBottom: 20, marginTop: 4 }}>

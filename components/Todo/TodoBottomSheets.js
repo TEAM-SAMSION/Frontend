@@ -155,7 +155,7 @@ const TodoEditHome = ({ navigation, selectedTodo, selectedDate, getInitDatas, ha
       <ModalPopUp visible={isVisible} petIcon={false} height={204}>
         <ModalHeader>
           <CloseButton onPress={() => setIsVisible(false)}>
-            <Close width={24} height={24} />
+            <Close width={24} height={24} color={colors.grey_600} />
           </CloseButton>
         </ModalHeader>
         <PopContent>

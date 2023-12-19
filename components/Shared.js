@@ -243,7 +243,7 @@ export const PetModalPopUp = ({ petIcon, visible, height, setIsVisible, setIsOpe
                 setIsOpen && setIsOpen(false)
               }}
             >
-              <Close width={24} height={24} />
+              <Close width={24} height={24} color={colors.grey_600} />
             </CloseButton>
           </ModalHeader>
           <PopContent>

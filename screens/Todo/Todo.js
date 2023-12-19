@@ -302,7 +302,7 @@ export default Todo = ({ navigation }) => {
         <ModalPopUp visible={isDeleteVisible} petIcon={false} height={204}>
           <ModalHeader>
             <CloseButton onPress={() => setIsDeleteVisible(false)}>
-              <Close width={24} height={24} />
+              <Close width={24} height={24} color={colors.grey_600} />
             </CloseButton>
           </ModalHeader>
           <PopContent>
