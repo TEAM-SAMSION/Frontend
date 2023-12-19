@@ -1,15 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import {
-  Dimensions,
-  FlatList,
-  Image,
-  RefreshControl,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native'
+import { FlatList, Image, RefreshControl, ScrollView, View } from 'react-native'
 import { ScreenLayout, ScreenWidth } from '../../components/Shared'
 import { TopHeader } from '../../components/Home/TopHeader'
 import styled from 'styled-components/native'
@@ -25,6 +15,7 @@ import { BodySm_Text, DetailSm_Text } from '../../components/Fonts'
 import { SelectedTeamAtom, TabBarAtom } from '../../recoil/TabAtom'
 import Swiper from 'react-native-swiper'
 import RightIcon from '../../assets/Svgs/chevron_right.svg'
+import { ChristmasModal } from './ChristmasModal'
 
 export default function Home({ navigation }) {
   const isFocused = useIsFocused()
@@ -284,6 +275,7 @@ export default function Home({ navigation }) {
           </>
         )}
       </ScrollView>
+      <ChristmasModal />
     </ScreenLayout>
   )
 }
