@@ -46,9 +46,8 @@ export default function OnBoarding({ navigation }) {
         <Auth navigation={navigation} />
       ) : (
         <ScreenLayout backgroundColor={colors.primary_container}>
-          <Container style={{ paddingTop: ScreenWidth < 380 ? 16 : 46 }}>
+          <Container style={{ paddingTop: 46 }}>
             <FlatList
-              style={{ marginTop: 16 }}
               horizontal
               data={PAGES}
               renderItem={({ item }) => <SlideItem item={item} />}

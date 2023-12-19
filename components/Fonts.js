@@ -1,8 +1,9 @@
 import { Text } from 'react-native'
+import { normalize } from './Shared'
 
 export const BodyBold_Text = ({ color, children, style = null }) => {
   return (
-    <Text style={[{ color: color, fontFamily: 'Spoqa-Bold', fontSize: 16, lineHeight: 22 }, { ...style }]}>
+    <Text style={[{ color: color, fontFamily: 'Spoqa-Bold', fontSize: normalize(16), lineHeight: 22 }, { ...style }]}>
       {children}
     </Text>
   )
@@ -10,14 +11,14 @@ export const BodyBold_Text = ({ color, children, style = null }) => {
 
 export const Detail_Text = ({ color, children, style = null, props = null }) => {
   return (
-    <Text style={[{ fontFamily: 'Spoqa-Medium', fontSize: 12, lineHeight: 15, color: color }, { ...style }]}>
+    <Text style={[{ fontFamily: 'Spoqa-Medium', fontSize: normalize(12), lineHeight: 15, color: color }, { ...style }]}>
       {children}
     </Text>
   )
 }
 export const Label_Text = ({ color, children, style = null }) => {
   return (
-    <Text style={[{ fontFamily: 'Spoqa-Medium', fontSize: 14, lineHeight: 19, color: color }, { ...style }]}>
+    <Text style={[{ fontFamily: 'Spoqa-Medium', fontSize: normalize(14), lineHeight: 19, color: color }, { ...style }]}>
       {children}
     </Text>
   )
@@ -25,7 +26,7 @@ export const Label_Text = ({ color, children, style = null }) => {
 
 export const BodyBoldSm_Text = ({ color, children, style = null }) => {
   return (
-    <Text style={[{ fontFamily: 'Spoqa-Bold', fontSize: 14, lineHeight: 19, color: color }, { ...style }]}>
+    <Text style={[{ fontFamily: 'Spoqa-Bold', fontSize: normalize(14), lineHeight: 19, color: color }, { ...style }]}>
       {children}
     </Text>
   )
@@ -33,7 +34,7 @@ export const BodyBoldSm_Text = ({ color, children, style = null }) => {
 
 export const BodySm_Text = ({ color, children, style = null }) => {
   return (
-    <Text style={[{ fontFamily: 'Spoqa-Medium', fontSize: 14, lineHeight: 19, color: color }, { ...style }]}>
+    <Text style={[{ fontFamily: 'Spoqa-Medium', fontSize: normalize(14), lineHeight: 19, color: color }, { ...style }]}>
       {children}
     </Text>
   )
@@ -41,7 +42,9 @@ export const BodySm_Text = ({ color, children, style = null }) => {
 
 export const DetailSm_Text = ({ color, children, style = null }) => {
   return (
-    <Text style={[{ fontFamily: 'Spoqa-Regular', fontSize: 12, lineHeight: 15, color: color }, { ...style }]}>
+    <Text
+      style={[{ fontFamily: 'Spoqa-Regular', fontSize: normalize(12), lineHeight: 15, color: color }, { ...style }]}
+    >
       {children}
     </Text>
   )
@@ -49,7 +52,12 @@ export const DetailSm_Text = ({ color, children, style = null }) => {
 
 export const Body_Text = ({ color, children, style = null }) => {
   return (
-    <Text style={[{ fontFamily: 'Spoqa-Medium', fontSize: 16, lineHeight: 22, color: color }, { ...style }]}>
+    <Text
+      style={[
+        { fontFamily: 'Spoqa-Medium', fontSize: normalize(16), lineHeight: normalize(22), color: color },
+        { ...style },
+      ]}
+    >
       {children}
     </Text>
   )
@@ -57,7 +65,7 @@ export const Body_Text = ({ color, children, style = null }) => {
 
 export const HeadLine_Text = ({ color, children, style = null }) => {
   return (
-    <Text style={[{ fontFamily: 'Spoqa-Bold', fontSize: 22, lineHeight: 30, color: color }, { ...style }]}>
+    <Text style={[{ fontFamily: 'Spoqa-Bold', fontSize: normalize(22), lineHeight: 30, color: color }, { ...style }]}>
       {children}
     </Text>
   )
@@ -65,21 +73,21 @@ export const HeadLine_Text = ({ color, children, style = null }) => {
 
 export const HeadLineSm_Text = ({ color, children, style = null }) => {
   return (
-    <Text style={[{ fontFamily: 'Spoqa-Medium', fontSize: 16, lineHeight: 22, color: color }, { ...style }]}>
+    <Text style={[{ fontFamily: 'Spoqa-Medium', fontSize: normalize(16), lineHeight: 22, color: color }, { ...style }]}>
       {children}
     </Text>
   )
 }
 export const SubHead_Text = ({ color, children, style = null }) => {
   return (
-    <Text style={[{ fontFamily: 'Spoqa-Bold', fontSize: 20, lineHeight: 28, color: color }, { ...style }]}>
+    <Text style={[{ fontFamily: 'Spoqa-Bold', fontSize: normalize(20), lineHeight: 28, color: color }, { ...style }]}>
       {children}
     </Text>
   )
 }
 export const SubHeadSm_Text = ({ color, children, style = null }) => {
   return (
-    <Text style={[{ fontFamily: 'Spoqa-Medium', fontSize: 18, lineHeight: 25, color: color }, { ...style }]}>
+    <Text style={[{ fontFamily: 'Spoqa-Medium', fontSize: normalize(18), lineHeight: 25, color: color }, { ...style }]}>
       {children}
     </Text>
   )

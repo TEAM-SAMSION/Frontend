@@ -88,7 +88,9 @@ export const UserSetting = ({ navigation, route }) => {
                       style={{ backgroundColor: selectedRoute == id + 1 ? colors.primary_container : colors.grey_150 }}
                       key={id}
                     >
-                      <Detail_Text color={colors.grey_600}>{item}</Detail_Text>
+                      <Detail_Text color={colors.grey_700} style={{ marginTop: 0 }}>
+                        {item}
+                      </Detail_Text>
                     </RouteItem>
                   )
                 })}

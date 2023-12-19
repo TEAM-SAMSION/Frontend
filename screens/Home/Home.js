@@ -25,6 +25,7 @@ import { BodySm_Text, DetailSm_Text } from '../../components/Fonts'
 import { SelectedTeamAtom, TabBarAtom } from '../../recoil/TabAtom'
 import Swiper from 'react-native-swiper'
 import RightIcon from '../../assets/Svgs/chevron_right.svg'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 export default function Home({ navigation }) {
   const isFocused = useIsFocused()

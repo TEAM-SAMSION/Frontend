@@ -12,7 +12,7 @@ import { DetailSm_Text } from '../components/Fonts'
 import { Platform } from 'react-native'
 import { useRecoilValue } from 'recoil'
 import { TabBarAtom } from '../recoil/TabAtom'
-import { ScreenWidth } from '../components/Shared'
+import { ScreenWidth, normalize } from '../components/Shared'
 
 const Tabs = createBottomTabNavigator()
 
@@ -28,7 +28,7 @@ export default function LoggedInNav() {
           tabBarStyle: {
             display: isTabVisible ? 'flex' : 'none',
             height: Platform.OS == 'android' ? 68 : 88,
-            paddingTop: Platform.OS == 'android' ? 0 : ScreenWidth > 380 ? 16 : 0,
+            paddingTop: Platform.OS == 'android' ? 0 : normalize(16),
           },
         }}
       >

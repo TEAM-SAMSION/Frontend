@@ -11,7 +11,7 @@ const NonLayoutButton = styled.TouchableOpacity`
   border-radius: 8px;
   align-items: center;
   justify-content: center;
-  margin-bottom: ${Platform.OS == 'android' ? 32 : 20}px;
+  margin-bottom: ${Platform.OS == 'android' ? 32 : 8}px;
 `
 export const OnboardingButton = ({ func, lastFunc, currentIdx, data }) => {
   const isLastItem = currentIdx === data.length - 1
@@ -32,9 +32,9 @@ export const OnboardingButton = ({ func, lastFunc, currentIdx, data }) => {
       onPress={!isLastItem ? func : lastFunc}
     >
       {isLastItem && <LOGO_Symbol color={colors.grey_100} height={24} width={24} />}
-      <ButtonText style={[{ color: !isLastItem ? colors.primary : colors.grey_100 }, isLastItem && { marginLeft: 8 }]}>
+      <BodyBoldSm_Text color={!isLastItem ? colors.primary : colors.grey_100} style={isLastItem && { marginLeft: 8 }}>
         {!isLastItem ? '다음' : '포잇과 함께하기'}
-      </ButtonText>
+      </BodyBoldSm_Text>
     </NonLayoutButton>
   )
 }

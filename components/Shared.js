@@ -1,10 +1,23 @@
 import styled from 'styled-components/native'
-import { Dimensions, StatusBar, Platform, Pressable } from 'react-native'
+import { Dimensions, StatusBar, Platform, Pressable, PixelRatio } from 'react-native'
 import { colors } from '../colors'
 import { useEffect, useRef, useState } from 'react'
 import { Modal } from 'react-native'
 // import { Picker } from 'react-native-wheel-pick'
 // import WheelPickerExpo from 'react-native-wheel-picker-expo'
+
+export const ScreenWidth = Dimensions.get('window').width
+export const ScreenHeight = Dimensions.get('screen').height
+
+const scale = ScreenWidth / 375
+export const normalize = (size) => {
+  const newSize = size * scale
+  if (Platform.OS === 'ios') {
+    return Math.round(PixelRatio.roundToNearestPixel(newSize))
+  } else {
+    return Math.round(PixelRatio.roundToNearestPixel(newSize)) - 2
+  }
+}
 
 ////////// safearea //////////
 export const ScreenContainer = styled.SafeAreaView`
@@ -12,10 +25,7 @@ export const ScreenContainer = styled.SafeAreaView`
   flex: 1;
 `
 
-export const ScreenWidth = Dimensions.get('window').width
-export const ScreenHeight = Dimensions.get('screen').height
-
-export const ScreenLayout = ({ children, backgroundColor = 'white' }) => {
+export const ScreenLayout = ({ children, backgroundColor = colors.grey_100 }) => {
   return (
     <ScreenContainer style={{ backgroundColor }}>
       <StatusBar />

@@ -10,11 +10,11 @@ import LoginButton from '../../components/OnBoarding/LoginButton'
 import { colors } from '../../colors'
 import { useSetRecoilState } from 'recoil'
 import { loggedInState } from '../../recoil/AuthAtom'
-import { ModalPopUp, ScreenWidth, url } from '../../components/Shared'
+import { ModalPopUp, ScreenLayout, ScreenWidth, url } from '../../components/Shared'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import Caution from '../../assets/Svgs/Caution.svg'
 import Close from '../../assets/Svgs/Close.svg'
-import { BodySm_Text, Body_Text, SubHeadSm_Text } from '../../components/Fonts'
+import { BodyBold_Text, BodySm_Text, Body_Text, SubHeadSm_Text } from '../../components/Fonts'
 import { checkFCMToken } from '../../AppBase'
 WebBrowser.maybeCompleteAuthSession()
 
@@ -164,43 +164,54 @@ export default function Auth({ navigation }) {
   }, [GoogleRes])
 
   return (
-    <Container>
-      <SymbolContainer>
-        <SymbolIcon source={require('../../assets/Imgs/LOGO_Symbol.png')} />
-      </SymbolContainer>
-      <LoginButton loginFunc={() => GooglepromptAsync()} id={0} />
-      <LoginButton loginFunc={() => loginKakao()} id={1} />
-      <LoginButton loginFunc={() => loginNaver()} id={2} />
-      {appleAuth.isSupported && (
-        <AppleButton
-          buttonStyle={AppleButton.Style.BLACK}
-          buttonType={AppleButton.Type.SIGN_IN}
-          style={{
-            width: '100%',
-            height: 44,
-          }}
-          onPress={() => loginApple()}
-        />
-      )}
-      <ModalPopUp visible={isPopupVisible} petIcon={false}>
-        <ModalHeader>
-          <CloseButton onPress={() => setIsPopupVisible(false)}>
-            <Close width={24} height={24} />
-          </CloseButton>
-        </ModalHeader>
-        <PopContent>
-          <Caution width={48} height={48} />
-          <SubHeadSm_Text style={{ marginTop: 20 }} color={colors.grey_700}>
-            이미 계정을 갖고 계시군요!
-          </SubHeadSm_Text>
-          <BodySm_Text style={{ marginTop: 4 }} color={colors.grey_450}>
-            다른 방법으로 로그인을 시도해주세요
-          </BodySm_Text>
-        </PopContent>
-      </ModalPopUp>
-    </Container>
+    <ScreenLayout>
+      <Container>
+        <HeaderContainer>
+          <BodyBold_Text color={colors.grey_600}>로그인</BodyBold_Text>
+        </HeaderContainer>
+        <SymbolContainer>
+          <SymbolIcon source={require('../../assets/Imgs/LOGO_Symbol.png')} />
+        </SymbolContainer>
+        <LoginButton loginFunc={() => GooglepromptAsync()} id={0} />
+        <LoginButton loginFunc={() => loginKakao()} id={1} />
+        <LoginButton loginFunc={() => loginNaver()} id={2} />
+        {appleAuth.isSupported && (
+          <AppleButton
+            buttonStyle={AppleButton.Style.BLACK}
+            buttonType={AppleButton.Type.SIGN_IN}
+            style={{
+              width: '100%',
+              height: 44,
+            }}
+            onPress={() => loginApple()}
+          />
+        )}
+        <ModalPopUp visible={isPopupVisible} petIcon={false}>
+          <ModalHeader>
+            <CloseButton onPress={() => setIsPopupVisible(false)}>
+              <Close width={24} height={24} />
+            </CloseButton>
+          </ModalHeader>
+          <PopContent>
+            <Caution width={48} height={48} />
+            <SubHeadSm_Text style={{ marginTop: 20 }} color={colors.grey_700}>
+              이미 계정을 갖고 계시군요!
+            </SubHeadSm_Text>
+            <BodySm_Text style={{ marginTop: 4 }} color={colors.grey_450}>
+              다른 방법으로 로그인을 시도해주세요
+            </BodySm_Text>
+          </PopContent>
+        </ModalPopUp>
+      </Container>
+    </ScreenLayout>
   )
 }
+const HeaderContainer = styled.View`
+  height: 52px;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+`
 const CloseButton = styled.TouchableOpacity``
 const ModalHeader = styled.View`
   width: 100%;
@@ -222,13 +233,12 @@ const Container = styled.View`
   align-items: center;
 `
 const SymbolContainer = styled.View`
-  margin-bottom: 90px;
-  margin-top: 76px;
+  margin-top: 85px;
+  margin-bottom: 82px;
   justify-content: center;
   align-items: center;
 `
 const SymbolIcon = styled.Image`
-  margin-top: 75px;
   width: 168px;
   height: 168px;
 `

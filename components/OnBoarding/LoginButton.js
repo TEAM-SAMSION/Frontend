@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { ActivityIndicator } from 'react-native'
 import styled from 'styled-components/native'
+import { BodyBoldSm_Text } from '../Fonts'
 
 export default LoginButton = ({ loginFunc, id }) => {
   const [isLoading, setIsLoading] = useState(false)
@@ -24,16 +25,18 @@ export default LoginButton = ({ loginFunc, id }) => {
       {isLoading ? (
         <ActivityIndicator style={{ flex: 1 }} />
       ) : (
-        <ButtonText style={{ color: fontColor[id] }}>{provider[id]}로 시작하기</ButtonText>
+        <BodyBoldSm_Text style={{ color: fontColor[id], flex: 1, textAlign: 'center' }}>
+          {provider[id]}로 시작하기
+        </BodyBoldSm_Text>
       )}
     </Button>
   )
 }
 
 const Button = styled.TouchableOpacity`
-  margin-bottom: 16px;
+  margin-bottom: 12px;
   width: 100%;
-  height: 44px;
+  height: 48px;
   padding: 0 16px;
   border-radius: 8px;
   flex-direction: row;
@@ -43,11 +46,4 @@ const Button = styled.TouchableOpacity`
 const LOGOIcon = styled.Image`
   width: 24px;
   height: 24px;
-`
-const ButtonText = styled.Text`
-  flex: 1;
-  text-align: center;
-  line-height: 25px;
-  font-size: 14px;
-  font-family: Spoqa-Medium;
 `

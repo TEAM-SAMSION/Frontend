@@ -5,7 +5,7 @@ import { ScreenWidth } from '../Shared'
 
 export default Paginator = ({ data, scrollX }) => {
   return (
-    <Container style={{ height: ScreenWidth < 380 ? 32 : 64 }}>
+    <Container style={{ height: 24, marginBottom: 55 }}>
       {data.map((_, i) => {
         //인접한 3개의 점과 대응하기 위한 범위
         const inputRange = [(i - 1) * ScreenWidth, i * ScreenWidth, (i + 1) * ScreenWidth]
@@ -26,7 +26,7 @@ export default Paginator = ({ data, scrollX }) => {
               {
                 flexDirection: 'row',
                 height: 8,
-                borderRadius: 5,
+                borderRadius: 4,
                 backgroundColor: '#F84D35',
                 marginHorizontal: 4,
               },
