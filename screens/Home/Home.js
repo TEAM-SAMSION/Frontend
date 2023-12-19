@@ -257,7 +257,6 @@ export default function Home({ navigation }) {
                     return <TodoBox data={item} index={index} updated={updated} setUpdated={setUpdated} />
                   }}
                   showsHorizontalScrollIndicator={false}
-                  numColumns={2}
                 />
               ) : (
                 <View height={376}>
@@ -275,7 +274,6 @@ export default function Home({ navigation }) {
                           return <TodoBox data={item} index={index} updated={updated} setUpdated={setUpdated} />
                         }}
                         showsHorizontalScrollIndicator={false}
-                        numColumns={1}
                       />
                     ))}
                   </Swiper>
