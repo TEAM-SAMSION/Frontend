@@ -6,9 +6,7 @@ import styled from 'styled-components/native'
 import SearchIcon from '../../assets/Svgs/Search.svg'
 import { TeamSearchBox } from '../../components/Home/TeamSearchBox'
 import { getSearchedTeam } from '../../components/Home/Apis'
-import { useRecoilState, useRecoilValue } from 'recoil'
-import { accessTokenState } from '../../recoil/AuthAtom'
-import axios from 'axios'
+import { useRecoilState } from 'recoil'
 import { TabBarAtom } from '../../recoil/TabAtom'
 import { useIsFocused } from '@react-navigation/native'
 import { SubHeadSm_Text } from '../../components/Fonts'
@@ -16,8 +14,6 @@ import { SubHeadSm_Text } from '../../components/Fonts'
 export default function JoinTeam({ navigation }) {
   const isFocused = useIsFocused()
   const [isTabVisible, setIsTabVisible] = useRecoilState(TabBarAtom)
-
-  const ACCESSTOKEN = useRecoilValue(accessTokenState)
   const [pamilyCode, setPamilyCode] = useState('')
   const [searchedData, setSearchedData] = useState([])
   const [isNonResult, setIsNonResult] = useState(false)
@@ -31,7 +27,7 @@ export default function JoinTeam({ navigation }) {
 
   const searchTeam = async (teamCode) => {
     try {
-      await getSearchedTeam(ACCESSTOKEN, teamCode).then((result) => {
+      await getSearchedTeam(teamCode).then((result) => {
         {
           result.length !== 0 && setIsNonResult(false) & setSearchedData(result)
         }

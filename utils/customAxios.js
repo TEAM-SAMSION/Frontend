@@ -2,10 +2,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import axios from 'axios'
 import { checkFCMToken } from '../AppBase'
 import { url } from '../components/Shared'
-import { navigate } from '../navigators/RootNavigator'
+// import { navigate } from '../navigators/RootNavigator'
 import NaverLogin from '@react-native-seoul/naver-login'
-import { useSetRecoilState } from 'recoil'
-import { loggedInState } from '../recoil/AuthAtom'
 
 const updateToken = async () => {
   const refreshToken = await AsyncStorage.getItem('refreshToken')

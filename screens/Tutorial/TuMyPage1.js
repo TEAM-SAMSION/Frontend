@@ -8,8 +8,7 @@ import { Alert, ScrollView, TouchableOpacity, View } from 'react-native'
 import EditIcon from '../../assets/Svgs/Edit.svg'
 import 'react-native-gesture-handler'
 import { BottomSheetBackdrop, BottomSheetModal, BottomSheetModalProvider } from '@gorhom/bottom-sheet'
-import { useRecoilValue, useSetRecoilState } from 'recoil'
-import { accessTokenState } from '../../recoil/AuthAtom'
+import { useSetRecoilState } from 'recoil'
 import { ModalPopUp } from '../../components/Shared'
 import { colors } from '../../colors'
 import { deleteTeam, getTeamDeleteValidation, getPeriod, getTeamList, getUserInfo } from '../../components/MyPage/Apis'
@@ -33,7 +32,6 @@ import About1 from '../../assets/Svgs/about1.svg'
 
 export default function TuMyPage1({ navigation }) {
   const isFocused = useIsFocused()
-  const ACCESSTOKEN = useRecoilValue(accessTokenState)
   const setIsTabVisible = useSetRecoilState(TabBarAtom)
 
   useEffect(() => {

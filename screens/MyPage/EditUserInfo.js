@@ -9,8 +9,7 @@ import {
   BottomSheetModalProvider,
   TouchableWithoutFeedback,
 } from '@gorhom/bottom-sheet'
-import { useRecoilState, useRecoilValue } from 'recoil'
-import { accessTokenState } from '../../recoil/AuthAtom'
+import { useRecoilState } from 'recoil'
 import { ScreenLayout, ScreenWidth } from '../../components/Shared'
 import EditIcon from '../../assets/Svgs/Edit.svg'
 import RNFS from 'react-native-fs'
@@ -22,8 +21,6 @@ import { TabBarAtom } from '../../recoil/TabAtom'
 export default function EditUserInfo({ route, navigation }) {
   const isFocused = useIsFocused()
   const [isTabVisible, setIsTabVisible] = useRecoilState(TabBarAtom)
-
-  const ACCESSTOKEN = useRecoilValue(accessTokenState)
 
   const data = route.params
   const [enabled, setEnabled] = useState(false)
@@ -93,10 +90,10 @@ export default function EditUserInfo({ route, navigation }) {
         name: 'default_user.png',
         type: 'image/png',
       })
-      await changeProfileImage(ACCESSTOKEN, defaultData)
+      await changeProfileImage(defaultData)
     }
     if (data.name !== name) {
-      await changeNickname(ACCESSTOKEN, name)
+      await changeNickname(name)
     }
   }
 
@@ -167,7 +164,6 @@ export default function EditUserInfo({ route, navigation }) {
           profileUrl={profileUrl}
           setProfileUrl={setProfileUrl}
           setProfileFile={setProfileFile}
-          accessToken={ACCESSTOKEN}
           closeFunction={() => bottomSheetModalRef.current?.dismiss()}
         />
       </BottomSheetModal>

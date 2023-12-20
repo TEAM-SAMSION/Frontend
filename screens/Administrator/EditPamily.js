@@ -9,9 +9,7 @@ import {
   BottomSheetModalProvider,
   TouchableWithoutFeedback,
 } from '@gorhom/bottom-sheet'
-import { useRecoilState, useRecoilValue } from 'recoil'
-import { accessTokenState } from '../../recoil/AuthAtom'
-import { ScreenLayout, ScreenWidth } from '../../components/Shared'
+import { useRecoilState } from 'recoil'
 import EditIcon from '../../assets/Svgs/Edit.svg'
 import RNFS from 'react-native-fs'
 import { useIsFocused } from '@react-navigation/native'
@@ -23,9 +21,6 @@ import { postTeamInfo } from '../../components/Administrator/Apis'
 export default function EditPamily({ route, navigation }) {
   const isFocused = useIsFocused()
   const [isTabVisible, setIsTabVisible] = useRecoilState(TabBarAtom)
-
-  const ACCESSTOKEN = useRecoilValue(accessTokenState)
-
   // onFocus
   const [onName, setOnName] = useState(false)
   const [onIntro, setOnIntro] = useState(false)
@@ -121,7 +116,7 @@ export default function EditPamily({ route, navigation }) {
     TeamData.append('todoTeamUpdateInfo', { string: json, type: 'application/json' })
     console.log(TeamData)
     console.log(TeamData._parts)
-    postTeamInfo(ACCESSTOKEN, teamId, TeamData)
+    postTeamInfo(teamId, TeamData)
   }
 
   const copyText = `초대코드: ${code}${'\n'}참여방법: 포잇 > Pamily 참여하기 > 코드 입력`

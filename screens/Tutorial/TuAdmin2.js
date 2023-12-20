@@ -9,8 +9,7 @@ import {
   BottomSheetModalProvider,
   TouchableWithoutFeedback,
 } from '@gorhom/bottom-sheet'
-import { useRecoilState, useRecoilValue } from 'recoil'
-import { accessTokenState } from '../../recoil/AuthAtom'
+import { useRecoilState } from 'recoil'
 import { ScreenHeight, ScreenLayout, ScreenWidth } from '../../components/Shared'
 import EditIcon from '../../assets/Svgs/Edit.svg'
 import RNFS from 'react-native-fs'
@@ -23,8 +22,6 @@ import CloseIcon from '../../assets/Svgs/Close.svg'
 export default function TuAdmin2({ navigation }) {
   const isFocused = useIsFocused()
   const [isTabVisible, setIsTabVisible] = useRecoilState(TabBarAtom)
-
-  const ACCESSTOKEN = useRecoilValue(accessTokenState)
 
   // onFocus
   const [onName, setOnName] = useState(false)

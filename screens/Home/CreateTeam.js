@@ -6,8 +6,7 @@ import styled from 'styled-components/native'
 import PlusIcon from '../../assets/Svgs/miniPlus.svg'
 import { BottomSheetBackdrop, BottomSheetModal, BottomSheetModalProvider } from '@gorhom/bottom-sheet'
 import { ProfileImageModal } from '../../components/Home/ProfileImageModal'
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
-import { accessTokenState } from '../../recoil/AuthAtom'
+import { useRecoilState, useSetRecoilState } from 'recoil'
 import BackButton from '../../assets/Svgs/chevron_back.svg'
 import {
   BodyBold_Text,
@@ -40,7 +39,6 @@ export default function CreateTeam({ route, navigation }) {
   )
   const [savedPets, setSavedPets] = useState([])
   const [pamilyFile, setPamilyFile] = useState('file://' + RNFS.MainBundlePath + '/default_pamily.png')
-  const ACCESSTOKEN = useRecoilValue(accessTokenState)
 
   const setSelectedTeam = useSetRecoilState(SelectedTeamAtom)
 
@@ -137,7 +135,7 @@ export default function CreateTeam({ route, navigation }) {
   )
 
   const createTeamCode = () => {
-    getTeamCode(ACCESSTOKEN).then((result) => {
+    getTeamCode().then((result) => {
       setPamilyCode(result)
     })
   }
@@ -175,7 +173,7 @@ export default function CreateTeam({ route, navigation }) {
 
     const json = JSON.stringify(teamInfo)
     pamilyData.append('todoTeamCreateInfo', { string: json, type: 'application/json' })
-    postTeamInfo(ACCESSTOKEN, pamilyData).then(() => {
+    postTeamInfo(pamilyData).then(() => {
       getLatestTeam().then((result) => {
         let tempArr = { id: result.teamId, name: result.teamName, auth: result.authority }
         console.log('topTeam Changed', tempArr)

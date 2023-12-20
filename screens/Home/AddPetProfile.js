@@ -9,16 +9,12 @@ import {
   BottomSheetModalProvider,
   TouchableWithoutFeedback,
 } from '@gorhom/bottom-sheet'
-import { useRecoilValue } from 'recoil'
-import { accessTokenState } from '../../recoil/AuthAtom'
 import { ScreenLayout, ScreenWidth } from '../../components/Shared'
 import EditIcon from '../../assets/Svgs/Edit.svg'
 import RNFS from 'react-native-fs'
 import { PetImageModal } from '../../components/Home/PetImageModal'
 
 export default function AddPetProfile({ route, navigation }) {
-  const ACCESSTOKEN = useRecoilValue(accessTokenState)
-
   const [enabled, setEnabled] = useState(false)
   const [petImageUrl, setPetImageUrl] = useState(
     'https://pawith.s3.ap-northeast-2.amazonaws.com/base-image/profileDefault.png',

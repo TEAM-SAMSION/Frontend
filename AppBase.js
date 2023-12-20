@@ -8,7 +8,7 @@ import { useSetRecoilState, useRecoilValue } from 'recoil'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import 'moment'
 import 'moment/locale/ko' // language must match config
-import { loggedInState, onboardedState, userInfoState } from './recoil/AuthAtom'
+import { eventViewedState, loggedInState, onboardedState, userInfoState } from './recoil/AuthAtom'
 import messaging from '@react-native-firebase/messaging'
 import PushNotificationIOS from '@react-native-community/push-notification-ios'
 import { NavigationContainer } from '@react-navigation/native'
@@ -62,6 +62,7 @@ export default function AppBase() {
   }, [])
   const setLoggedIn = useSetRecoilState(loggedInState)
   const setOnboarded = useSetRecoilState(onboardedState)
+  const setEventViewed = useSetRecoilState(eventViewedState)
 
   const onRemoteNotification = (notification) => {
     const isClicked = notification.getData().userInteraction === 1
@@ -78,6 +79,11 @@ export default function AppBase() {
           //RecoilState로 로그인여부 저장
           setLoggedIn(true)
           checkFCMToken(accessToken)
+        }
+      })
+      await AsyncStorage.getItem('eventViewed').then((eventViewed) => {
+        if (eventViewed) {
+          setEventViewed(true)
         }
       })
       await AsyncStorage.getItem('onBoardingDone').then((onBoardingDone) => {

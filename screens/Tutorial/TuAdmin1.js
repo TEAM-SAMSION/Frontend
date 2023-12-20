@@ -17,17 +17,15 @@ import QuestionMark from '../../assets/Svgs/Question_mark.svg'
 import Right from '../../assets/Svgs/chevron_right.svg'
 import Close from '../../assets/Svgs/Close.svg'
 import { useIsFocused } from '@react-navigation/native'
-import { useRecoilState, useRecoilValue } from 'recoil'
+import { useRecoilState } from 'recoil'
 import { TabBarAtom } from '../../recoil/TabAtom'
 import { getTeamInfo } from '../../components/Administrator/Apis'
-import { accessTokenState } from '../../recoil/AuthAtom'
 import CrownIcon from '../../assets/Svgs/Crown.svg'
 import BackButton from '../../assets/Svgs/chevron_back.svg'
 import CloseIcon from '../../assets/Svgs/Close.svg'
 import About1 from '../../assets/Svgs/about1.svg'
 
 export default function TuAdmin1({ navigation }) {
-  const ACCESSTOKEN = useRecoilValue(accessTokenState)
   const isFocused = useIsFocused()
   const [isTabVisible, setIsTabVisible] = useRecoilState(TabBarAtom)
 

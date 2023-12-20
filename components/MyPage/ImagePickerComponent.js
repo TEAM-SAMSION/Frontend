@@ -5,8 +5,6 @@ import { colors } from '../../colors'
 import axios from 'axios'
 //import ImageResizer from "react-native-image-resizer";
 import * as ImageManipulator from 'expo-image-manipulator'
-import { useRecoilValue } from 'recoil'
-import { accessTokenState } from '../../recoil/AuthAtom'
 import { BodySm_Text } from '../Fonts'
 import { changeProfileImage } from './Apis'
 

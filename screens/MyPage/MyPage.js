@@ -8,8 +8,7 @@ import { Alert, ScrollView, TouchableOpacity, View } from 'react-native'
 import EditIcon from '../../assets/Svgs/Edit.svg'
 import 'react-native-gesture-handler'
 import { BottomSheetBackdrop, BottomSheetModal, BottomSheetModalProvider } from '@gorhom/bottom-sheet'
-import { useRecoilValue, useSetRecoilState } from 'recoil'
-import { accessTokenState } from '../../recoil/AuthAtom'
+import { useSetRecoilState } from 'recoil'
 import { ModalPopUp } from '../../components/Shared'
 import { colors } from '../../colors'
 import { deleteTeam, getTeamDeleteValidation, getPeriod, getTeamList, getUserInfo } from '../../components/MyPage/Apis'
@@ -20,7 +19,6 @@ import ErrorIcon from '../../assets/Svgs/error.svg'
 
 export default function MyPage({ navigation }) {
   const isFocused = useIsFocused()
-  const ACCESSTOKEN = useRecoilValue(accessTokenState)
   const setIsTabVisible = useSetRecoilState(TabBarAtom)
 
   useEffect(() => {
@@ -36,7 +34,7 @@ export default function MyPage({ navigation }) {
   const swipeableRefs = useRef(null)
 
   const fetchUserInfo = () => {
-    getUserInfo(ACCESSTOKEN).then((result) => {
+    getUserInfo().then((result) => {
       setEmail(result.email)
       setName(result.nickname)
       setProfileUrl(result.profileImageUrl)
@@ -50,7 +48,7 @@ export default function MyPage({ navigation }) {
   const [groupInfo, setGroupInfo] = useState([])
 
   const fetchTeamList = async () => {
-    getTeamList(ACCESSTOKEN).then((result) => {
+    getTeamList().then((result) => {
       setGroupInfo(result)
     })
   }

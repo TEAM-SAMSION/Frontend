@@ -9,8 +9,6 @@ import {
   BottomSheetModalProvider,
   TouchableWithoutFeedback,
 } from '@gorhom/bottom-sheet'
-import { useRecoilValue } from 'recoil'
-import { accessTokenState } from '../../recoil/AuthAtom'
 import { ModalPopUp, ScreenLayout, ScreenWidth } from '../../components/Shared'
 import EditIcon from '../../assets/Svgs/Edit.svg'
 import { PetImageModal } from '../../components/Home/PetImageModal'
@@ -18,8 +16,6 @@ import BackButton from '../../assets/Svgs/chevron_back.svg'
 import { changePetInfo } from '../../components/Administrator/Apis'
 
 export default function EditPet({ route, navigation }) {
-  const ACCESSTOKEN = useRecoilValue(accessTokenState)
-
   const data = route.params
   const petInfo = data.petInfo
   const teamId = data.teamId
@@ -122,7 +118,7 @@ export default function EditPet({ route, navigation }) {
 
     const json = JSON.stringify(petDatas)
     petData.append('petUpdateInfo', { string: json, type: 'application/json' })
-    changePetInfo(ACCESSTOKEN, petId, petData)
+    changePetInfo(petId, petData)
   }
 
   return (

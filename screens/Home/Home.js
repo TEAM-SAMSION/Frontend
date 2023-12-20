@@ -87,11 +87,11 @@ export default function Home({ navigation }) {
           const todoList = await getMyTodoList(selectedTeam.id) //selectedTeam.id 다이렉트로 전달
           setResultArray(todoList)
           setMyTodo(todoList)
-          // const progress = await getTodoProgress(ACCESSTOKEN, teamList[selectedTeam.id].teamId)
+          // const progress = await getTodoProgress( teamList[selectedTeam.id].teamId)
           const progress = await getTodoProgress(selectedTeam.id)
           setProgress(progress)
         }
-        // const todoList = await getMyTodoList(ACCESSTOKEN, teamList[selectedTeam.id].teamId)  //selectedTeam.id는 로컬에 저장된 어레이의 위치값을 표시하는 것이 아닌, 서버 내에서의 team 위치를 파악하기 위한 인텍스이다
+        // const todoList = await getMyTodoList( teamList[selectedTeam.id].teamId)  //selectedTeam.id는 로컬에 저장된 어레이의 위치값을 표시하는 것이 아닌, 서버 내에서의 team 위치를 파악하기 위한 인텍스이다
       } else {
         setPamilyNum(0)
         setMyTodo([])
@@ -103,7 +103,6 @@ export default function Home({ navigation }) {
   useEffect(() => {
     getUserNickname()
     fetchData()
-    // AsyncStorage.removeItem('onBoardingDone')
   }, [])
 
   useEffect(() => {

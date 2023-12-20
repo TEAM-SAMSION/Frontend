@@ -3,8 +3,6 @@ import { Dimensions, StatusBar, Platform, Pressable, PixelRatio } from 'react-na
 import { colors } from '../colors'
 import { useEffect, useRef, useState } from 'react'
 import { Modal } from 'react-native'
-// import { Picker } from 'react-native-wheel-pick'
-// import WheelPickerExpo from 'react-native-wheel-picker-expo'
 
 export const ScreenWidth = Dimensions.get('window').width
 export const ScreenHeight = Dimensions.get('screen').height
@@ -74,7 +72,6 @@ export const InputTitle = styled.Text`
 //****************** ScreenLayout  *******************************************************/
 
 const KeyBoardAwareContainer = styled.KeyboardAvoidingView`
-  /* flex-direction: column; */
   width: 100%;
   flex: 1;
 `

@@ -21,7 +21,6 @@ import { useNavigation } from '@react-navigation/native'
 import { View } from 'react-native'
 
 export const MemberSearchBox = (props) => {
-  const ACCESSTOKEN = props.accessToken
   const teamId = props.teamId
   const myAuthority = props.myAuthority
   const myEmail = props.email
@@ -61,7 +60,7 @@ export const MemberSearchBox = (props) => {
       setChangingToExecutive(false)
       setChangingToMember(false)
     } else {
-      await changeAuthority(ACCESSTOKEN, teamId, registerId, changing)
+      await changeAuthority(teamId, registerId, changing)
       props.changeFunction()
       setChangingToPresident(false)
       setChangingToExecutive(false)
@@ -70,7 +69,7 @@ export const MemberSearchBox = (props) => {
   }
 
   useEffect(() => {
-    getUserInfo(ACCESSTOKEN).then((result) => {
+    getUserInfo().then((result) => {
       setNickname(result.nickname)
     })
   }, [])
@@ -277,7 +276,7 @@ export const MemberSearchBox = (props) => {
           </PopButton>
           <PopButton
             onPress={async () => {
-              await changeAuthority(ACCESSTOKEN, teamId, registerId, changing)
+              await changeAuthority(teamId, registerId, changing)
               navigation.navigate('MyPage')
             }}
           >

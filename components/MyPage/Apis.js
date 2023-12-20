@@ -2,13 +2,13 @@ import axios from 'axios'
 import { url } from '../Shared'
 import axiosInstance from '../../utils/customAxios'
 
-export const getUserInfo = async (accessToken) => {
+export const getUserInfo = async () => {
   let API = `/user`
   const response = await axiosInstance.get(url + API)
   return response.data
 }
 
-export const getTeamList = async (accessToken) => {
+export const getTeamList = async () => {
   const page = 0
   const size = 10000
   let API = `/teams?page=${page}&size=${size}`
@@ -19,7 +19,7 @@ export const getTeamList = async (accessToken) => {
 }
 
 /////// 정보 수정 //////
-export const changeProfileImage = async (accessToken, routeData) => {
+export const changeProfileImage = async (routeData) => {
   let API = '/user'
   const response = await axiosInstance.post(url + API, routeData, {
     headers: {
@@ -28,21 +28,21 @@ export const changeProfileImage = async (accessToken, routeData) => {
   })
 }
 
-export const changeNickname = async (accessToken, nickName) => {
+export const changeNickname = async (nickName) => {
   let API = '/user/name'
   let data = { nickname: nickName }
   const response = await axiosInstance.put(url + API, data)
 }
 
 /////// 팀 탈퇴 //////
-export const deleteTeam = async (accessToken, teamId) => {
+export const deleteTeam = async (teamId) => {
   let API = `/teams/${teamId}/registers`
   let data = {}
   const response = await axiosInstance.delete(url + API, data)
   console.log(`${teamId} 삭제`)
 }
 
-export const getAllTodoList = async (accessToken, teamId, page) => {
+export const getAllTodoList = async (teamId, page) => {
   let API = `/teams/${teamId}/todos/withdraw`
   const response = await axiosInstance.get(url + API, {
     params: {
@@ -53,7 +53,7 @@ export const getAllTodoList = async (accessToken, teamId, page) => {
   return response.data.content
 }
 
-export const getTodoNum = async (accessToken, teamId) => {
+export const getTodoNum = async (teamId) => {
   let API = `/teams/${teamId}/todos/withdraw/count`
   const response = await axiosInstance.get(url + API)
   return response.data.todoCount
@@ -71,13 +71,13 @@ export const getUserDeleteValidation = async () => {
   const response = await axiosInstance.post(url + API)
 }
 
-export const getAllTeams = async (accessToken) => {
+export const getAllTeams = async () => {
   let API = `/teams/withdraw`
   const response = await axiosInstance.get(url + API)
   return response.data.content
 }
 
-export const getAllTodos = async (accessToken, page) => {
+export const getAllTodos = async (page) => {
   let API = `/teams/todos/withdraw?page=${page}&size=10`
   const response = await axiosInstance.get(url + API, {
     params: {
@@ -88,25 +88,25 @@ export const getAllTodos = async (accessToken, page) => {
   return response.data.content
 }
 
-export const getAllTodoNum = async (accessToken) => {
+export const getAllTodoNum = async () => {
   let API = `/teams/todos/withdraw/count`
   const response = await axiosInstance.get(url + API)
   return response.data.todoCount
 }
 
-export const deleteAccount = async (accessToken) => {
+export const deleteAccount = async () => {
   let API = `/user`
   const response = await axiosInstance.delete(url + API)
   return response.status
 }
 
-export const postReason = async (accessToken, data) => {
+export const postReason = async (data) => {
   let API = '/user/withdraw'
   let reason = { reason: data }
   const response = await axiosInstance.post(url + API, reason)
 }
 
-export const countDate = async (accessToken) => {
+export const countDate = async () => {
   let API = '/user/term'
   const response = await axiosInstance.get(url + API)
   return response.data.joinTerm

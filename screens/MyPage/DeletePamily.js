@@ -4,17 +4,14 @@ import styled from 'styled-components/native'
 import { categoryColors, colors } from '../../colors'
 import BackButton from '../../assets/Svgs/chevron_back.svg'
 import { deleteTeam, getAllTodoList, getTodoNum } from '../../components/MyPage/Apis'
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
-import { accessTokenState } from '../../recoil/AuthAtom'
+import { useRecoilState, useSetRecoilState } from 'recoil'
 import { useIsFocused } from '@react-navigation/native'
 import { SelectedTeamAtom, TabBarAtom } from '../../recoil/TabAtom'
-import { ScrollView } from 'react-native-gesture-handler'
 import { BodyBoldSm_Text, DetailSm_Text } from '../../components/Fonts'
 import { ScreenLayout } from '../../components/Shared'
 import { getLatestTeam } from '../../components/Home/Apis'
 
 export default function DeletePamily({ route, navigation }) {
-  const ACCESSTOKEN = useRecoilValue(accessTokenState)
   const isFocused = useIsFocused()
   const [isTabVisible, setIsTabVisible] = useRecoilState(TabBarAtom)
   const setSelectedTeam = useSetRecoilState(SelectedTeamAtom)
@@ -54,24 +51,24 @@ export default function DeletePamily({ route, navigation }) {
     })
 
     const teamId = team.teamId
-    getAllTodoList(ACCESSTOKEN, teamId, todoPage).then((result) => {
+    getAllTodoList(teamId, todoPage).then((result) => {
       setTodoList(result)
     })
-    getTodoNum(ACCESSTOKEN, teamId).then((result) => {
+    getTodoNum(teamId).then((result) => {
       setTodoNum(result)
     })
     setDeleteTeamId(teamId)
   }, [])
 
   const loadMore = async () => {
-    const newTodoList = await getAllTodoList(ACCESSTOKEN, teamId, todoPage + 1)
+    const newTodoList = await getAllTodoList(teamId, todoPage + 1)
     setTodoList((prevTodoList) => [...prevTodoList, ...newTodoList])
     setTodoPage((prevTodoPage) => prevTodoPage + 1)
   }
 
   const deletePamily = () => {
     console.log(deleteTeamId)
-    deleteTeam(ACCESSTOKEN, deleteTeamId)
+    deleteTeam(deleteTeamId)
   }
 
   const renderItem = ({ item }) => (

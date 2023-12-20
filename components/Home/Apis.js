@@ -35,27 +35,27 @@ export const completeTodo = async (todoId) => {
 
 //////////////////////// 팀 참여 ////////////////////////
 
-export const getSearchedTeam = async (accessToken, teamCode) => {
+export const getSearchedTeam = async (teamCode) => {
   let API = `/teams/codes/${teamCode}`
   const response = await axiosInstance.get(url + API)
   console.log(response.data)
   return response.data
 }
 
-export const postJoiningTeam = async (accessToken, teamCode) => {
+export const postJoiningTeam = async (teamCode) => {
   let API = `/teams/registers?todoTeamCode=${teamCode}`
   let body = {}
   const response = await axiosInstance.post(url + API, body)
 }
 //////////////////////// 팀 생성 ////////////////////////
 
-export const getTeamCode = async (accessToken) => {
+export const getTeamCode = async () => {
   let API = `/teams/codes/random`
   const response = await axiosInstance.get(url + API)
   return response.data.randomCode
 }
 
-export const postTeamInfo = async (accessToken, data) => {
+export const postTeamInfo = async (data) => {
   let API = `/teams`
   const response = await axiosInstance.post(url + API, data, {
     headers: {

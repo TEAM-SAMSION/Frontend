@@ -9,17 +9,12 @@ import {
   BottomSheetModalProvider,
   TouchableWithoutFeedback,
 } from '@gorhom/bottom-sheet'
-import { useRecoilValue } from 'recoil'
-import { accessTokenState } from '../../recoil/AuthAtom'
-import { ProfileImageModal } from '../../components/Home/ProfileImageModal'
 import { ScreenLayout, ScreenWidth } from '../../components/Shared'
 import EditIcon from '../../assets/Svgs/Edit.svg'
 import { PetImageModal } from '../../components/Home/PetImageModal'
 import BackButton from '../../assets/Svgs/chevron_back.svg'
 
 export default function EditPetProfile({ route, navigation }) {
-  const ACCESSTOKEN = useRecoilValue(accessTokenState)
-
   const petInfo = route.params.petInfo
   const [enabled, setEnabled] = useState(false)
   const [petImageUrl, setPetImageUrl] = useState(petInfo.profileUrl)

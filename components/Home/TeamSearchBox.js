@@ -15,7 +15,6 @@ import { getLatestTeam, postJoiningTeam } from './Apis'
 import Close from '../../assets/Svgs/Close.svg'
 import { CommonActions, StackActions, useNavigation } from '@react-navigation/native'
 import { useRecoilValue, useSetRecoilState } from 'recoil'
-import { accessTokenState } from '../../recoil/AuthAtom'
 import ToDoNav from '../../navigators/ToDoNav'
 import ErrorIcon from '../../assets/Svgs/error.svg'
 import { SelectedTeamAtom } from '../../recoil/TabAtom'
@@ -23,7 +22,6 @@ import { SelectedTeamAtom } from '../../recoil/TabAtom'
 export const TeamSearchBox = (props) => {
   const [visible, setVisible] = useState(false)
   const [isDuplicated, setIsDuplicated] = useState(false)
-  const ACCESSTOKEN = useRecoilValue(accessTokenState)
   const setSelectedTeam = useSetRecoilState(SelectedTeamAtom)
 
   const data = props.data
@@ -39,7 +37,7 @@ export const TeamSearchBox = (props) => {
 
   const joinTeam = async () => {
     try {
-      await postJoiningTeam(ACCESSTOKEN, teamCode)
+      await postJoiningTeam(teamCode)
       let tempArr = { id: teamId, name: teamName, auth: 'MEMBER' }
       setSelectedTeam(tempArr)
       setVisible(false)

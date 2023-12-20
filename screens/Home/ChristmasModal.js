@@ -6,18 +6,25 @@ import Txt from '../../assets/Svgs/ChristmasText.svg'
 import { colors } from '../../colors'
 import { ScreenLayout } from '../../components/Shared'
 import { EventButton } from '../../components/Buttons'
+import { eventViewedState } from '../../recoil/AuthAtom'
+import { useRecoilState } from 'recoil'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 export const ChristmasModal = () => {
-  const [modalVisible, setModalVisible] = useState(true)
+  const [eventViewed, setEventViewed] = useRecoilState(eventViewedState)
+  const handleClose = () => {
+    setEventViewed(true)
+    AsyncStorage.setItem('eventViewed', 'true')
+  }
 
   return (
-    <Modal visible={modalVisible} animationType="slide" onRequestClose={() => setModalVisible(false)}>
+    <Modal visible={!eventViewed} animationType="slide" onRequestClose={() => handleClose()}>
       <ScreenLayout>
         <ContentLayout>
           <ModalHeader>
             <CloseButton
               onPress={() => {
-                setModalVisible(false)
+                handleClose()
               }}
             >
               <Close width={24} height={24} color={colors.grey_600} />
@@ -26,7 +33,7 @@ export const ChristmasModal = () => {
           <ContentBase>
             <Txt color={colors.grey_600} />
           </ContentBase>
-          <EventButton func={() => setModalVisible(false)} />
+          <EventButton func={() => handleClose()} />
         </ContentLayout>
       </ScreenLayout>
     </Modal>

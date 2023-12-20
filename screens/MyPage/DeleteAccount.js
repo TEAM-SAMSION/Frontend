@@ -3,17 +3,10 @@ import { FlatList } from 'react-native'
 import styled from 'styled-components/native'
 import { colors } from '../../colors'
 import { countDate, getAllTeams, getAllTodoNum, getAllTodos, getUserInfo } from '../../components/MyPage/Apis'
-import { useRecoilState, useRecoilValue } from 'recoil'
-import { accessTokenState } from '../../recoil/AuthAtom'
-import { useIsFocused } from '@react-navigation/native'
-import { TabBarAtom } from '../../recoil/TabAtom'
-import { ScrollView } from 'react-native-gesture-handler'
 import { BodyBoldSm_Text, DetailSm_Text } from '../../components/Fonts'
 import { ScreenLayout } from '../../components/Shared'
 
 export default function DeleteAccount({ route, navigation }) {
-  const ACCESSTOKEN = useRecoilValue(accessTokenState)
-
   const [userNickname, setUserNickname] = useState('')
   const [userPeriod, setUserPeriod] = useState()
   const [teamList, setTeamList] = useState([])
@@ -22,26 +15,26 @@ export default function DeleteAccount({ route, navigation }) {
   const [todoPage, setTodoPage] = useState(0)
 
   useEffect(() => {
-    getUserInfo(ACCESSTOKEN).then((result) => {
+    getUserInfo().then((result) => {
       setUserNickname(result.nickname)
     })
-    getAllTeams(ACCESSTOKEN).then((result) => {
+    getAllTeams().then((result) => {
       setTeamList(result)
     })
-    getAllTodos(ACCESSTOKEN, todoPage).then((result) => {
+    getAllTodos(todoPage).then((result) => {
       setTodoList(result)
       console.log(todoList)
     })
-    getAllTodoNum(ACCESSTOKEN).then((result) => {
+    getAllTodoNum().then((result) => {
       setTodoNum(result)
     })
-    countDate(ACCESSTOKEN).then((result) => {
+    countDate().then((result) => {
       setUserPeriod(result)
     })
   }, [])
 
   const loadMore = async () => {
-    const newTodoList = await getAllTodos(ACCESSTOKEN, todoPage + 1)
+    const newTodoList = await getAllTodos(todoPage + 1)
     setTodoList((prevTodoList) => [...prevTodoList, ...newTodoList])
     setTodoPage((prevTodoPage) => prevTodoPage + 1)
   }

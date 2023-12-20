@@ -7,12 +7,9 @@ import PlusIcon from '../../assets/Svgs/miniPlus.svg'
 import { useEffect, useRef, useState } from 'react'
 import { ScrollView, TouchableWithoutFeedback, View } from 'react-native'
 import { deletePet, getPet } from '../../components/Administrator/Apis'
-import { useRecoilValue } from 'recoil'
-import { accessTokenState } from '../../recoil/AuthAtom'
 import { useIsFocused } from '@react-navigation/native'
 
 export default function ManagePet({ route, navigation }) {
-  const ACCESSTOKEN = useRecoilValue(accessTokenState)
   const isFocused = useIsFocused()
 
   const data = route.params
@@ -22,7 +19,7 @@ export default function ManagePet({ route, navigation }) {
   const [savedPets, setSavedPets] = useState([])
 
   useEffect(() => {
-    getPet(ACCESSTOKEN, teamId).then((result) => {
+    getPet(teamId).then((result) => {
       setSavedPets(result)
     })
   }, [isFocused, isDeletePet])
@@ -43,7 +40,7 @@ export default function ManagePet({ route, navigation }) {
                       grey={false}
                       navigation={navigation}
                       handleDelete={() => {
-                        deletePet(ACCESSTOKEN, pet.petId)
+                        deletePet(pet.petId)
                         setIsDeletePet(!isDeletePet)
                       }}
                       onSwipeableOpenHandler={(ref) => {

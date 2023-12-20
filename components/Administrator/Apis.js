@@ -2,13 +2,13 @@ import axiosInstance from '../../utils/customAxios'
 import { url } from '../Shared'
 
 ////// 팀 정보 //////
-export const getTeamInfo = async (accessToken, teamId) => {
+export const getTeamInfo = async (teamId) => {
   let API = `/teams/${teamId}`
   const response = await axiosInstance.get(url + API)
   return response.data
 }
 
-export const postTeamInfo = async (accessToken, teamId, data) => {
+export const postTeamInfo = async (teamId, data) => {
   let API = `/teams/${teamId}`
   const response = await axiosInstance.post(url + API, data, {
     headers: {
@@ -18,19 +18,19 @@ export const postTeamInfo = async (accessToken, teamId, data) => {
 }
 
 ////// 회원 관리 //////
-export const getMember = async (accessToken, teamId) => {
+export const getMember = async (teamId) => {
   let API = `/teams/${teamId}/registers/manage`
   const response = await axiosInstance.get(url + API)
   return response.data.content
 }
 
-export const changeAuthority = async (accessToken, teamId, registerId, authority) => {
+export const changeAuthority = async (teamId, registerId, authority) => {
   let API = `/teams/${teamId}/registers/${registerId}`
   let data = { authority: authority }
   const response = await axiosInstance.put(url + API, data)
 }
 
-export const searchMember = async (accessToken, teamId, nickname) => {
+export const searchMember = async (teamId, nickname) => {
   let API = `/teams/${teamId}/registers/search?nickname=${nickname}`
   const response = await axiosInstance.get(url + API)
   return response.data.content
@@ -41,13 +41,13 @@ export const deleteMember = async (teamId, registerId) => {
   const response = await axiosInstance.put(url + API)
 }
 ////// 펫 관리 //////
-export const getPet = async (accessToken, teamId) => {
+export const getPet = async (teamId) => {
   let API = `/teams/${teamId}/pets`
   const response = await axiosInstance.get(url + API)
   return response.data.content
 }
 
-export const addPet = async (accessToken, teamId, data) => {
+export const addPet = async (teamId, data) => {
   let API = `/teams/${teamId}/pets`
   const response = await axiosInstance.post(url + API, data, {
     headers: {
@@ -56,12 +56,12 @@ export const addPet = async (accessToken, teamId, data) => {
   })
 }
 
-export const deletePet = async (accessToken, petId) => {
+export const deletePet = async (petId) => {
   let API = `/teams/pets/${petId}`
   const response = await axiosInstance.delete(url + API)
 }
 
-export const changePetInfo = async (accessToken, petId, data) => {
+export const changePetInfo = async (petId, data) => {
   let API = `/teams/pets/${petId}`
   const response = await axiosInstance.post(url + API, data, {
     headers: {

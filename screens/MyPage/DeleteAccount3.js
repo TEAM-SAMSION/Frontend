@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
 import styled from 'styled-components/native'
 import { colors } from '../../colors'
-import { useRecoilState, useRecoilValue } from 'recoil'
-import { accessTokenState, loggedInState } from '../../recoil/AuthAtom'
+import { useRecoilState } from 'recoil'
+import { loggedInState } from '../../recoil/AuthAtom'
 import CheckOn from '../../assets/Svgs/Check-box.svg'
 import CheckOff from '../../assets/Svgs/Check-box_off.svg'
 
@@ -16,15 +16,11 @@ import {
 } from '../../components/Fonts'
 import { ModalPopUp, ScreenLayout } from '../../components/Shared'
 import { deleteAccount, postReason } from '../../components/MyPage/Apis'
-import AsyncStorage from '@react-native-async-storage/async-storage'
-import { CommonActions } from '@react-navigation/native'
-import { Alert, ScrollView } from 'react-native'
-import ErrorIcon from '../../assets/Svgs/error.svg'
+import { ScrollView } from 'react-native'
 import { LogOut } from '../../utils/customAxios'
 import { SelectedTeamAtom } from '../../recoil/TabAtom'
 
 export default function DeleteAccount3({ route, navigation }) {
-  const ACCESSTOKEN = useRecoilValue(accessTokenState)
   const data = route.params
   const [selectedTeam, setSelectedTeam] = useRecoilState(SelectedTeamAtom)
   const reason = data.reason
@@ -33,8 +29,8 @@ export default function DeleteAccount3({ route, navigation }) {
   const [visible, setVisible] = useState(false)
 
   const withDraw = async () => {
-    await postReason(ACCESSTOKEN, reason)
-    await deleteAccount(ACCESSTOKEN)
+    await postReason(reason)
+    await deleteAccount()
     setSelectedTeam(null)
     LogOut(setLoggedIn)
   }
