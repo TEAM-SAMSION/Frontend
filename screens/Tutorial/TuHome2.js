@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { Image, Pressable, ScrollView, TouchableOpacity, View } from 'react-native'
-import { ScreenHeight, ScreenLayout, ScreenWidth } from '../../components/Shared'
+import { Image, Platform, Pressable, ScrollView, TouchableOpacity, View } from 'react-native'
+import { ScreenHeight, ScreenLayout, ScreenWidth, normalize } from '../../components/Shared'
 import { TopHeader } from '../../components/Home/TopHeader'
 import styled from 'styled-components/native'
 import { colors } from '../../colors'
@@ -9,9 +9,11 @@ import { MainImage } from '../../components/Home/MainImage'
 import { useRecoilState, useSetRecoilState } from 'recoil'
 import { useIsFocused } from '@react-navigation/native'
 import { SelectedTeamAtom, TabBarAtom } from '../../recoil/TabAtom'
-import { Body_Text } from '../../components/Fonts'
+import { Body_Text, DetailSm_Text } from '../../components/Fonts'
 import CloseIcon from '../../assets/Svgs/Close.svg'
-import { AuthError } from 'expo-auth-session'
+import Home from '../../assets/Svgs/Home.svg'
+import Logo from '../../assets/Svgs/LOGO_Symbol.svg'
+import MyPage from '../../assets/Svgs/Mypage.svg'
 
 export default function TuHome2({ navigation }) {
   const isFocused = useIsFocused()
@@ -31,8 +33,9 @@ export default function TuHome2({ navigation }) {
   return (
     <ScreenLayout>
       <Pressable
+        style={{ flex: 1 }}
         onPress={() => {
-          navigation.navigate('TuHome2')
+          navigation.navigate('TuMyPage1')
         }}
       >
         <View
@@ -118,6 +121,23 @@ export default function TuHome2({ navigation }) {
             </StartIcon>
           </StartTeamContainer>
         </TeamContainer>
+        <BottomNav>
+          <Tab>
+            <Home style={{ color: colors.primary_outline }} width={24} height={24} />
+            <DetailSm_Text color={colors.primary_outline} style={{ marginTop: 4 }}>
+              홈
+            </DetailSm_Text>
+          </Tab>
+          <Tab>
+            <Logo style={{ color: colors.grey_250 }} width={65} height={65} />
+          </Tab>
+          <Tab>
+            <MyPage style={{ color: colors.grey_250 }} width={24} height={24} />
+            <DetailSm_Text color={colors.grey_250} style={{ marginTop: 4 }}>
+              마이페이지
+            </DetailSm_Text>
+          </Tab>
+        </BottomNav>
       </Pressable>
       <View style={{ position: 'absolute', bottom: 52, left: ScreenWidth / 2 - 30, zIndex: 100 }}>
         <TouchableOpacity
@@ -213,4 +233,19 @@ const StartIcon = styled.View`
   position: absolute;
   right: 12px;
   bottom: 0;
+`
+const BottomNav = styled.View`
+  width: ${ScreenWidth};
+  position: absolute;
+  bottom: 0;
+  flex-direction: row;
+  display: flex;
+  align-items: center;
+  height: ${Platform.OS == 'android' ? 68 : 88};
+  padding-top: ${Platform.OS == 'android' ? 0 : normalize(16)};
+`
+const Tab = styled.View`
+  align-items: center;
+  justify-content: center;
+  flex: 1 0 0;
 `
