@@ -15,10 +15,12 @@ export default function AuthBridge({ navigation }) {
     console.log('Hello?')
     if (AT) {
       console.log('AccessToken성공적으로 불러왔으므로, 홈화면으로 이동', AT.substring(0, 10))
-      navigation.navigate('Home')
+
+      setLoggedIn(true)
     } else {
       console.log('현재 보유중인 토큰이 유효하지 않거나, RefreshToken값의 유효기간이 지났으므로 로그아웃 처리')
       setLoggedIn(false)
+      navigation.navigate('Auth')
     }
   }
   useFocusEffect(

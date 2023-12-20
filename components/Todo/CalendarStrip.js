@@ -17,11 +17,10 @@ export const MyCalendarStrip = ({ selectedDate, setSelectedDate }) => {
   const locale = { name: 'ko', config: { weekdays: '화수목금토일월' } } // const markedDate = [{ date: today,dots: [ {color: 'red' },],} ]
   const weekdays = ['일', '월', '화', '수', '목', '금', '토']
   const calendarRef = useRef(null)
-  console.log(selectedDate)
   return (
     <>
       <CalendarHeader>
-        <MonthText>{month}월</MonthText>
+        <SubHeadSm_Text color={colors.grey_700}>{month}월</SubHeadSm_Text>
         <ArrowContainer>
           <Arrow onPress={() => calendarRef.current.getPreviousWeek()}>
             <Arrow_left width={28} height={28} />
@@ -103,12 +102,6 @@ const CalendarHeader = styled.View`
   flex-direction: row;
   justify-content: space-between;
 `
-const MonthText = styled.Text`
-  color: ${colors.grey_700};
-  font-family: 'Spoqa-Bold';
-  font-size: 20px;
-  padding-left: 8px;
-`
 const ArrowContainer = styled.View`
   width: 64px;
   flex-direction: row;
@@ -136,6 +129,7 @@ const TodayButton = styled.TouchableOpacity`
   justify-content: center;
   align-items: center;
   padding: 4px 10px;
+  height: 32px;
   border-radius: 99px;
   display: inline-block;
 `

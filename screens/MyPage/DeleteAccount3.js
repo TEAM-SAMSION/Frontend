@@ -36,7 +36,7 @@ export default function DeleteAccount3({ route, navigation }) {
     await postReason(ACCESSTOKEN, reason)
     await deleteAccount(ACCESSTOKEN)
     setSelectedTeam(null)
-    LogOut()
+    LogOut(setLoggedIn)
   }
 
   return (

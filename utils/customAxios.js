@@ -4,9 +4,12 @@ import { checkFCMToken } from '../AppBase'
 import { url } from '../components/Shared'
 import { navigate } from '../navigators/RootNavigator'
 import NaverLogin from '@react-native-seoul/naver-login'
+import { useSetRecoilState } from 'recoil'
+import { loggedInState } from '../recoil/AuthAtom'
 
 const updateToken = async () => {
   const refreshToken = await AsyncStorage.getItem('refreshToken')
+
   let API = `/reissue`
   let body = {}
   if (refreshToken) {
@@ -28,12 +31,13 @@ const updateToken = async () => {
   }
 }
 
-export const LogOut = async () => {
+export const LogOut = async (setLoggedIn) => {
   NaverLogin.logout()
   console.log('Naver Logout')
   await AsyncStorage.removeItem('accessToken')
   await AsyncStorage.removeItem('refreshToken')
-  navigate('AuthBridge')
+  setLoggedIn(false)
+  // navigate('AuthBridge')
 }
 const axiosInstance = axios.create({
   baseURL: 'https://api.pawith.com',
@@ -60,9 +64,9 @@ axiosInstance.interceptors.response.use(
     console.log('axiosInstance에서 에러 감지', error.config.method, error.config.url, error.response.data.errorCode)
     // 유효하지 않은 토큰입니다. / 토큰이 만료되었습니다. / 토큰이 존재하지 않습니다.
     if (
-      error.response.data.errorCode === 1000 ||
-      error.response.data.errorCode === 1001 ||
-      error.response.data.errorCode === 1002
+      // error.response.data.errorCode === 1000 ||
+      error.response.data.errorCode === 1001
+      // error.response.data.errorCode === 1002
     ) {
       console.log('액서스토큰 만료')
       const data = await updateToken() // 액세스토큰 갱신

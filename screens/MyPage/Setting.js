@@ -4,19 +4,26 @@ import { ScreenLayout } from '../../components/Shared'
 import { styled } from 'styled-components/native'
 import ContentIcon from '../../assets/Svgs/chevron_right.svg'
 import { colors } from '../../colors'
-import { useRecoilState } from 'recoil'
-import { useIsFocused } from '@react-navigation/native'
+import { useRecoilState, useSetRecoilState } from 'recoil'
+import { CommonActions, useIsFocused } from '@react-navigation/native'
 import { SelectedTeamAtom, TabBarAtom } from '../../recoil/TabAtom'
 import { LogOut } from '../../utils/customAxios'
+import { loggedInState } from '../../recoil/AuthAtom'
 
 export default function Setting({ navigation }) {
   const isFocused = useIsFocused()
   const [isTabVisible, setIsTabVisible] = useRecoilState(TabBarAtom)
   const [selectedTeam, setSelectedTeam] = useRecoilState(SelectedTeamAtom)
 
+  const setLoggedIn = useSetRecoilState(loggedInState)
   const handleLogout = () => {
     setSelectedTeam(null)
-    LogOut()
+    navigation.dispatch(
+      CommonActions.reset({
+        routes: [{ name: 'HomeNav' }],
+      }),
+    )
+    LogOut(setLoggedIn)
   }
   useEffect(() => {
     isFocused && setIsTabVisible(false)

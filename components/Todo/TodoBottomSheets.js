@@ -1,13 +1,13 @@
 import { useMemo, useState } from 'react'
 import axios from 'axios'
-import { ActivityIndicator, Alert, Keyboard, Platform, ScrollView } from 'react-native'
+import { ActivityIndicator, Alert, Keyboard, Platform, ScrollView, View } from 'react-native'
 import styled from 'styled-components/native'
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator, TransitionPresets } from '@react-navigation/stack'
 import { colors } from '../../colors'
 import { Input, ModalPopUp, ScreenWidth, url } from '../Shared'
-import { BodyBoldSm_Text, Body_Text, Detail_Text } from '../Fonts'
-import { Button_PinkBg } from '../Buttons'
+import { BodyBoldSm_Text, BodySm_Text, Body_Text, Detail_Text } from '../Fonts'
+import { Button_PinkBg, Button_PinkBgBottom, Button_PinkBg_Abs } from '../Buttons'
 
 import Caution from '../../assets/Svgs/Caution.svg'
 import Change from '../../assets/Svgs/Todo_change.svg'
@@ -26,6 +26,7 @@ export const TodoEditBottomSheet = ({
   getInitDatas,
   setSelectedTodo,
   selectedDate,
+  teamUserList,
 }) => {
   const screenOptions = useMemo(
     () => ({
@@ -78,6 +79,7 @@ export const TodoEditBottomSheet = ({
               setSelectedTodo={setSelectedTodo}
               handleBottomSheetHeight={handleBottomSheetHeight}
               getInitDatas={getInitDatas}
+              teamUserList={teamUserList}
             />
           )}
         </Stack.Screen>
@@ -147,7 +149,11 @@ const TodoEditHome = ({ navigation, selectedTodo, selectedDate, getInitDatas, ha
           <Alarm color={colors.grey_400} width={24} height={24} />
           <Detail_Text>시간알림</Detail_Text>
         </BigBox>
-        <BigBox onPress={() => navigation.navigate('TodoDateSetting')}>
+        <BigBox
+          onPress={() => {
+            navigation.navigate('TodoDateSetting')
+          }}
+        >
           <Change color={colors.grey_400} width={24} height={24} />
           <Detail_Text>날짜변경</Detail_Text>
         </BigBox>
@@ -190,41 +196,66 @@ const TodoDataEditing = ({
   getInitDatas,
   selectedDate,
   setSelectedTodo,
+  teamUserList,
 }) => {
   const [name, setName] = useState(selectedTodo.task)
   const [isLoading, setIsLoading] = useState(false)
-  // let assigneeNames = selectedTodo.assignNames.map((assignee) => assignee.assigneeName)
-  // const [users, setUsers] = useState(
-  //   teamUserList?.map(function (user) {
-  //     console.log(user)
-  //     if (assigneeNames.includes(user.name)) {
-  //       return { ...user, selected: true }
-  //     } else {
-  //       return { ...user, selected: false }
-  //     }
-  //   }),
-  // )
-  // const selectedUser = users.reduce((acc, user) => {
-  //   if (user.selected) {
-  //     acc.push(user.id)
-  //   }
-  //   return acc
-  // }, [])
 
-  // const selectAll = () => {
-  //   const tempArr = JSON.parse(JSON.stringify(users))
-  //   tempArr.map((e) => {
-  //     e.selected = true
-  //     return e
-  //   })
-  //   setUsers(tempArr)
-  // }
+  let assigneeNames = selectedTodo.assignNames.map((assignee) => assignee.assigneeName)
+  const [users, setUsers] = useState(
+    teamUserList?.map(function (user) {
+      console.log(user)
+      if (assigneeNames.includes(user.name)) {
+        return { ...user, selected: true }
+      } else {
+        return { ...user, selected: false }
+      }
+    }),
+  )
+  const selectedUser = users.reduce((acc, user) => {
+    if (user.selected) {
+      acc.push(user.id)
+    }
+    return acc
+  }, [])
 
-  // const selectUser = (id) => {
-  //   const tempArr = JSON.parse(JSON.stringify(users))
-  //   tempArr[id].selected = !tempArr[id].selected
-  //   setUsers(tempArr)
-  // }
+  const editTodo = async () => {
+    let data = {
+      categoryId: selectedCategoryID,
+      description: name,
+      scheduledDate: selectedDate,
+      registerIds: selectedUser,
+    }
+    try {
+      let API = `/teams/todos`
+      const response = axiosInstance.post(url + API, data)
+      console.log('CreateTodoSuccessed!, response:', response)
+    } catch (e) {
+      console.log('CreateTodo Error:', e)
+    }
+  }
+  const selectAll = () => {
+    const tempArr = JSON.parse(JSON.stringify(users))
+    if (tempArr.filter((item) => item.selected == false).length > 0) {
+      //선택되지 않은 담당자가 한명이라도 있으면
+      tempArr.map((e) => {
+        e.selected = true
+        return e
+      })
+    } else {
+      tempArr.map((e) => {
+        e.selected = false
+        return e
+      })
+    }
+    setUsers(tempArr)
+  }
+
+  const selectUser = (id) => {
+    const tempArr = JSON.parse(JSON.stringify(users))
+    tempArr[id].selected = !tempArr[id].selected
+    setUsers(tempArr)
+  }
   const popKeyboard = () => {
     Keyboard.dismiss()
     handleBottomSheetHeight(1)
@@ -252,69 +283,79 @@ const TodoDataEditing = ({
         justifyContent: 'flex-start',
       }}
     >
-      <HeaderWithBackButton style={{ marginBottom: 16 }}>
-        <BackButton style={{ position: 'absolute', top: 12 }} onPress={() => navigation.goBack()}>
-          <Back width={24} height={24} />
-        </BackButton>
-        <Body_Text style={{ width: '100%', textAlign: 'center' }} color={colors.grey_800}>
-          TODO 수정
-        </Body_Text>
-      </HeaderWithBackButton>
-      <InputContainer>
-        <BodyBoldSm_Text style={{ marginBottom: 10 }}>TODO 입력</BodyBoldSm_Text>
-        <Input
-          style={{ backgroundColor: colors.grey_150, color: colors.grey_700 }}
-          autoCapitalize="none"
-          placeholderTextColor={colors.grey_450}
-          onSubmitEditing={() => handleSubmit()}
-          placeholder="할 일을 입력해주세요"
-          returnKeyType="done"
-          inputMode="text"
-          blurOnSubmit={false}
-          onChangeText={(text) => setName(text)}
-          onFocus={() => handleBottomSheetHeight(3)}
-          onEndEditing={() => popKeyboard()}
-        >
-          {selectedTodo.task}
-        </Input>
-        {name?.length > 20 && (
-          <Detail_Text style={{ marginTop: 4 }} color={colors.red_300}>
-            글자 수가 1에서 20 사이여야합니다
-          </Detail_Text>
-        )}
-      </InputContainer>
-      {/* <BodyBoldSm_Text style={{ marginBottom: 10 }}>담당자 지정</BodyBoldSm_Text>
-      <UserContainer>
-        <UserItem
-          style={{
-            backgroundColor:
-              users.filter((item) => item.selected == false).length == 0 ? colors.red_200 : colors.grey_150,
-          }}
-          key={0}
-          onPress={() => selectAll()}
-        >
-          <Detail_Text color={colors.grey_700}>모두</Detail_Text>
-        </UserItem>
-        {users?.map((user, id) => {
-          return (
+      <View style={{ flex: 38 }}>
+        <HeaderWithBackButton style={{ marginBottom: 16 }}>
+          <BackButton style={{ position: 'absolute', top: 12 }} onPress={() => navigation.goBack()}>
+            <Back width={24} height={24} />
+          </BackButton>
+          <Body_Text style={{ width: '100%', textAlign: 'center' }} color={colors.grey_800}>
+            TODO 수정
+          </Body_Text>
+        </HeaderWithBackButton>
+        <InputContainer>
+          <BodyBoldSm_Text style={{ marginBottom: 10 }}>TODO 입력</BodyBoldSm_Text>
+          <Input
+            style={{ backgroundColor: colors.grey_150 }}
+            autoCapitalize="none"
+            placeholderTextColor={colors.grey_450}
+            onSubmitEditing={() => handleSubmit()}
+            placeholder="할 일을 입력해주세요"
+            returnKeyType="done"
+            inputMode="text"
+            blurOnSubmit={false}
+            onChangeText={(text) => setName(text)}
+            onFocus={() => handleBottomSheetHeight(3)}
+            onEndEditing={() => popKeyboard()}
+          >
+            <BodySm_Text color={colors.grey_600}>{selectedTodo.task}</BodySm_Text>
+          </Input>
+          {name?.length > 20 && (
+            <Detail_Text style={{ marginTop: 4 }} color={colors.red_300}>
+              글자 수가 1에서 20 사이여야합니다
+            </Detail_Text>
+          )}
+        </InputContainer>
+        <BodyBoldSm_Text style={{ marginBottom: 10 }}>담당자 지정</BodyBoldSm_Text>
+        <UserContainer>
+          <ScrollView
+            style={{ height: '100%' }}
+            contentContainerStyle={{ flexWrap: 'wrap', flexDirection: 'row' }}
+            showsVerticalScrollIndicator={false}
+          >
             <UserItem
-              key={id + 1}
-              onPress={() => selectUser(id)}
-              style={{ backgroundColor: user?.selected ? colors.red_200 : colors.grey_150 }}
+              style={{
+                backgroundColor:
+                  users.filter((item) => item.selected == false).length == 0 ? colors.red_200 : colors.grey_150,
+              }}
+              key={0}
+              onPress={() => selectAll()}
             >
-              <Detail_Text key={id} color={user?.selected ? colors.grey_700 : colors.grey_600}>
-                {user.name}
-              </Detail_Text>
+              <Detail_Text color={colors.grey_700}>모두</Detail_Text>
             </UserItem>
-          )
-        })}
-      </UserContainer> */}
-      <Button_PinkBg
-        isLoading={isLoading}
-        isEnabled={name.length > 0 && name.length < 21}
-        text="완료"
-        func={() => handleSubmit()}
-      />
+            {users?.map((user, id) => {
+              return (
+                <UserItem
+                  key={id + 1}
+                  onPress={() => selectUser(id)}
+                  style={{ backgroundColor: user?.selected ? colors.red_200 : colors.grey_150 }}
+                >
+                  <Detail_Text key={id} color={user?.selected ? colors.grey_700 : colors.grey_600}>
+                    {user.name}
+                  </Detail_Text>
+                </UserItem>
+              )
+            })}
+          </ScrollView>
+        </UserContainer>
+      </View>
+      <View style={{ flex: 62 }}>
+        <Button_PinkBg
+          isLoading={isLoading}
+          isEnabled={name.length > 0 && name.length < 21}
+          text="완료"
+          func={() => handleSubmit()}
+        />
+      </View>
     </BottomSheetBase>
   )
 }
@@ -490,71 +531,76 @@ export const TodoCreateBottomSheet = ({
         paddingTop: Platform.OS === 'android' ? 8 : 0,
       }}
     >
-      <BottomSheetHeader>
-        <Body_Text color={colors.grey_800}>TODO</Body_Text>
-      </BottomSheetHeader>
-      <InputContainer>
-        <BodyBoldSm_Text style={{ marginBottom: 10 }}>TODO 입력</BodyBoldSm_Text>
-        <Input
-          style={{ backgroundColor: colors.grey_150, color: colors.grey_700 }}
-          autoCapitalize="none"
-          placeholderTextColor={colors.grey_450}
-          onSubmitEditing={() => {
-            Keyboard.dismiss()
-            handleBottomSheetHeight(2)
-          }}
-          maxLength={20}
-          placeholder="할 일을 입력해주세요"
-          returnKeyType="done"
-          inputMode="text"
-          blurOnSubmit={false}
-          onChangeText={(text) => setName(text)}
-          onFocus={() => handleBottomSheetHeight(3)}
-        />
-        {name?.length > 20 && (
-          <Detail_Text style={{ marginTop: 4 }} color={colors.red_300}>
-            글자 수가 1에서 20 사이여야합니다
-          </Detail_Text>
-        )}
-      </InputContainer>
-
-      <BodyBoldSm_Text style={{ marginBottom: 10 }}>담당자 지정</BodyBoldSm_Text>
-      <UserContainer>
-        <ScrollView
-          contentContainerStyle={{ flexWrap: 'wrap', flexDirection: 'row' }}
-          showsVerticalScrollIndicator={false}
-        >
-          <UserItem
-            style={{
-              backgroundColor:
-                users.filter((item) => item.selected == false).length == 0 ? colors.red_200 : colors.grey_150,
+      <View style={{ flex: 38 }}>
+        <BottomSheetHeader>
+          <Body_Text color={colors.grey_800}>TODO</Body_Text>
+        </BottomSheetHeader>
+        <InputContainer>
+          <BodyBoldSm_Text style={{ marginBottom: 10 }}>TODO 입력</BodyBoldSm_Text>
+          <Input
+            style={{ backgroundColor: colors.grey_150, color: colors.grey_700 }}
+            autoCapitalize="none"
+            placeholderTextColor={colors.grey_450}
+            onSubmitEditing={() => {
+              Keyboard.dismiss()
+              handleBottomSheetHeight(2)
             }}
-            key={0}
-            onPress={() => selectAll()}
+            maxLength={20}
+            placeholder="할 일을 입력해주세요"
+            returnKeyType="done"
+            inputMode="text"
+            blurOnSubmit={false}
+            onChangeText={(text) => setName(text)}
+            onFocus={() => handleBottomSheetHeight(3)}
+          />
+          {name?.length > 20 && (
+            <Detail_Text style={{ marginTop: 4 }} color={colors.red_300}>
+              글자 수가 1에서 20 사이여야합니다
+            </Detail_Text>
+          )}
+        </InputContainer>
+
+        <BodyBoldSm_Text style={{ marginBottom: 10 }}>담당자 지정</BodyBoldSm_Text>
+        <UserContainer>
+          <ScrollView
+            style={{ height: '100%' }}
+            contentContainerStyle={{ flexWrap: 'wrap', flexDirection: 'row' }}
+            showsVerticalScrollIndicator={false}
           >
-            <Detail_Text color={colors.grey_700}>모두</Detail_Text>
-          </UserItem>
-          {users?.map((user, id) => {
-            return (
-              <UserItem
-                key={id + 1}
-                onPress={() => selectUser(id)}
-                style={{ backgroundColor: user?.selected ? colors.red_200 : colors.grey_150 }}
-              >
-                <Detail_Text key={id} color={user?.selected ? colors.grey_700 : colors.grey_600}>
-                  {user.name}
-                </Detail_Text>
-              </UserItem>
-            )
-          })}
-        </ScrollView>
-      </UserContainer>
-      <Button_PinkBg
-        isLoading={isLoading}
-        isEnabled={!isLoading && selectedUser?.length > 0 && name?.length > 0 && name?.length < 21}
-        text="완료"
-        func={() => handleSubmit()}
-      />
+            <UserItem
+              style={{
+                backgroundColor:
+                  users.filter((item) => item.selected == false).length == 0 ? colors.red_200 : colors.grey_150,
+              }}
+              key={0}
+              onPress={() => selectAll()}
+            >
+              <Detail_Text color={colors.grey_700}>모두</Detail_Text>
+            </UserItem>
+            {users?.map((user, id) => {
+              return (
+                <UserItem
+                  key={id + 1}
+                  onPress={() => selectUser(id)}
+                  style={{ backgroundColor: user?.selected ? colors.red_200 : colors.grey_150 }}
+                >
+                  <Detail_Text key={id} color={user?.selected ? colors.grey_700 : colors.grey_600}>
+                    {user.name}
+                  </Detail_Text>
+                </UserItem>
+              )
+            })}
+          </ScrollView>
+        </UserContainer>
+      </View>
+      <View style={{ flex: 62 }}>
+        <Button_PinkBg
+          isLoading={isLoading}
+          isEnabled={!isLoading && selectedUser?.length > 0 && name?.length > 0 && name?.length < 21}
+          text="완료"
+          func={() => handleSubmit()}
+        />
+      </View>
     </BottomSheetBase>
   )
 }
@@ -572,7 +618,6 @@ const UserContainer = styled.View`
   flex-direction: row;
   flex-wrap: wrap;
   flex: 1;
-  /* width: 100%; */
 `
 const ContentContainer = styled.View`
   flex-direction: column;
@@ -606,7 +651,7 @@ const BottomSheetBase = styled.View`
   height: 100%;
   padding: 24px 24px 32px 24px;
   flex-direction: column;
-  justify-content: space-between;
+  /* justify-content: space-between; */
 `
 const BottomSheetHeader = styled.View`
   flex-direction: row;

@@ -6,7 +6,7 @@ import { Detail_Text, Label_Text } from '../Fonts'
 
 export const CategoryIndicator = ({ startCreateTodo, categoryId, todos }) => {
   return (
-    <CategoryContainer style={{ marginTop: 16, marginBottom: 12 }}>
+    <CategoryContainer style={{ marginBottom: 8, marginTop: 8 }}>
       <CategoryBox onPress={() => startCreateTodo(categoryId)}>
         <Circle style={{ backgroundColor: categoryColors[categoryId % 10] }}></Circle>
         <Label_Text>{todos[1]}</Label_Text>

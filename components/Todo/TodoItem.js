@@ -114,6 +114,7 @@ const TodoContainer = styled.TouchableOpacity`
   border-radius: 8px;
   background-color: ${colors.grey_150};
   margin-bottom: 8px;
+  margin-top: 4px;
   justify-content: space-between;
   align-items: center;
 `

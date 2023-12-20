@@ -1,6 +1,6 @@
 import styled from 'styled-components/native'
 import { colors } from '../colors'
-import LOGO_Symbol from '../assets/Svgs/LOGO_Symbol.svg'
+import LOGO_Symbol from '../assets/Svgs/Logo_bottom.svg'
 import { ActivityIndicator, Platform } from 'react-native'
 import { BodyBoldSm_Text } from './Fonts'
 
@@ -38,6 +38,21 @@ export const OnboardingButton = ({ func, lastFunc, currentIdx, data }) => {
     </NonLayoutButton>
   )
 }
+export const EventButton = ({ func }) => {
+  return (
+    <NonLayoutButton
+      style={{
+        backgroundColor: colors.primary,
+      }}
+      onPress={func}
+    >
+      <LOGO_Symbol color={colors.grey_100} height={24} width={24} />
+      <BodyBoldSm_Text color={colors.grey_100} style={{ marginLeft: 8 }}>
+        크리스마스도 포잇과 함께하기
+      </BodyBoldSm_Text>
+    </NonLayoutButton>
+  )
+}
 export const NotificationButton = ({ func }) => {
   return (
     <MyButton
@@ -69,7 +84,6 @@ export const Button_PinkBg = ({ isEnabled, func, text, isLoading }) => {
   )
 }
 const MyButton = styled.TouchableOpacity`
-  width: 100%;
   flex-direction: row;
   height: 44px;
   border-radius: 8px;
