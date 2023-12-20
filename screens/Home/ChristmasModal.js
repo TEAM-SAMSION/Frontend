@@ -3,8 +3,9 @@ import { View, Text, Modal, Button, StyleSheet, SafeAreaView } from 'react-nativ
 import styled from 'styled-components/native'
 import Close from '../../assets/Svgs/Close.svg'
 import Txt from '../../assets/Svgs/ChristmasText.svg'
+import Back from '../../assets/Svgs/ChristmasBack.svg'
 import { colors } from '../../colors'
-import { ScreenLayout } from '../../components/Shared'
+import { ScreenHeight, ScreenLayout, ScreenWidth } from '../../components/Shared'
 import { EventButton } from '../../components/Buttons'
 import { eventViewedState } from '../../recoil/AuthAtom'
 import { useRecoilState } from 'recoil'
@@ -19,7 +20,11 @@ export const ChristmasModal = () => {
 
   return (
     <Modal visible={!eventViewed} animationType="slide" onRequestClose={() => handleClose()}>
+      {/* <Modal visible={true} animationType="slide" onRequestClose={() => handleClose()}> */}
       <ScreenLayout>
+        <BackImgContainer>
+          <Back width={ScreenWidth} height={ScreenHeight} />
+        </BackImgContainer>
         <ContentLayout>
           <ModalHeader>
             <CloseButton
@@ -32,6 +37,7 @@ export const ChristmasModal = () => {
           </ModalHeader>
           <ContentBase>
             <Txt color={colors.grey_600} />
+            <BackGif resizeMode="contain" source={require('../../assets/Gifs/Christmas.gif')} />
           </ContentBase>
           <EventButton func={() => handleClose()} />
         </ContentLayout>
@@ -46,14 +52,26 @@ const ModalHeader = styled.View`
   height: 52px;
   margin: 16px;
 `
+const BackImgContainer = styled.View`
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+`
+const BackGif = styled.Image`
+  width: 200%;
+  /* top: -30px; */
+  /* background-color: cadetblue; */
+`
 const ContentLayout = styled.View`
   flex-direction: column;
   flex: 1;
   justify-content: space-between;
 `
 const ContentBase = styled.View`
+  bottom: 40px;
   align-items: center;
-  margin-top: 24px;
   flex: 1;
 `
 const CloseButton = styled.TouchableOpacity``

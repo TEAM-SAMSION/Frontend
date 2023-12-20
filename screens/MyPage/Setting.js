@@ -9,6 +9,7 @@ import { CommonActions, useIsFocused } from '@react-navigation/native'
 import { SelectedTeamAtom, TabBarAtom } from '../../recoil/TabAtom'
 import { LogOut } from '../../utils/customAxios'
 import { loggedInState } from '../../recoil/AuthAtom'
+// import { navigate } from '../../navigators/RootNavigator'
 
 export default function Setting({ navigation }) {
   const isFocused = useIsFocused()
@@ -23,6 +24,7 @@ export default function Setting({ navigation }) {
         routes: [{ name: 'HomeNav' }],
       }),
     )
+    // navigate('HomeNav')
     LogOut(setLoggedIn)
   }
   useEffect(() => {
@@ -55,9 +57,9 @@ export default function Setting({ navigation }) {
           <ContentIcon width={16} height={16} color={colors.grey_450} />
         </TouchableIcon>
       </ContentContainer>
-      <ContentContainer onPress={() => navigation.navigate('TutorialNav', { screen: 'TuHome1' })}>
-        <ContentText>튜토리얼테스트</ContentText>
-      </ContentContainer>
+      {/* <ContentContainer>
+        <ContentText>공지사항</ContentText>
+      </ContentContainer> */}
       <ContentContainer>
         <ContentText>앱 정보</ContentText>
         <ContentText2>ver 1.0.0</ContentText2>
