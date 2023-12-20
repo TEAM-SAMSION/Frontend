@@ -40,7 +40,7 @@ export const LogOut = async (setLoggedIn) => {
   // navigate('AuthBridge')
 }
 const axiosInstance = axios.create({
-  baseURL: 'https://api.pawith.com',
+  baseURL: 'https://dev.pawith.com',
   timeout: 5000,
 })
 axiosInstance.interceptors.request.use(

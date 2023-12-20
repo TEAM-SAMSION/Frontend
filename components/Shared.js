@@ -34,7 +34,7 @@ export const ScreenLayout = ({ children, backgroundColor = colors.grey_100 }) =>
   )
 }
 
-export const url = 'https://api.pawith.com'
+export const url = 'https://dev.pawith.com'
 
 //****************** Input  *******************************************************/
 const TitleText = styled.Text`

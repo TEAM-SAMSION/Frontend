@@ -30,7 +30,6 @@ export default Todo = ({ navigation }) => {
     tempDate.getDate() < 10 ? `0${tempDate.getDate()}` : tempDate.getDate()
   }`
 
-  const [isTutorialVisible, setIsTutorialVisible] = useState(true)
   const buttonRef = useRef(null)
   const [todosByCategory, setTodosByCategory] = useState(null)
 
@@ -85,12 +84,13 @@ export default Todo = ({ navigation }) => {
       setRefreshing(false)
     }, 1000)
   }, [selectedDate, selectedTeam])
+
   const refreshData = async (date = today) => {
     console.log('RefreshData', date)
     // setIsLoading(true)
     if (selectedTeam) {
-      await getCategoryList(selectedTeam.id).then((categories) => {
-        // console.log('2. 카테고리로 Todo 불러와서 저장', categories.toString().substring(0, 10))
+      await getCategoryList(selectedTeam.id, date).then((categories) => {
+        console.log('2. 카테고리로 Todo 불러와서 저장', categories.toString().substring(0, 10))
         getTodosByCategory(categories, date)
       })
       await getTeamUser(selectedTeam.id).then((res) => {
@@ -146,9 +146,8 @@ export default Todo = ({ navigation }) => {
         // console.log('실제로 fetch때 사용되는 팀ID:', selectedTeamID, 'Recoil의 팀ID:', selectedTeam.id)
         if (selectedTeamID) {
           //null 반환받으면, TodoTeam 없다는 것을 의미하기에 api호출 스킵
-          await getCategoryList(selectedTeamID).then((categories) => {
-            console.log(categories)
-            // console.log('2. 카테고리로 Todo 불러와서 저장', categories.toString().substring(0, 10))
+          await getCategoryList(selectedTeamID, date).then((categories) => {
+            console.log('2. 카테고리로 Todo 불러와서 저장', categories.toString().substring(0, 10))
             getTodosByCategory(categories, date).then(setIsLoading(false))
           })
           await getTeamUser(selectedTeamID).then((res) => {
