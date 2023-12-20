@@ -4,7 +4,7 @@ import styled from 'styled-components/native'
 import { colors } from '../../colors'
 import { Body_Text, Detail_Text } from '../Fonts'
 
-export const TodoModal = ({ isVisible, onClose, todoTeamList, handleTeamChange }) => {
+export const TodoMenuModal = ({ isVisible, onClose, todoTeamList, handleTeamChange }) => {
   const translateY = useRef(new Animated.Value(0)).current
   const [showModal, setShowModal] = useState(isVisible)
   useEffect(() => {

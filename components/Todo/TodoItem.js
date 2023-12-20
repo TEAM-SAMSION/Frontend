@@ -7,19 +7,28 @@ import InComplete from '../../assets/Imgs/InComplete.png'
 import styled from 'styled-components/native'
 import { completeTodo } from './Apis'
 import { ActivityIndicator, Alert } from 'react-native'
+import Toast from 'react-native-toast-message'
+import { showDeletedToast, showNotAuthorizedToast } from '../../utils/toastMessages'
 
-const TodoItem = ({ editTodo, categoryId, todo, todoLocalId, refreshData, selectedDate, setIsDeleteVisible }) => {
+const TodoItem = ({ editTodo, categoryId, todo, todoLocalId, refreshData, selectedDate }) => {
   const [isLoading, setIsLoading] = useState(false)
   // console.log(todo) // {"assignNames": [{"assigneeId": 5, "assigneeName": "김형석", "completionStatus": "INCOMPLETE"}, {"assigneeId": 9, "assigneeName": "주희", "completionStatus": "COMPLETE"}, {"assigneeId": 11, "assigneeName": "심규민", "completionStatus": "INCOMPLETE"}, {"assigneeId": 13, "assigneeName": "센", "completionStatus": "INCOMPLETE"}, {"assigneeId": 14, "assigneeName": "신민선", "completionStatus": "INCOMPLETE"}], "completionStatus": "INCOMPLETE", "isAssigned": true,
   // "notificationInfo": {"isNotification": true, "notificationTime": "15:06:00"}, "task": "QA", "todoId": 6431}
   //내가 포함되어있는 투두 아이템이며, 첫번째 담당자가 이것을 완수하였을때 -> 즉 내가 완수하였을때!
   //선택된 날짜 == todo의 날짜 => 선택된 날짜가 오늘 이전이다 -> 안보이게
   let meDoneStatus = todo.isAssigned && todo.assignNames[0].completionStatus == 'COMPLETE'
-  const [finished, setFinished] = useState(meDoneStatus)
-  const handlePress = () => {
+
+  const handleTodoPress = () => {
+    if (todo.isAssigned) {
+      editTodo(categoryId, todoLocalId)
+    } else {
+      showNotAuthorizedToast()
+    }
+    //*** 여기서 Validation 거친 후에*/
+  }
+  const handleIconPress = () => {
     setIsLoading(true)
     if (todo.isAssigned) {
-      // setFinished(!finished)
       completeTodo(todo)
         .then((res) => {
           console.log('Res')
@@ -27,12 +36,11 @@ const TodoItem = ({ editTodo, categoryId, todo, todoLocalId, refreshData, select
             refreshData(selectedDate)
           } else {
             Alert.alert('투두 Complete 오류')
-            setFinished(meDoneStatus)
           }
         })
         .then(setTimeout(() => setIsLoading(false), 500))
     } else {
-      setIsDeleteVisible(true)
+      showNotAuthorizedToast()
       setIsLoading(false)
     }
   }
@@ -58,7 +66,7 @@ const TodoItem = ({ editTodo, categoryId, todo, todoLocalId, refreshData, select
           ? { backgroundColor: colors.grey_150, borderColor: colors.grey_250, borderWidth: 1 }
           : { backgroundColor: colors.grey_100, borderColor: colors.outline, borderWidth: 1 }
       }
-      onPress={() => (todo.isAssigned ? editTodo(categoryId, todoLocalId) : setIsDeleteVisible(true))}
+      onPress={() => handleTodoPress()}
     >
       <LeftContainer>
         <Label_Text style={{ padding: 4 }} color={Done ? colors.grey_400 : colors.grey_800}>
@@ -93,7 +101,7 @@ const TodoItem = ({ editTodo, categoryId, todo, todoLocalId, refreshData, select
         </MateContainer>
       </LeftContainer>
       {!passed && (
-        <CheckBox disabled={isLoading} onPress={() => handlePress()}>
+        <CheckBox disabled={isLoading} onPress={() => handleIconPress()}>
           {isLoading ? (
             <ActivityIndicator style={{ width: 48, height: 48, marginRight: 12 }} />
           ) : meDoneStatus ? (

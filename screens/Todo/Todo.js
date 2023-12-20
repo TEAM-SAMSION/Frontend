@@ -18,7 +18,7 @@ import { CategoryIndicator } from '../../components/Todo/CategoryIndicator'
 import { useFocusEffect } from '@react-navigation/native'
 import { SelectedTeamAtom, TabBarAtom } from '../../recoil/TabAtom'
 import TodoItem from '../../components/Todo/TodoItem'
-import { TodoModal } from '../../components/Todo/TodoModal'
+import { TodoMenuModal, TodoModal } from '../../components/Todo/TodoMenuModal'
 
 export default Todo = ({ navigation }) => {
   const setIsTabVisible = useSetRecoilState(TabBarAtom)
@@ -30,20 +30,18 @@ export default Todo = ({ navigation }) => {
     tempDate.getDate() < 10 ? `0${tempDate.getDate()}` : tempDate.getDate()
   }`
 
-  const [isTutorialVisible, setIsTutorialVisible] = useState(true)
   const buttonRef = useRef(null)
   const [todosByCategory, setTodosByCategory] = useState(null)
 
   const [todoTeamList, setTodoTeamList] = useState(null)
   const [teamUserList, setTeamUserList] = useState([])
-  const [isDeleteVisible, setIsDeleteVisible] = useState(false)
-  const [isCreateVisible, setIsCreateVisible] = useState(false)
 
   const [selectedCategoryID, setSelectedCategoryID] = useState(null)
   const [selectedTodo, setSelectedTodo] = useState(null)
   const [selectedDate, setSelectedDate] = useState(today)
 
-  const [isHeaderOpen, setIsHeaderOpen] = useState(false)
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [isCreateVisible, setIsCreateVisible] = useState(false)
   const [isCreateMode, setIsCreateMode] = useState(false)
 
   const [isLoading, setIsLoading] = useState(false)
@@ -75,7 +73,7 @@ export default Todo = ({ navigation }) => {
   }
 
   const handleTeamChange = (team) => {
-    setIsHeaderOpen(false)
+    setIsMenuOpen(false)
     setSelectedTeam({ name: team.name, id: team.id, auth: team.auth })
   }
   const onRefresh = useCallback(() => {
@@ -210,17 +208,17 @@ export default Todo = ({ navigation }) => {
   return (
     <ScreenContainer>
       <StatusBar />
-      <Pressable disabled={!isHeaderOpen} style={{ flex: 1, width: '100%' }} onPress={() => setIsHeaderOpen(false)}>
+      <Pressable disabled={!isMenuOpen} style={{ flex: 1, width: '100%' }} onPress={() => setIsMenuOpen(false)}>
         <ContentLayout>
           <TodoHeader
             buttonRef={buttonRef}
-            isHeaderOpen={isHeaderOpen}
+            isMenuOpen={isMenuOpen}
             handleTeamChange={handleTeamChange}
             setIsCreateVisible={setIsCreateVisible}
             todoTeamList={todoTeamList}
             navigation={navigation}
             selectedTeam={selectedTeam}
-            setIsHeaderOpen={setIsHeaderOpen}
+            setIsMenuOpen={setIsMenuOpen}
           />
           <ScrollViewContainer>
             <ScrollView
@@ -253,7 +251,6 @@ export default Todo = ({ navigation }) => {
                         {todos[1][2].map((todo, index) => (
                           <TodoItem
                             refreshData={refreshData}
-                            setIsDeleteVisible={setIsDeleteVisible}
                             selectedDate={selectedDate}
                             key={index}
                             todo={todo}
@@ -302,19 +299,6 @@ export default Todo = ({ navigation }) => {
             />
           )}
         </BottomSheetModal>
-        {/* ModalPopup 컴퍼넌트를 하나로 쓰되, 할당된 Todo가 아닙니다랑 페밀리 선택 Todo를 둘다 포함하게끔*/}
-
-        <ModalPopUp visible={isDeleteVisible} petIcon={false} height={204}>
-          <ModalHeader>
-            <CloseButton onPress={() => setIsDeleteVisible(false)}>
-              <Close width={24} height={24} color={colors.grey_600} />
-            </CloseButton>
-          </ModalHeader>
-          <PopContent>
-            <Caution width={48} height={48} />
-            <Body_Text color={colors.grey_700}>나에게 할당된 TODO가 아닙니다.</Body_Text>
-          </PopContent>
-        </ModalPopUp>
         <PetModalPopUp
           petIcon={true}
           height={211}
@@ -322,9 +306,9 @@ export default Todo = ({ navigation }) => {
           setIsVisible={setIsCreateVisible}
           visible={isCreateVisible}
         />
-        <TodoModal
-          isVisible={isHeaderOpen}
-          onClose={() => setIsHeaderOpen(false)}
+        <TodoMenuModal
+          isVisible={isMenuOpen}
+          onClose={() => setIsMenuOpen(false)}
           todoTeamList={todoTeamList}
           handleTeamChange={handleTeamChange}
         />

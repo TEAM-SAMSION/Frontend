@@ -19,6 +19,7 @@ import Edit from '../../assets/Svgs/Todo_edit.svg'
 import DatePicker from 'react-native-date-picker'
 import { deleteTodo, editTodoDate, editTodoName, setTodoAlarm } from './Apis'
 import axiosInstance from '../../utils/customAxios'
+import { showDeletedToast } from '../../utils/toastMessages'
 
 export const TodoEditBottomSheet = ({
   handleBottomSheetHeight,
@@ -111,6 +112,7 @@ const TodoEditHome = ({ navigation, selectedTodo, selectedDate, getInitDatas, ha
         })
         .then(() => {
           setIsLoading(false)
+          showDeletedToast()
           handleBottomSheetHeight(0)
         })
     } else {
@@ -219,21 +221,21 @@ const TodoDataEditing = ({
     return acc
   }, [])
 
-  const editTodo = async () => {
-    let data = {
-      categoryId: selectedCategoryID,
-      description: name,
-      scheduledDate: selectedDate,
-      registerIds: selectedUser,
-    }
-    try {
-      let API = `/teams/todos`
-      const response = axiosInstance.post(url + API, data)
-      console.log('CreateTodoSuccessed!, response:', response)
-    } catch (e) {
-      console.log('CreateTodo Error:', e)
-    }
-  }
+  // const editTodo = async () => {
+  //   let data = {
+  //     categoryId: selectedCategoryID,
+  //     description: name,
+  //     scheduledDate: selectedDate,
+  //     registerIds: selectedUser,
+  //   }
+  //   try {
+  //     let API = `/teams/todos`
+  //     const response = axiosInstance.post(url + API, data)
+  //     console.log('CreateTodoSuccessed!, response:', response)
+  //   } catch (e) {
+  //     console.log('CreateTodo Error:', e)
+  //   }
+  // }
   const selectAll = () => {
     const tempArr = JSON.parse(JSON.stringify(users))
     if (tempArr.filter((item) => item.selected == false).length > 0) {

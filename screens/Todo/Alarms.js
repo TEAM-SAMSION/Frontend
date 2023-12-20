@@ -1,19 +1,18 @@
-import React, { useCallback, useEffect, useState } from 'react'
-import { FlatList, RefreshControl, ScrollView, StatusBar, Text, View } from 'react-native'
+import React, { useCallback, useState } from 'react'
+import { FlatList, RefreshControl, ScrollView, StatusBar } from 'react-native'
 import styled from 'styled-components/native'
 import { colors } from '../../colors'
-import { HeaderWithBack, ScreenHeight, ScreenLayout, ScreenWidth } from '../../components/Shared'
+import { HeaderWithBack, ScreenWidth } from '../../components/Shared'
 
 import Alarm from '../../assets/Svgs/Alarm'
 import NoAlarm from '../../assets/Imgs/NoAlarm.png'
-import { BodySm_Text, DetailSm_Text, Detail_Text, SubHead_Text } from '../../components/Fonts'
+import { BodySm_Text, DetailSm_Text, SubHead_Text } from '../../components/Fonts'
 import { getAlarms } from '../../components/Todo/Apis'
 import { useRecoilState } from 'recoil'
-import { useIsFocused } from '@react-navigation/native'
+import { useFocusEffect } from '@react-navigation/native'
 import { TabBarAtom } from '../../recoil/TabAtom'
 
 export const Alarms = ({ navigation }) => {
-  const isFocused = useIsFocused()
   const [isTabVisible, setIsTabVisible] = useRecoilState(TabBarAtom)
   const [pageNum, setPageNum] = useState(0)
   const [refreshing, setRefreshing] = useState(false)
@@ -24,10 +23,6 @@ export const Alarms = ({ navigation }) => {
     setAlarmList((prevTodoList) => [...prevTodoList, ...newTodoList])
     setPageNum((prevTodoPage) => prevTodoPage + 1)
   }
-
-  useEffect(() => {
-    isFocused && setIsTabVisible(false)
-  }, [isFocused, isTabVisible])
 
   const onRefresh = useCallback(() => {
     setRefreshing(true)
@@ -43,7 +38,7 @@ export const Alarms = ({ navigation }) => {
     }, 1000)
   }, [])
 
-  useEffect(() => {
+  const fetchAlarm = () => {
     getAlarms().then((data) => {
       if (data.length > 0) {
         setAlarmList(data)
@@ -51,7 +46,15 @@ export const Alarms = ({ navigation }) => {
         setAlarmList([])
       }
     })
-  }, [])
+  }
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchAlarm()
+      setIsTabVisible(false)
+    }, []),
+  )
+
   const renderItem = ({ item }) => (
     <AlarmBase style={{ borderBottomWidth: 1, borderBottomColor: colors.outline }}>
       <AlarmIcon>
@@ -95,11 +98,10 @@ export const Alarms = ({ navigation }) => {
           })}
         </ScrollView>
       </FilterBase> */}
-      <ContentBase>
+      <AlarmListBase>
         {alarmList.length > 0 ? (
           <FlatList
-            style={{ flexDirection: 'column', width: ScreenWidth }}
-            contentContainerStyle={{ justifyContent: 'start', flex: 1 }}
+            style={{ flexDirection: 'column', width: ScreenWidth, height: '100%' }}
             data={alarmList}
             renderItem={renderItem}
             onRefresh={() => onRefresh()}
@@ -111,29 +113,20 @@ export const Alarms = ({ navigation }) => {
         ) : (
           <ScrollView
             showsVerticalScrollIndicator={false}
-            contentContainerStyle={{ width: '100%', justifyContent: 'start', flex: 1 }}
+            style={{ height: '100%' }}
+            contentContainerStyle={{ width: '100%', justifyContent: 'start' }}
             refreshControl={<RefreshControl refreshing={refreshing} onRefresh={() => onRefresh()} />}
           >
             <ContentBase>
               <NoAlarmImg source={NoAlarm} />
               <SubHead_Text color={colors.grey_400}>알림이 없습니다</SubHead_Text>
-              <RefreshButton
-                onPress={() =>
-                  getAlarms(0).then((data) => {
-                    if (data.length > 0) {
-                      setAlarmList(data)
-                    } else {
-                      setAlarmList([])
-                    }
-                  })
-                }
-              >
+              <RefreshButton onPress={() => fetchAlarm()}>
                 <BodySm_Text color={colors.primary_outline}>새로고침</BodySm_Text>
               </RefreshButton>
             </ContentBase>
           </ScrollView>
         )}
-      </ContentBase>
+      </AlarmListBase>
     </ScreenContainer>
   )
 }
@@ -172,6 +165,11 @@ const ContentBase = styled.View`
   justify-content: center;
   align-items: center;
   background-color: ${colors.grey_150};
+  flex-direction: column;
+  flex: 1;
+`
+const AlarmListBase = styled.View`
+  flex-direction: row;
   flex: 1;
 `
 const AlarmBase = styled.View`
@@ -179,7 +177,7 @@ const AlarmBase = styled.View`
   width: 100%;
   padding: 16px 24px;
   justify-content: space-between;
-  background-color: ${colors.grey_100};
+  /* background-color: ${colors.grey_100}; */
 `
 const AlarmTextContainer = styled.View`
   flex-direction: column;
