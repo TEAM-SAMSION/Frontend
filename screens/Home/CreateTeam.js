@@ -405,7 +405,7 @@ export default function CreateTeam({ route, navigation }) {
                   navigation.navigate('ToDoNav', { screen: 'todo' })
                 }}
               >
-                <Close width={24} height={24} />
+                <Close width={24} height={24} color={colors.grey_600} />
               </CloseButton>
             </ModalHeader>
             <PopContent style={{ flexDirection: 'column', marginTop: 0, marginBottom: 39, gap: 4 }}>

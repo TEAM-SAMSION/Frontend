@@ -189,7 +189,7 @@ export default function Auth({ navigation }) {
         <ModalPopUp visible={isPopupVisible} petIcon={false}>
           <ModalHeader>
             <CloseButton onPress={() => setIsPopupVisible(false)}>
-              <Close width={24} height={24} />
+              <Close width={24} height={24} color={colors.grey_600} />
             </CloseButton>
           </ModalHeader>
           <PopContent>

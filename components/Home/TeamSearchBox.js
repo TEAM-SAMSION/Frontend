@@ -88,7 +88,7 @@ export const TeamSearchBox = (props) => {
               setVisible(false)
             }}
           >
-            <Close width={24} height={24} />
+            <Close width={24} height={24} color={colors.grey_600} />
           </CloseButton>
         </ModalHeader>
         <PopContent>
@@ -120,7 +120,7 @@ export const TeamSearchBox = (props) => {
               setIsDuplicated(false)
             }}
           >
-            <Close width={24} height={24} />
+            <Close width={24} height={24} color={colors.grey_600} />
           </CloseButton>
         </ModalHeader>
         <PopContent style={{ marginBottom: 22 }}>

@@ -3,7 +3,9 @@ import { createStackNavigator } from '@react-navigation/stack'
 import OnBoarding from '../screens/OnBoarding/OnBoarding'
 import { UserSetting } from '../screens/OnBoarding/UserSetting'
 import Auth from '../screens/OnBoarding/Auth'
+import TutorialNav from './TutorialNav'
 import AuthBridge from '../screens/OnBoarding/AuthBridge'
+
 
 const Stack = createStackNavigator()
 
@@ -18,6 +20,7 @@ export default function AuthNav() {
         component={AuthBridge}
         options={{ headerShown: false, animationEnabled: false }}
       />
+      <Stack.Screen name="TutorialNav">{() => <TutorialNav />}</Stack.Screen>
     </Stack.Navigator>
   )
 }
