@@ -31,6 +31,7 @@ export default function Guide() {
           <TopButton active={active === 6} onPress={() => setActive(6)}>
             <ButtonText active={active === 6}>알림/설정</ButtonText>
           </TopButton>
+          <View style={{ width: 24 }}></View>
         </TopContainer>
         <Container>
           <Contents>
@@ -46,8 +47,10 @@ const Container = styled.View`
   margin: 0px 16px;
 `
 const TopContainer = styled.ScrollView`
-  margin: 16px;
+  margin: 16px 0px;
   margin-bottom: 0;
+  padding-left: 12px;
+  padding-right: 50px;
 `
 const TopButton = styled.Pressable`
   padding: 8px 12px;
