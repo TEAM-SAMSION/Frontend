@@ -58,7 +58,7 @@ export const GuideContents = (props) => {
                 마이페이지 - Pamily 추가 카드를 통해 생성 가능
               </Content>
             </TextContainer>
-            <Img
+            <Img2
               source={require('../../assets/Imgs/guide2.png')}
               style={{ height: 360, borderBottomLeftRadius: 16, borderBottomRightRadius: 16 }}
             />
@@ -190,6 +190,9 @@ const Content = styled.Text`
 const Img = styled.Image`
   width: ${ScreenWidth - 32};
   overflow: visible;
+`
+const Img2 = styled.Image`
+  width: ${ScreenWidth - 32};
 `
 const SubsetImage = styled.View`
   border-radius: 16px;
