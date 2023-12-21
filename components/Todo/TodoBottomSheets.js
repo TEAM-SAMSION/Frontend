@@ -675,3 +675,142 @@ const UserItem = styled.TouchableOpacity`
   align-items: center;
   background-color: ${colors.grey_150};
 `
+
+export const TuTodoCreateBottomSheet = ({
+  selectedCategoryID,
+  handleBottomSheetHeight,
+  teamUserList,
+  selectedDate,
+  getInitDatas,
+}) => {
+  const [users, setUsers] = useState(teamUserList?.map((users) => ({ ...users, selected: false })))
+  users[2].selected = true
+  const [name, setName] = useState(null)
+  const [isLoading, setIsLoading] = useState(false)
+  const selectedUser = users.reduce((acc, user) => {
+    if (user.selected) {
+      acc.push(user.id)
+    }
+    return acc
+  }, [])
+
+  const selectAll = () => {
+    const tempArr = JSON.parse(JSON.stringify(users))
+    if (tempArr.filter((item) => item.selected == false).length > 0) {
+      //선택되지 않은 담당자가 한명이라도 있으면
+      tempArr.map((e) => {
+        e.selected = true
+        return e
+      })
+    } else {
+      tempArr.map((e) => {
+        e.selected = false
+        return e
+      })
+    }
+    setUsers(tempArr)
+  }
+
+  const selectUser = (id) => {
+    const tempArr = JSON.parse(JSON.stringify(users))
+    tempArr[id].selected = !tempArr[id].selected
+    setUsers(tempArr)
+  }
+  const createTodo = async () => {
+    let data = {
+      categoryId: selectedCategoryID,
+      description: name,
+      scheduledDate: selectedDate,
+      registerIds: selectedUser,
+    }
+  }
+  const handleSubmit = () => {
+    setIsLoading(true)
+    createTodo().then(() => {
+      //추가된 todo아이템이 서버에 등록되는 데에 소요되는 시간이 길어서, 바로 fetch하면 의도치 않은 실행이 되는 문제 발생
+      //그게 아니고, updateTodo()에서 실행되는 함수만으로는 모든 요소가 반영되지 않는듯함,
+      //임시방편으로 initData함수를 가져왔으나, 나중에 실질적으로 필요로 하는 함수를 추려봐야할 것.
+      setIsLoading(false)
+      handleBottomSheetHeight(0)
+      getInitDatas(selectedDate)
+    })
+  }
+  return (
+    <BottomSheetBase
+      style={{
+        backgroundColor: colors.grey_100,
+        paddingTop: Platform.OS === 'android' ? 8 : 0,
+        paddingBottom: 0,
+      }}
+    >
+      <View style={{ flex: 38 }}>
+        <BottomSheetHeader>
+          <Body_Text color={colors.grey_800}>TODO</Body_Text>
+        </BottomSheetHeader>
+        <InputContainer>
+          <BodyBoldSm_Text style={{ marginBottom: 10 }}>TODO 입력</BodyBoldSm_Text>
+          <Input
+            style={{ backgroundColor: colors.grey_150, color: colors.grey_700 }}
+            autoCapitalize="none"
+            placeholderTextColor={colors.grey_450}
+            onSubmitEditing={() => {
+              Keyboard.dismiss()
+              handleBottomSheetHeight(2)
+            }}
+            maxLength={20}
+            placeholder="할 일을 입력해주세요"
+            returnKeyType="done"
+            inputMode="text"
+            value="산책"
+            blurOnSubmit={false}
+            onChangeText={(text) => setName(text)}
+            onFocus={() => handleBottomSheetHeight(3)}
+          />
+          {name?.length > 20 && (
+            <Detail_Text style={{ marginTop: 4 }} color={colors.red_300}>
+              글자 수가 1에서 20 사이여야합니다
+            </Detail_Text>
+          )}
+        </InputContainer>
+
+        <BodyBoldSm_Text style={{ marginBottom: 10 }}>담당자 지정</BodyBoldSm_Text>
+        <UserContainer>
+          <View
+            style={{ width: '100%' }}
+            contentContainerStyle={{ flexWrap: 'wrap', flexDirection: 'row' }}
+            showsVerticalScrollIndicator={false}
+          >
+            <View style={{ flexWrap: 'wrap', flexDirection: 'row' }}>
+              <UserItem
+                style={{
+                  backgroundColor:
+                    users.filter((item) => item.selected == false).length == 0 ? colors.red_200 : colors.grey_150,
+                }}
+                key={0}
+                onPress={() => selectAll()}
+              >
+                <Detail_Text color={colors.grey_700}>모두</Detail_Text>
+              </UserItem>
+              {users?.map((user, id) => {
+                return (
+                  <UserItem
+                    key={id + 1}
+                    onPress={() => selectUser(id)}
+                    style={{ backgroundColor: user?.selected ? colors.red_200 : colors.grey_150 }}
+                  >
+                    <Detail_Text key={id} color={user?.selected ? colors.grey_700 : colors.grey_600}>
+                      {user.name}
+                    </Detail_Text>
+                  </UserItem>
+                )
+              })}
+            </View>
+          </View>
+        </UserContainer>
+      </View>
+      <View style={{ bottom: 0 }}>
+        <Button_PinkBg isLoading={isLoading} isEnabled={true} text="완료" func={() => handleSubmit()} />
+      </View>
+    </BottomSheetBase>
+  )
+}

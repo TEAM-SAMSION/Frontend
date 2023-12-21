@@ -1,9 +1,9 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { ModalPopUp, PetModalPopUp, ScreenHeight, ScreenLayout, ScreenWidth, normalize } from '../../components/Shared'
-import { colors } from '../../colors'
+import { categoryColors, colors } from '../../colors'
 import styled from 'styled-components/native'
 import { TodoHeader } from '../../components/Todo/TodoHeader'
-import { Body_Text, DetailSm_Text } from '../../components/Fonts'
+import { Body_Text, DetailSm_Text, Label_Text } from '../../components/Fonts'
 import {
   ActivityIndicator,
   Keyboard,
@@ -31,11 +31,12 @@ import TodoItem from '../../components/Todo/TodoItem'
 import { TodoMenuModal, TodoModal } from '../../components/Todo/TodoMenuModal'
 import { TuCalendarStrip } from '../../components/Todo/TuCalendarStrip'
 import CloseIcon from '../../assets/Svgs/Close.svg'
+import Add from '../../assets/Svgs/add.svg'
 import Home from '../../assets/Svgs/Home.svg'
 import Logo from '../../assets/Svgs/LOGO_Symbol.svg'
 import MyPage from '../../assets/Svgs/Mypage.svg'
 
-export default TuTodo1 = ({ navigation }) => {
+export default TuTodo2 = ({ navigation }) => {
   const setIsTabVisible = useSetRecoilState(TabBarAtom)
   const [selectedTeam, setSelectedTeam] = useRecoilState(SelectedTeamAtom)
 
@@ -193,7 +194,7 @@ export default TuTodo1 = ({ navigation }) => {
       <Pressable
         style={{ flex: 1 }}
         onPress={() => {
-          navigation.navigate('TuTodo2')
+          navigation.navigate('TuTodo3')
         }}
       >
         <View
@@ -205,19 +206,20 @@ export default TuTodo1 = ({ navigation }) => {
             zIndex: 99,
           }}
         >
-          <View
+          <CategoryBox
+            onPress={() => startCreateTodo(22)}
             style={{
+              marginLeft: 16,
               backgroundColor: colors.grey_100,
-              paddingLeft: 16,
-              paddingRight: 16,
-              top: 44 + 8,
+              top: 237,
             }}
           >
-            <TuCalendarStrip selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
-          </View>
+            <Circle style={{ backgroundColor: categoryColors[22 % 10] }}></Circle>
+            <Label_Text>카테고리</Label_Text>
+            <Add width={16} height={16} />
+          </CategoryBox>
           <View style={{ position: 'absolute', bottom: 180, width: ScreenWidth, alignItems: 'center' }}>
-            <Body_Text color={colors.red_200}>캘린더를 통해</Body_Text>
-            <Body_Text color={colors.red_200}>원하는 날짜로 이동할 수 있어요!</Body_Text>
+            <Body_Text color={colors.red_200}>카테고리를 클릭하여 TODO를 생성할 수 있어요!</Body_Text>
           </View>
         </View>
 
@@ -236,10 +238,7 @@ export default TuTodo1 = ({ navigation }) => {
                 setIsMenuOpen={setIsMenuOpen}
               />
               <ScrollViewContainer>
-                <ScrollView
-                  refreshControl={<RefreshControl refreshing={refreshing} onRefresh={() => onRefresh()} />}
-                  showsVerticalScrollIndicator={false}
-                >
+                <ScrollView showsVerticalScrollIndicator={false}>
                   <MyCalendarStrip selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
                   {isLoading ? (
                     <LoadingContainer>
@@ -340,7 +339,6 @@ export default TuTodo1 = ({ navigation }) => {
           </Tab>
         </BottomNav>
       </Pressable>
-
       <View style={{ position: 'absolute', bottom: 52, left: ScreenWidth / 2 - 30, zIndex: 100 }}>
         <TouchableOpacity
           style={{ width: 60, height: 60, alignItems: 'center', justifyContent: 'center' }}
@@ -386,6 +384,20 @@ const ContentLayout = styled.View`
   padding: 0px 16px;
   flex-direction: column;
   flex: 1;
+`
+export const Circle = styled.View`
+  width: 12px;
+  height: 12px;
+  border-radius: 6px;
+`
+export const CategoryBox = styled.View`
+  align-self: flex-start;
+  flex-direction: row;
+  align-items: center;
+  border-radius: 4px;
+  padding: ${Platform.OS == 'android' ? '2px 8px' : '6px 8px'};
+  border: 1px solid ${colors.grey_200};
+  gap: 8px;
 `
 const BottomNav = styled.View`
   width: ${ScreenWidth};

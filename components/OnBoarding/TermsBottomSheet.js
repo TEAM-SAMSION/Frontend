@@ -10,6 +10,7 @@ import { BodyBoldSm_Text, BodyBold_Text, Detail_Text } from '../Fonts'
 import { registerNickname, registerRoute } from './Apis'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { checkFCMToken } from '../../AppBase'
+import { useNavigation } from '@react-navigation/native'
 
 export const TermsBottomSheet = ({ nickname, selectedRoute, detailRoute, accessToken, refreshToken, provider }) => {
   const [termState, setTermState] = useState({ 0: false, 1: false, 2: false })
@@ -28,6 +29,7 @@ export const TermsBottomSheet = ({ nickname, selectedRoute, detailRoute, accessT
     }
   }
   console.log(provider)
+  const navigation = useNavigation()
   const handleSubmit = () => {
     setIsLoading(true)
     let paths = ['인스타', '지인추천', '반려동물 커뮤니티', '검색']
@@ -40,7 +42,7 @@ export const TermsBottomSheet = ({ nickname, selectedRoute, detailRoute, accessT
         AsyncStorage.setItem('accessToken', accessToken).then(() => registerRoute(path))
         AsyncStorage.setItem('platform', provider)
         checkFCMToken(accessToken)
-        setLoggedIn(true)
+        navigation.navigate('TutorialNav')
       } else {
         console.log('닉네임등록이 잘 안되었는뎁쇼')
         setIsLoading(false)

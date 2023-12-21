@@ -199,8 +199,8 @@ export default function TuMyPage4({ navigation }) {
         </TouchableWithoutFeedback>
         <BottomNav>
           <Tab>
-            <Home style={{ color: colors.primary_outline }} width={24} height={24} />
-            <DetailSm_Text color={colors.primary_outline} style={{ marginTop: 4 }}>
+            <Home style={{ color: colors.grey_250 }} width={24} height={24} />
+            <DetailSm_Text color={colors.grey_250} style={{ marginTop: 4 }}>
               홈
             </DetailSm_Text>
           </Tab>
@@ -208,8 +208,8 @@ export default function TuMyPage4({ navigation }) {
             <Logo style={{ color: colors.grey_250 }} width={65} height={65} />
           </Tab>
           <Tab>
-            <MyPage style={{ color: colors.grey_250 }} width={24} height={24} />
-            <DetailSm_Text color={colors.grey_250} style={{ marginTop: 4 }}>
+            <MyPage style={{ color: colors.primary_outline }} width={24} height={24} />
+            <DetailSm_Text color={colors.primary_outline} style={{ marginTop: 4 }}>
               마이페이지
             </DetailSm_Text>
           </Tab>
@@ -218,7 +218,7 @@ export default function TuMyPage4({ navigation }) {
       <View style={{ position: 'absolute', bottom: 52, left: ScreenWidth / 2 - 30, zIndex: 100 }}>
         <TouchableOpacity
           style={{ width: 60, height: 60, alignItems: 'center', justifyContent: 'center' }}
-          onPress={() => navigation.navigate('HomeNav')}
+          onPress={() => navigation.navigate('AuthBridge')}
         >
           <CloseIcon width={36} height={36} color={colors.grey_200} />
         </TouchableOpacity>
