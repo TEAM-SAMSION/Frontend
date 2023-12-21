@@ -58,12 +58,7 @@ axiosInstance.interceptors.response.use(
   async (error) => {
     console.log('axiosInstance에서 에러 감지', error.config.method, error.config.url, error.response.data.errorCode)
     // 유효하지 않은 토큰입니다. / 토큰이 만료되었습니다. / 토큰이 존재하지 않습니다.
-    if (
-      // error.response.data.errorCode === 1000 ||
-      error.response.data.errorCode === 1001
-      // error.response.data.errorCode === 1002
-    ) {
-      console.log('액서스토큰 만료')
+    if (error.response.data.errorCode === 1001) {
       const data = await updateToken() // 액세스토큰 갱신
       // 갱신된 accessToken을 받으면
       if (data) {
@@ -80,8 +75,7 @@ axiosInstance.interceptors.response.use(
         console.log('Else')
       }
     } else {
-      //1000 -> 유효한 토큰 아님
-      console.log('완전 Else')
+      console.log('토큰 만료 외의 이유로 API 호출에 에러 발생')
     }
     return Promise.reject(error)
   },
