@@ -132,7 +132,7 @@ export default function TuAdmin3({ navigation }) {
                 setIsInfoVisible(true)
               }}
             >
-              <QuestionMark width={28} height={28} />
+              <QuestionMark width={28} height={28} color={colors.grey_350} />
             </TouchableOpacity>
           </TitleBox>
           <FunctionBox onPress={() => navigation.navigate('ManageMember', { teamId, teamCode, myAuthority })}>

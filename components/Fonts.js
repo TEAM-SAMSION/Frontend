@@ -99,3 +99,10 @@ export const HeadLineXl_Text = ({ color, children, style = null }) => {
     </Text>
   )
 }
+export const HeadLineLg_Text = ({ color, children, style = null }) => {
+  return (
+    <Text style={[{ fontFamily: 'Spoqa-Bold', fontSize: normalize(28), lineHeight: 33, color: color }, { ...style }]}>
+      {children}
+    </Text>
+  )
+}
