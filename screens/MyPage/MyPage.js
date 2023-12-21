@@ -161,12 +161,14 @@ export default function MyPage({ navigation }) {
                   </Groups>
                 )}
               </GroupContainer>
-              {/* <FooterContainer>
+              <FooterContainer>
                 <Detail_Text color={'#A09999'}>
                   포잇에 대해 더 알아볼까요?{'\n'}좀 더 똑똑하게 포잇을 사용하고 싶다면?
                 </Detail_Text>
-                <Guide>포잇가이드</Guide>
-              </FooterContainer> */}
+                <TouchableOpacity onPress={() => navigation.navigate('Guide')}>
+                  <Guide>포잇가이드</Guide>
+                </TouchableOpacity>
+              </FooterContainer>
             </View>
           </TouchableWithoutFeedback>
         </ScrollView>
@@ -288,6 +290,7 @@ const FooterContainer = styled.View`
   justify-content: space-between;
   align-items: flex-end;
   padding: 12px 24px;
+  margin-top: 16px;
 `
 const Guide = styled.Text`
   font-family: 'Spoqa-Bold';

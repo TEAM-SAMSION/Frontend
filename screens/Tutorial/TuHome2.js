@@ -142,7 +142,7 @@ export default function TuHome2({ navigation }) {
       <View style={{ position: 'absolute', bottom: 52, left: ScreenWidth / 2 - 30, zIndex: 100 }}>
         <TouchableOpacity
           style={{ width: 60, height: 60, alignItems: 'center', justifyContent: 'center' }}
-          onPress={() => navigation.navigate('HomeNav')}
+          onPress={() => navigation.navigate('AuthBridge')}
         >
           <CloseIcon width={36} height={36} color={colors.grey_200} />
         </TouchableOpacity>

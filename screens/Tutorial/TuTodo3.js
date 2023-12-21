@@ -1,13 +1,12 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { ModalPopUp, PetModalPopUp, ScreenHeight, ScreenLayout, ScreenWidth, normalize } from '../../components/Shared'
-import { colors } from '../../colors'
+import { ModalPopUp, PetModalPopUp, ScreenHeight, ScreenLayout, ScreenWidth } from '../../components/Shared'
+import { categoryColors, colors } from '../../colors'
 import styled from 'styled-components/native'
 import { TodoHeader } from '../../components/Todo/TodoHeader'
-import { Body_Text, DetailSm_Text } from '../../components/Fonts'
+import { BodyBoldSm_Text, Body_Text, Detail_Text, Label_Text } from '../../components/Fonts'
 import {
   ActivityIndicator,
   Keyboard,
-  Platform,
   Pressable,
   RefreshControl,
   ScrollView,
@@ -20,8 +19,11 @@ import { useRecoilState, useSetRecoilState } from 'recoil'
 import Close from '../../assets/Svgs/Close.svg'
 import { NoCategory, NoPamily, NoTodo } from '../../components/Todo/NoToDoBox'
 import { BottomSheetBackdrop, BottomSheetModal } from '@gorhom/bottom-sheet'
-import { TodoCreateBottomSheet, TodoEditBottomSheet } from '../../components/Todo/TodoBottomSheets'
-
+import {
+  TodoCreateBottomSheet,
+  TodoEditBottomSheet,
+  TuTodoCreateBottomSheet,
+} from '../../components/Todo/TodoBottomSheets'
 import { MyCalendarStrip } from '../../components/Todo/CalendarStrip'
 import { getCategoryList, getTeamUser, getTodoTeamList, getTodos } from '../../components/Todo/Apis'
 import { CategoryIndicator } from '../../components/Todo/CategoryIndicator'
@@ -31,11 +33,10 @@ import TodoItem from '../../components/Todo/TodoItem'
 import { TodoMenuModal, TodoModal } from '../../components/Todo/TodoMenuModal'
 import { TuCalendarStrip } from '../../components/Todo/TuCalendarStrip'
 import CloseIcon from '../../assets/Svgs/Close.svg'
-import Home from '../../assets/Svgs/Home.svg'
-import Logo from '../../assets/Svgs/LOGO_Symbol.svg'
-import MyPage from '../../assets/Svgs/Mypage.svg'
+import Add from '../../assets/Svgs/add.svg'
+import About3 from '../../assets/Svgs/about3.svg'
 
-export default TuTodo1 = ({ navigation }) => {
+export default TuTodo3 = ({ navigation }) => {
   const setIsTabVisible = useSetRecoilState(TabBarAtom)
   const [selectedTeam, setSelectedTeam] = useRecoilState(SelectedTeamAtom)
 
@@ -136,7 +137,7 @@ export default TuTodo1 = ({ navigation }) => {
     { id: 25, name: '김가현' },
   ])
 
-  const [selectedCategoryID, setSelectedCategoryID] = useState(null)
+  const [selectedCategoryID, setSelectedCategoryID] = useState(22)
   const [selectedTodo, setSelectedTodo] = useState(null)
   const [selectedDate, setSelectedDate] = useState(today)
 
@@ -185,7 +186,11 @@ export default TuTodo1 = ({ navigation }) => {
     bottomModal.current?.present()
   }
   useEffect(() => {
-    handleBottomSheetHeight(0)
+    setIsCreateMode(true)
+    setSelectedCategoryID(22)
+    handleBottomSheetHeight(2)
+    bottomModal.current?.present()
+    //handleBottomSheetHeight(0)
   }, [])
 
   return (
@@ -193,7 +198,7 @@ export default TuTodo1 = ({ navigation }) => {
       <Pressable
         style={{ flex: 1 }}
         onPress={() => {
-          navigation.navigate('TuTodo2')
+          navigation.navigate('TuTodo4')
         }}
       >
         <View
@@ -202,24 +207,46 @@ export default TuTodo1 = ({ navigation }) => {
             height: ScreenHeight,
             backgroundColor: 'rgba(8, 7, 7, 0.75)',
             position: 'absolute',
-            zIndex: 99,
+            zIndex: 200,
           }}
         >
+          <View style={{ position: 'absolute', bottom: 255 + 50 + 33 + 16, left: 16 + 8 }}>
+            <BodyBoldSm_Text color={colors.grey_100}>담당자 지정</BodyBoldSm_Text>
+          </View>
+          <View style={{ position: 'absolute', bottom: 255 + 50, left: 16 + 8 }}>
+            <UserItem style={{ backgroundColor: colors.grey_150 }}>
+              <Detail_Text color={colors.grey_600}>모두</Detail_Text>
+            </UserItem>
+          </View>
           <View
             style={{
-              backgroundColor: colors.grey_100,
-              paddingLeft: 16,
-              paddingRight: 16,
-              top: 44 + 8,
+              position: 'absolute',
+              bottom: 255,
+              left: 16 + 8 + 60,
+              alignItems: 'flex-start',
             }}
           >
-            <TuCalendarStrip selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
+            <About3 width={18} height={26} />
+            <View style={{ marginTop: 4 }}>
+              <Body_Text color={colors.red_200} style={{ textAlign: 'left' }}>
+                ‘모두’를 클릭하면 pamily의
+              </Body_Text>
+              <Body_Text color={colors.red_200}>모든 회원에게 todo를 할당할 수 있어요</Body_Text>
+            </View>
           </View>
           <View style={{ position: 'absolute', bottom: 180, width: ScreenWidth, alignItems: 'center' }}>
-            <Body_Text color={colors.red_200}>캘린더를 통해</Body_Text>
-            <Body_Text color={colors.red_200}>원하는 날짜로 이동할 수 있어요!</Body_Text>
+            <Body_Text color={colors.red_200}>카테고리를 클릭하여 TODO를 생성할 수 있어요!</Body_Text>
           </View>
         </View>
+        <View
+          style={{
+            width: ScreenWidth,
+            height: ScreenHeight,
+            backgroundColor: 'rgba(8, 7, 7, 0.4)',
+            position: 'absolute',
+            zIndex: 99,
+          }}
+        ></View>
 
         <ScreenContainer>
           <StatusBar />
@@ -236,10 +263,7 @@ export default TuTodo1 = ({ navigation }) => {
                 setIsMenuOpen={setIsMenuOpen}
               />
               <ScrollViewContainer>
-                <ScrollView
-                  refreshControl={<RefreshControl refreshing={refreshing} onRefresh={() => onRefresh()} />}
-                  showsVerticalScrollIndicator={false}
-                >
+                <ScrollView showsVerticalScrollIndicator={false}>
                   <MyCalendarStrip selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
                   {isLoading ? (
                     <LoadingContainer>
@@ -264,7 +288,6 @@ export default TuTodo1 = ({ navigation }) => {
                                 todo={todo}
                                 todoLocalId={index}
                                 categoryId={id}
-                                //여기서 categoryID는 배열로 불러왔을때, 임의 순서를 나타낸 것이며, 서버 내에서 식별용으로 사용되는 ID값은 아님
                                 editTodo={startEditTodo}
                               />
                             ))}
@@ -276,72 +299,22 @@ export default TuTodo1 = ({ navigation }) => {
                 </ScrollView>
               </ScrollViewContainer>
             </ContentLayout>
-            <BottomSheetModal
-              ref={bottomModal}
-              backdropComponent={renderBackdrop}
-              snapPoints={['44%', '55%', '90%']}
-              enablePanDownToClose={false}
-              enableHandlePanningGesture={false}
-              enableContentPanningGesture={false}
-              handleHeight={0}
-              enableDismissOnClose
-              backgroundStyle={{ borderRadius: 24 }}
-              handleIndicatorStyle={{ backgroundColor: colors.grey_300, width: 72, height: 6, marginTop: 8 }}
-            >
-              {isCreateMode ? (
-                <TodoCreateBottomSheet
-                  selectedCategoryID={selectedCategoryID}
-                  handleBottomSheetHeight={handleBottomSheetHeight}
-                  teamUserList={teamUserList}
-                  selectedDate={selectedDate}
-                  getInitDatas={getAllData}
-                />
-              ) : (
-                <TodoEditBottomSheet
-                  handleBottomSheetHeight={handleBottomSheetHeight}
-                  teamUserList={teamUserList}
-                  selectedTodo={selectedTodo}
-                  selectedDate={selectedDate}
-                  setSelectedTodo={setSelectedTodo}
-                  getInitDatas={getAllData}
-                />
-              )}
-            </BottomSheetModal>
-            <PetModalPopUp
-              petIcon={true}
-              height={211}
-              navigation={navigation}
-              setIsVisible={setIsCreateVisible}
-              visible={isCreateVisible}
-            />
-            <TodoMenuModal
-              isVisible={isMenuOpen}
-              onClose={() => setIsMenuOpen(false)}
-              todoTeamList={todoTeamList}
-              handleTeamChange={handleTeamChange}
-            />
           </Pressable>
         </ScreenContainer>
-        <BottomNav>
-          <Tab>
-            <Home style={{ color: colors.grey_250 }} width={24} height={24} />
-            <DetailSm_Text color={colors.grey_250} style={{ marginTop: 4 }}>
-              홈
-            </DetailSm_Text>
-          </Tab>
-          <Tab>
-            <Logo style={{ color: colors.primary_outline }} width={65} height={65} />
-          </Tab>
-          <Tab>
-            <MyPage style={{ color: colors.grey_250 }} width={24} height={24} />
-            <DetailSm_Text color={colors.grey_250} style={{ marginTop: 4 }}>
-              마이페이지
-            </DetailSm_Text>
-          </Tab>
-        </BottomNav>
+        <View style={{ position: 'absolute', zIndex: 100, bottom: 0, height: 450 }}>
+          <BottomHeader>
+            <BottomBar />
+          </BottomHeader>
+          <TuTodoCreateBottomSheet
+            selectedCategoryID={selectedCategoryID}
+            handleBottomSheetHeight={handleBottomSheetHeight}
+            teamUserList={teamUserList}
+            selectedDate={selectedDate}
+            getInitDatas={getAllData}
+          />
+        </View>
       </Pressable>
-
-      <View style={{ position: 'absolute', bottom: 52, left: ScreenWidth / 2 - 30, zIndex: 100 }}>
+      <View style={{ position: 'absolute', bottom: 52, left: ScreenWidth / 2 - 30, zIndex: 110 }}>
         <TouchableOpacity
           style={{ width: 60, height: 60, alignItems: 'center', justifyContent: 'center' }}
           onPress={() => navigation.navigate('AuthBridge')}
@@ -387,19 +360,41 @@ const ContentLayout = styled.View`
   flex-direction: column;
   flex: 1;
 `
-const BottomNav = styled.View`
-  width: ${ScreenWidth};
+const BottomHeader = styled.View`
+  border-top-right-radius: 12px;
+  border-top-left-radius: 12px;
+  height: 24px;
   background-color: ${colors.grey_100};
-  position: absolute;
-  bottom: 0;
-  flex-direction: row;
-  display: flex;
   align-items: center;
-  height: ${Platform.OS == 'android' ? 68 : 88};
-  padding-top: ${Platform.OS == 'android' ? 0 : normalize(16)};
+  justify-content: flex-end;
 `
-const Tab = styled.View`
+const BottomBar = styled.View`
+  width: 71px;
+  height: 6px;
+  background-color: ${colors.grey_300};
+  border-radius: 99px;
+`
+export const Circle = styled.View`
+  width: 12px;
+  height: 12px;
+  border-radius: 6px;
+`
+export const CategoryBox = styled.View`
+  align-self: flex-start;
+  flex-direction: row;
   align-items: center;
+  border-radius: 4px;
+  padding: ${Platform.OS == 'android' ? '2px 8px' : '6px 8px'};
+  border: 1px solid ${colors.grey_200};
+  gap: 8px;
+`
+const UserItem = styled.TouchableOpacity`
+  height: 31px;
+  padding: 0px 14px;
+  margin-bottom: 8px;
+  margin-right: 8px;
+  border-radius: 99px;
   justify-content: center;
-  flex: 1 0 0;
+  align-items: center;
+  background-color: ${colors.grey_150};
 `
