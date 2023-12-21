@@ -62,7 +62,7 @@ export default function Setting({ navigation }) {
       </ContentContainer> */}
       <ContentContainer>
         <ContentText>앱 정보</ContentText>
-        <ContentText2>ver 1.0.0</ContentText2>
+        <ContentText2>ver 1.0.1</ContentText2>
       </ContentContainer>
       <ContentContainer onPress={() => handleLogout()}>
         <ContentText style={{ color: colors.primary_outline }}>로그아웃</ContentText>
