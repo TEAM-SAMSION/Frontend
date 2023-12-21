@@ -164,13 +164,6 @@ export const NumberInput = ({ onPress, value, placeholder, active, isDark }) => 
     </NumberContainer>
   )
 }
-
-// ************ Todo Modal PopUp *************
-
-// export const TodoModal  = ()=> {
-
-// }
-
 // ************ Modal PopUp *************
 export const ModalPopUp = ({ petIcon, visible, height, children }) => {
   const [showModal, setShowModal] = useState(visible)

@@ -140,11 +140,8 @@ export default Todo = ({ navigation }) => {
         // console.log('실제로 fetch때 사용되는 팀ID:', selectedTeamID, 'Recoil의 팀ID:', selectedTeam.id)
         if (selectedTeamID) {
           //null 반환받으면, TodoTeam 없다는 것을 의미하기에 api호출 스킵
-          // await getCategoryList(selectedTeamID).then((categories) => {
-          //   console.log(categories)
           await getCategoryList(selectedTeamID, date).then((categories) => {
             console.log('2. 카테고리로 Todo 불러와서 저장', categories.toString().substring(0, 10))
-
             getTodosByCategory(categories, date).then(setIsLoading(false))
           })
           await getTeamUser(selectedTeamID).then((res) => {
@@ -286,6 +283,7 @@ export default Todo = ({ navigation }) => {
               handleBottomSheetHeight={handleBottomSheetHeight}
               teamUserList={teamUserList}
               selectedDate={selectedDate}
+              selectedTeam={selectedTeam}
               getInitDatas={getAllData}
             />
           ) : (

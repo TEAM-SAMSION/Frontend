@@ -1,5 +1,4 @@
 import { useMemo, useState } from 'react'
-import axios from 'axios'
 import { ActivityIndicator, Alert, Keyboard, Platform, ScrollView, View } from 'react-native'
 import styled from 'styled-components/native'
 import { NavigationContainer } from '@react-navigation/native'
@@ -7,7 +6,7 @@ import { createStackNavigator, TransitionPresets } from '@react-navigation/stack
 import { colors } from '../../colors'
 import { Input, ModalPopUp, ScreenWidth, url } from '../Shared'
 import { BodyBoldSm_Text, BodySm_Text, Body_Text, Detail_Text } from '../Fonts'
-import { Button_PinkBg, Button_PinkBgBottom, Button_PinkBg_Abs } from '../Buttons'
+import { Button_PinkBg } from '../Buttons'
 
 import Caution from '../../assets/Svgs/Caution.svg'
 import Change from '../../assets/Svgs/Todo_change.svg'
@@ -467,6 +466,7 @@ export const TodoCreateBottomSheet = ({
   teamUserList,
   selectedDate,
   getInitDatas,
+  selectedTeam,
 }) => {
   const [users, setUsers] = useState(teamUserList?.map((users) => ({ ...users, selected: false })))
   const [name, setName] = useState(null)
@@ -503,6 +503,7 @@ export const TodoCreateBottomSheet = ({
   const createTodo = async () => {
     let data = {
       categoryId: selectedCategoryID,
+      todoTeamId: selectedTeam.id,
       description: name,
       scheduledDate: selectedDate,
       registerIds: selectedUser,

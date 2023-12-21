@@ -20,6 +20,7 @@ export const getCategoryListAdmin = async (teamId) => {
 }
 export const getCategoryList = async (teamId, moveDate) => {
   let API = `/teams/${teamId}/category?moveDate=${moveDate}`
+  // let API = `/teams/${teamId}/category`
   const response = await axiosInstance.get(url + API)
   return response.data.content
 }
@@ -56,8 +57,7 @@ export const validateTodo = async (todoId, teamId) => {
   let API = `/teams/${teamId}/todos/${todoId}/validate`
   // /teams/3127/todos/2846/validate
   const response = await axiosInstance.get(url + API)
-  console.log(response)
-  return response
+  return response.data.isNotValidate
 }
 export const completeTodo = async (todo) => {
   let API = `/teams/todos/${todo.todoId}/assign/complete`

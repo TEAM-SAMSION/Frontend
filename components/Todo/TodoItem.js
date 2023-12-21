@@ -19,13 +19,13 @@ const TodoItem = ({ editTodo, categoryId, todo, todoLocalId, refreshData, select
   let meDoneStatus = todo.isAssigned && todo.assignNames[0].completionStatus == 'COMPLETE'
 
   const handleTodoPress = () => {
-    validateTodo(todo.todoId, selectedTeamId)
-    // if (todo.isAssigned) {
-    //   editTodo(categoryId, todoLocalId)
-    // } else {
-    //   showNotAuthorizedToast()
-    // }
-    // //*** 여기서 Validation 거친 후에*/
+    validateTodo(todo.todoId, selectedTeamId).then((isNotValid) => {
+      if (isNotValid == true) {
+        showNotAuthorizedToast()
+      } else {
+        editTodo(categoryId, todoLocalId)
+      }
+    })
   }
   const handleIconPress = () => {
     setIsLoading(true)
