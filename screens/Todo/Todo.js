@@ -101,7 +101,7 @@ export default Todo = ({ navigation }) => {
       console.log('선택된 Team없어서, Refresh안함')
     }
   }
-
+  console.log(teamUserList)
   const getAllData = (date = today) => {
     !todoTeamList && setIsLoading(true)
     //TodoTeam과 Default TodoTeam에 한해 User들을 일시적으로 반환(나중에 Team 변경하면 해당 변수 대체됨)
@@ -145,7 +145,6 @@ export default Todo = ({ navigation }) => {
         if (selectedTeamID) {
           //null 반환받으면, TodoTeam 없다는 것을 의미하기에 api호출 스킵
           await getCategoryList(selectedTeamID).then((categories) => {
-            console.log(categories)
             // console.log('2. 카테고리로 Todo 불러와서 저장', categories.toString().substring(0, 10))
             getTodosByCategory(categories, date).then(setIsLoading(false))
           })

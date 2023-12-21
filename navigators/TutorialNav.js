@@ -18,8 +18,8 @@ const Stack = createStackNavigator()
 export default function TutorialNav() {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="TuHome1" component={TuHome1} />
-      <Stack.Screen name="TuHome2" component={TuHome2} />
+      {/* <Stack.Screen name="TuHome1" component={TuHome1} />
+      <Stack.Screen name="TuHome2" component={TuHome2} /> */}
       <Stack.Screen name="TuTodo1" component={TuTodo1} />
       <Stack.Screen name="TuMyPage1" component={TuMyPage1} />
       <Stack.Screen name="TuMyPage2" component={TuMyPage2} />

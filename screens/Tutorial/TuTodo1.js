@@ -31,10 +31,95 @@ export default TuTodo1 = ({ navigation }) => {
   }`
 
   const buttonRef = useRef(null)
-  const [todosByCategory, setTodosByCategory] = useState(null)
+  const [todosByCategory, setTodosByCategory] = useState([
+    [
+      '0',
+      [
+        22,
+        '카테고리',
+        [
+          {
+            todoId: 419,
+            task: 'Task',
+            completionStatus: 'INCOMPLETE',
+            assignNames: [
+              { assigneeId: 1, assigneeName: '내이름', completionStatus: 'INCOMPLETE' },
+              { assigneeId: 2, assigneeName: 'Text', completionStatus: 'COMPLETE' },
+              { assigneeId: 3, assigneeName: 'Text', completionStatus: 'INCOMPLETE' },
+            ],
+            isAssigned: true,
+            notificationInfo: { isNotification: true, notificationTime: '12:50:00' },
+          },
+          {
+            todoId: 422,
+            task: 'Task',
+            completionStatus: 'INCOMPLETE',
+            assignNames: [
+              { assigneeId: 1, assigneeName: '내이름', completionStatus: 'INCOMPLETE' },
+              { assigneeId: 2, assigneeName: 'Text', completionStatus: 'INCOMPLETE' },
+              { assigneeId: 3, assigneeName: 'Text', completionStatus: 'INCOMPLETE' },
+            ],
+            isAssigned: false,
+            notificationInfo: { isNotification: false },
+          },
+        ],
+      ],
+    ],
+    [
+      '1',
+      [
+        24,
+        '카테고리',
+        [
+          {
+            todoId: 42,
+            task: 'Task',
+            completionStatus: 'INCOMPLETE',
+            assignNames: [
+              { assigneeId: 1, assigneeName: '내이름', completionStatus: 'INCOMPLETE' },
+              { assigneeId: 2, assigneeName: 'Text', completionStatus: 'COMPLETE' },
+              { assigneeId: 3, assigneeName: 'Text', completionStatus: 'INCOMPLETE' },
+            ],
+            isAssigned: true,
+            notificationInfo: { isNotification: true, notificationTime: '17:40:00' },
+          },
+          {
+            todoId: 12,
+            task: 'Task',
+            completionStatus: 'INCOMPLETE',
+            assignNames: [
+              { assigneeId: 1, assigneeName: '내이름', completionStatus: 'INCOMPLETE' },
+              { assigneeId: 2, assigneeName: 'Text', completionStatus: 'COMPLETE' },
+              { assigneeId: 3, assigneeName: 'Text', completionStatus: 'INCOMPLETE' },
+            ],
+            isAssigned: false,
+            notificationInfo: { isNotification: false },
+          },
+          {
+            todoId: 12,
+            task: 'Task',
+            completionStatus: 'INCOMPLETE',
+            assignNames: [
+              { assigneeId: 1, assigneeName: '내이름', completionStatus: 'INCOMPLETE' },
+              { assigneeId: 2, assigneeName: 'Text', completionStatus: 'COMPLETE' },
+              { assigneeId: 3, assigneeName: 'Text', completionStatus: 'INCOMPLETE' },
+            ],
+            isAssigned: false,
+            notificationInfo: { isNotification: false },
+          },
+        ],
+      ],
+    ],
+  ])
 
-  const [todoTeamList, setTodoTeamList] = useState(null)
-  const [teamUserList, setTeamUserList] = useState([])
+  const [todoTeamList, setTodoTeamList] = useState(['1', '2', '3'])
+  const [teamUserList, setTeamUserList] = useState([
+    { id: 25, name: '또지' },
+    { id: 25, name: '두덩이' },
+    { id: 25, name: '민맘밈' },
+    { id: 25, name: '센' },
+    { id: 25, name: '김가현' },
+  ])
 
   const [selectedCategoryID, setSelectedCategoryID] = useState(null)
   const [selectedTodo, setSelectedTodo] = useState(null)
@@ -46,141 +131,19 @@ export default TuTodo1 = ({ navigation }) => {
 
   const [isLoading, setIsLoading] = useState(false)
   const [refreshing, setRefreshing] = useState(false)
-
   const bottomModal = useRef()
 
   //prettier-ignore
   const renderBackdrop = useCallback((props) => <BottomSheetBackdrop {...props} pressBehavior="close" appearsOnIndex={0} disappearsOnIndex={-1} ><Pressable onPress={()=>Keyboard.dismiss()} style={{flex:1}}/></BottomSheetBackdrop>,[],)
 
-  const getTodosByCategory = async (categories, date) => {
-    // 각 categoryId에 대해 getTodo 함수를 병렬로 호출
-    const todoPromises = categories.map(
-      (category) => getTodos(category.categoryId, date), //[{"assignNames": [[Object], [Object], [Object], [Object]], "status": "INCOMPLETE", "task": "test", "todoId": 6149}, {"assignNames": [[Object], [Object], [Object], [Object]], "status": "INCOMPLETE", "task": "test", "todoId": 6150},
-    )
-    // Promise.all()를 사용하여 모든 비동기 작업 완료를 기다림
-    const todosArr = await Promise.all(todoPromises) //todosArr = {"0":[1,"test",{"todoId":6161,"task":"test","status":"INCOMPLETE","assignNames":[{"assigneeId":1,"assigneeName":"test"},{"assigneeId":5,"assigneeName":"김형석"},{"assigneeId":6,"assigneeName":null},{"assigneeId":7,"assigneeName":"neon"}]}],
-    // 각 categoryId와 그에 해당하는 todo 객체들을 묶음/ 누적값, 현재값, id
-    const todosByCategory = categories.reduce((acc, category, id) => {
-      acc[id] = [category.categoryId, category.categoryName, todosArr[id]]
-      return acc
-    }, [])
+  const getTodosByCategory = async (categories, date) => {}
 
-    if (Object.entries(todosByCategory).length > 0) {
-      setTodosByCategory(Object.entries(todosByCategory))
-    } else {
-      setTodosByCategory(null)
-    }
-  }
+  const handleTeamChange = (team) => {}
+  const onRefresh = useCallback(() => {}, [selectedDate, selectedTeam])
+  const refreshData = async (date = today) => {}
 
-  const handleTeamChange = (team) => {
-    setIsMenuOpen(false)
-    setSelectedTeam({ name: team.name, id: team.id, auth: team.auth })
-  }
-  const onRefresh = useCallback(() => {
-    setRefreshing(true)
-    refreshData(selectedDate)
-    setTimeout(() => {
-      setRefreshing(false)
-    }, 1000)
-  }, [selectedDate, selectedTeam])
-  const refreshData = async (date = today) => {
-    console.log('RefreshData', date)
-    // setIsLoading(true)
-    if (selectedTeam) {
-      await getCategoryList(selectedTeam.id).then((categories) => {
-        // console.log('2. 카테고리로 Todo 불러와서 저장', categories.toString().substring(0, 10))
-        getTodosByCategory(categories, date)
-      })
-      await getTeamUser(selectedTeam.id).then((res) => {
-        let tempTeamUserList = []
-        res.map((user) => tempTeamUserList.push({ id: user.registerId, name: user.registerName }))
-        console.log('3. 선택된 팀의 사용자들 state로 저장', tempTeamUserList.toString().substring(0, 10))
-        setTeamUserList(tempTeamUserList) //나중에 Team 변경하면 해당 변수 대체됨
-      })
-    } else {
-      console.log('선택된 Team없어서, Refresh안함')
-    }
-  }
+  const getAllData = (date = today) => {}
 
-  const getAllData = (date = today) => {
-    !todoTeamList && setIsLoading(true)
-    //TodoTeam과 Default TodoTeam에 한해 User들을 일시적으로 반환(나중에 Team 변경하면 해당 변수 대체됨)
-    getTodoTeamList()
-      .then((data) => {
-        if (data.length == 0) {
-          console.log('***. TodoTeam없으므로 getAllData 스킵')
-          setIsLoading(false)
-          setTodoTeamList(null)
-          setSelectedTeam(null)
-          setTeamUserList([])
-          return false
-        }
-        let tempTeamList = []
-        data.map((team) => tempTeamList.push({ id: team.teamId, name: team.teamName, auth: team.authority }))
-        console.log('1. Team 리스트들을 정리')
-        setTodoTeamList(tempTeamList)
-        if (!selectedTeam) {
-          //만약 선택된 팀이 없다면(초기상태의 경우), 불러온 Team의 가장 마지막 팀(가장 최근) 설정
-          setSelectedTeam({
-            auth: tempTeamList[tempTeamList.length - 1]?.authority,
-            name: tempTeamList[tempTeamList.length - 1]?.name,
-            id: tempTeamList[tempTeamList.length - 1]?.id,
-          })
-          return tempTeamList[tempTeamList.length - 1]?.id
-        } else {
-          tempTeamList.map((team) => {
-            if (team.id == selectedTeam.id && team.auth != selectedTeam.auth) {
-              setSelectedTeam({
-                auth: team.authority,
-                name: team.name,
-                id: team.id,
-              })
-            }
-          })
-          return selectedTeam.id
-        }
-      })
-      .then(async (selectedTeamID) => {
-        // console.log('실제로 fetch때 사용되는 팀ID:', selectedTeamID, 'Recoil의 팀ID:', selectedTeam.id)
-        if (selectedTeamID) {
-          //null 반환받으면, TodoTeam 없다는 것을 의미하기에 api호출 스킵
-          await getCategoryList(selectedTeamID).then((categories) => {
-            console.log(categories)
-            // console.log('2. 카테고리로 Todo 불러와서 저장', categories.toString().substring(0, 10))
-            getTodosByCategory(categories, date).then(setIsLoading(false))
-          })
-          await getTeamUser(selectedTeamID).then((res) => {
-            let tempTeamUserList = []
-            res.map((user) => tempTeamUserList.push({ id: user.registerId, name: user.registerName }))
-            console.log('3. 선택된 팀의 사용자들 state로 저장', tempTeamUserList.toString().substring(0, 10))
-            setTeamUserList(tempTeamUserList) //나중에 Team 변경하면 해당 변수 대체됨
-          })
-        } else {
-          setTodosByCategory(null)
-        }
-      })
-  }
-  useEffect(() => {
-    let timer
-    timer = setInterval(() => {
-      const sec = new Date().getSeconds()
-      if (sec) return
-      if (selectedTeam) {
-        console.log('*********************자동갱신****************************')
-        refreshData(selectedDate)
-      }
-    }, 1000)
-    return () => {
-      clearInterval(timer)
-    }
-  }, [selectedTeam, selectedDate])
-
-  useFocusEffect(
-    useCallback(() => {
-      getAllData(selectedDate)
-      setIsTabVisible(true)
-    }, [selectedDate, selectedTeam]),
-  )
   const handleBottomSheetHeight = (status) => {
     if (status == 0) {
       bottomModal.current?.dismiss()
@@ -192,6 +155,7 @@ export default TuTodo1 = ({ navigation }) => {
       bottomModal.current?.snapToIndex(2)
     }
   }
+
   const startCreateTodo = (index) => {
     setIsCreateMode(true)
     setSelectedCategoryID(index)
@@ -205,6 +169,10 @@ export default TuTodo1 = ({ navigation }) => {
     handleBottomSheetHeight(1)
     bottomModal.current?.present()
   }
+  useEffect(() => {
+    handleBottomSheetHeight(0)
+  }, [])
+
   return (
     <ScreenContainer>
       <StatusBar />
@@ -217,7 +185,7 @@ export default TuTodo1 = ({ navigation }) => {
             setIsCreateVisible={setIsCreateVisible}
             todoTeamList={todoTeamList}
             navigation={navigation}
-            selectedTeam={selectedTeam}
+            selectedTeam={{ auth: 'MEMBER', name: '페밀리', id: 1 }}
             setIsMenuOpen={setIsMenuOpen}
           />
           <ScrollViewContainer>
@@ -226,13 +194,13 @@ export default TuTodo1 = ({ navigation }) => {
               showsVerticalScrollIndicator={false}
             >
               <MyCalendarStrip selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
-              {!todoTeamList ? (
+              {/* {!todoTeamList ? (
                 <NoPamily />
               ) : !todosByCategory ? (
                 <NoCategory />
               ) : (
                 todosByCategory?.filter((item) => item[1][2].length > 0).length == 0 && <NoTodo />
-              )}
+              )} */}
               {isLoading ? (
                 <LoadingContainer>
                   <ActivityIndicator />
