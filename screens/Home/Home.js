@@ -16,6 +16,7 @@ import { SelectedTeamAtom, TabBarAtom } from '../../recoil/TabAtom'
 import Swiper from 'react-native-swiper'
 import RightIcon from '../../assets/Svgs/chevron_right.svg'
 import { ChristmasModal } from './ChristmasModal'
+import { checkVersion } from '../../utils/VersionControl'
 
 export default function Home({ navigation }) {
   const isFocused = useIsFocused()
@@ -101,6 +102,7 @@ export default function Home({ navigation }) {
     }
   }
   useEffect(() => {
+    checkVersion()
     getUserNickname()
     fetchData()
   }, [])

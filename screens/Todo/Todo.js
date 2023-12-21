@@ -84,8 +84,6 @@ export default Todo = ({ navigation }) => {
     }, 1000)
   }, [selectedDate, selectedTeam])
   const refreshData = async (date = today) => {
-    console.log('RefreshData', date)
-    // setIsLoading(true)
     if (selectedTeam) {
       await getCategoryList(selectedTeam.id).then((categories) => {
         // console.log('2. 카테고리로 Todo 불러와서 저장', categories.toString().substring(0, 10))
@@ -176,6 +174,7 @@ export default Todo = ({ navigation }) => {
 
   useFocusEffect(
     useCallback(() => {
+      // getLatestAppVersion()
       getAllData(selectedDate)
       setIsTabVisible(true)
     }, [selectedDate, selectedTeam]),

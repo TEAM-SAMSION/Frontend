@@ -72,6 +72,7 @@ export default function AppBase() {
     const result = PushNotificationIOS.FetchResult.NoData
     notification.finish(result)
   }
+
   const prepare = async () => {
     try {
       await AsyncStorage.getItem('accessToken').then((accessToken) => {
