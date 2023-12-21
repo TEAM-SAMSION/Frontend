@@ -21,6 +21,7 @@ export const ChristmasModal = () => {
 
   return (
     <Modal visible={!eventViewed} animationType="slide" onRequestClose={() => handleClose()}>
+      {/* <Modal visible={true} animationType="slide" onRequestClose={() => handleClose()}> */}
       <ScreenLayout>
         <BackImgContainer>
           <Back width={ScreenWidth} height={ScreenHeight} />
@@ -60,7 +61,7 @@ const BackImgContainer = styled.View`
 `
 const BackGif = styled.Image`
   flex: 1;
-  margin-top: 64px;
+  margin-top: 80px;
   align-items: start;
   flex-direction: column;
   justify-self: flex-start;

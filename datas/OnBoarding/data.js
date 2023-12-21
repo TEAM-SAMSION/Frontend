@@ -26,7 +26,7 @@ export const PAGES = [
   {
     id: 5,
     title: '잘부탁드려요',
-    content: `포잇과 함께, 나의 펫에게 사람과 온정이 넘치는 하루를 선물하세요!`,
+    content: `포잇과 함께, 나의 펫에게 사랑과 온정이 넘치는 하루를 선물하세요!`,
     image: require('../../assets/Imgs/onboarding05.png'),
   },
 ]
