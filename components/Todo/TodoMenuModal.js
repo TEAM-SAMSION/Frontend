@@ -2,9 +2,9 @@ import React, { useRef, useEffect, useState } from 'react'
 import { Animated, StyleSheet, View, TouchableOpacity, Text, Modal } from 'react-native'
 import styled from 'styled-components/native'
 import { colors } from '../../colors'
-import { Body_Text, Detail_Text } from '../Fonts'
+import { BodySm_Text, Body_Text, Detail_Text } from '../Fonts'
 
-export const TodoMenuModal = ({ isVisible, onClose, todoTeamList, handleTeamChange }) => {
+export const TodoMenuModal = ({ isVisible, onClose, todoTeamList, handleTeamChange, setCreateModalOpen }) => {
   const translateY = useRef(new Animated.Value(0)).current
   const [showModal, setShowModal] = useState(isVisible)
   useEffect(() => {
@@ -24,6 +24,10 @@ export const TodoMenuModal = ({ isVisible, onClose, todoTeamList, handleTeamChan
     } else {
       setShowModal(false)
     }
+  }
+  const handleCreatePamilyClick = () => {
+    setCreateModalOpen(true)
+    setShowModal(false)
   }
   return (
     <Modal transparent visible={showModal}>
@@ -46,18 +50,19 @@ export const TodoMenuModal = ({ isVisible, onClose, todoTeamList, handleTeamChan
         >
           {todoTeamList?.map((todoTeam, id) => (
             <DropdownBox
-              style={
-                id != todoTeamList.length - 1 && {
-                  borderColor: colors.grey_150,
-                  borderBottomWidth: 1,
-                }
-              }
+              style={{
+                borderColor: colors.grey_150,
+                borderBottomWidth: 1,
+              }}
               key={id}
               onPress={() => handleTeamChange(todoTeam)}
             >
               <Body_Text color={colors.grey_600}>{todoTeam.name}</Body_Text>
             </DropdownBox>
           ))}
+          <DropdownBox onPress={() => handleCreatePamilyClick()}>
+            <BodySm_Text color={colors.grey_400}>패밀리 생성하기</BodySm_Text>
+          </DropdownBox>
         </Animated.View>
       </ModalBackground>
     </Modal>

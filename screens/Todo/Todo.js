@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { ModalPopUp, PetModalPopUp } from '../../components/Shared'
+import { PetModalPopUp } from '../../components/Shared'
 import { colors } from '../../colors'
 import styled from 'styled-components/native'
 import { TodoHeader } from '../../components/Todo/TodoHeader'
@@ -15,7 +15,7 @@ import { CategoryIndicator } from '../../components/Todo/CategoryIndicator'
 import { useFocusEffect } from '@react-navigation/native'
 import { SelectedTeamAtom, TabBarAtom } from '../../recoil/TabAtom'
 import TodoItem from '../../components/Todo/TodoItem'
-import { TodoMenuModal, TodoModal } from '../../components/Todo/TodoMenuModal'
+import { TodoMenuModal } from '../../components/Todo/TodoMenuModal'
 
 export default Todo = ({ navigation }) => {
   const setIsTabVisible = useSetRecoilState(TabBarAtom)
@@ -38,7 +38,7 @@ export default Todo = ({ navigation }) => {
   const [selectedDate, setSelectedDate] = useState(today)
 
   const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const [isCreateVisible, setIsCreateVisible] = useState(false)
+  const [createModalOpen, setCreateModalOpen] = useState(false)
   const [isCreateMode, setIsCreateMode] = useState(false)
 
   const [isLoading, setIsLoading] = useState(false)
@@ -209,7 +209,7 @@ export default Todo = ({ navigation }) => {
             buttonRef={buttonRef}
             isMenuOpen={isMenuOpen}
             handleTeamChange={handleTeamChange}
-            setIsCreateVisible={setIsCreateVisible}
+            setIsCreateVisible={setCreateModalOpen}
             todoTeamList={todoTeamList}
             navigation={navigation}
             selectedTeam={selectedTeam}
@@ -300,14 +300,15 @@ export default Todo = ({ navigation }) => {
           petIcon={true}
           height={211}
           navigation={navigation}
-          setIsVisible={setIsCreateVisible}
-          visible={isCreateVisible}
+          setIsVisible={setCreateModalOpen}
+          visible={createModalOpen}
         />
         <TodoMenuModal
           isVisible={isMenuOpen}
           onClose={() => setIsMenuOpen(false)}
           todoTeamList={todoTeamList}
           handleTeamChange={handleTeamChange}
+          setCreateModalOpen={setCreateModalOpen}
         />
       </Pressable>
     </ScreenContainer>

@@ -8,6 +8,7 @@ import Arrow_right from '../../assets/Svgs/arrow_right.svg'
 import Reset from '../../assets/Svgs/Reset.svg'
 
 import { BodyBoldSm_Text, Detail_Text, SubHeadSm_Text } from '../Fonts'
+import { normalize } from '../Shared'
 
 export const MyCalendarStrip = ({ selectedDate, setSelectedDate }) => {
   //2023-11-20
@@ -38,7 +39,7 @@ export const MyCalendarStrip = ({ selectedDate, setSelectedDate }) => {
           setSelectedDate(date.format('YYYY-MM-DD'))
           setCustomDay(date.format('d'))
         }}
-        style={{ height: 68 }}
+        style={{ height: normalize(68) }}
         selectedDate={new Date()} //** 실제 렌더링에서의 성능체감 */
         highlightDateNumberContainerStyle={{
           backgroundColor: colors.primary_container,
@@ -49,26 +50,33 @@ export const MyCalendarStrip = ({ selectedDate, setSelectedDate }) => {
         onWeekChanged={(a, b) => {
           setMonth(b.month() + 1)
         }}
-        dateNameStyle={{ color: colors.grey_500, fontFamily: 'Spoqa-Medium', fontSize: 12, marginBottom: 4 }}
+        dateNameStyle={{
+          color: colors.grey_500,
+          fontFamily: 'Spoqa-Medium',
+          fontSize: normalize(14),
+          lineHeight: normalize(19),
+          marginBottom: normalize(2),
+        }}
         highlightDateNameStyle={{
           color: colors.grey_500,
           fontFamily: 'Spoqa-Medium',
-          fontSize: 12,
-          marginBottom: 4,
+          fontSize: normalize(14),
+          lineHeight: normalize(19),
+          marginBottom: normalize(2),
         }}
         dateNumberStyle={{
           color: colors.grey_800,
           fontFamily: 'Spoqa-Medium',
-          fontSize: 12,
-          padding: 12,
-          margin: -6,
+          fontSize: normalize(12),
+          padding: normalize(12),
+          margin: normalize(-6),
         }}
         highlightDateNumberStyle={{
           color: colors.primary,
           fontFamily: 'Spoqa-Medium',
-          fontSize: 12,
-          padding: 12,
-          margin: -6,
+          fontSize: normalize(12),
+          padding: normalize(12),
+          margin: normalize(-6),
         }}
         leftSelector={[]}
         rightSelector={[]}
