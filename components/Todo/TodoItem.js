@@ -5,12 +5,12 @@ import Complete from '../../assets/Imgs/Complete.png'
 import Alarm from '../../assets/Svgs/Alarm.svg'
 import InComplete from '../../assets/Imgs/InComplete.png'
 import styled from 'styled-components/native'
-import { completeTodo } from './Apis'
+import { completeTodo, validateTodo } from './Apis'
 import { ActivityIndicator, Alert } from 'react-native'
 import Toast from 'react-native-toast-message'
 import { showDeletedToast, showNotAuthorizedToast } from '../../utils/toastMessages'
 
-const TodoItem = ({ editTodo, categoryId, todo, todoLocalId, refreshData, selectedDate }) => {
+const TodoItem = ({ editTodo, categoryId, todo, todoLocalId, refreshData, selectedDate, selectedTeamId }) => {
   const [isLoading, setIsLoading] = useState(false)
   // console.log(todo) // {"assignNames": [{"assigneeId": 5, "assigneeName": "김형석", "completionStatus": "INCOMPLETE"}, {"assigneeId": 9, "assigneeName": "주희", "completionStatus": "COMPLETE"}, {"assigneeId": 11, "assigneeName": "심규민", "completionStatus": "INCOMPLETE"}, {"assigneeId": 13, "assigneeName": "센", "completionStatus": "INCOMPLETE"}, {"assigneeId": 14, "assigneeName": "신민선", "completionStatus": "INCOMPLETE"}], "completionStatus": "INCOMPLETE", "isAssigned": true,
   // "notificationInfo": {"isNotification": true, "notificationTime": "15:06:00"}, "task": "QA", "todoId": 6431}
@@ -19,12 +19,13 @@ const TodoItem = ({ editTodo, categoryId, todo, todoLocalId, refreshData, select
   let meDoneStatus = todo.isAssigned && todo.assignNames[0].completionStatus == 'COMPLETE'
 
   const handleTodoPress = () => {
-    if (todo.isAssigned) {
-      editTodo(categoryId, todoLocalId)
-    } else {
-      showNotAuthorizedToast()
-    }
-    //*** 여기서 Validation 거친 후에*/
+    validateTodo(todo.todoId, selectedTeamId)
+    // if (todo.isAssigned) {
+    //   editTodo(categoryId, todoLocalId)
+    // } else {
+    //   showNotAuthorizedToast()
+    // }
+    // //*** 여기서 Validation 거친 후에*/
   }
   const handleIconPress = () => {
     setIsLoading(true)

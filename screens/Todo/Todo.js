@@ -3,11 +3,8 @@ import { ModalPopUp, PetModalPopUp } from '../../components/Shared'
 import { colors } from '../../colors'
 import styled from 'styled-components/native'
 import { TodoHeader } from '../../components/Todo/TodoHeader'
-import { Body_Text } from '../../components/Fonts'
 import { ActivityIndicator, Keyboard, Pressable, RefreshControl, ScrollView, StatusBar } from 'react-native'
-import Caution from '../../assets/Svgs/Caution.svg'
 import { useRecoilState, useSetRecoilState } from 'recoil'
-import Close from '../../assets/Svgs/Close.svg'
 import { NoCategory, NoPamily, NoTodo } from '../../components/Todo/NoToDoBox'
 import { BottomSheetBackdrop, BottomSheetModal } from '@gorhom/bottom-sheet'
 import { TodoCreateBottomSheet, TodoEditBottomSheet } from '../../components/Todo/TodoBottomSheets'
@@ -99,7 +96,7 @@ export default Todo = ({ navigation }) => {
       console.log('선택된 Team없어서, Refresh안함')
     }
   }
-  console.log(teamUserList)
+
   const getAllData = (date = today) => {
     !todoTeamList && setIsLoading(true)
     //TodoTeam과 Default TodoTeam에 한해 User들을 일시적으로 반환(나중에 Team 변경하면 해당 변수 대체됨)
@@ -256,6 +253,7 @@ export default Todo = ({ navigation }) => {
                             categoryId={id}
                             //여기서 categoryID는 배열로 불러왔을때, 임의 순서를 나타낸 것이며, 서버 내에서 식별용으로 사용되는 ID값은 아님
                             editTodo={startEditTodo}
+                            selectedTeamId={selectedTeam.id}
                           />
                         ))}
                       </>
