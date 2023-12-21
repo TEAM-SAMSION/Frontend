@@ -35,7 +35,7 @@ export default function TuHome2({ navigation }) {
       <Pressable
         style={{ flex: 1 }}
         onPress={() => {
-          navigation.navigate('TuMyPage1')
+          navigation.navigate('TuTodo1')
         }}
       >
         <View

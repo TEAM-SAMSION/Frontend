@@ -47,7 +47,7 @@ export default function TuAdmin4({ navigation }) {
       <Pressable
         style={{ flex: 1 }}
         onPress={() => {
-          navigation.navigate('TuAdmin2')
+          navigation.navigate('HomeNav')
         }}
       >
         <View
