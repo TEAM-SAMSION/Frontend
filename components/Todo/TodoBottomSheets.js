@@ -736,14 +736,13 @@ export const TuTodoCreateBottomSheet = ({
     })
   }
   return (
-    <BottomSheetBase
+    <View2
       style={{
         backgroundColor: colors.grey_100,
         paddingTop: Platform.OS === 'android' ? 8 : 0,
-        paddingBottom: 0,
       }}
     >
-      <View style={{ flex: 38 }}>
+      <View>
         <BottomSheetHeader>
           <Body_Text color={colors.grey_800}>TODO</Body_Text>
         </BottomSheetHeader>
@@ -808,9 +807,16 @@ export const TuTodoCreateBottomSheet = ({
           </View>
         </UserContainer>
       </View>
-      <View style={{ bottom: 0 }}>
+      <View style={{ top: 200 }}>
         <Button_PinkBg isLoading={isLoading} isEnabled={true} text="완료" func={() => handleSubmit()} />
       </View>
-    </BottomSheetBase>
+    </View2>
   )
 }
+
+const View2 = styled.View`
+  width: 100%;
+  height: 470px;
+  padding: 24px 24px 32px 24px;
+  flex-direction: column;
+`
