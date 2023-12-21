@@ -37,7 +37,7 @@ export default function DeleteAccount3({ route, navigation }) {
 
   return (
     <ScreenLayout>
-      <Container style={{ marginBottom: 80 }}>
+      <Container style={{ marginBottom: 0 }}>
         <ScrollView showsVerticalScrollIndicator={false}>
           <TitleBox>
             <SubHead_Text>탈퇴하기 전에</SubHead_Text>

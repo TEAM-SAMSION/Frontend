@@ -210,22 +210,15 @@ export default TuTodo3 = ({ navigation }) => {
             zIndex: 200,
           }}
         >
-          <View style={{ position: 'absolute', bottom: 255 + 50 + 33 + 16, left: 16 + 8 }}>
+          <View style={{ position: 'absolute', top: 470, left: 16 + 8 }}>
             <BodyBoldSm_Text color={colors.grey_100}>담당자 지정</BodyBoldSm_Text>
           </View>
-          <View style={{ position: 'absolute', bottom: 255 + 50, left: 16 + 8 }}>
+          <View style={{ position: 'absolute', top: 500, left: 16 + 8 }}>
             <UserItem style={{ backgroundColor: colors.grey_150 }}>
               <Detail_Text color={colors.grey_600}>모두</Detail_Text>
             </UserItem>
           </View>
-          <View
-            style={{
-              position: 'absolute',
-              bottom: 255,
-              left: 16 + 8 + 60,
-              alignItems: 'flex-start',
-            }}
-          >
+          <View style={{ position: 'absolute', top: 510, left: 16 + 8 + 60 }}>
             <About3 width={18} height={26} />
             <View style={{ marginTop: 4 }}>
               <Body_Text color={colors.red_200} style={{ textAlign: 'left' }}>
@@ -301,7 +294,7 @@ export default TuTodo3 = ({ navigation }) => {
             </ContentLayout>
           </Pressable>
         </ScreenContainer>
-        <View style={{ position: 'absolute', zIndex: 100, bottom: 0, height: 450 }}>
+        <View style={{ position: 'absolute', zIndex: 100, top: 300 }}>
           <BottomHeader>
             <BottomBar />
           </BottomHeader>
