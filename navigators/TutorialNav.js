@@ -11,6 +11,7 @@ import TuAdmin1 from '../screens/Tutorial/TuAdmin1'
 import TuAdmin2 from '../screens/Tutorial/TuAdmin2'
 import TuAdmin3 from '../screens/Tutorial/TuAdmin3'
 import TuAdmin4 from '../screens/Tutorial/TuAdmin4'
+import TuTodo1 from '../screens/Tutorial/TuTodo1'
 
 const Stack = createStackNavigator()
 
@@ -19,6 +20,7 @@ export default function TutorialNav() {
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name="TuHome1" component={TuHome1} />
       <Stack.Screen name="TuHome2" component={TuHome2} />
+      <Stack.Screen name="TuTodo1" component={TuTodo1} />
       <Stack.Screen name="TuMyPage1" component={TuMyPage1} />
       <Stack.Screen name="TuMyPage2" component={TuMyPage2} />
       <Stack.Screen name="TuMyPage3" component={TuMyPage3} />
