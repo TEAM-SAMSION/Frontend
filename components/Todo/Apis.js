@@ -18,8 +18,8 @@ export const getCategoryListAdmin = async (teamId) => {
   const response = await axiosInstance.get(url + API)
   return response.data.content
 }
-export const getCategoryList = async (teamId) => {
-  let API = `/teams/${teamId}/category`
+export const getCategoryList = async (teamId, moveDate) => {
+  let API = `/teams/${teamId}/category?moveDate=${moveDate}`
   const response = await axiosInstance.get(url + API)
   return response.data.content
 }
