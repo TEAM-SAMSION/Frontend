@@ -91,8 +91,16 @@ export const editTodoName = async (todoId, name) => {
   let data = {
     description: name,
   }
-  const response = await axiosInstance.put(url + API, data)
-  return response
+  await axiosInstance.put(url + API, data).then((res) => console.log('Todo이름 수정 결과:', res.status))
+}
+
+export const editTodoAssignee = async (todoId, user) => {
+  const registerIds = user
+  let API = `/teams/todos/${todoId}/assign`
+  let data = {
+    registerIds,
+  }
+  await axiosInstance.put(url + API, data).then((res) => console.log('Todo담당자 수정 결과:', res.status))
 }
 
 export const editTodoDate = async (todoId, scheduledDate) => {

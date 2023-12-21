@@ -16,7 +16,7 @@ import Back from '../../assets/Svgs/chevron_back.svg'
 import Close from '../../assets/Svgs/Close.svg'
 import Edit from '../../assets/Svgs/Todo_edit.svg'
 import DatePicker from 'react-native-date-picker'
-import { deleteTodo, editTodoDate, editTodoName, setTodoAlarm } from './Apis'
+import { deleteTodo, editTodoAssignee, editTodoDate, editTodoName, setTodoAlarm } from './Apis'
 import axiosInstance from '../../utils/customAxios'
 import { showDeletedToast } from '../../utils/toastMessages'
 
@@ -205,7 +205,6 @@ const TodoDataEditing = ({
   let assigneeNames = selectedTodo.assignNames.map((assignee) => assignee.assigneeName)
   const [users, setUsers] = useState(
     teamUserList?.map(function (user) {
-      console.log(user)
       if (assigneeNames.includes(user.name)) {
         return { ...user, selected: true }
       } else {
@@ -220,21 +219,6 @@ const TodoDataEditing = ({
     return acc
   }, [])
 
-  // const editTodo = async () => {
-  //   let data = {
-  //     categoryId: selectedCategoryID,
-  //     description: name,
-  //     scheduledDate: selectedDate,
-  //     registerIds: selectedUser,
-  //   }
-  //   try {
-  //     let API = `/teams/todos`
-  //     const response = axiosInstance.post(url + API, data)
-  //     console.log('CreateTodoSuccessed!, response:', response)
-  //   } catch (e) {
-  //     console.log('CreateTodo Error:', e)
-  //   }
-  // }
   const selectAll = () => {
     const tempArr = JSON.parse(JSON.stringify(users))
     if (tempArr.filter((item) => item.selected == false).length > 0) {
@@ -269,12 +253,14 @@ const TodoDataEditing = ({
   const handleSubmit = () => {
     setIsLoading(true)
     popKeyboard()
-    editTodoName(selectedTodo.todoId, name).then((res) => {
-      getInitDatas(selectedDate) //BackGround에서의 정보갱신
-      updateSelectedTodo(name) //BottomSheet 내부에서의 정보 갱신
-      setIsLoading(false)
-      navigation.goBack()
-    })
+    editTodoName(selectedTodo.todoId, name).then(
+      editTodoAssignee(selectedTodo.todoId, selectedUser).then(() => {
+        getInitDatas(selectedDate) //BackGround에서의 정보갱신
+        updateSelectedTodo(name) //BottomSheet 내부에서의 정보 갱신
+        setIsLoading(false)
+        navigation.goBack()
+      }),
+    )
   }
   return (
     <BottomSheetBase

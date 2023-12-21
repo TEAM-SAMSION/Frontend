@@ -13,6 +13,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 
 export const ChristmasModal = () => {
   const [eventViewed, setEventViewed] = useRecoilState(eventViewedState)
+
   const handleClose = () => {
     setEventViewed(true)
     AsyncStorage.setItem('eventViewed', 'true')
@@ -20,7 +21,6 @@ export const ChristmasModal = () => {
 
   return (
     <Modal visible={!eventViewed} animationType="slide" onRequestClose={() => handleClose()}>
-      {/* <Modal visible={true} animationType="slide" onRequestClose={() => handleClose()}> */}
       <ScreenLayout>
         <BackImgContainer>
           <Back width={ScreenWidth} height={ScreenHeight} />
@@ -36,7 +36,7 @@ export const ChristmasModal = () => {
             </CloseButton>
           </ModalHeader>
           <ContentBase>
-            <Txt color={colors.grey_600} />
+            <Txt wid color={colors.grey_600} />
             <BackGif resizeMode="contain" source={require('../../assets/Gifs/Christmas.gif')} />
           </ContentBase>
           <EventButton func={() => handleClose()} />
@@ -49,7 +49,6 @@ export const ChristmasModal = () => {
 const ModalHeader = styled.View`
   align-items: flex-end;
   justify-content: center;
-  height: 52px;
   margin: 16px;
 `
 const BackImgContainer = styled.View`
@@ -60,17 +59,17 @@ const BackImgContainer = styled.View`
   left: 0;
 `
 const BackGif = styled.Image`
-  width: 200%;
-  /* top: -30px; */
-  /* background-color: cadetblue; */
+  flex: 1;
+  margin-top: 64px;
+  align-items: start;
+  flex-direction: column;
+  justify-self: flex-start;
 `
 const ContentLayout = styled.View`
-  flex-direction: column;
   flex: 1;
   justify-content: space-between;
 `
 const ContentBase = styled.View`
-  bottom: 40px;
   align-items: center;
   flex: 1;
 `

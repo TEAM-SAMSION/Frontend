@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { FlatList, Image, RefreshControl, ScrollView, View } from 'react-native'
-import { ScreenLayout, ScreenWidth } from '../../components/Shared'
+import { ScreenLayout } from '../../components/Shared'
 import { TopHeader } from '../../components/Home/TopHeader'
 import styled from 'styled-components/native'
 import { colors } from '../../colors'
@@ -16,7 +16,7 @@ import { SelectedTeamAtom, TabBarAtom } from '../../recoil/TabAtom'
 import Swiper from 'react-native-swiper'
 import RightIcon from '../../assets/Svgs/chevron_right.svg'
 import { ChristmasModal } from './ChristmasModal'
-import { checkVersion, checkVersionTemp } from '../../utils/VersionControl'
+import { checkVersionTemp } from '../../utils/VersionControl'
 
 export default function Home({ navigation }) {
   const isFocused = useIsFocused()
@@ -47,7 +47,7 @@ export default function Home({ navigation }) {
   const fetchTeamList = () => {
     getTeamList().then((result) => {
       setPamilyList(result)
-      console.log('fetchTeamList:', result)
+      // console.log('fetchTeamList:', result)
       if (result.length !== 0 && selectedTeam) {
         //selectedTeam이 null인 극 초반에 실행돼서, fetchProgress에서 null의 id를 인자로 전달하는 경우 생김. -> selectedTeam이 null이 아닐때 fetchProgress()실행할 수 있도록함
         fetchProgress()

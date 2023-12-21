@@ -141,13 +141,13 @@ export default Todo = ({ navigation }) => {
         if (selectedTeamID) {
           //null 반환받으면, TodoTeam 없다는 것을 의미하기에 api호출 스킵
           await getCategoryList(selectedTeamID, date).then((categories) => {
-            console.log('2. 카테고리로 Todo 불러와서 저장', categories.toString().substring(0, 10))
+            console.log('2. 카테고리로 Todo 불러와서 저장', JSON.stringify(categories).substring(0, 10))
             getTodosByCategory(categories, date).then(setIsLoading(false))
           })
           await getTeamUser(selectedTeamID).then((res) => {
             let tempTeamUserList = []
             res.map((user) => tempTeamUserList.push({ id: user.registerId, name: user.registerName }))
-            console.log('3. 선택된 팀의 사용자들 state로 저장', tempTeamUserList.toString().substring(0, 10))
+            console.log('3. 선택된 팀의 사용자들 state로 저장', JSON.stringify(tempTeamUserList).substring(0, 10))
             setTeamUserList(tempTeamUserList) //나중에 Team 변경하면 해당 변수 대체됨
           })
         } else {
@@ -172,7 +172,6 @@ export default Todo = ({ navigation }) => {
 
   useFocusEffect(
     useCallback(() => {
-      // getLatestAppVersion()
       getAllData(selectedDate)
       setIsTabVisible(true)
     }, [selectedDate, selectedTeam]),
