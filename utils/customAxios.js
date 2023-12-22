@@ -36,7 +36,7 @@ export const LogOut = async (setLoggedIn) => {
   setLoggedIn(false)
 }
 const axiosInstance = axios.create({
-  baseURL: 'https://dev.pawith.com',
+  baseURL: 'https://api.pawith.com',
   timeout: 5000,
 })
 axiosInstance.interceptors.request.use(
