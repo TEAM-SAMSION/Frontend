@@ -268,7 +268,12 @@ export default function AddPet({ route, navigation }) {
         <BottomTitle>
           <BottomTitleText>펫 프로필 등록</BottomTitleText>
         </BottomTitle>
-        <PetImageModal profileUrl={petImageUrl} setProfileUrl={setPetImageUrl} setPetFile={setPetFile} />
+        <PetImageModal
+          profileUrl={petImageUrl}
+          setProfileUrl={setPetImageUrl}
+          setPetFile={setPetFile}
+          closeFunction={() => bottomSheetModalRef.current?.dismiss()}
+        />
       </BottomSheetModal>
     </BottomSheetModalProvider>
   )

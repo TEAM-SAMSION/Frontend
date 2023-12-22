@@ -3,13 +3,15 @@ import { colors } from '../../colors'
 import { ScreenLayout } from '../../components/Shared'
 import { CommonActions, StackActions } from '@react-navigation/native'
 import { StatusBar } from 'react-native'
+import { BodyBoldSm_Text, Detail_Text } from '../../components/Fonts'
 
 export default function DeletePamily2({ navigation }) {
   return (
     <Container>
       <StatusBar color={colors.red_200} />
       <MessageBox>
-        <MessageText>패밀리 나가기가 완료되었습니다{'\n'}그동안 함께 해주셔서 감사합니다.</MessageText>
+        <BodyBoldSm_Text color={colors.grey_700}>그동안 함께 해주셔서 감사합니다</BodyBoldSm_Text>
+        <Detail_Text color={colors.grey_600}>패밀리 나가기가 완료되었습니다</Detail_Text>
       </MessageBox>
       <MessageIcon />
       <ImageContainer>
@@ -42,6 +44,8 @@ const MessageBox = styled.View`
   background-color: ${colors.grey_100};
   padding: 15px 18px;
   border-radius: 12px;
+  justify-content: center;
+  align-items: center;
 `
 const MessageIcon = styled.View`
   width: 0;
@@ -54,7 +58,6 @@ const MessageIcon = styled.View`
   border-right-color: transparent;
   border-top-color: ${colors.grey_100};
 `
-const MessageText = styled.Text``
 const ImageContainer = styled.View`
   position: relative;
 `

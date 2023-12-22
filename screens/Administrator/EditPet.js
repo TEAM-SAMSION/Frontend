@@ -303,7 +303,12 @@ export default function EditPet({ route, navigation }) {
           <BottomTitle>
             <BottomTitleText>펫 프로필 수정</BottomTitleText>
           </BottomTitle>
-          <PetImageModal profileUrl={petImageUrl} setProfileUrl={setPetImageUrl} setPetFile={setPetFile} />
+          <PetImageModal
+            profileUrl={petImageUrl}
+            setProfileUrl={setPetImageUrl}
+            setPetFile={setPetFile}
+            closeFunction={() => bottomSheetModalRef.current?.dismiss()}
+          />
         </BottomSheetModal>
       </BottomSheetModalProvider>
     </>
