@@ -149,6 +149,7 @@ export default Todo = ({ navigation }) => {
             let tempTeamUserList = []
             res.map((user) => tempTeamUserList.push({ id: user.registerId, name: user.registerName }))
             console.log('3. 선택된 팀의 사용자들 state로 저장', JSON.stringify(tempTeamUserList).substring(0, 10))
+
             setTeamUserList(tempTeamUserList) //나중에 Team 변경하면 해당 변수 대체됨
           })
         } else {

@@ -514,6 +514,7 @@ export const TodoCreateBottomSheet = ({
       getInitDatas(selectedDate)
     })
   }
+  console.log(users)
   return (
     <BottomSheetBase
       style={{
@@ -521,7 +522,7 @@ export const TodoCreateBottomSheet = ({
         paddingTop: Platform.OS === 'android' ? 8 : 0,
       }}
     >
-      <BottomSheetView>
+      <View style={{ flex: 38 }}>
         <BottomSheetHeader>
           <Body_Text color={colors.grey_800}>TODO</Body_Text>
         </BottomSheetHeader>
@@ -582,13 +583,15 @@ export const TodoCreateBottomSheet = ({
             })}
           </ScrollView>
         </UserContainer>
+      </View>
+      <View style={{ flex: 62 }}>
         <Button_PinkBg
           isLoading={isLoading}
           isEnabled={!isLoading && selectedUser?.length > 0 && name?.length > 0 && name?.length < 21}
           text="완료"
           func={() => handleSubmit()}
         />
-      </BottomSheetView>
+      </View>
     </BottomSheetBase>
   )
 }
