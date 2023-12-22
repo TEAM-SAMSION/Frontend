@@ -2,7 +2,7 @@ export const PAGES = [
   {
     id: 1,
     title: '처음 인사드려요',
-    content: '혼자가 아닌 함께, 나의 펫을 위한 모든 것을 관리할 수 있도록 포잇이 함께할게요!',
+    content: `혼자가 아닌 함께, 나의 펫을 위한 모든 것을 관리할 수 있도록 포잇이 함께할게요!`,
     image: require('../../assets/Imgs/onboarding01.png'),
   },
   {

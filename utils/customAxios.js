@@ -16,7 +16,7 @@ const updateToken = async () => {
           RefreshToken: refreshToken,
         },
       })
-      console.log('response:', response)
+      console.log('재발급 결과:', response.status)
       return response.data
     } catch (e) {
       console.log('재발급과정 실패1', e)

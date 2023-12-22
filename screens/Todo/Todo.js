@@ -16,6 +16,7 @@ import { useFocusEffect } from '@react-navigation/native'
 import { SelectedTeamAtom, TabBarAtom } from '../../recoil/TabAtom'
 import TodoItem from '../../components/Todo/TodoItem'
 import { TodoMenuModal } from '../../components/Todo/TodoMenuModal'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 export default Todo = ({ navigation }) => {
   const setIsTabVisible = useSetRecoilState(TabBarAtom)
@@ -172,6 +173,7 @@ export default Todo = ({ navigation }) => {
 
   useFocusEffect(
     useCallback(() => {
+      // AsyncStorage.removeItem('onBoardingDone')
       getAllData(selectedDate)
       setIsTabVisible(true)
     }, [selectedDate, selectedTeam]),

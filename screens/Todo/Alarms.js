@@ -2,7 +2,7 @@ import React, { useCallback, useState } from 'react'
 import { FlatList, RefreshControl, ScrollView, StatusBar } from 'react-native'
 import styled from 'styled-components/native'
 import { colors } from '../../colors'
-import { HeaderWithBack, ScreenWidth } from '../../components/Shared'
+import { HeaderWithBack, ScreenHeight, ScreenWidth } from '../../components/Shared'
 
 import Alarm from '../../assets/Svgs/Alarm'
 import NoAlarm from '../../assets/Imgs/NoAlarm.png'
@@ -112,9 +112,8 @@ export const Alarms = ({ navigation }) => {
           />
         ) : (
           <ScrollView
+            contentContainerStyle={{ flex: 1 }}
             showsVerticalScrollIndicator={false}
-            style={{ height: '100%' }}
-            contentContainerStyle={{ width: '100%', justifyContent: 'start' }}
             refreshControl={<RefreshControl refreshing={refreshing} onRefresh={() => onRefresh()} />}
           >
             <ContentBase>
@@ -150,7 +149,7 @@ const FilterBase = styled.View`
 const NoAlarmImg = styled.Image`
   width: 186px;
   height: 172px;
-  margin-top: -32px;
+  margin-top: -64px;
 `
 const AlarmIcon = styled.View`
   width: 48px;
@@ -162,11 +161,14 @@ const AlarmIcon = styled.View`
   justify-content: center;
 `
 const ContentBase = styled.View`
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   justify-content: center;
   align-items: center;
   background-color: ${colors.grey_150};
-  flex-direction: column;
-  flex: 1;
 `
 const AlarmListBase = styled.View`
   flex-direction: row;

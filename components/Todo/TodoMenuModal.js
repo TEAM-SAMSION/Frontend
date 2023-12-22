@@ -1,8 +1,9 @@
 import React, { useRef, useEffect, useState } from 'react'
-import { Animated, StyleSheet, View, TouchableOpacity, Text, Modal } from 'react-native'
+import { Animated, Modal } from 'react-native'
 import styled from 'styled-components/native'
 import { colors } from '../../colors'
-import { BodySm_Text, Body_Text, Detail_Text } from '../Fonts'
+import Plus from '../../assets/Svgs/miniPlus.svg'
+import { BodySm_Text, Body_Text } from '../Fonts'
 
 export const TodoMenuModal = ({ isVisible, onClose, todoTeamList, handleTeamChange, setCreateModalOpen }) => {
   const translateY = useRef(new Animated.Value(0)).current
@@ -61,7 +62,7 @@ export const TodoMenuModal = ({ isVisible, onClose, todoTeamList, handleTeamChan
             </DropdownBox>
           ))}
           <DropdownBox onPress={() => handleCreatePamilyClick()}>
-            <BodySm_Text color={colors.grey_400}>패밀리 생성하기</BodySm_Text>
+            <Plus color={colors.grey_450} width={24} height={24} />
           </DropdownBox>
         </Animated.View>
       </ModalBackground>
