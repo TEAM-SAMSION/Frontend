@@ -255,7 +255,7 @@ export default Todo = ({ navigation }) => {
                             categoryId={id}
                             //여기서 categoryID는 배열로 불러왔을때, 임의 순서를 나타낸 것이며, 서버 내에서 식별용으로 사용되는 ID값은 아님
                             editTodo={startEditTodo}
-                            selectedTeamId={selectedTeam.id}
+                            selectedTeamId={selectedTeam?.id}
                           />
                         ))}
                       </>

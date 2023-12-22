@@ -19,6 +19,7 @@ import DatePicker from 'react-native-date-picker'
 import { deleteTodo, editTodoAssignee, editTodoDate, editTodoName, setTodoAlarm } from './Apis'
 import axiosInstance from '../../utils/customAxios'
 import { showDeletedToast } from '../../utils/toastMessages'
+import { BottomSheetView } from '@gorhom/bottom-sheet'
 
 export const TodoEditBottomSheet = ({
   handleBottomSheetHeight,
@@ -520,7 +521,7 @@ export const TodoCreateBottomSheet = ({
         paddingTop: Platform.OS === 'android' ? 8 : 0,
       }}
     >
-      <View style={{ flex: 38 }}>
+      <BottomSheetView>
         <BottomSheetHeader>
           <Body_Text color={colors.grey_800}>TODO</Body_Text>
         </BottomSheetHeader>
@@ -581,15 +582,13 @@ export const TodoCreateBottomSheet = ({
             })}
           </ScrollView>
         </UserContainer>
-      </View>
-      <View style={{ flex: 62 }}>
         <Button_PinkBg
           isLoading={isLoading}
           isEnabled={!isLoading && selectedUser?.length > 0 && name?.length > 0 && name?.length < 21}
           text="완료"
           func={() => handleSubmit()}
         />
-      </View>
+      </BottomSheetView>
     </BottomSheetBase>
   )
 }
@@ -606,6 +605,7 @@ const InputContainer = styled.View`
 const UserContainer = styled.View`
   flex-direction: row;
   flex-wrap: wrap;
+  padding-bottom: 24px;
   flex: 1;
 `
 const ContentContainer = styled.View`
