@@ -174,7 +174,7 @@ export default function Auth({ navigation }) {
         </SymbolContainer>
         <LoginButton loginFunc={() => GooglepromptAsync()} id={0} />
         <LoginButton loginFunc={() => loginKakao()} id={1} />
-        <LoginButton loginFunc={() => loginNaver()} id={2} />
+        {/* <LoginButton loginFunc={() => loginNaver()} id={2} /> */}
         {appleAuth.isSupported && (
           <AppleButton
             buttonStyle={AppleButton.Style.BLACK}
