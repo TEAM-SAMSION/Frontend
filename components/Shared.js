@@ -11,6 +11,9 @@ const scale = ScreenWidth / 375
 export const normalize = (size) => {
   const newSize = size * scale
   if (Platform.OS === 'ios') {
+    if (ScreenWidth > 480) {
+      return size
+    }
     return Math.round(PixelRatio.roundToNearestPixel(newSize))
   } else {
     return Math.round(PixelRatio.roundToNearestPixel(newSize)) - 2

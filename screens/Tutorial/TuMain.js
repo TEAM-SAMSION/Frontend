@@ -5,34 +5,39 @@ import styled from 'styled-components/native'
 import { colors } from '../../colors'
 import Question from '../../assets/Svgs/Question_mark.svg'
 import Back from '../../assets/Svgs/ChristmasBack.svg'
+import LinearGradient from 'react-native-linear-gradient'
 
 export default function TuMain({ navigation }) {
   return (
-    <ScreenLayout backgroundColor="transparent">
-      <BackImgContainer>
-        <Back width={ScreenWidth} height={ScreenHeight} />
-      </BackImgContainer>
-      <Container>
-        <SubHeadSm_Text color={colors.red_300}>튜토리얼</SubHeadSm_Text>
-        <HeadLineLg_Text color={colors.grey_700}>포잇 사용이 처음이신가요?</HeadLineLg_Text>
-        <ImageContainer>
-          <Circle>
-            <ImageBox>
-              <WhiteCircle>
-                <Question width={79} height={79} color={colors.primary_outline} />
-              </WhiteCircle>
-              <Img source={require('../../assets/Imgs/TuMain.png')} style={{ height: 196 }} />
-            </ImageBox>
-          </Circle>
-        </ImageContainer>
-      </Container>
-      <ButtonContainer style={{ backgroundColor: colors.red_350 }} onPress={() => navigation.navigate('TuHome1')}>
-        <BodyBoldSm_Text color={colors.grey_100}>튜토리얼 시작하기</BodyBoldSm_Text>
-      </ButtonContainer>
-      <ButtonContainer onPress={() => navigation.navigate('AuthBridge')}>
-        <BodySm_Text color={colors.red_350}>건너뛰기</BodySm_Text>
-      </ButtonContainer>
-    </ScreenLayout>
+    <LinearGradient
+      colors={['#fff', 'rgba(255,226,224,0.83)']}
+      style={{ flex: 1 }}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 1, y: 1 }}
+    >
+      <ScreenLayout backgroundColor="transparent">
+        <Container>
+          <SubHeadSm_Text color={colors.red_300}>튜토리얼</SubHeadSm_Text>
+          <HeadLineLg_Text color={colors.grey_700}>포잇 사용이 처음이신가요?</HeadLineLg_Text>
+          <ImageContainer>
+            <Circle>
+              <ImageBox>
+                <WhiteCircle>
+                  <Question width={79} height={79} color={colors.primary_outline} />
+                </WhiteCircle>
+                <Img source={require('../../assets/Imgs/TuMain.png')} style={{ height: 196 }} />
+              </ImageBox>
+            </Circle>
+          </ImageContainer>
+        </Container>
+        <ButtonContainer style={{ backgroundColor: colors.red_350 }} onPress={() => navigation.navigate('TuHome1')}>
+          <BodyBoldSm_Text color={colors.grey_100}>튜토리얼 시작하기</BodyBoldSm_Text>
+        </ButtonContainer>
+        <ButtonContainer onPress={() => navigation.navigate('AuthBridge')}>
+          <BodySm_Text color={colors.red_350}>건너뛰기</BodySm_Text>
+        </ButtonContainer>
+      </ScreenLayout>
+    </LinearGradient>
   )
 }
 
