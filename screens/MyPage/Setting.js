@@ -57,7 +57,7 @@ export default function Setting({ navigation }) {
           <ContentIcon width={16} height={16} color={colors.grey_450} />
         </TouchableIcon>
       </ContentContainer>
-      {/* <ContentContainer>
+      {/* <ContentContainer onPress={() => navigation.navigate('TutorialNav', { screen: 'TuMain' })}>
         <ContentText>공지사항</ContentText>
       </ContentContainer> */}
       <ContentContainer>

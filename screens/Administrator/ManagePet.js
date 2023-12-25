@@ -54,7 +54,7 @@ export default function ManagePet({ route, navigation }) {
                   ))}
             </PetAddContainer>
             <AddPetButton onPress={() => navigation.navigate('AddPet', { teamId })}>
-              <PlusIcon width={20} height={20} />
+              <PlusIcon width={20} height={20} color={colors.grey_800} />
               <BodySm_Text color={colors.grey_700}>새로운 펫 등록</BodySm_Text>
             </AddPetButton>
           </View>

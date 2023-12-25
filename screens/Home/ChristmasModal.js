@@ -23,9 +23,13 @@ export const ChristmasModal = () => {
     <Modal visible={!eventViewed} animationType="slide" onRequestClose={() => handleClose()}>
       {/* <Modal visible={true} animationType="slide" onRequestClose={() => handleClose()}> */}
       <ScreenLayout>
-        <BackImgContainer>
-          <Back width={ScreenWidth} height={ScreenHeight} />
-        </BackImgContainer>
+        {ScreenWidth > 480 ? (
+          ''
+        ) : (
+          <BackImgContainer>
+            <Back width={ScreenWidth} height={ScreenHeight} />
+          </BackImgContainer>
+        )}
         <ContentLayout>
           <ModalHeader>
             <CloseButton

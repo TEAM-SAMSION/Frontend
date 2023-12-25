@@ -276,7 +276,7 @@ export default function CreateTeam({ route, navigation }) {
               }
             >
               <Detail_Text>펫 등록</Detail_Text>
-              <PlusIcon width={16} height={16} />
+              <PlusIcon width={16} height={16} color={colors.grey_600} />
             </Block>
             {savedPets.length > 0 ? (
               ''
