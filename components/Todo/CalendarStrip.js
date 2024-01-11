@@ -7,12 +7,13 @@ import Arrow_left from '../../assets/Svgs/arrow_left.svg'
 import Arrow_right from '../../assets/Svgs/arrow_right.svg'
 import Reset from '../../assets/Svgs/Reset.svg'
 
-import { BodyBoldSm_Text, Detail_Text, SubHeadSm_Text } from '../Fonts'
+import { Detail_Text, SubHeadSm_Text } from '../Fonts'
 import { normalize } from '../Shared'
 
 export const MyCalendarStrip = ({ selectedDate, setSelectedDate }) => {
   //2023-11-20
   let today = new Date()
+  console.log(selectedDate)
   const [month, setMonth] = useState(selectedDate.substring(5, 7))
   const [customDay, setCustomDay] = useState(today.getDay())
   const locale = { name: 'ko', config: { weekdays: '화수목금토일월' } } // const markedDate = [{ date: today,dots: [ {color: 'red' },],} ]
