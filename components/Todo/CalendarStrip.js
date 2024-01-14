@@ -11,9 +11,7 @@ import { Detail_Text, SubHeadSm_Text } from '../Fonts'
 import { normalize } from '../Shared'
 
 export const MyCalendarStrip = ({ selectedDate, setSelectedDate }) => {
-  //2023-11-20
   let today = new Date()
-  console.log(selectedDate)
   const [month, setMonth] = useState(selectedDate.substring(5, 7))
   const [customDay, setCustomDay] = useState(today.getDay())
   const locale = { name: 'ko', config: { weekdays: '화수목금토일월' } } // const markedDate = [{ date: today,dots: [ {color: 'red' },],} ]
@@ -85,7 +83,7 @@ export const MyCalendarStrip = ({ selectedDate, setSelectedDate }) => {
       <Divider />
       <TodoListHeader>
         <SubHeadSm_Text color={colors.grey_800}>
-          {selectedDate.substring(5, 7)}월 {selectedDate.substring(8, 10)}일 {weekdays[customDay]}
+          {+month}월 {selectedDate.substring(8, 10)}일 {weekdays[customDay]}
           요일
         </SubHeadSm_Text>
         <TodayButton onPress={() => calendarRef.current.setSelectedDate(new Date())}>

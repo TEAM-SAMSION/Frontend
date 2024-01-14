@@ -25,41 +25,6 @@ const goToAppStore = () => {
   })
 }
 
-export const checkVersionTemp = async () => {
-  let currentVersion = '0.0.1'
-  // await AsyncStorage.removeItem('onBoardingDone')
-  await AsyncStorage.getItem('version').then((version) => {
-    if (version) {
-      console.log('asdfasd?')
-      currentVersion = '1.0.0'
-    }
-
-    getLatestAppVersion().then((latestVersion) => {
-      console.log('latestVersion:', latestVersion, 'DeviceInfo.getVersion():', currentVersion)
-      if (latestVersion > currentVersion) {
-        console.log('버전 업데이트 필요')
-        Alert.alert(
-          '업데이트 필요',
-          `최신 버전 업데이트를 통해
-개선된 포잇을 사용하세요.`,
-          [
-            // { text: '취소', style: 'cancel' },
-            {
-              text: '바로 업데이트 하기',
-              onPress: () => {
-                AsyncStorage.setItem('version', 'valid')
-                goToAppStore()
-              },
-            },
-          ],
-        )
-      } else {
-        console.log('버전 최신 버전임')
-      }
-    })
-  })
-}
-
 export const checkVersion = async () => {
   const currentVersion = DeviceInfo.getVersion()
   const latestVersion = await getLatestAppVersion()
