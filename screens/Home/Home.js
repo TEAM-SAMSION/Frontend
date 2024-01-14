@@ -276,7 +276,7 @@ export default function Home({ navigation }) {
           </>
         )}
       </ScrollView>
-      <ChristmasModal />
+      {/* <ChristmasModal /> */}
     </ScreenLayout>
   )
 }
