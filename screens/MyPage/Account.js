@@ -16,11 +16,15 @@ export default function Account({ navigation }) {
 
   const deleteValidation = async () => {
     try {
-      await getUserDeleteValidation().then(() => {
-        navigation.navigate('DeleteAccount')
+      await getUserDeleteValidation().then((result) => {
+        if (result) {
+          setIsRejectVisible(true)
+        } else {
+          navigation.navigate('DeleteAccount')
+        }
       })
     } catch (error) {
-      error.response.data.errorCode == 3007 && setIsRejectVisible(true)
+      console.log(error.response.data.errorCode)
     }
   }
   const checkPlatform = async () => {

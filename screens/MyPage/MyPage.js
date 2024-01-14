@@ -66,11 +66,16 @@ export default function MyPage({ navigation }) {
   const deleteValidation = async (teamId) => {
     // 팀 탈퇴 검증 api -> status에 따라 팝업 종류 다르게
     try {
-      await getTeamDeleteValidation(teamId).then(() => {
-        setVisible(true)
+      await getTeamDeleteValidation(teamId).then((result) => {
+        console.log(result)
+        if (result) {
+          setIsRejectVisible(true)
+        } else {
+          setVisible(true)
+        }
       })
     } catch (error) {
-      setIsRejectVisible(true)
+      console.log(error.response.data.errorCode)
     }
   }
 
