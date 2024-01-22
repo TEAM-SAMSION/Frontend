@@ -124,201 +124,199 @@ export default function EditPet({ route, navigation }) {
   return (
     <>
       <BottomSheetModalProvider>
-        <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-          <Layout>
-            <ProfileContainer>
-              <TouchableOpacity onPress={handlePresentModal}>
-                <ProfileImage
-                  source={{
-                    uri: `${petImageUrl}`,
+        <ScreenLayout>
+          <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+            <View>
+              <ProfileContainer>
+                <TouchableOpacity onPress={handlePresentModal}>
+                  <ProfileImage
+                    source={{
+                      uri: `${petImageUrl}`,
+                    }}
+                  />
+                  <IconCover>
+                    <EditIcon width={16} height={16} color={'#4D4D4D'} />
+                  </IconCover>
+                </TouchableOpacity>
+              </ProfileContainer>
+              <InfoContainer>
+                <InputBox
+                  style={{
+                    borderWidth: onName ? 1 : 0,
+                    borderColor: onName ? (petName.length > 20 ? colors.primary_outline : 'rgba(0, 0, 0, 0.12)') : '',
                   }}
-                />
-                <IconCover>
-                  <EditIcon width={16} height={16} color={'#4D4D4D'} />
-                </IconCover>
-              </TouchableOpacity>
-            </ProfileContainer>
-            <InfoContainer>
-              <InputBox
-                style={{
-                  borderWidth: onName ? 1 : 0,
-                  borderColor: onName ? (petName.length > 20 ? colors.primary_outline : 'rgba(0, 0, 0, 0.12)') : '',
+                >
+                  <Detail_Text color={colors.grey_800}>이름</Detail_Text>
+                  <InputBlock
+                    editable
+                    onChangeText={(text) => setPetName(text)}
+                    value={petName}
+                    returnKeyType="done"
+                    onFocus={() => setOnName(true)}
+                    onBlur={() => setOnName(false)}
+                    maxLength={23}
+                  />
+                </InputBox>
+                {petName.length > 20 && (
+                  <TextAlertBox>
+                    <Detail_Text color={colors.primary_outline}>20자 이내로 입력해주세요</Detail_Text>
+                  </TextAlertBox>
+                )}
+                <InputBox style={{ borderWidth: onAge ? 1 : 0, borderColor: onAge ? 'rgba(0, 0, 0, 0.12)' : '' }}>
+                  <Detail_Text color={colors.grey_800}>나이</Detail_Text>
+                  <InputBlock
+                    editable
+                    onChangeText={(text) => setPetAge(text)}
+                    value={`${petAge}`}
+                    keyboardType="numeric"
+                    returnKeyType="done"
+                    onFocus={() => setOnAge(true)}
+                    onBlur={() => setOnAge(false)}
+                  />
+                </InputBox>
+                <CategoryBlock>
+                  <ContentBlock>
+                    <InputBox
+                      style={{
+                        width: (ScreenWidth - 40) / 2,
+                        borderWidth: onCategory ? 1 : 0,
+                        borderColor: onCategory
+                          ? petCategory.length > 10
+                            ? colors.primary_outline
+                            : 'rgba(0, 0, 0, 0.12)'
+                          : '',
+                      }}
+                    >
+                      <Detail_Text color={colors.grey_800}>펫 종</Detail_Text>
+                      <InputBlock
+                        editable
+                        onChangeText={(text) => setPetCategroy(text)}
+                        value={petCategory}
+                        style={{
+                          flexGrow: 1,
+                          borderTopRightRadius: 0,
+                          borderBottomRightRadius: 0,
+                        }}
+                        returnKeyType="done"
+                        onFocus={() => setOnCategory(true)}
+                        onBlur={() => setOnCategory(false)}
+                        maxLength={12}
+                      />
+                    </InputBox>
+                    {petCategory.length > 10 && (
+                      <TextAlertBox>
+                        <Detail_Text color={colors.primary_outline}>10자 이내로 입력해주세요</Detail_Text>
+                      </TextAlertBox>
+                    )}
+                  </ContentBlock>
+                  <ContentBlock>
+                    <InputBox
+                      style={{
+                        width: (ScreenWidth - 40) / 2,
+                        borderWidth: onDetail ? 1 : 0,
+                        borderColor: onDetail
+                          ? petDetail.length > 10
+                            ? colors.primary_outline
+                            : 'rgba(0, 0, 0, 0.12)'
+                          : '',
+                      }}
+                    >
+                      <Detail_Text color={colors.grey_800}>종류</Detail_Text>
+                      <InputBlock
+                        editable
+                        onChangeText={(text) => setPetDetail(text)}
+                        value={petDetail}
+                        style={{
+                          flexGrow: 1,
+                          borderBottomLeftRadius: 0,
+                          borderTopLeftRadius: 0,
+                        }}
+                        returnKeyType="done"
+                        onFocus={() => setOnDetail(true)}
+                        onBlur={() => setOnDetail(false)}
+                        maxLength={12}
+                      />
+                    </InputBox>
+                    {petDetail.length > 10 && (
+                      <TextAlertBox>
+                        <Detail_Text color={colors.primary_outline}>10자 이내로 입력해주세요</Detail_Text>
+                      </TextAlertBox>
+                    )}
+                  </ContentBlock>
+                </CategoryBlock>
+                <InputBox
+                  style={{
+                    borderWidth: onIntro ? 1 : 0,
+                    borderColor: onIntro ? (petIntro.length > 20 ? colors.primary_outline : 'rgba(0, 0, 0, 0.12)') : '',
+                  }}
+                >
+                  <Detail_Text color={colors.grey_800}>한줄소개</Detail_Text>
+                  <InputBlock
+                    editable
+                    onChangeText={(text) => setPetIntro(text)}
+                    value={petIntro}
+                    returnKeyType="done"
+                    onFocus={() => setOnIntro(true)}
+                    onBlur={() => setOnIntro(false)}
+                    maxLength={25}
+                  />
+                </InputBox>
+                {petIntro.length > 20 && (
+                  <TextAlertBox>
+                    <Detail_Text color={colors.primary_outline}>20자 이내로 입력해주세요</Detail_Text>
+                  </TextAlertBox>
+                )}
+              </InfoContainer>
+            </View>
+          </TouchableWithoutFeedback>
+          <ModalPopUp visible={backVisible} petIcon={false} height={204}>
+            <PopContent style={{ flexDirection: 'column', marginTop: 54, marginBottom: 46 }}>
+              <BodyBold_Text color={colors.grey_600}>취소하시겠습니까?</BodyBold_Text>
+              <BodyBold_Text color={colors.grey_600}>입력하신 정보는 저장되지 않습니다</BodyBold_Text>
+            </PopContent>
+            <PopButtonContainer>
+              <PopButton
+                onPress={() => {
+                  setBackVisible(false)
+                }}
+                style={{ backgroundColor: colors.grey_100, borderColor: colors.grey_150, borderWidth: 2 }}
+              >
+                <BodySm_Text color={colors.red_350}>아니오</BodySm_Text>
+              </PopButton>
+              <PopButton
+                onPress={() => {
+                  navigation.goBack()
                 }}
               >
-                <Detail_Text color={colors.grey_800}>이름</Detail_Text>
-                <InputBlock
-                  editable
-                  onChangeText={(text) => setPetName(text)}
-                  value={petName}
-                  returnKeyType="done"
-                  onFocus={() => setOnName(true)}
-                  onBlur={() => setOnName(false)}
-                  maxLength={23}
-                />
-              </InputBox>
-              {petName.length > 20 && (
-                <TextAlertBox>
-                  <Detail_Text color={colors.primary_outline}>20자 이내로 입력해주세요</Detail_Text>
-                </TextAlertBox>
-              )}
-              <InputBox style={{ borderWidth: onAge ? 1 : 0, borderColor: onAge ? 'rgba(0, 0, 0, 0.12)' : '' }}>
-                <Detail_Text color={colors.grey_800}>나이</Detail_Text>
-                <InputBlock
-                  editable
-                  onChangeText={(text) => setPetAge(text)}
-                  value={`${petAge}`}
-                  keyboardType="numeric"
-                  returnKeyType="done"
-                  onFocus={() => setOnAge(true)}
-                  onBlur={() => setOnAge(false)}
-                />
-              </InputBox>
-              <CategoryBlock>
-                <ContentBlock>
-                  <InputBox
-                    style={{
-                      width: (ScreenWidth - 40) / 2,
-                      borderWidth: onCategory ? 1 : 0,
-                      borderColor: onCategory
-                        ? petCategory.length > 10
-                          ? colors.primary_outline
-                          : 'rgba(0, 0, 0, 0.12)'
-                        : '',
-                    }}
-                  >
-                    <Detail_Text color={colors.grey_800}>펫 종</Detail_Text>
-                    <InputBlock
-                      editable
-                      onChangeText={(text) => setPetCategroy(text)}
-                      value={petCategory}
-                      style={{
-                        flexGrow: 1,
-                        borderTopRightRadius: 0,
-                        borderBottomRightRadius: 0,
-                      }}
-                      returnKeyType="done"
-                      onFocus={() => setOnCategory(true)}
-                      onBlur={() => setOnCategory(false)}
-                      maxLength={12}
-                    />
-                  </InputBox>
-                  {petCategory.length > 10 && (
-                    <TextAlertBox>
-                      <Detail_Text color={colors.primary_outline}>10자 이내로 입력해주세요</Detail_Text>
-                    </TextAlertBox>
-                  )}
-                </ContentBlock>
-                <ContentBlock>
-                  <InputBox
-                    style={{
-                      width: (ScreenWidth - 40) / 2,
-                      borderWidth: onDetail ? 1 : 0,
-                      borderColor: onDetail
-                        ? petDetail.length > 10
-                          ? colors.primary_outline
-                          : 'rgba(0, 0, 0, 0.12)'
-                        : '',
-                    }}
-                  >
-                    <Detail_Text color={colors.grey_800}>종류</Detail_Text>
-                    <InputBlock
-                      editable
-                      onChangeText={(text) => setPetDetail(text)}
-                      value={petDetail}
-                      style={{
-                        flexGrow: 1,
-                        borderBottomLeftRadius: 0,
-                        borderTopLeftRadius: 0,
-                      }}
-                      returnKeyType="done"
-                      onFocus={() => setOnDetail(true)}
-                      onBlur={() => setOnDetail(false)}
-                      maxLength={12}
-                    />
-                  </InputBox>
-                  {petDetail.length > 10 && (
-                    <TextAlertBox>
-                      <Detail_Text color={colors.primary_outline}>10자 이내로 입력해주세요</Detail_Text>
-                    </TextAlertBox>
-                  )}
-                </ContentBlock>
-              </CategoryBlock>
-              <InputBox
-                style={{
-                  borderWidth: onIntro ? 1 : 0,
-                  borderColor: onIntro ? (petIntro.length > 20 ? colors.primary_outline : 'rgba(0, 0, 0, 0.12)') : '',
-                }}
-              >
-                <Detail_Text color={colors.grey_800}>한줄소개</Detail_Text>
-                <InputBlock
-                  editable
-                  onChangeText={(text) => setPetIntro(text)}
-                  value={petIntro}
-                  returnKeyType="done"
-                  onFocus={() => setOnIntro(true)}
-                  onBlur={() => setOnIntro(false)}
-                  maxLength={25}
-                />
-              </InputBox>
-              {petIntro.length > 20 && (
-                <TextAlertBox>
-                  <Detail_Text color={colors.primary_outline}>20자 이내로 입력해주세요</Detail_Text>
-                </TextAlertBox>
-              )}
-            </InfoContainer>
-          </Layout>
-        </TouchableWithoutFeedback>
-        <ModalPopUp visible={backVisible} petIcon={false} height={204}>
-          <PopContent style={{ flexDirection: 'column', marginTop: 54, marginBottom: 46 }}>
-            <BodyBold_Text color={colors.grey_600}>취소하시겠습니까?</BodyBold_Text>
-            <BodyBold_Text color={colors.grey_600}>입력하신 정보는 저장되지 않습니다</BodyBold_Text>
-          </PopContent>
-          <PopButtonContainer>
-            <PopButton
-              onPress={() => {
-                setBackVisible(false)
-              }}
-              style={{ backgroundColor: colors.grey_100, borderColor: colors.grey_150, borderWidth: 2 }}
-            >
-              <BodySm_Text color={colors.red_350}>아니오</BodySm_Text>
-            </PopButton>
-            <PopButton
-              onPress={() => {
-                navigation.goBack()
-              }}
-            >
-              <BodySm_Text color={colors.red_350}>예</BodySm_Text>
-            </PopButton>
-          </PopButtonContainer>
-        </ModalPopUp>
-        <BottomSheetModal
-          ref={bottomSheetModalRef}
-          index={0}
-          snapPoints={snapPoints}
-          backdropComponent={renderBackdrop}
-          backgroundStyle={{
-            borderRadius: 22,
-          }}
-        >
-          <BottomTitle>
-            <BottomTitleText>펫 프로필 수정</BottomTitleText>
-          </BottomTitle>
-          <PetImageModal
-            profileUrl={petImageUrl}
-            setProfileUrl={setPetImageUrl}
-            setPetFile={setPetFile}
-            closeFunction={() => bottomSheetModalRef.current?.dismiss()}
-          />
-        </BottomSheetModal>
+                <BodySm_Text color={colors.red_350}>예</BodySm_Text>
+              </PopButton>
+            </PopButtonContainer>
+          </ModalPopUp>
+          <BottomSheetModal
+            ref={bottomSheetModalRef}
+            index={0}
+            snapPoints={snapPoints}
+            backdropComponent={renderBackdrop}
+            backgroundStyle={{
+              borderRadius: 22,
+            }}
+          >
+            <BottomTitle>
+              <BottomTitleText>펫 프로필 수정</BottomTitleText>
+            </BottomTitle>
+            <PetImageModal
+              profileUrl={petImageUrl}
+              setProfileUrl={setPetImageUrl}
+              setPetFile={setPetFile}
+              closeFunction={() => bottomSheetModalRef.current?.dismiss()}
+            />
+          </BottomSheetModal>
+        </ScreenLayout>
       </BottomSheetModalProvider>
     </>
   )
 }
 
-const Layout = styled.View`
-  flex: 1;
-  background-color: ${colors.grey_100};
-`
 const ProfileContainer = styled.View`
   justify-content: center;
   align-items: center;
