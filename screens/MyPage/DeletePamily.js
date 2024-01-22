@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { FlatList, TouchableOpacity } from 'react-native'
+import { FlatList, Platform, TouchableOpacity } from 'react-native'
 import styled from 'styled-components/native'
 import { categoryColors, colors } from '../../colors'
 import BackButton from '../../assets/Svgs/chevron_back.svg'
@@ -73,12 +73,16 @@ export default function DeletePamily({ route, navigation }) {
 
   const renderItem = ({ item }) => (
     <TodoContainer
-      style={{
-        shadowColor: 'rgb(0,0,0)',
-        shadowRadius: 2,
-        shadowOpacity: 0.2,
-        shadowOffset: [0, 0],
-      }}
+      style={
+        Platform.OS == 'android'
+          ? { elevation: 0.7, borderWidth: 0.7, borderColor: 'rgba(0, 0, 0, 0.01)' }
+          : {
+              shadowColor: 'rgb(0,0,0)',
+              shadowRadius: 2,
+              shadowOpacity: 0.2,
+              shadowOffset: [0, 0],
+            }
+      }
     >
       <TeamColor style={{ backgroundColor: categoryColors[item.categoryId % 10] }} />
       <ContentContainer>
@@ -96,12 +100,16 @@ export default function DeletePamily({ route, navigation }) {
             <TeamNameText>{teamName}</TeamNameText>과 함께한 {userNickname}님의 시간
           </Title>
           <DateContent
-            style={{
-              shadowColor: 'rgb(0,0,0)',
-              shadowRadius: 2,
-              shadowOpacity: 0.2,
-              shadowOffset: [0, 0],
-            }}
+            style={
+              Platform.OS == 'android'
+                ? { elevation: 0.7, borderWidth: 0.7, borderColor: 'rgba(0, 0, 0, 0.01)' }
+                : {
+                    shadowColor: 'rgb(0,0,0)',
+                    shadowRadius: 2,
+                    shadowOpacity: 0.2,
+                    shadowOffset: [0, 0],
+                  }
+            }
           >
             <DateText>{teamPeriod}일</DateText>
           </DateContent>
@@ -127,7 +135,6 @@ export default function DeletePamily({ route, navigation }) {
             await deletePamily()
             getLatestTeam().then((result) => {
               if (result.teamId == deleteTeamId) {
-                console.log('여기 수정 필요')
                 setSelectedTeam(null)
               } else {
                 let tempArr = { id: result.teamId, name: result.teamName, auth: result.authority }
@@ -137,6 +144,7 @@ export default function DeletePamily({ route, navigation }) {
             })
             navigation.navigate('DeletePamily2')
           }}
+          style={Platform.OS == 'android' ? { bottom: 16 } : { bottom: 0 }}
         >
           <ButtonText>나가기</ButtonText>
         </DeleteButton>

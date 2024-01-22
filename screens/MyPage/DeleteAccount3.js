@@ -16,7 +16,7 @@ import {
 } from '../../components/Fonts'
 import { ModalPopUp, ScreenLayout } from '../../components/Shared'
 import { deleteAccount, postReason } from '../../components/MyPage/Apis'
-import { ScrollView } from 'react-native'
+import { Platform, ScrollView } from 'react-native'
 import { LogOut } from '../../utils/customAxios'
 import { SelectedTeamAtom } from '../../recoil/TabAtom'
 
@@ -101,7 +101,11 @@ export default function DeleteAccount3({ route, navigation }) {
         onPress={() => {
           setVisible(true)
         }}
-        style={{ backgroundColor: isChecked ? colors.primary_container : colors.grey_150 }}
+        style={
+          Platform.OS == 'android'
+            ? { bottom: 16, backgroundColor: isChecked ? colors.primary_container : colors.grey_150 }
+            : { bottom: 0, backgroundColor: isChecked ? colors.primary_container : colors.grey_150 }
+        }
       >
         <ButtonText style={{ color: isChecked ? colors.primary : colors.grey_500 }}>포잇 탈퇴하기</ButtonText>
       </DeleteButton>
