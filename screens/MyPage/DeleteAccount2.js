@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { FlatList, Keyboard, TouchableWithoutFeedback } from 'react-native'
+import { FlatList, Keyboard, TouchableWithoutFeedback, Platform } from 'react-native'
 import styled from 'styled-components/native'
 import { colors } from '../../colors'
 import { TabBarAtom } from '../../recoil/TabAtom'
@@ -42,7 +42,11 @@ export default function DeleteAccount2({ route, navigation }) {
                 navigation.navigate('DeleteAccount3', { reason })
               }
             }}
-            style={{ backgroundColor: isEnabled ? colors.primary_container : colors.grey_150 }}
+            style={
+              Platform.OS == 'android'
+                ? { bottom: 16, backgroundColor: isEnabled ? colors.primary_container : colors.grey_150 }
+                : { bottom: 0, backgroundColor: isEnabled ? colors.primary_container : colors.grey_150 }
+            }
           >
             <ButtonText style={{ color: isEnabled ? colors.primary : colors.grey_500 }}>다음</ButtonText>
           </DeleteButton>

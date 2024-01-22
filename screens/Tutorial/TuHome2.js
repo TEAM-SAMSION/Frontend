@@ -90,12 +90,16 @@ export default function TuHome2({ navigation }) {
         </BannerContainer>
         <TeamContainer>
           <StartTeamContainer
-            style={{
-              shadowColor: 'rgb(0,0,0)',
-              shadowRadius: 2,
-              shadowOpacity: 0.15,
-              shadowOffset: [0, 0],
-            }}
+            style={
+              Platform.OS == 'android'
+                ? { elevation: 0.5, borderWidth: 0.7, borderColor: 'rgba(0, 0, 0, 0.01)' }
+                : {
+                    shadowColor: 'rgb(0,0,0)',
+                    shadowRadius: 2,
+                    shadowOpacity: 0.15,
+                    shadowOffset: [0, 0],
+                  }
+            }
           >
             <Title>Pamily 생성하기</Title>
             <SubTitle>
@@ -107,12 +111,16 @@ export default function TuHome2({ navigation }) {
             </StartIcon>
           </StartTeamContainer>
           <StartTeamContainer
-            style={{
-              shadowColor: 'rgb(0,0,0)',
-              shadowRadius: 2,
-              shadowOpacity: 0.15,
-              shadowOffset: [0, 0],
-            }}
+            style={
+              Platform.OS == 'android'
+                ? { elevation: 0.5, borderWidth: 0.7, borderColor: 'rgba(0, 0, 0, 0.01)' }
+                : {
+                    shadowColor: 'rgb(0,0,0)',
+                    shadowRadius: 2,
+                    shadowOpacity: 0.15,
+                    shadowOffset: [0, 0],
+                  }
+            }
           >
             <Title>Pamily 참여하기</Title>
             <SubTitle>TODO를 함께할{'\n'}Pamily에 참여해 볼까요?</SubTitle>

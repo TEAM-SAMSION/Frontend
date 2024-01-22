@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { FlatList, Image, RefreshControl, ScrollView, View } from 'react-native'
+import { FlatList, Image, Platform, RefreshControl, ScrollView, View } from 'react-native'
 import { ScreenLayout } from '../../components/Shared'
 import { TopHeader } from '../../components/Home/TopHeader'
 import styled from 'styled-components/native'
@@ -102,7 +102,7 @@ export default function Home({ navigation }) {
     }
   }
   useEffect(() => {
-    checkVersion()
+    //checkVersion()
     getUserNickname()
     fetchData()
   }, [])
@@ -182,12 +182,16 @@ export default function Home({ navigation }) {
         {pamilyNum == 0 ? (
           <TeamContainer>
             <StartTeamContainer
-              style={{
-                shadowColor: 'rgb(0,0,0)',
-                shadowRadius: 2,
-                shadowOpacity: 0.15,
-                shadowOffset: [0, 0],
-              }}
+              style={
+                Platform.OS == 'android'
+                  ? { elevation: 0.5, borderWidth: 0.7, borderColor: 'rgba(0, 0, 0, 0.01)' }
+                  : {
+                      shadowColor: 'rgb(0,0,0)',
+                      shadowRadius: 2,
+                      shadowOpacity: 0.15,
+                      shadowOffset: [0, 0],
+                    }
+              }
               onPress={() => {
                 navigation.navigate('CreateTeam')
               }}
@@ -202,12 +206,16 @@ export default function Home({ navigation }) {
               </StartIcon>
             </StartTeamContainer>
             <StartTeamContainer
-              style={{
-                shadowColor: 'rgb(0,0,0)',
-                shadowRadius: 2,
-                shadowOpacity: 0.15,
-                shadowOffset: [0, 0],
-              }}
+              style={
+                Platform.OS == 'android'
+                  ? { elevation: 0.5, borderWidth: 0.7, borderColor: 'rgba(0, 0, 0, 0.01)' }
+                  : {
+                      shadowColor: 'rgb(0,0,0)',
+                      shadowRadius: 2,
+                      shadowOpacity: 0.15,
+                      shadowOffset: [0, 0],
+                    }
+              }
               onPress={() => {
                 navigation.navigate('JoinTeam')
               }}

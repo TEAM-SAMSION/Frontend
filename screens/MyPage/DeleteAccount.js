@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { FlatList } from 'react-native'
+import { FlatList, Platform } from 'react-native'
 import styled from 'styled-components/native'
 import { colors } from '../../colors'
 import { countDate, getAllTeams, getAllTodoNum, getAllTodos, getUserInfo } from '../../components/MyPage/Apis'
@@ -50,12 +50,16 @@ export default function DeleteAccount({ route, navigation }) {
 
   const renderItem = ({ item }) => (
     <TodoContainer
-      style={{
-        shadowColor: 'rgb(0,0,0)',
-        shadowRadius: 2,
-        shadowOpacity: 0.2,
-        shadowOffset: [0, 0],
-      }}
+      style={
+        Platform.OS == 'android'
+          ? { elevation: 0.7, borderWidth: 0.7, borderColor: 'rgba(0, 0, 0, 0.01)' }
+          : {
+              shadowColor: 'rgb(0,0,0)',
+              shadowRadius: 2,
+              shadowOpacity: 0.2,
+              shadowOffset: [0, 0],
+            }
+      }
     >
       <TodoImage source={{ uri: `${item.teamProfileImage}` }} />
       <ContentContainer>
@@ -73,12 +77,16 @@ export default function DeleteAccount({ route, navigation }) {
             <TeamNameText>포잇</TeamNameText>과 함께한 {userNickname}님의 시간
           </Title>
           <DateContent
-            style={{
-              shadowColor: 'rgb(0,0,0)',
-              shadowRadius: 2,
-              shadowOpacity: 0.2,
-              shadowOffset: [0, 0],
-            }}
+            style={
+              Platform.OS == 'android'
+                ? { elevation: 0.7, borderWidth: 0.7, borderColor: 'rgba(0, 0, 0, 0.01)' }
+                : {
+                    shadowColor: 'rgb(0,0,0)',
+                    shadowRadius: 2,
+                    shadowOpacity: 0.2,
+                    shadowOffset: [0, 0],
+                  }
+            }
           >
             <DateText>{userPeriod}일</DateText>
           </DateContent>
@@ -113,6 +121,7 @@ export default function DeleteAccount({ route, navigation }) {
           </Todos>
         </TodoBox>
         <DeleteButton
+          style={Platform.OS == 'android' ? { bottom: 16 } : { bottom: 0 }}
           onPress={() => {
             navigation.navigate('DeleteAccount2')
           }}
@@ -211,7 +220,6 @@ const ContentContainer = styled.View`
 `
 const DeleteButton = styled.TouchableOpacity`
   position: absolute;
-  bottom: 0px;
   left: 16px;
   right: 16px;
   background-color: ${colors.red_200};

@@ -17,6 +17,7 @@ import { TabBarAtom } from '../../recoil/TabAtom'
 import { ProfileImageModal } from '../../components/Home/ProfileImageModal'
 import Clipboard from '@react-native-clipboard/clipboard'
 import { postTeamInfo } from '../../components/Administrator/Apis'
+import { ScreenLayout } from '../../components/Shared'
 
 export default function EditPamily({ route, navigation }) {
   const isFocused = useIsFocused()
@@ -127,93 +128,95 @@ export default function EditPamily({ route, navigation }) {
   return (
     <>
       <BottomSheetModalProvider>
-        <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-          <Layout>
-            <ProfileContainer>
-              <TouchableOpacity onPress={handlePresentModal}>
-                <ProfileImage
-                  source={{
-                    uri: `${profileUrl}`,
+        <ScreenLayout>
+          <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+            <View>
+              <ProfileContainer>
+                <TouchableOpacity onPress={handlePresentModal}>
+                  <ProfileImage
+                    source={{
+                      uri: `${profileUrl}`,
+                    }}
+                  />
+                  <IconCover>
+                    <EditIcon width={16} height={16} color={'#4D4D4D'} />
+                  </IconCover>
+                </TouchableOpacity>
+              </ProfileContainer>
+              <InfoContainer>
+                <InputBox style={{ paddingRight: 12 }}>
+                  <Detail_Text color={colors.grey_800}>Pamily 코드</Detail_Text>
+                  <CodeBox>
+                    <Detail_Text style={{ color: colors.grey_400 }}>{code}</Detail_Text>
+                    <CodeButton onPress={copyTeamCode}>
+                      <Detail_Text color={colors.secondary}>복사</Detail_Text>
+                    </CodeButton>
+                  </CodeBox>
+                </InputBox>
+                <InputBox
+                  style={{
+                    borderWidth: onName ? 1 : 0,
+                    borderColor: onName ? (name.length > 20 ? colors.primary_outline : 'rgba(0, 0, 0, 0.12)') : '',
                   }}
-                />
-                <IconCover>
-                  <EditIcon width={16} height={16} color={'#4D4D4D'} />
-                </IconCover>
-              </TouchableOpacity>
-            </ProfileContainer>
-            <InfoContainer>
-              <InputBox style={{ paddingRight: 12 }}>
-                <Detail_Text color={colors.grey_800}>Pamily 코드</Detail_Text>
-                <CodeBox>
-                  <Detail_Text style={{ color: colors.grey_400 }}>{code}</Detail_Text>
-                  <CodeButton onPress={copyTeamCode}>
-                    <Detail_Text color={colors.secondary}>복사</Detail_Text>
-                  </CodeButton>
-                </CodeBox>
-              </InputBox>
-              <InputBox
-                style={{
-                  borderWidth: onName ? 1 : 0,
-                  borderColor: onName ? (name.length > 20 ? colors.primary_outline : 'rgba(0, 0, 0, 0.12)') : '',
-                }}
-              >
-                <Detail_Text color={colors.grey_800}>Pamily 이름</Detail_Text>
-                <InputBlock
-                  editable
-                  onChangeText={(text) => setName(text)}
-                  value={name}
-                  returnKeyType="done"
-                  onFocus={() => setOnName(true)}
-                  onBlur={() => setOnName(false)}
-                  maxLength={23}
-                />
-              </InputBox>
-              {name.length > 20 && (
-                <TextAlertBox>
-                  <Detail_Text color={colors.primary_outline}>20자 이내로 입력해주세요</Detail_Text>
-                </TextAlertBox>
-              )}
-              <InputBox
-                style={{
-                  borderWidth: onIntro ? 1 : 0,
-                  borderColor: onIntro ? (intro.length > 20 ? colors.primary_outline : 'rgba(0, 0, 0, 0.12)') : '',
-                }}
-              >
-                <Detail_Text color={colors.grey_800}>한줄소개</Detail_Text>
-                <InputBlock
-                  editable
-                  onChangeText={(text) => setIntro(text)}
-                  value={intro}
-                  returnKeyType="done"
-                  onFocus={() => setOnIntro(true)}
-                  onBlur={() => setOnIntro(false)}
-                  maxLength={25}
-                />
-              </InputBox>
-              {intro.length > 20 && (
-                <TextAlertBox>
-                  <Detail_Text color={colors.primary_outline}>20자 이내로 입력해주세요</Detail_Text>
-                </TextAlertBox>
-              )}
-            </InfoContainer>
-          </Layout>
-        </TouchableWithoutFeedback>
-        <BottomSheetModal
-          ref={bottomSheetModalRef}
-          index={0}
-          snapPoints={snapPoints}
-          backdropComponent={renderBackdrop}
-          backgroundStyle={{
-            borderRadius: 24,
-          }}
-        >
-          <ProfileImageModal
-            profileUrl={profileUrl}
-            setProfileUrl={setProfileUrl}
-            bottomRef={bottomSheetModalRef}
-            setImageFile={setPamilyFile}
-          />
-        </BottomSheetModal>
+                >
+                  <Detail_Text color={colors.grey_800}>Pamily 이름</Detail_Text>
+                  <InputBlock
+                    editable
+                    onChangeText={(text) => setName(text)}
+                    value={name}
+                    returnKeyType="done"
+                    onFocus={() => setOnName(true)}
+                    onBlur={() => setOnName(false)}
+                    maxLength={23}
+                  />
+                </InputBox>
+                {name.length > 20 && (
+                  <TextAlertBox>
+                    <Detail_Text color={colors.primary_outline}>20자 이내로 입력해주세요</Detail_Text>
+                  </TextAlertBox>
+                )}
+                <InputBox
+                  style={{
+                    borderWidth: onIntro ? 1 : 0,
+                    borderColor: onIntro ? (intro.length > 20 ? colors.primary_outline : 'rgba(0, 0, 0, 0.12)') : '',
+                  }}
+                >
+                  <Detail_Text color={colors.grey_800}>한줄소개</Detail_Text>
+                  <InputBlock
+                    editable
+                    onChangeText={(text) => setIntro(text)}
+                    value={intro}
+                    returnKeyType="done"
+                    onFocus={() => setOnIntro(true)}
+                    onBlur={() => setOnIntro(false)}
+                    maxLength={25}
+                  />
+                </InputBox>
+                {intro.length > 20 && (
+                  <TextAlertBox>
+                    <Detail_Text color={colors.primary_outline}>20자 이내로 입력해주세요</Detail_Text>
+                  </TextAlertBox>
+                )}
+              </InfoContainer>
+            </View>
+          </TouchableWithoutFeedback>
+          <BottomSheetModal
+            ref={bottomSheetModalRef}
+            index={0}
+            snapPoints={snapPoints}
+            backdropComponent={renderBackdrop}
+            backgroundStyle={{
+              borderRadius: 24,
+            }}
+          >
+            <ProfileImageModal
+              profileUrl={profileUrl}
+              setProfileUrl={setProfileUrl}
+              bottomRef={bottomSheetModalRef}
+              setImageFile={setPamilyFile}
+            />
+          </BottomSheetModal>
+        </ScreenLayout>
       </BottomSheetModalProvider>
     </>
   )
