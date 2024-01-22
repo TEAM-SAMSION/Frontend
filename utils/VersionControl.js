@@ -28,6 +28,7 @@ const goToAppStore = () => {
 export const checkVersion = async () => {
   const currentVersion = DeviceInfo.getVersion()
   const latestVersion = await getLatestAppVersion()
+  console.log(currentVersion, latestVersion)
   if (latestVersion && latestVersion > currentVersion) {
     console.log('버전 업데이트 필요')
     Alert.alert('업데이트 필요', '최신 버전을 사용해야 합니다. 앱 스토어로 이동하시겠습니까?', [

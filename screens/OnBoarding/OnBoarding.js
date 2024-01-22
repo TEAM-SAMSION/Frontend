@@ -20,9 +20,9 @@ export default function OnBoarding({ navigation }) {
 
   const slidesRef = useRef(null)
   const [currentIdx, setCurrentIdx] = useState(0)
+  const [lastReached, setLastReached] = useState(false)
 
   const onViewableItemsChanged = ({ viewableItems }) => {
-    console.log(viewableItems[0].index)
     setCurrentIdx(viewableItems[0].index)
   }
   const viewabilityConfigCallbackPairs = useRef([{ onViewableItemsChanged }])
@@ -60,6 +60,7 @@ export default function OnBoarding({ navigation }) {
                 { useNativeDriver: false },
                 // 너비를 Animating해야하지만, Native driver는 이를 지원하지않음
               )}
+              onEndReached={() => setLastReached(true)}
               scrollEventThrottle={32}
               viewabilityConfigCallbackPairs={viewabilityConfigCallbackPairs.current}
               viewabilityConfig={viewConfig}
@@ -70,7 +71,7 @@ export default function OnBoarding({ navigation }) {
           <OnboardingButton
             func={() => scrollTo()}
             lastFunc={() => OnBoardingReady()}
-            currentIdx={currentIdx}
+            lastReached={lastReached}
             data={PAGES}
           />
         </ScreenLayout>

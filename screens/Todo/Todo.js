@@ -30,9 +30,6 @@ export default Todo = ({ navigation }) => {
     (tempDate.getDate() < 9 ? '0' + tempDate.getDate() : tempDate.getDate())
 
   //** new Date()를 새벽에 호출하면 ISOString으로 가져올때 하루 전으로 반환하는 문제가 있다. getDate()를 직접 호출하여 정확한 날짜정보를 가져와야함 */
-  // const today = `${tempDate.getFullYear()}-${
-  //   tempDate.getMonth() < 10 ? `0${tempDate.getMonth() + 1}` : tempDate.getMonth() + 1
-  // }-${tempDate.getDate() < 10 ? `0${tempDate.getDate()}` : tempDate.getDate()}`
 
   const buttonRef = useRef(null)
   const [todosByCategory, setTodosByCategory] = useState(null)
