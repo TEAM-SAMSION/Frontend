@@ -19,6 +19,7 @@ import { deleteAccount, postReason } from '../../components/MyPage/Apis'
 import { Platform, ScrollView } from 'react-native'
 import { LogOut } from '../../utils/customAxios'
 import { SelectedTeamAtom } from '../../recoil/TabAtom'
+import { CommonActions } from '@react-navigation/native'
 
 export default function DeleteAccount3({ route, navigation }) {
   const data = route.params
@@ -104,7 +105,7 @@ export default function DeleteAccount3({ route, navigation }) {
         style={
           Platform.OS == 'android'
             ? { bottom: 16, backgroundColor: isChecked ? colors.primary_container : colors.grey_150 }
-            : { bottom: 0, backgroundColor: isChecked ? colors.primary_container : colors.grey_150 }
+            : { backgroundColor: isChecked ? colors.primary_container : colors.grey_150 }
         }
       >
         <ButtonText style={{ color: isChecked ? colors.primary : colors.grey_500 }}>포잇 탈퇴하기</ButtonText>
@@ -127,6 +128,11 @@ export default function DeleteAccount3({ route, navigation }) {
           <PopButton
             onPress={() => {
               setVisible(false)
+              navigation.dispatch(
+                CommonActions.reset({
+                  routes: [{ name: 'MyPage' }],
+                }),
+              )
             }}
           >
             <PopButtonText>아니오</PopButtonText>
