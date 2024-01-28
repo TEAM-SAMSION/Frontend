@@ -33,8 +33,6 @@ export default function TuAdmin2({ navigation }) {
   const [profileUrl, setProfileUrl] = useState('https://pawith.s3.ap-northeast-2.amazonaws.com/base-image/sample_5.png')
   const [name, setName] = useState('모임이름')
   const [intro, setIntro] = useState('모임을 대표하는 한줄소개')
-  const [pamilyFile, setPamilyFile] = useState('file://' + RNFS.MainBundlePath + '/default_pet.png')
-
   useEffect(() => {
     isFocused && setIsTabVisible(false)
   }, [isFocused, isTabVisible])

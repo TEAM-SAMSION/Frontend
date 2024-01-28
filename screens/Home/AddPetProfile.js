@@ -24,8 +24,8 @@ export default function AddPetProfile({ route, navigation }) {
   const [petCategory, setPetCategroy] = useState('')
   const [petDetail, setPetDetail] = useState('')
   const [petIntro, setPetIntro] = useState('')
-  const [petFile, setPetFile] = useState('file://' + RNFS.MainBundlePath + '/default_pet.png')
-
+  // const [petFile, setPetFile] = useState('file://' + RNFS.MainBundlePath + '/default_pet.png')//*** */
+  const [petFile, setPetFile] = useState(RNFS.DocumentDirectoryPath + '/default_pet.png')
   // onFocus
   const [onName, setOnName] = useState(false)
   const [onAge, setOnAge] = useState(false)

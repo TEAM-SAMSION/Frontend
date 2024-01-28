@@ -29,8 +29,8 @@ export default function EditUserInfo({ route, navigation }) {
   )
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
-  const [profileFile, setProfileFile] = useState('file://' + RNFS.MainBundlePath + '/default_pet.png')
-
+  //const [profileFile, setProfileFile] = useState('file://' + RNFS.MainBundlePath + '/default_pet.png')
+  const [profileFile, setProfileFile] = useState(RNFS.DocumentDirectoryPath + '/default_pet.png')
   // onFocus
   const [onName, setOnName] = useState(false)
 

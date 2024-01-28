@@ -8,7 +8,7 @@ export const PetImageModal = (props) => {
   const changeSampleImage = async (file) => {
     props.setProfileUrl(`https://pawith.s3.ap-northeast-2.amazonaws.com/base-image/profileDefault.png`)
     // props.setPetFile('file://' + RNFS.MainBundlePath + '/default_pet.png')//*** */
-    props.setPetFile(`${RNFS.DocumentDirectoryPath}${file}`.replace(/:/g, '-'))
+    props.setPetFile(`${RNFS.DocumentDirectoryPath}/default_pet.png`)
     props.closeFunction()
   }
 

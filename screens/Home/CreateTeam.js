@@ -42,7 +42,7 @@ export default function CreateTeam({ route, navigation }) {
   const [pamilyFile, setPamilyFile] = useState(RNFS.DocumentDirectoryPath + '/default_pamily.png')
 
   const setSelectedTeam = useSetRecoilState(SelectedTeamAtom)
-  console.log(pamilyFile)
+
   // onFocus
   const [onName, setOnName] = useState(false)
   const [onIntro, setOnIntro] = useState(false)
@@ -175,7 +175,7 @@ export default function CreateTeam({ route, navigation }) {
     }
     const json = JSON.stringify(teamInfo)
     pamilyData.append('todoTeamCreateInfo', { string: json, type: 'application/json' })
-    console.log(pamilyData)
+    console.log('pamilyData:', JSON.stringify(pamilyData))
     postTeamInfo(pamilyData).then(() => {
       getLatestTeam().then((result) => {
         let tempArr = { id: result.teamId, name: result.teamName, auth: result.authority }

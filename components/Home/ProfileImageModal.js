@@ -8,7 +8,8 @@ import RNFS from 'react-native-fs'
 
 export const ProfileImageModal = (props) => {
   const [bottomProfileUrl, setBottomProfileUrl] = useState(props.profileUrl)
-  const [imageFile, setImageFile] = useState('file://' + RNFS.MainBundlePath + '/default_pamily.png')
+  // const [imageFile, setImageFile] = useState('file://' + RNFS.MainBundlePath + '/default_pamily.png')//*** */
+  const [imageFile, setImageFile] = useState(RNFS.DocumentDirectoryPath + '/default_pamily.png')
 
   const changeSampleImage = async (file) => {
     setBottomProfileUrl(`https://pawith.s3.ap-northeast-2.amazonaws.com/base-image${file}`)

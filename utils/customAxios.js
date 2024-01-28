@@ -30,13 +30,12 @@ const updateToken = async () => {
 
 export const LogOut = async (setLoggedIn) => {
   NaverLogin.logout()
-  console.log('Naver Logout')
   await AsyncStorage.removeItem('accessToken')
   await AsyncStorage.removeItem('refreshToken')
   setLoggedIn(false)
 }
 const axiosInstance = axios.create({
-  baseURL: 'https://api.pawith.com',
+  baseURL: 'https://dev.pawith.com',
   timeout: 5000,
 })
 axiosInstance.interceptors.request.use(
