@@ -12,7 +12,8 @@ export const ProfileImageModal = (props) => {
 
   const changeSampleImage = async (file) => {
     setBottomProfileUrl(`https://pawith.s3.ap-northeast-2.amazonaws.com/base-image${file}`)
-    setImageFile('file://' + RNFS.MainBundlePath + file)
+    // setImageFile('file://' + RNFS.MainBundlePath + file) //*** */
+    setImageFile(`${RNFS.DocumentDirectoryPath}${file}`.replace(/:/g, '-'))
   }
 
   return (
@@ -74,7 +75,6 @@ const BottomTitleText = styled.Text`
 const ImageContainer = styled.View`
   justify-content: center;
   align-items: center;
-  //margin-top: 16px;
 `
 const ProfileImageBox = styled.Image`
   width: 110px;

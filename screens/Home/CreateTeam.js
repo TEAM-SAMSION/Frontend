@@ -38,10 +38,11 @@ export default function CreateTeam({ route, navigation }) {
     'https://pawith.s3.ap-northeast-2.amazonaws.com/base-image/default_pamily.png',
   )
   const [savedPets, setSavedPets] = useState([])
-  const [pamilyFile, setPamilyFile] = useState('file://' + RNFS.MainBundlePath + '/default_pamily.png')
+  // const [pamilyFile, setPamilyFile] = useState('file://' + RNFS.MainBundlePath + '/default_pamily.png')//*** */
+  const [pamilyFile, setPamilyFile] = useState(RNFS.DocumentDirectoryPath + '/default_pamily.png')
 
   const setSelectedTeam = useSetRecoilState(SelectedTeamAtom)
-
+  console.log(pamilyFile)
   // onFocus
   const [onName, setOnName] = useState(false)
   const [onIntro, setOnIntro] = useState(false)
@@ -67,7 +68,6 @@ export default function CreateTeam({ route, navigation }) {
   useEffect(() => {
     try {
       const { result } = route.params || { result: [] } // route.params가 undefined일 경우 빈 배열로 설정
-      console.log(result)
       const resultArray = Array.isArray(result) ? result : [result]
       setSavedPets((prevArray) => [...prevArray, ...resultArray])
     } catch (error) {
@@ -125,10 +125,13 @@ export default function CreateTeam({ route, navigation }) {
   }, [enabled])
 
   const bottomSheetModalRef = useRef(null)
+
   const snapPoints = ['60%']
+
   const handlePresentModal = useCallback(() => {
     bottomSheetModalRef.current?.present()
   }, [])
+
   const renderBackdrop = useCallback(
     (props) => <BottomSheetBackdrop {...props} disappearsOnIndex={-1} appearsOnIndex={0} pressBehavior="close" />,
     [],
@@ -170,9 +173,9 @@ export default function CreateTeam({ route, navigation }) {
       description: pamilyIntro,
       petRegisters: savedPets.map(({ profileUrl, file, ...rest }) => rest),
     }
-
     const json = JSON.stringify(teamInfo)
     pamilyData.append('todoTeamCreateInfo', { string: json, type: 'application/json' })
+    console.log(pamilyData)
     postTeamInfo(pamilyData).then(() => {
       getLatestTeam().then((result) => {
         let tempArr = { id: result.teamId, name: result.teamName, auth: result.authority }

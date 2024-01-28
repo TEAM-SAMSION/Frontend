@@ -23,7 +23,6 @@ import {
 } from '../../components/Fonts'
 import { TabBarAtom } from '../../recoil/TabAtom'
 import { useIsFocused } from '@react-navigation/native'
-import ErrorIcon from '../../assets/Svgs/error.svg'
 import CloseIcon from '../../assets/Svgs/Close.svg'
 import Home from '../../assets/Svgs/Home.svg'
 import Logo from '../../assets/Svgs/LOGO_Symbol.svg'

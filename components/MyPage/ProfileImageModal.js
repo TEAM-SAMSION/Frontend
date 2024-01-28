@@ -9,7 +9,9 @@ import { changeProfileImage } from './Apis'
 export const ProfileImageModal = (props) => {
   const uploadDefaultImage = async () => {
     props.setProfileUrl('https://pawith.s3.ap-northeast-2.amazonaws.com/base-image/default_user.png')
-    props.setProfileFile('file://' + RNFS.MainBundlePath + '/default_user.png')
+    // props.setProfileFile('file://' + RNFS.MainBundlePath + '/default_user.png')//*** */
+    props.setProfileFile(`${RNFS.DocumentDirectoryPath}${file}`.replace(/:/g, '-'))
+
     props.closeFunction()
   }
 

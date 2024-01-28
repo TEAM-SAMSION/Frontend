@@ -56,6 +56,7 @@ export const getTeamCode = async () => {
 }
 
 export const postTeamInfo = async (data) => {
+  console.log(data)
   let API = `/teams`
   const response = await axiosInstance.post(url + API, data, {
     headers: {
@@ -63,6 +64,7 @@ export const postTeamInfo = async (data) => {
       //Accept: 'application/json',
     },
   })
+  console.log(response)
 }
 
 export const getLatestTeam = async () => {
