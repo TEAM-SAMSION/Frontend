@@ -29,7 +29,20 @@ export const PamilyChoiceToggle = (props) => {
 
   return (
     <>
-      <DropdownContainer isOpen={isOpen} onPress={toggleDropdown}>
+      <DropdownContainer
+        isOpen={isOpen}
+        onPress={toggleDropdown}
+        style={
+          Platform.OS == 'android'
+            ? { elevation: 0.7, borderWidth: 0.7, borderColor: 'rgba(0, 0, 0, 0.01)' }
+            : {
+                shadowColor: 'rgb(0,0,0)',
+                shadowRadius: 2,
+                shadowOpacity: 0.1,
+                shadowOffset: [0, 0],
+              }
+        }
+      >
         <Detail_Text color={colors.grey_600} style={{ width: 67 }}>
           {props.selectedTeam?.name || '패밀리 선택 '}
         </Detail_Text>
@@ -46,7 +59,24 @@ export const PamilyChoiceToggle = (props) => {
             <ScrollView showsVerticalScrollIndicator={false}>
               {options.map((option) => (
                 <DropdownBox
-                  style={{ paddingLeft: 4, width: 90 }}
+                  style={
+                    Platform.OS == 'android'
+                      ? {
+                          elevation: 0.7,
+                          borderWidth: 0.7,
+                          borderColor: 'rgba(0, 0, 0, 0.01)',
+                          paddingLeft: 4,
+                          width: 90,
+                        }
+                      : {
+                          shadowColor: 'rgb(0,0,0)',
+                          shadowRadius: 2,
+                          shadowOpacity: 0.1,
+                          shadowOffset: { width: 2, height: 2 },
+                          paddingLeft: 4,
+                          width: 90,
+                        }
+                  }
                   key={option.teamId}
                   onPress={() => handleOptionSelect(option)}
                 >
@@ -54,7 +84,28 @@ export const PamilyChoiceToggle = (props) => {
                 </DropdownBox>
               ))}
               <DropdownBox
-                style={{ borderBottomLeftRadius: 8, borderBottomRightRadius: 8, paddingLeft: 4, width: 90 }}
+                style={
+                  Platform.OS == 'android'
+                    ? {
+                        elevation: 0.7,
+                        borderWidth: 0.7,
+                        borderColor: 'rgba(0, 0, 0, 0.01)',
+                        borderBottomLeftRadius: 8,
+                        borderBottomRightRadius: 8,
+                        paddingLeft: 4,
+                        width: 90,
+                      }
+                    : {
+                        shadowColor: 'rgb(0,0,0)',
+                        shadowRadius: 2,
+                        shadowOpacity: 0.1,
+                        shadowOffset: { width: 2, height: 2 },
+                        borderBottomLeftRadius: 8,
+                        borderBottomRightRadius: 8,
+                        paddingLeft: 4,
+                        width: 90,
+                      }
+                }
                 onPress={() => setVisible(true)}
               >
                 <Detail_Text color={colors.grey_600}>+</Detail_Text>
@@ -64,12 +115,46 @@ export const PamilyChoiceToggle = (props) => {
         ) : (
           <>
             {options.map((option) => (
-              <DropdownBox key={option.teamId} onPress={() => handleOptionSelect(option)}>
+              <DropdownBox
+                key={option.teamId}
+                onPress={() => handleOptionSelect(option)}
+                style={
+                  Platform.OS == 'android'
+                    ? {
+                        elevation: 0.7,
+                        borderWidth: 0.7,
+                        borderColor: 'rgba(0, 0, 0, 0.01)',
+                      }
+                    : {
+                        shadowColor: 'rgb(0,0,0)',
+                        shadowRadius: 2,
+                        shadowOpacity: 0.1,
+                        shadowOffset: { width: 2, height: 2 },
+                      }
+                }
+              >
                 <Detail_Text color={colors.grey_600}>{option.teamName}</Detail_Text>
               </DropdownBox>
             ))}
             <DropdownBox
-              style={{ borderBottomLeftRadius: 8, borderBottomRightRadius: 8 }}
+              style={
+                Platform.OS == 'android'
+                  ? {
+                      elevation: 0.7,
+                      borderWidth: 0.7,
+                      borderColor: 'rgba(0, 0, 0, 0.01)',
+                      borderBottomLeftRadius: 8,
+                      borderBottomRightRadius: 8,
+                    }
+                  : {
+                      shadowColor: 'rgb(0, 0, 0)',
+                      shadowRadius: 2,
+                      shadowOpacity: 0.1,
+                      shadowOffset: { width: 2, height: 2 },
+                      borderBottomLeftRadius: 8,
+                      borderBottomRightRadius: 8,
+                    }
+              }
               onPress={() => setVisible(true)}
             >
               <Detail_Text color={colors.grey_600}>+</Detail_Text>
@@ -89,8 +174,8 @@ export const PamilyChoiceToggle = (props) => {
 }
 
 const DropdownContainer = styled.Pressable`
-  width: 109px;
-  height: 32px;
+  width: 129px;
+  height: 38px;
   padding: 4px 10px 4px 16px;
   margin: 12px 0px 0px 12px;
   z-index: 999;
@@ -102,8 +187,8 @@ const DropdownContainer = styled.Pressable`
   background-color: ${colors.grey_100};
 `
 const DropdownBox = styled.Pressable`
-  width: 109px;
-  height: 32px;
+  width: 129px;
+  height: 38px;
   padding: 0px 10px 0px 16px;
   margin-left: 12px;
   z-index: 1;
