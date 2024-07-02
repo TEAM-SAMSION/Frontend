@@ -39,7 +39,7 @@ const BarContainer = styled.View`
 `
 const BackBar = styled.View`
   flex-direction: row;
-  height: 26px;
+  height: 24px;
   border-radius: 99px;
   border: 1px solid ${colors.primary_outline};
 `

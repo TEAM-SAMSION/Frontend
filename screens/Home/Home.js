@@ -292,7 +292,7 @@ export default function Home({ navigation }) {
 const BannerContainer = styled.View`
   height: 398px;
   padding: 24px 16px;
-  background-color: ${colors.primary_container};
+  background-color: ${colors.grey_150};
 `
 const NicknameContainer = styled.View`
   flex-direction: row;
@@ -326,14 +326,14 @@ const PamilyContainer = styled.View`
 `
 const PamilyStatContainer = styled.View`
   width: 100%;
-  height: 62px;
+  height: 56px;
   justify-content: center;
   align-items: center;
   background-color: #fff;
   border-radius: 16px;
   position: absolute;
   z-index: 1;
-  top: 210px;
+  top: 216px;
 `
 const NoneText = styled.Text`
   font-family: 'Spoqa-Bold';
